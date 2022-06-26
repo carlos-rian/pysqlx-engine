@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "sqlx-engine"
+version = "0.1.0"
+description = ""
+authors = ["carlos.rian <carlos.rian@quartile.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pydantic = "^1.9.1"
+httpx = "^0.23.0"
+
+[tool.poetry.dev-dependencies]
+black = "^22.3.0"
+isort = "^5.10.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
