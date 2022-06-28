@@ -4,15 +4,23 @@ import subprocess
 import sys
 from os import environ
 from pathlib import Path
-from typing import List
+from typing import Any, Dict, List
 
 import httpx
 from binary import check_binary
+from binary.const import METHOD
 
 from core.abc import AbstractEngine
 
 from . import common
-from .errors import AlreadyConnectedError, EngineConnectionError
+from .errors import (
+    AlreadyConnectedError,
+    EngineConnectionError,
+    EngineRequestError,
+    NotConnectedError,
+    PrismaError,
+    UnprocessableEntityError,
+)
 
 log: logging.Logger = logging.getLogger()
 
@@ -77,27 +85,53 @@ class Engine(AbstractEngine):
             stderr=sys.stderr,
         )
 
+    async def request(
+        self, method: METHOD, path: str, *, content: Any = None
+    ) -> Dict[str, Any]:
+        if self.url is None:
+            raise NotConnectedError("Not connected to the engine")
+
+        kwargs = {
+            "headers": {"Content-Type": "application/json", "Accept": "application/json"}
+        }
+
+        if content is not None:
+            kwargs["content"] = content
+
+        url = self.url + path
+        log.debug(f"Sending {method} request to {url} with content: {content}")
+
+        resp = await self.session.request(method=method, url=url, **kwargs)
+
+        if 300 > resp.status >= 200:
+            response = await resp.json()
+
+            log.debug(f"{method} {url} returned {response}")
+
+            errors_data = response.get("errors")
+            if errors_data:
+                ...  # return utils.handle_response_errors(resp, errors_data)
+
+            return response
+
+        elif resp.status == 422:
+            raise UnprocessableEntityError(resp)
+
+        # TODO: handle errors better
+        # raise EngineRequestError(resp, await resp.text())
+
     async def check(self, timeout: int = 10):
-        last_exc = None
+        last_err = None
         for _ in range(int(timeout / 0.1)):
             try:
-                data = await self.session.get("/status")
-                resp = data.json()
-                if data.is_success and resp.get("status", "") == "ok":
+                data = await self.request("GET", "/status")
+                if data.get("status", "") == "ok":
                     return True
-            except Exception as exc:
-                last_exc = exc
-                log.debug(
-                    "Could not connect to query engine due to %s; retrying...",
-                    type(exc).__name__,
-                )
+            except PrismaError as err:
                 await asyncio.sleep(0.1)
+                log.debug(f"Could not connect to engine due to {err.name}; retrying...")
+                last_err = err
 
-            if data.get("Errors") is not None:
-                log.debug("Could not connect due to gql errors; retrying...")
-                await asyncio.sleep(0.1)
-                break
-        else:
-            raise EngineConnectionError(
-                "Could not connect to the engine..."
-            ) from last_exc
+        raise EngineConnectionError(
+            "Could not connect to the query engine"
+        ) from last_err
