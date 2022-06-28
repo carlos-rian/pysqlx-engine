@@ -21,12 +21,13 @@ from .errors import (
     NotConnectedError,
     PrismaError,
     UnprocessableEntityError,
+    handler_error,
 )
 
 log: logging.Logger = logging.getLogger()
 
 
-class Engine(AbstractEngine):
+class AsyncEngine(AbstractEngine):
     def __init__(
         self,
         db_uri: str,
@@ -42,6 +43,7 @@ class Engine(AbstractEngine):
         self.url: str = url
         self.process: subprocess.Popen = process
         self.session: httpx.AsyncClient = session
+        self.connected = False
         self._binary_path: Path = None
 
     async def connect(self) -> None:
@@ -56,6 +58,17 @@ class Engine(AbstractEngine):
         except Exception:
             await self.disconnect()
             raise
+
+    async def disconnect(self) -> None:
+        if not self.process:
+            raise NotConnectedError("Not connected")
+        if self.session and not self.session.is_closed:
+            await self.session.aclose()
+        self.url = None
+        self.process.kill()
+        self.process = None
+        self.session = None
+        self.connected = False
 
     async def get_dml(self):
         path = f"{Path(__package__).absolute()}/schema.prisma"
@@ -93,19 +106,22 @@ class Engine(AbstractEngine):
             stderr=sys.stderr,
         )
 
-        await self.check()
+        await self._check_connect()
 
     async def request(
         self, method: METHOD, path: str, *, content: Any = None
     ) -> Dict[str, Any]:
-        if self.url is None:
+        if not self.url:
             raise NotConnectedError("Not connected to the engine")
 
         kwargs = {
-            "headers": {"Content-Type": "application/json", "Accept": "application/json"}
+            "headers": {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            }
         }
 
-        if content is not None:
+        if content:
             kwargs["content"] = content
 
         url = self.url + path
@@ -113,35 +129,33 @@ class Engine(AbstractEngine):
 
         resp = await self.session.request(method=method, url=url, **kwargs)
 
-        if 300 > resp.status >= 200:
+        if resp.is_success:
             response = await resp.json()
 
             log.debug(f"{method} {url} returned {response}")
 
             errors_data = response.get("errors")
             if errors_data:
-                ...  # return utils.handle_response_errors(resp, errors_data)
+                return handler_error(errors=errors_data)
 
             return response
 
         elif resp.status == 422:
             raise UnprocessableEntityError(resp)
 
-        # TODO: handle errors better
-        # raise EngineRequestError(resp, await resp.text())
+        raise EngineRequestError(f"{resp.status_code}: {resp.text}")
 
-    async def check(self):
+    async def _check_connect(self) -> None:
         last_err = None
         for _ in range(int(self.db_timeout / 0.1)):
             try:
                 data = await self.request("GET", "/status")
                 if data.get("status", "") == "ok":
-                    return True
+                    self.connected = True
+                    return
             except PrismaError as err:
                 await asyncio.sleep(0.1)
                 log.debug(f"Could not connect to engine due to {err.name}; retrying...")
                 last_err = err
 
-        raise EngineConnectionError(
-            "Could not connect to the query engine"
-        ) from last_err
+        raise EngineConnectionError("Could not connect to the engine") from last_err

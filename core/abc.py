@@ -16,10 +16,6 @@ class AbstractEngine(ABC):
         ...
 
     @abstractmethod
-    async def connected(self) -> bool:
-        ...
-
-    @abstractmethod
     async def disconnect(self) -> None:
         ...
 
