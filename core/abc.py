@@ -1,7 +1,6 @@
 import subprocess
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any
 
 import httpx
 
@@ -23,5 +22,6 @@ class AbstractEngine(ABC):
     async def spawn(self, file: Path, timeout: int = 10) -> None:
         ...
 
+    @abstractmethod
     async def _check_connect(self) -> None:
         ...
