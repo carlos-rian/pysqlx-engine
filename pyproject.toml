@@ -8,6 +8,7 @@ authors = ["carlos.rian <carlos.rian@quartile.com>"]
 python = "^3.10"
 pydantic = "^1.9.1"
 httpx = "^0.23.0"
+aiofiles = "^0.8.0"
 
 [tool.poetry.dev-dependencies]
 black = "^22.3.0"
