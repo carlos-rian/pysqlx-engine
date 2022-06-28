@@ -8,8 +8,8 @@ from pathlib import Path
 import httpx
 from pydantic import BaseModel
 
+from .const import ENGINE_URL, ENGINE_VERSION, GLOBAL_TEMP_DIR, check_extension
 from .platform import binary_platform
-from .version import ENGINE_URL, ENGINE_VERSION, GLOBAL_TEMP_DIR, check_extension
 
 log: logging.Logger = logging.getLogger()
 

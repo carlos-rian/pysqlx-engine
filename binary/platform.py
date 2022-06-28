@@ -4,7 +4,7 @@ import sys
 from functools import lru_cache
 from typing import Tuple
 
-from .version import PLATFORM_NAME
+from .const import PLATFORM_NAME
 
 
 # 01 =======GET PLATFORM NAME=========
