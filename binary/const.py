@@ -2,6 +2,7 @@ import os
 import platform
 import tempfile
 from pathlib import Path
+from typing import Literal
 
 ENGINE_VERSION = os.environ.get(
     "PRISMA_ENGINE_VERSION", "81a0ee489e5f8c8ce98440028ea9050092430503"
@@ -16,6 +17,8 @@ GLOBAL_TEMP_DIR = (
 )
 
 PLATFORM_NAME = platform.system().lower()
+
+METHOD = Literal["GET", "POST"]
 
 
 def check_extension(filename: str) -> str:
