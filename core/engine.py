@@ -32,13 +32,14 @@ class AsyncEngine(AbstractEngine):
         self,
         db_uri: str,
         db_provider: str,
+        db_timeout: int = 10,
         url: str = None,
         process: subprocess.Popen = None,
         session: httpx.AsyncClient = None,
     ) -> None:
         self.db_uri = db_uri
         self.db_provider = db_provider
-        self.db_timeout = 10
+        self.db_timeout = db_timeout
 
         self.url: str = url
         self.process: subprocess.Popen = process
