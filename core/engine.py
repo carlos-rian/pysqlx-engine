@@ -6,6 +6,7 @@ from os import environ
 from pathlib import Path
 from typing import Any, Dict, List
 
+import aiofiles
 import httpx
 from binary import check_binary
 from binary.const import METHOD
@@ -28,10 +29,16 @@ log: logging.Logger = logging.getLogger()
 class Engine(AbstractEngine):
     def __init__(
         self,
+        db_uri: str,
+        db_provider: str,
         url: str = None,
         process: subprocess.Popen = None,
         session: httpx.AsyncClient = None,
     ) -> None:
+        self.db_uri = db_uri
+        self.db_provider = db_provider
+        self.db_timeout = 10
+
         self.url: str = url
         self.process: subprocess.Popen = process
         self.session: httpx.AsyncClient = session
@@ -50,21 +57,22 @@ class Engine(AbstractEngine):
             await self.disconnect()
             raise
 
+    async def get_dml(self):
+        path = f"{Path(__package__).absolute()}/schema.prisma"
+        async with aiofiles.open(path, mode="r") as file:
+            content = await file.read()
+        return content
+
     async def spawn(self, file: Path) -> None:
         port = common.get_open_port()
         log.debug(f"Running engine on port: {port}")
 
         self.url = f"http://localhost:{port}"
 
-        dml = """
-            generator client {
-                provider = "prisma-client-py"
-            }
-            datasource db {
-                provider = "postgresql"
-                url      = env("DATABASE_URL")
-            }
-        """
+        dml = await self.get_dml()
+
+        dml.replace("postgres", self.db_provider)
+        dml.replace("DATASOURCE_URL", self.db_uri)
 
         env = environ.copy()
 
@@ -84,6 +92,8 @@ class Engine(AbstractEngine):
             stdout=sys.stdout,
             stderr=sys.stderr,
         )
+
+        await self.check()
 
     async def request(
         self, method: METHOD, path: str, *, content: Any = None
@@ -120,9 +130,9 @@ class Engine(AbstractEngine):
         # TODO: handle errors better
         # raise EngineRequestError(resp, await resp.text())
 
-    async def check(self, timeout: int = 10):
+    async def check(self):
         last_err = None
-        for _ in range(int(timeout / 0.1)):
+        for _ in range(int(self.db_timeout / 0.1)):
             try:
                 data = await self.request("GET", "/status")
                 if data.get("status", "") == "ok":
