@@ -1,0 +1,13 @@
+generator client {
+    provider = "prisma-client-py"
+}
+
+datasource db {
+    provider = "postgres"
+    url      = "DATASOURCE_URL"
+}
+
+model TestItemXPTO {
+    id   String @id @default(uuid()) @db.Uuid
+    name String @db.VarChar(100)
+}
