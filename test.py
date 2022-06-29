@@ -2,6 +2,7 @@ import asyncio
 import logging
 import os
 import sys
+from time import time
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
@@ -9,15 +10,20 @@ from sqlx_engine import SQLXEngine
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
+data = None
+
 
 async def main():
+    global data
     uri = "postgresql://postgres:password@localhost:5432/fastapi_prisma?schema=public"
     db = SQLXEngine(provider="postgresql", uri=uri)
 
     await db.connect()
-
+    init = time()
+    print("\n")
     data = await db.query("SELECT * FROM public.peoples")
-
+    print(time()-init)
+    return data
     print(data)
 
     data2 = await db.execute(
