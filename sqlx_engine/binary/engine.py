@@ -18,12 +18,18 @@ class Engine(BaseModel):
     name: str = "query-engine"
     env: str = "PRISMA_QUERY_ENGINE_BINARY"
     _session: httpx.Client = httpx.Client()
+    _binary_path: str = f"{Path(__file__).parent.absolute()}/.binary"
 
     def download(self) -> None:
+        local_path = self._read_local_binary_path()
+        if local_path:
+            log.debug(f"{self.name} is cached, skipping download")
+            return
         url = self.url
         dest = self.path
         if dest.exists():
             log.debug(f"{self.name} is cached, skipping download")
+            self._write_local_binary_path(to=str(dest.absolute()))
             return
 
         log.debug(f"Downloading from {url} to {dest}")
@@ -60,11 +66,28 @@ class Engine(BaseModel):
         os.remove(tar)
         os.remove(tmp)
 
+        # save binary path
+        self._write_local_binary_path(to=to)
+
+    def _write_local_binary_path(self, to: str):
+        with open(self._binary_path, mode="wb") as file:
+            file.write(to.encode())
+
+    def _read_local_binary_path(self) -> str:
+        try:
+            with open(self._binary_path, mode="rb") as file:
+                data = file.read().decode()
+            return data
+        except:
+            ...
+
     @property
     def binary_path(self) -> str:
-        if not self.path:
-            self.download()
-        return str(self.path)
+        path = self._read_local_binary_path()
+        if path:
+            return path
+        self.download()
+        return self._read_local_binary_path()
 
     @property
     def url(self) -> str:
