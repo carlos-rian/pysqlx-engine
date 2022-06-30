@@ -103,14 +103,16 @@ class AsyncEngine(AbstractEngine):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
-        start_err = None #self.process.stderr.readlines()
-        if start_err:
-            stderr = start_err[0].decode()
+        try:
+            _, start_err = self.process.communicate(timeout=0.03)
+            stderr = start_err.decode()
             try:
                 data = json.loads(stderr)
                 raise StartEngineError(error=data)
             except (json.JSONDecodeError, TypeError):
                 raise BaseStartEngineError(stderr)
+        except subprocess.TimeoutExpired:
+            pass
 
         await self._check_connect()
 
@@ -153,18 +155,17 @@ class AsyncEngine(AbstractEngine):
 
     async def _check_connect(self) -> None:
         last_err = None
-        for _ in range(int(self.db_timeout / 0.1)):
+        for _ in range(int(self.db_timeout / 0.01)):
             try:
-                data = await self.request("GET", "/status")
-                if data.get("status", "") == "ok":
-                    self.connected = True
-                    return
+                await self.request("GET", "/status")
+                self.connected = True
+                return
             except Exception as err:
-                await asyncio.sleep(0.1)
+                await asyncio.sleep(0.001)
                 log.debug(
                     (
                         "Could not connect to engine due to "
-                        f"{err.__class__.__name__}; retrying..."
+                        f"{err.__class__.__name__}; retrying...{err}"
                     )
                 )
                 last_err = err
