@@ -1,9 +1,11 @@
+from functools import lru_cache
 from json import dumps
 from typing import Literal
 
 from typing_extensions import LiteralString
 
 
+@lru_cache(maxsize=None)
 def mount_body(_type: Literal["queryRaw", "executeRaw"], _sql: LiteralString) -> str:
     query = """
         mutation {
