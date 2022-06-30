@@ -8,21 +8,31 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 from sqlx_engine import SQLXEngine
 
-logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 data = None
 
 
 async def main():
     global data
+    ini = time()
     uri = "postgresql://postgres:password@localhost:5432/fastapi_prisma?schema=public"
     db = SQLXEngine(provider="postgresql", uri=uri)
-
     await db.connect()
+    print("connect", time() - ini)
+
+    # init = time()
+    # data = await db.query("SELECT * FROM public.peoples")
+    # print("deserial", time() - init)
+    # print(data)
+
     init = time()
-    print("\n")
-    data = await db.query("SELECT * FROM public.peoples")
-    print(time()-init)
+    data = await db.query(query="SELECT * FROM public.peoples", as_base_row=False)
+    print("serial", time() - init)
+    # print(data)
+
+    print("total", time() - ini)
+
     return data
     print(data)
 
