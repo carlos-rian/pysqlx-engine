@@ -87,7 +87,7 @@ class Engine(BaseModel):
         if path:
             return path
         self.download()
-        return self._read_local_binary_path()
+        return str(self.path)
 
     @property
     def url(self) -> str:
