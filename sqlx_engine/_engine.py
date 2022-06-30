@@ -45,15 +45,17 @@ class SQLXEngine:
     ```
     """
 
+    __slots__ = ("provider", "uri", "connected", "_connection")
+
     def __init__(
         self,
-        provider: Literal["postgresql", "mysql", "sqlserver", "sqlite"],
+        provider: Literal["postgresql", "mysql", "sqlserver", "sqlite", "_connection"],
         uri: str,
     ) -> None:
         self.uri = uri
         self.provider = provider
-        self._connection: _AsyncEngine = None
         self.connected: bool = False
+        self._connection: _AsyncEngine = None
 
     async def connect(self, timeout: int = 10) -> None:
         self._connection = _AsyncEngine(

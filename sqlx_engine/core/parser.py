@@ -31,6 +31,8 @@ TYPES = {
 
 
 class Deserialize:
+    __slots__ = ("rows", "as_base_row", "_model", "_base_model_type")
+
     def __init__(self, rows: List[Dict[str, Any]], as_base_row: bool = True) -> None:
         self.rows = rows
         self.as_base_row = as_base_row

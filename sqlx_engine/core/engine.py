@@ -27,6 +27,17 @@ log: logging.Logger = logging.getLogger()
 
 
 class AsyncEngine(AbstractEngine):
+    __slots__ = (
+        "db_uri",
+        "db_provider",
+        "db_timeout",
+        "url",
+        "process",
+        "session",
+        "connected",
+        "_binary_path",
+    )
+
     def __init__(
         self,
         db_uri: str,
