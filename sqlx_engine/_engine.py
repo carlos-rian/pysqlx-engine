@@ -1,4 +1,4 @@
-from typing import List, Literal, Optional
+from typing import Dict, List, Literal, Optional, Union
 
 from typing_extensions import LiteralString
 
@@ -87,10 +87,13 @@ class SQLXEngine:
 
         return int(data["data"]["result"])
 
-    async def query(self, query: LiteralString) -> Optional[List[BaseRow]]:
+    async def query(
+        self, query: LiteralString, as_base_row: bool = True
+    ) -> Optional[Union[List[BaseRow], List[Dict]]]:
         """Execute select
         Args:
             query (LiteralString): Only query/select!
+            as_dict (bool): By default is False, row
 
         Returns:
            Optional[List[BaseRow]]: Pydantic Model or None
@@ -100,6 +103,6 @@ class SQLXEngine:
 
         resp = data["data"]["result"]
         if resp:
-            rows = Deserialize(rows=resp)
+            rows = Deserialize(rows=resp, as_base_row=as_base_row)
             return list(rows.deserialize())
         return None
