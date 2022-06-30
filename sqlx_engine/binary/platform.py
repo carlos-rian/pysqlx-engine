@@ -7,7 +7,6 @@ from typing import Tuple
 from .const import PLATFORM_NAME
 
 
-# 01 =======GET PLATFORM NAME=========
 @lru_cache(maxsize=None)
 def binary_platform() -> str:
     if PLATFORM_NAME != "linux":
@@ -21,7 +20,6 @@ def binary_platform() -> str:
     return f"{distro}-openssl-{ssl}"
 
 
-# 02 =======GET LINUX DISTRO==========
 def linux_distro() -> str:
     distro_id, distro_id_like = _get_linux_distro_details()
     if distro_id == "alpine":
@@ -45,7 +43,6 @@ def _get_linux_distro_details() -> Tuple[str, str]:
     return distro_id, distro_id_like
 
 
-# 03 ======GET OPEN SSL VERSION=======
 def get_openssl() -> str:
     process = subprocess.run(
         ["openssl", "version", "-v"], stdout=subprocess.PIPE, check=True
