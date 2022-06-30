@@ -53,7 +53,7 @@ class SQLXEngine:
         self.uri = uri
         self.provider = provider
         self._connection: _AsyncEngine = None
-        self._connected: bool = False
+        self.connected: bool = False
 
     async def connect(self, timeout: int = 10) -> None:
         self._connection = _AsyncEngine(
@@ -62,15 +62,11 @@ class SQLXEngine:
             db_timeout=timeout,
         )
         await self._connection.connect()
-        self._connected = self._connection.connected
-
-    @property
-    def connected(self) -> bool:
-        return self._connected
+        self.connected = self._connection.connected
 
     async def close(self) -> None:
         await self._connection.disconnect()
-        self._connected = False
+        self.connected = False
         self._connection = None
 
     async def execute(self, stmt: LiteralString) -> int:
