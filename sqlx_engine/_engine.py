@@ -2,9 +2,9 @@ from typing import Dict, List, Literal, Optional, Union
 
 from typing_extensions import LiteralString
 
+from sqlx_engine.core.builder import QueryBuilder
 from sqlx_engine.core.parser import Deserialize
 
-from ._mount import mount_body
 from .core.common import BaseRow
 from .core.engine import AsyncEngine as _AsyncEngine
 
@@ -80,24 +80,42 @@ class SQLXEngine:
         Returns:
             int: Affect row
         """
-        body = mount_body(_type="executeRaw", _sql=stmt)
-        data = await self._connection.request(method="POST", path="/", content=body)
+        builder = QueryBuilder(
+            method="executeRaw",
+            operation="mutation",
+            arguments={
+                "query": stmt,
+                "parameters": [],
+            },
+        )
+        content = builder.build()
+        data = await self._connection.request(method="POST", path="/", content=content)
 
         return int(data["data"]["result"])
 
     async def query(
         self, query: LiteralString, as_base_row: bool = True
     ) -> Optional[Union[List[BaseRow], List[Dict]]]:
-        """Execute select
+        """Query execute
         Args:
             query (LiteralString): Only query/select!
-            as_dict (bool): By default is False, row
+            as_dict (bool): By default is True, BaseRow is an object typing.
 
         Returns:
-           Optional[List[BaseRow]]: Pydantic Model or None
+           List[BaseRow]: List of Pydantic Model
+           List[Dict]: List of dict
+           NoneType: None
         """
-        body = mount_body(_type="queryRaw", _sql=query)
-        data = await self._connection.request(method="POST", path="/", content=body)
+        builder = QueryBuilder(
+            method="queryRaw",
+            operation="mutation",
+            arguments={
+                "query": query,
+                "parameters": [],
+            },
+        )
+        content = builder.build()
+        data = await self._connection.request(method="POST", path="/", content=content)
 
         resp = data["data"]["result"]
         if resp:
