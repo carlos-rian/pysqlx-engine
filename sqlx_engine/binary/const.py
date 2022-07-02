@@ -20,6 +20,8 @@ PLATFORM_NAME = platform.system().lower()
 
 METHOD = Literal["GET", "POST"]
 
+IMPROVED_ERROR_LOG = True
+
 
 def check_extension(filename: str) -> str:
     if PLATFORM_NAME == "windows" and ".exe" not in filename:

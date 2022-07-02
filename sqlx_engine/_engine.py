@@ -1,7 +1,9 @@
+import asyncio
 from typing import Dict, List, Literal, Optional, Union
 
 from typing_extensions import LiteralString
 
+from sqlx_engine.binary.const import IMPROVED_ERROR_LOG
 from sqlx_engine.core.builder import QueryBuilder
 from sqlx_engine.core.parser import Deserialize
 
@@ -39,7 +41,7 @@ class SQLXEngine:
     >>> conn = SQLXEngine(provider="sqlite", uri=uri)
 
     ```
-
+    #------------------------------------------
     ```md
     Reference: https://www.prisma.io/docs/reference/database-reference/connection-urls
     ```
@@ -51,13 +53,26 @@ class SQLXEngine:
         self,
         provider: Literal["postgresql", "mysql", "sqlserver", "sqlite", "_connection"],
         uri: str,
+        improved_error_log: bool = True,
     ) -> None:
         self.uri = uri
         self.provider = provider
         self.connected: bool = False
         self._connection: _AsyncEngine = None
 
+        global IMPROVED_ERROR_LOG
+        IMPROVED_ERROR_LOG = improved_error_log
+
     async def connect(self, timeout: int = 10) -> None:
+        """
+        Every connection instance is lazy, only after the connect is the
+        database checked and a connection is created with it.
+
+        Args:
+            timeout in sec (int, optional):
+            You can change the value if your database is slow to receive a new connection
+            Defaults to 10.
+        """
         self._connection = _AsyncEngine(
             db_uri=self.uri,
             db_provider=self.provider,
@@ -67,18 +82,42 @@ class SQLXEngine:
         self.connected = self._connection.connected
 
     async def close(self) -> None:
+        """Is good always close the connection, but!
+        Even if you don't close the connection, don't worry,
+        when the process ends automatically the connections will
+        be closed so the bank doesn't have an idle connection.
+        """
         await self._connection.disconnect()
         self.connected = False
         self._connection = None
 
     async def execute(self, stmt: LiteralString) -> int:
-        """Execute statement
+        """Execute statement to change, add or delete etc.
 
+        Always `COMMIT` and `ROLLBACK` is automatic!!! This is not changeable...
+        if you transaction failed your receive a except SQLXEngineError with error.
+
+        Exception example:
+        ``` python
+            sqlx_engine.core.errors.SQLXEngineError:
+            {
+                "is_panic": false,
+                "error_code": "P2010",
+                "error_message": "Raw query failed. Code: `23505`. Message: `Key (id)=(a7e382c9-8d6d-4233-b1be-be9ef6024bd5) already exists.`",
+                "meta": {
+                    "code": "23505",
+                    "message": "Key (id)=(a7e382c9-8d6d-4233-b1be-be9ef6024bd5) already exists."
+                },
+                "helper": "https://www.prisma.io/docs/reference/api-reference/error-reference#error-codes",
+                "description": "Raw query failed. Code: {code}. Message: {message}"
+            }
+
+        ```
         Args:
-            stmt (LiteralString): Insert, Update, Delete, Drop etc. Not Query!
+            stmt (LiteralString): Insert, Update, Delete, Drop etc. `Query NO`!
 
         Returns:
-            int: Affect row
+            int: Number of rows affected
         """
         builder = QueryBuilder(
             method="executeRaw",

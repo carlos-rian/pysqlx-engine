@@ -23,7 +23,7 @@ async def main():
     global data
     start = time.monotonic()
     uri = "postgresql://postgres:password@localhost:5432/fastapi_prisma?schema=public"
-    db = SQLXEngine(provider="postgresql", uri=uri)
+    db = SQLXEngine(provider="postgresql", uri=uri, improved_error_log=False)
     await db.connect()
     print("connect:  ", time_since(start))
 
@@ -45,7 +45,7 @@ async def main():
             created_at, 
             updated_at) 
             VALUES (
-                'a7e382c9-8d6d-4233-b1be-be9ef6024bd2', 
+                'a7e382c9-8d6d-4233-b1be-be9ef6024bd5', 
                 'string\\n', 
                 0, 
                 '2022-06-21 12:53:46.278', 
@@ -53,6 +53,8 @@ async def main():
     )
     print("insert:   ", time_since(start4))
     print("total:    ", time_since(start))
+
+    await db.close()
 
 
 asyncio.run(main())

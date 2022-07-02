@@ -9,39 +9,43 @@ from pygments.lexers import JsonLexer
 from ._errors_mapping import COMMON_ERRORS_MAPPING, ENGINE_ERRORS_MAPPING
 
 
-class PrismaError(Exception):
+class GenericSQLXEngineError(Exception):
     @property
     def name(self):
         return self.__class__.__name__
 
 
-class AlreadyConnectedError(PrismaError):
+class SQLXEngineError(GenericSQLXEngineError):
     ...
 
 
-class EngineConnectionError(PrismaError):
+class AlreadyConnectedError(SQLXEngineError):
     ...
 
 
-class NotConnectedError(PrismaError):
+class EngineConnectionError(SQLXEngineError):
     ...
 
 
-class EngineRequestError(PrismaError):
+class NotConnectedError(SQLXEngineError):
     ...
 
 
-class UnprocessableEntityError(PrismaError):
+class EngineRequestError(SQLXEngineError):
+    ...
+
+
+class UnprocessableEntityError(SQLXEngineError):
     def __init__(self, resp: httpx.Response, *args) -> None:
         error_msg = f"status_code: {resp.status_code} -> body: {resp.json()}"
         super().__init__(error_msg, *args)
 
 
-class EngineError(PrismaError):
+class EngineError(SQLXEngineError):
     ...
 
 
-class BaseStartEngineError(PrismaError):
+class BaseStartEngineError(SQLXEngineError):
     ...
 
 
@@ -69,23 +73,26 @@ def _colorizer_json(dumps: str):
 def _mount_msg(
     error_code: str, message: str, error_msg: str, meta: dict, is_panic: bool
 ):
-    return "\n" + _colorizer_json(
-        json.dumps(
-            {
-                "is_panic": is_panic,
-                "error_code": error_code,
-                "error_message": message,
-                "meta": meta,
-                "helper": (
-                    "https://www.prisma.io/docs/reference/"
-                    "api-reference/error-reference#error-codes"
-                ),
-                "description": error_msg,
-            },
-            indent=2,
-            sort_keys=False,
-        )
+    from sqlx_engine.binary.const import IMPROVED_ERROR_LOG
+
+    error_msg = json.dumps(
+        {
+            "is_panic": is_panic,
+            "error_code": error_code,
+            "error_message": message,
+            "meta": meta,
+            "helper": (
+                "https://www.prisma.io/docs/reference/"
+                "api-reference/error-reference#error-codes"
+            ),
+            "description": error_msg,
+        },
+        indent=2,
+        sort_keys=False,
     )
+    if not IMPROVED_ERROR_LOG:
+        return "\n" + error_msg
+    return "\n" + _colorizer_json(error_msg)
 
 
 def handler_error(errors: List[Dict[str, Any]]):
@@ -107,8 +114,8 @@ def handler_error(errors: List[Dict[str, Any]]):
             meta=meta,
             is_panic=is_panic,
         )
-        raise EngineError(complete_msg)
+        raise SQLXEngineError(complete_msg)
 
-    raise PrismaError(
+    raise GenericSQLXEngineError(
         f"Could not process erroneous response: {json.dumps(errors, indent=2)}"
     )
