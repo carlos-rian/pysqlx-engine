@@ -64,8 +64,8 @@ class SQLXEngine:
             raise ValueError(
                 f"Invalid provider {provider} \n Providers available: {_providers}"
             )
-        if not uri or not any([uri.startswith(prov) for prov in _providers]):
-            raise ValueError(f"Invalid uri: {uri} check the usage uri.")
+        if not uri or not any([uri.startswith(prov) for prov in [*_providers, "file"]]):
+            raise ValueError(f"Invalid uri: {uri}, check the usage uri.")
 
         self.uri = uri
         self.provider = provider
