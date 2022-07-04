@@ -54,10 +54,18 @@ class SQLXEngine:
 
     def __init__(
         self,
-        provider: Literal["postgresql", "mysql", "sqlserver", "sqlite", "_connection"],
+        provider: Literal["postgresql", "mysql", "sqlserver", "sqlite"],
         uri: str,
         improved_error_log: bool = True,
     ) -> None:
+        _providers = ["postgresql", "mysql", "sqlserver", "sqlite"]
+        if provider not in _providers:
+            raise ValueError(
+                f"Invalid provider {provider} \n Providers available: {_providers}"
+            )
+        if not uri or not any([uri.startswith(prov) for prov in _providers]):
+            raise ValueError(f"Invalid uri: {uri} check the usage uri.")
+
         self.uri = uri
         self.provider = provider
         self.connected: bool = False
