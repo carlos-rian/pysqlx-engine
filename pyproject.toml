@@ -17,6 +17,9 @@ isort = "^5.10.1"
 ipython = "^8.4.0"
 SQLAlchemy = "^1.4.39"
 psycopg2-binary = "^2.9.3"
+pytest-dotenv = "^0.5.2"
+pytest = "^7.1.2"
+pytest-cov = "^3.0.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

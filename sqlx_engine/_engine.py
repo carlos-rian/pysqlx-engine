@@ -6,6 +6,7 @@ from ._core.builder import QueryBuilder
 from ._core.common import BaseRow
 from ._core.config import config
 from ._core.engine import AsyncEngine as _AsyncEngine
+from ._core.errors import AlreadyConnectedError, NotConnectedError
 from ._core.parser import Deserialize
 
 
@@ -83,6 +84,8 @@ class SQLXEngine:
             You can change the value if your database is slow to receive a new connection
             Defaults to 10.
         """
+        if self._connection:
+            raise AlreadyConnectedError("Already connected to the engine")
         self._connection = _AsyncEngine(
             db_uri=self.uri,
             db_provider=self.provider,
@@ -97,6 +100,8 @@ class SQLXEngine:
         when the process ends automatically the connections will
         be closed so the bank doesn't have an idle connection.
         """
+        if not self._connection:
+            raise NotConnectedError("Not connected")
         await self._connection.disconnect()
         self.connected = False
         self._connection = None
@@ -143,6 +148,8 @@ class SQLXEngine:
             RecordNotFoundError |
             GenericSQLXEngineError
         """
+        if not self._connection:
+            raise NotConnectedError("Not connected")
         builder = QueryBuilder(
             method="executeRaw",
             operation="mutation",
@@ -171,6 +178,8 @@ class SQLXEngine:
         Raises:
             SQLXEngineError
         """
+        if not self._connection:
+            raise NotConnectedError("Not connected")
         builder = QueryBuilder(
             method="queryRaw",
             operation="mutation",
