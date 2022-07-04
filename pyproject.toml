@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "sqlx-engine"
+name = "pysqlx-engine"
 version = "0.1.0"
 description = ""
-authors = ["carlos.rian <carlos.rian@quartile.com>"]
+authors = ["carlos.rian <crian.rian@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
