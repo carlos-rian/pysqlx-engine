@@ -15,7 +15,6 @@ def get_open_port() -> int:
     return int(port)
 
 
-@lru_cache(maxsize=None)
 async def get_dml() -> str:
     path = f"{Path(__file__).parent.absolute()}/schema.prisma"
     async with aiofiles.open(path, mode="r") as file:
