@@ -18,4 +18,3 @@ async def db(uri):
     _db = SQLXEngine(provider="sqlite", uri=uri)
     await _db.connect()
     return _db
-    
