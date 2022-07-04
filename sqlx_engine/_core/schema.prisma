@@ -8,6 +8,6 @@ datasource db {
 }
 
 model TestItemXPTO {
-    id   String @id @default(uuid()) @db.Uuid
-    name String @db.VarChar(100)
+    id   String @id
+    name String
 }
