@@ -1,0 +1,35 @@
+version: "3.7"
+
+services:
+  postgresql:
+    image: postgres:latest
+    container_name: postgresql
+    environment:
+      - POSTGRES_DB=master
+      - POSTGRES_PASSWORD=Build!Test321
+    ports:
+      - 4442:5432
+    networks:
+      - default
+  
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    environment:
+      - MYSQL_DATABASE=master
+      - MYSQL_ROOT_PASSWORD=Build!Test321
+    ports:
+      - 4443:3306
+    networks:
+      - default
+  
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: mssql
+    environment:
+      - SA_PASSWORD=Build!Test321
+      - ACCEPT_EULA=Y
+    ports:
+      - 4444:1433
+    networks:
+      - default
