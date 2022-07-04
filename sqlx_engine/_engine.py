@@ -1,20 +1,26 @@
-import asyncio
 from typing import Dict, List, Literal, Optional, Union
 
 from typing_extensions import LiteralString
 
-from sqlx_engine.binary.const import IMPROVED_ERROR_LOG
-from sqlx_engine.core.builder import QueryBuilder
-from sqlx_engine.core.parser import Deserialize
-
-from .core.common import BaseRow
-from .core.engine import AsyncEngine as _AsyncEngine
+from ._core.builder import QueryBuilder
+from ._core.common import BaseRow
+from ._core.config import config
+from ._core.engine import AsyncEngine as _AsyncEngine
+from ._core.parser import Deserialize
 
 
 class SQLXEngine:
     """
+    SQLXEngine is an engine to run pure sql with queries, inserts,
+    deletes, updates, create/alter/drop tables etc.
+
+    It is a CORE for pure SQL, NOT an engine to execute
+    ROUTINES/PROCEDURES/FUNCTIONS in the database.
+
     ```md
-    Providers -> postgresql, mysql, sqlserver or sqlite
+    providers(str): postgresql, mysql, sqlserver or sqlite
+    uri(str):  Connection values.
+    improved_error_log(bool): Default True. Returns an error in json format with colors.
     ```
     Usage:
     ``` python
@@ -40,10 +46,7 @@ class SQLXEngine:
     >>> uri = "file:./dev.db"
     >>> conn = SQLXEngine(provider="sqlite", uri=uri)
 
-    ```
-    #------------------------------------------
-    ```md
-    Reference: https://www.prisma.io/docs/reference/database-reference/connection-urls
+    # URI Reference: https://www.prisma.io/docs/reference/database-reference/connection-urls
     ```
     """
 
@@ -60,8 +63,7 @@ class SQLXEngine:
         self.connected: bool = False
         self._connection: _AsyncEngine = None
 
-        global IMPROVED_ERROR_LOG
-        IMPROVED_ERROR_LOG = improved_error_log
+        config.improved_error_log = improved_error_log
 
     async def connect(self, timeout: int = 10) -> None:
         """
@@ -94,12 +96,14 @@ class SQLXEngine:
     async def execute(self, stmt: LiteralString) -> int:
         """Execute statement to change, add or delete etc.
 
+        ROUTINES/PROCEDURES/FUNCTIONS 'Can execute without error' but has no returns.
+
         Always `COMMIT` and `ROLLBACK` is automatic!!! This is not changeable...
-        if you transaction failed your receive a except SQLXEngineError with error.
+        if you transaction failed your receive a except with error.
 
         Exception example:
         ``` python
-            sqlx_engine.core.errors.SQLXEngineError:
+            sqlx_engine.core.errors.RawQueryError:
             {
                 "is_panic": false,
                 "error_code": "P2010",
@@ -118,6 +122,18 @@ class SQLXEngine:
 
         Returns:
             int: Number of rows affected
+
+        Raises:
+            SQLXEngineError |
+            UniqueViolationError |
+            ForeignKeyViolationError |
+            FieldNotFoundError |
+            RawQueryError |
+            MissingRequiredValueError |
+            InputError |
+            TableNotFoundError |
+            RecordNotFoundError |
+            GenericSQLXEngineError
         """
         builder = QueryBuilder(
             method="executeRaw",
@@ -144,6 +160,8 @@ class SQLXEngine:
            List[BaseRow]: List of Pydantic Model
            List[Dict]: List of dict
            NoneType: None
+        Raises:
+            SQLXEngineError
         """
         builder = QueryBuilder(
             method="queryRaw",
