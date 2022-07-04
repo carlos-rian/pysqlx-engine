@@ -23,7 +23,7 @@ async def main():
     global data
     start = time.monotonic()
     uri = "postgresql://postgres:password@localhost:5432/fastapi_prisma?schema=public"
-    db = SQLXEngine(provider="postgresql", uri=uri, improved_error_log=False)
+    db = SQLXEngine(provider="postgresql", uri=uri)
     await db.connect()
     print("connect:  ", time_since(start))
 
