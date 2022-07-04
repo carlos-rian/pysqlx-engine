@@ -85,6 +85,20 @@ class AsyncEngine(AbstractEngine):
         self.process = None
         self.connected = False
 
+    async def _try_comunicate(self):
+        try:
+            _, start_err = self.process.communicate(timeout=0.03)
+            stderr = start_err.decode()
+            try:
+                data = json.loads(stderr)
+                await self.disconnect()
+                raise StartEngineError(error=data)
+            except (json.JSONDecodeError, TypeError):
+                await self.disconnect()
+                raise BaseStartEngineError(stderr)
+        except subprocess.TimeoutExpired:
+            pass
+
     async def spawn(self, file: Path) -> None:
         port = common.get_open_port()
         log.debug(f"Running engine on port: {port}")
@@ -114,16 +128,7 @@ class AsyncEngine(AbstractEngine):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
-        try:
-            _, start_err = self.process.communicate(timeout=0.03)
-            stderr = start_err.decode()
-            try:
-                data = json.loads(stderr)
-                raise StartEngineError(error=data)
-            except (json.JSONDecodeError, TypeError):
-                raise BaseStartEngineError(stderr)
-        except subprocess.TimeoutExpired:
-            pass
+        await self._try_comunicate()
 
         await self._check_connect()
 
@@ -172,7 +177,7 @@ class AsyncEngine(AbstractEngine):
                 self.connected = True
                 return
             except Exception as err:
-                await asyncio.sleep(0.001)
+                await asyncio.sleep(0.01)
                 log.debug(
                     (
                         "Could not connect to engine due to "
@@ -180,5 +185,7 @@ class AsyncEngine(AbstractEngine):
                     )
                 )
                 last_err = err
+
+        await self._try_comunicate()
 
         raise EngineConnectionError("Could not connect to the engine") from last_err
