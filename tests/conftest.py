@@ -10,7 +10,7 @@ from sqlx_engine import SQLXEngine
 
 @pytest.fixture(scope="session")
 def uri():
-    return "file:./dev.db"
+    return os.environ["DATABASE_URI"]
 
 
 @pytest.fixture(scope="session")
