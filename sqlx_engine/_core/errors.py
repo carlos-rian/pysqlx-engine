@@ -78,7 +78,7 @@ def _mount_msg(
             ),
             "description": error_msg,
         },
-        indent=2,
+        indent=2 if config.improved_error_log else None,
         sort_keys=False,
     )
     if not config.improved_error_log:
