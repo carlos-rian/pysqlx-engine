@@ -18,11 +18,11 @@ class SQLXEngine:
     It is a CORE for pure SQL, NOT an engine to execute
     ROUTINES/PROCEDURES/FUNCTIONS in the database.
 
-    ```md
-    providers(str): postgresql, mysql, sqlserver or sqlite
-    uri(str):  Connection values.
-    improved_error_log(bool): Default True. Returns an error in json format with colors.
-    ```
+
+    `providers(str)`: postgresql, mysql, sqlserver or sqlite
+    `uri(str)`:  Connection values.
+    `improved_error_log(bool)`: Default True. Returns an error in json format with colors.
+
     Usage:
     ``` python
     >>> ##### PostgreSQL
