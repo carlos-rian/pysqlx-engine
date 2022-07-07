@@ -1,10 +1,9 @@
 from datetime import date, datetime, time
 from decimal import Decimal
-from json import loads
 from typing import Any, Dict, List, Tuple
 from uuid import UUID
 
-from pydantic import create_model
+from pydantic import Json, create_model
 
 from .common import BaseRow
 
@@ -17,17 +16,17 @@ TYPES = {
     "bool": bool,
     "char": str,
     "decimal": Decimal,
-    "json": loads,
+    "json": Json,
     "uuid": UUID,
     "datetime": datetime,
     "date": date,
     "time": time,
     "array": list,
+    "xml": str,
     # not implement
-    "bytes": None,  # bytes
-    "enum": None,  # Enum
+    "bytes": Any,  # bytes
+    "enum": Any,  # Enum
     "null": None,
-    "xml": None,  # str
 }
 
 
@@ -65,7 +64,5 @@ class Deserialize:
         return mapper
 
     def _mapping_type(self, prisma__type: TYPES, prisma__value: Any) -> Tuple:
-        _type = TYPES.get(prisma__type)
-        if _type is None:
-            _type = Any
-        return prisma__value, _type
+        _type = TYPES.get(prisma__type, Any)
+        return (prisma__value, _type)
