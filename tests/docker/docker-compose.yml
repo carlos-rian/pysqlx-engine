@@ -5,7 +5,7 @@ services:
     image: postgres:latest
     container_name: postgresql
     environment:
-      - POSTGRES_DB=master
+      - POSTGRES_DB=engine
       - POSTGRES_PASSWORD=Build!Test321
     ports:
       - 4442:5432
@@ -16,7 +16,7 @@ services:
     image: mysql:latest
     container_name: mysql
     environment:
-      - MYSQL_DATABASE=master
+      - MYSQL_DATABASE=engine
       - MYSQL_ROOT_PASSWORD=Build!Test321
     ports:
       - 4443:3306
