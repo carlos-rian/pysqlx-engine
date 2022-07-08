@@ -1,7 +1,6 @@
+import json
 import os
 import sys
-from ctypes import Union
-from typing import Dict
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
@@ -13,7 +12,7 @@ from sqlx_engine import SQLXEngine
 @pytest.fixture(scope="session")
 async def db_sqlite():
     uri = os.environ["DATABASE_URI_SQLITE"]
-    _db = SQLXEngine(provider="sqlite", uri=uri)
+    _db = SQLXEngine(provider="sqlite", uri=uri, improved_error_log=False)
     await _db.connect()
     return _db
 
@@ -21,7 +20,7 @@ async def db_sqlite():
 @pytest.fixture(scope="session")
 async def db_postgresql():
     uri = os.environ["DATABASE_URI_POSTGRESQL"]
-    _db = SQLXEngine(provider="postgresql", uri=uri)
+    _db = SQLXEngine(provider="postgresql", uri=uri, improved_error_log=False)
     await _db.connect()
     return _db
 
@@ -29,7 +28,7 @@ async def db_postgresql():
 @pytest.fixture(scope="session")
 async def db_mssql():
     uri = os.environ["DATABASE_URI_MSSQL"]
-    _db = SQLXEngine(provider="sqlserver", uri=uri)
+    _db = SQLXEngine(provider="sqlserver", uri=uri, improved_error_log=False)
     await _db.connect()
     return _db
 
@@ -37,9 +36,19 @@ async def db_mssql():
 @pytest.fixture(scope="session")
 async def db_mysql():
     uri = os.environ["DATABASE_URI_MYSQL"]
-    _db = SQLXEngine(provider="mysql", uri=uri)
+    _db = SQLXEngine(provider="mysql", uri=uri, improved_error_log=False)
     await _db.connect()
     return _db
+
+
+@pytest.fixture(name="all_dbs", scope="session", autouse=True)
+def get_all_dbs(db_sqlite, db_postgresql, db_mssql, db_mysql):
+    return {
+        "db_sqlite": db_sqlite,
+        "db_postgresql": db_postgresql,
+        "db_mssql": db_mssql,
+        "db_mysql": db_mysql,
+    }
 
 
 @pytest.fixture(name="table", scope="session")
@@ -96,3 +105,10 @@ def get_table_sql():
             );
         """,
     }
+
+
+@pytest.fixture(name="rows", scope="session")
+def get_rows():
+    with open("tests/rows.json", mode="r") as f:
+        data = json.loads(f.read())
+        return data
