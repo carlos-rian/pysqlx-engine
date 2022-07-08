@@ -59,6 +59,7 @@ def get_table_sql():
                 id          integer   PRIMARY KEY,
                 first_name  text      not null,
                 last_name   text      null,
+                age         integer   null,
                 email       text      null,
                 phone       text      null,
                 created_at  text      not null,
@@ -70,6 +71,7 @@ def get_table_sql():
                 id         serial        not null,
                 first_name varchar(100)  not null,
                 last_name  varchar(100)  null,
+                age        int           null,
                 email      text          null,
                 phone      text          null,
                 created_at timestamp     not null,
@@ -83,6 +85,7 @@ def get_table_sql():
                 id         int           not null IDENTITY(1,1),
                 first_name nvarchar(100) not null,
                 last_name  nvarchar(100) null,
+                age        int           null,
                 email      varchar(max)  null,
                 phone      varchar(max)  null,
                 created_at datetime      not null,
@@ -96,6 +99,7 @@ def get_table_sql():
                 id         int           not null auto_increment,
                 first_name nvarchar(100) not null,
                 last_name  nvarchar(100) null,
+                age        int           null,
                 email      text          null,
                 phone      text          null,
                 created_at datetime      not null,
@@ -112,3 +116,31 @@ def get_rows():
     with open("tests/rows.json", mode="r") as f:
         data = json.loads(f.read())
         return data
+
+
+@pytest.fixture(name="inserts", scope="session", autouse=True)
+def get_inserts(rows):
+    sql = """
+        INSERT INTO test_table(
+            first_name,
+            last_name,
+            age,
+            email,
+            phone,
+            created_at,
+            updated_at
+        ) VALUES ('{0}', '{1}', {2}, '{3}', '{4}', '{5}', '{6}');
+    """
+
+    return [
+        sql.format(
+            row.get("first_name"),
+            row.get("last_name"),
+            row.get("age"),
+            row.get("email"),
+            row.get("phone"),
+            row.get("created_at"),
+            row.get("updated_at"),
+        )
+        for row in rows
+    ]
