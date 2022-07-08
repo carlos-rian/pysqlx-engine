@@ -65,19 +65,6 @@ async def test_04_create_table_mysql(
     assert row_count == 0
 
 
-def get_insert():
-    return """
-        INSERT INTO test_table(
-            first_name,
-            last_name,
-            email,
-            phone,
-            created_at,
-            updated_at
-        ) VALUES ('?', '?', '?', '?', '?', '?');
-    """
-
-
 @pytest.mark.asyncio
 @pytest.mark.parametrize("name", ["db_sqlite", "db_postgresql", "db_mssql", "db_mysql"])
 async def test_05_check_table_was_created(name: str, all_dbs):
@@ -89,26 +76,14 @@ async def test_05_check_table_was_created(name: str, all_dbs):
     assert row is None
 
 
-# "db_sqlite", "db_mysql"
-# "db_postgresql", db_mssql
 @pytest.mark.asyncio
-@pytest.mark.parametrize("name", ["db_postgresql"])
-async def test_06_insert_one_hundred_rows(name: SQLXEngine, all_dbs, rows: List[Dict]):
+@pytest.mark.parametrize("name", ["db_sqlite", "db_mysql", "db_postgresql", "db_mssql"])
+async def test_06_insert_one_hundred_rows(
+    name: SQLXEngine, all_dbs: dict, inserts: List[Dict]
+):
     db = all_dbs.get(name)
     db: SQLXEngine = await db
-    sql = get_insert()
-    for row in rows:
-        params = [
-            row.get("first_name"),
-            row.get("last_name"),
-            row.get("email"),
-            row.get("phone"),
-            row.get("created_at"),
-            row.get("updated_at"),
-        ]
-        for i in range(sql.count("?")):
-            sql = sql.replace("?", params[i], 1)
-
+    for sql in inserts:
         resp = await db.execute(stmt=sql)
         assert isinstance(resp, int)
         assert resp == 1
