@@ -87,10 +87,15 @@ class AsyncEngine(AbstractEngine):
 
     async def _try_comunicate(self):
         try:
-            _, start_err = self.process.communicate(timeout=0.03)
-            stderr = start_err.decode()
+            stdout, stderr = self.process.communicate(timeout=0.03)
+
+            stderr = stderr.decode()
+            stdout = stdout.decode()
+
+            std = stdout or stderr
+
             try:
-                data = json.loads(stderr)
+                data = json.loads(std)
                 await self.disconnect()
                 raise StartEngineError(error=data)
             except (json.JSONDecodeError, TypeError):
