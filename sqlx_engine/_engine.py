@@ -1,4 +1,4 @@
-from typing import Dict, List, Literal, Optional, Union
+from typing import Dict, List, Literal, Optional, Tuple, Union
 
 from typing_extensions import LiteralString
 
@@ -106,15 +106,16 @@ class SQLXEngine:
         self.connected = False
         self._connection = None
 
-    async def execute(self, stmt: LiteralString) -> int:
+    async def execute(self, stmt: LiteralString, params: Union[List, Tuple] = []) -> int:
         """Execute statement to change, add or delete etc.
-
-        ROUTINES/PROCEDURES/FUNCTIONS 'Can execute without error' but has no returns.
+        ---
+        ROUTINES/PROCEDURES/FUNCTIONS Can execute without error, but has no returns.
 
         Always `COMMIT` and `ROLLBACK` is automatic!!! This is not changeable...
         if you transaction failed your receive a except with error.
+        ---
+        - `Exception Example`:
 
-        Exception example:
         ``` python
             sqlx_engine.core.errors.RawQueryError:
             {
@@ -130,23 +131,34 @@ class SQLXEngine:
             }
 
         ```
-        Args:
-            stmt (LiteralString): Insert, Update, Delete, Drop etc. `Query NO`!
+        ---
+        - `Args`:
+            * `stmt (LiteralString)`: Insert, Update, Delete, Drop etc. `Query NO`!
+            * `params (Union[List, Tuple])`: Values using positional arguments.
 
-        Returns:
-            int: Number of rows affected
+        ---
+        - `Usage`:
 
-        Raises:
-            SQLXEngineError |
-            UniqueViolationError |
-            ForeignKeyViolationError |
-            FieldNotFoundError |
-            RawQueryError |
-            MissingRequiredValueError |
-            InputError |
-            TableNotFoundError |
-            RecordNotFoundError |
-            GenericSQLXEngineError
+            >>> await db.execute(query="INSERT INTO table(name) values ('rian')")
+            >>> await db.execute(query="INSERT INTO table(name) values (?)", params=("rian"))
+
+        ---
+        - `Returns`:
+            * `int`: Number of rows affected
+
+        ---
+        - `Raises`:
+            * `RawQueryError`: Default
+            * `SQLXEngineError`
+            * `GenericSQLXEngineError`
+            * `UniqueViolationError`
+            * `ForeignKeyViolationError`
+            * `FieldNotFoundError`
+            * `MissingRequiredValueError`
+            * `InputError`
+            * `TableNotFoundError`
+            * `RecordNotFoundError`
+
         """
         if not self._connection:
             raise NotConnectedError("Not connected")
@@ -155,7 +167,7 @@ class SQLXEngine:
             operation="mutation",
             arguments={
                 "query": stmt,
-                "parameters": [],
+                "parameters": params,
             },
         )
         content = builder.build()
@@ -164,19 +176,36 @@ class SQLXEngine:
         return int(data["data"]["result"])
 
     async def query(
-        self, query: LiteralString, as_base_row: bool = True
+        self,
+        query: LiteralString,
+        params: Union[List, Tuple] = [],
+        as_base_row: bool = True,
     ) -> Optional[Union[List[BaseRow], List[Dict]]]:
-        """Query execute
-        Args:
-            query (LiteralString): Only query/select!
-            as_dict (bool): By default is True, BaseRow is an object typing.
+        """Execute query on db
+        ---
+        - `Args`:
+            * `query (LiteralString)`: Only query/select!
+            * `params (Union[List, Tuple])`: Values using positional arguments.
+            * `as_base_row (bool)`: By default is True, BaseRow is an object typing.
 
-        Returns:
-           List[BaseRow]: List of Pydantic Model
-           List[Dict]: List of dict
-           NoneType: None
-        Raises:
-            SQLXEngineError
+        ---
+        - `Usage`:
+
+            >>> await db.query(query="SELECT 1")
+            >>> await db.query(query="SELECT ?", params=(1))
+
+        ---
+        - `Returns`:
+            * `List[BaseRow]`: List of Pydantic Model
+            * `List[Dict]`: List of dict
+            * `NoneType`: None
+
+        ---
+        - `Raises`:
+            * `RawQueryError` Default
+            * `SQLXEngineError`
+            * `GenericSQLXEngineError`
+
         """
         if not self._connection:
             raise NotConnectedError("Not connected")
@@ -185,7 +214,7 @@ class SQLXEngine:
             operation="mutation",
             arguments={
                 "query": query,
-                "parameters": [],
+                "parameters": params,
             },
         )
         content = builder.build()
