@@ -6,7 +6,6 @@ import aiofiles
 from pydantic import BaseModel
 
 
-@lru_cache(maxsize=None)
 def get_open_port() -> int:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.bind(("", 0))
