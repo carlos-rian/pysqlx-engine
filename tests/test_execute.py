@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Dict, List, Literal
 
 import pytest
@@ -87,3 +88,54 @@ async def test_06_insert_one_hundred_rows(
         resp = await db.execute(stmt=sql)
         assert isinstance(resp, int)
         assert resp == 1
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("name", ["db_sqlite", "db_mysql", "db_postgresql", "db_mssql"])
+async def test_07_query_all_rows(name: SQLXEngine, all_dbs: dict):
+    db = all_dbs.get(name)
+    db: SQLXEngine = await db
+    rows = await db.query(query="SELECT * FROM test_table")
+    for row in rows:
+        assert isinstance(row.id, int)
+        assert isinstance(row.first_name, str)
+        assert isinstance(row.last_name, str) or row.last_name is None
+        assert isinstance(row.age, int) or row.age is None
+        assert isinstance(row.email, str) or row.email is None
+        assert isinstance(row.phone, str) or row.phone is None
+        # sqlite is str
+        assert isinstance(row.created_at, str) or isinstance(row.created_at, datetime)
+        assert isinstance(row.updated_at, str) or isinstance(row.updated_at, datetime)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("name", ["db_mysql", "db_postgresql", "db_mssql", "db_sqlite"])
+async def test_08_update_all_rows(name: SQLXEngine, all_dbs: dict, rows: list):
+    db = all_dbs.get(name)
+    db: SQLXEngine = await db
+    _rows = await db.query(query="SELECT id FROM test_table")
+
+    update = """
+        UPDATE test_table
+        SET first_name = '{name}',
+            updated_at = '2022-07-09 22:00:01'
+        WHERE id = {id}
+    """
+    query = "SELECT id, first_name FROM test_table WHERE id = {id}"
+    for row in _rows:
+        resp = await db.execute(stmt=update.format(name="test", id=row.id))
+        assert isinstance(resp, int)
+        assert resp == 1
+
+        new_row = await db.query(query=query.format(id=row.id))
+        assert isinstance(new_row[0].first_name, str)
+        assert new_row[0].first_name == "test"
+
+    for data, row in zip(rows, _rows):
+        resp = await db.execute(stmt=update.format(id=row.id, name=data["first_name"]))
+        assert isinstance(resp, int)
+        assert resp == 1
+
+        new_row = await db.query(query=query.format(id=row.id))
+        assert isinstance(new_row[0].first_name, str)
+        assert new_row[0].first_name == data["first_name"]
