@@ -9,7 +9,7 @@ import pytest
 from sqlx_engine import SQLXEngine
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture
 async def db_sqlite():
     uri = os.environ["DATABASE_URI_SQLITE"]
     _db = SQLXEngine(provider="sqlite", uri=uri, improved_error_log=False)
@@ -17,7 +17,7 @@ async def db_sqlite():
     return _db
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture
 async def db_postgresql():
     uri = os.environ["DATABASE_URI_POSTGRESQL"]
     _db = SQLXEngine(provider="postgresql", uri=uri, improved_error_log=False)
@@ -25,7 +25,7 @@ async def db_postgresql():
     return _db
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture
 async def db_mssql():
     uri = os.environ["DATABASE_URI_MSSQL"]
     _db = SQLXEngine(provider="sqlserver", uri=uri, improved_error_log=False)
@@ -33,7 +33,7 @@ async def db_mssql():
     return _db
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture
 async def db_mysql():
     uri = os.environ["DATABASE_URI_MYSQL"]
     _db = SQLXEngine(provider="mysql", uri=uri, improved_error_log=False)
@@ -41,7 +41,7 @@ async def db_mysql():
     return _db
 
 
-@pytest.fixture(name="all_dbs", scope="session", autouse=True)
+@pytest.fixture(name="all_dbs")
 def get_all_dbs(db_sqlite, db_postgresql, db_mssql, db_mysql):
     return {
         "db_sqlite": db_sqlite,
