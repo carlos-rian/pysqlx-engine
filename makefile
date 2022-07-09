@@ -1,10 +1,11 @@
-databases-tests:
+tests-databases:
 	docker-compose \
 	--file tests/docker/docker-compose.yml up \
-	--force-recreate \
-	--build 
+	--build \
+	--detach 
 
-test-coverage:
+tests-coverage:
+	make tests-databases && \
 	poetry run pytest tests -v -x \
 		--doctest-modules \
 		--ignore=tests/ \
