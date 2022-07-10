@@ -3,12 +3,14 @@ from datetime import datetime
 import pytest
 from sqlx_engine import SQLXEngine
 
+from tests.common import get_all_dbs
+
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("name", ["db_sqlite", "db_mysql", "db_postgresql", "db_mssql"])
-async def test_01_query_all_rows_with_base_row(name: SQLXEngine, all_dbs: dict):
-    db = all_dbs.get(name)
-    db: SQLXEngine = await db
+async def test_01_query_all_rows_with_base_row(name: SQLXEngine):
+    db = get_all_dbs(name)
+    db: SQLXEngine = await db()
     rows = await db.query(query="SELECT * FROM test_table")
     for row in rows:
         assert isinstance(row.id, int)
@@ -20,13 +22,14 @@ async def test_01_query_all_rows_with_base_row(name: SQLXEngine, all_dbs: dict):
         # sqlite is str
         assert isinstance(row.created_at, (datetime, str))
         assert isinstance(row.updated_at, (datetime, str))
+    await db.close()
 
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("name", ["db_sqlite", "db_mysql", "db_postgresql", "db_mssql"])
-async def test_02_query_all_rows_with_dict(name: SQLXEngine, all_dbs: dict):
-    db = all_dbs.get(name)
-    db: SQLXEngine = await db
+async def test_02_query_all_rows_with_dict(name: SQLXEngine):
+    db = get_all_dbs(name)
+    db: SQLXEngine = await db()
     rows = await db.query(query="SELECT * FROM test_table", as_base_row=False)
     for row in rows:
         assert isinstance(row, dict)
@@ -39,3 +42,4 @@ async def test_02_query_all_rows_with_dict(name: SQLXEngine, all_dbs: dict):
         # sqlite is str
         assert isinstance(row["created_at"], (str, datetime))
         assert isinstance(row["updated_at"], (str, datetime))
+    await db.close()

@@ -1,8 +1,9 @@
-from datetime import datetime
 from typing import Dict, List, Literal
 
 import pytest
 from sqlx_engine import SQLXEngine
+
+from tests.common import get_all_dbs
 
 
 async def remove_table(db: SQLXEngine):
@@ -25,6 +26,7 @@ async def test_01_create_table_sqlite(
     sql = table["sqlite"]
     row_count = await db.execute(sql)
     assert row_count == 0
+    await db.close()
 
 
 @pytest.mark.asyncio
@@ -38,6 +40,7 @@ async def test_02_create_table_postgresql(
     sql = table["postgresql"]
     row_count = await db.execute(sql)
     assert row_count == 0
+    await db.close()
 
 
 @pytest.mark.asyncio
@@ -51,6 +54,7 @@ async def test_03_create_table_mssql(
     sql = table["mssql"]
     row_count = await db.execute(sql)
     assert row_count == 0
+    await db.close()
 
 
 @pytest.mark.asyncio
@@ -64,13 +68,14 @@ async def test_04_create_table_mysql(
     sql = table["mysql"]
     row_count = await db.execute(sql)
     assert row_count == 0
+    await db.close()
 
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("name", ["db_sqlite", "db_postgresql", "db_mssql", "db_mysql"])
-async def test_05_check_table_was_created(name: str, all_dbs):
-    db = all_dbs.get(name)
-    db: SQLXEngine = await db
+async def test_05_check_table_was_created(name: str):
+    db = get_all_dbs(name)
+    db: SQLXEngine = await db()
     sql = "SELECT * FROM test_table;"
     row = await db.query(query=sql)
     await db.close()
@@ -79,22 +84,22 @@ async def test_05_check_table_was_created(name: str, all_dbs):
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("name", ["db_sqlite", "db_mysql", "db_postgresql", "db_mssql"])
-async def test_06_insert_one_hundred_rows(
-    name: SQLXEngine, all_dbs: dict, inserts: List[Dict]
-):
-    db = all_dbs.get(name)
-    db: SQLXEngine = await db
+async def test_06_insert_one_hundred_rows(name: SQLXEngine, inserts: List[Dict]):
+    db = get_all_dbs(name)
+    db: SQLXEngine = await db()
     for sql in inserts:
         resp = await db.execute(stmt=sql)
         assert isinstance(resp, int)
         assert resp == 1
 
+    await db.close()
+
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("name", ["db_mysql", "db_postgresql", "db_mssql", "db_sqlite"])
-async def test_07_update_all_rows(name: SQLXEngine, all_dbs: dict, rows: list):
-    db = all_dbs.get(name)
-    db: SQLXEngine = await db
+async def test_07_update_all_rows(name: SQLXEngine, rows: list):
+    db = get_all_dbs(name)
+    db: SQLXEngine = await db()
     _rows = await db.query(query="SELECT id FROM test_table")
 
     update = """
@@ -121,3 +126,5 @@ async def test_07_update_all_rows(name: SQLXEngine, all_dbs: dict, rows: list):
         new_row = await db.query(query=query.format(id=row.id))
         assert isinstance(new_row[0].first_name, str)
         assert new_row[0].first_name == data["first_name"]
+
+    await db.close()

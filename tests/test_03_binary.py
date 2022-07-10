@@ -1,8 +1,12 @@
 from io import StringIO
 from pathlib import Path
 
+import pytest
 from dotenv import load_dotenv
+from httpx import HTTPStatusError
+from sqlx_engine._binary.download import check_binary
 from sqlx_engine._binary.engine import Engine
+from sqlx_engine._config import config
 
 
 def test_01_platform_linux():
@@ -76,3 +80,47 @@ def test_08_get_path_custom():
     engine = Engine()
     path = engine.path
     assert path == Path(".")
+
+
+def test_09_linux_get_url():
+    engine = Engine()
+    url = engine.url
+    assert isinstance(url, str)
+    assert url.startswith("https://binaries.prisma.sh")
+    assert url.endswith("query-engine.gz")
+
+
+def test_10_windows_get_url():
+    engine = Engine()
+    config.platform_name = "windows"
+    url = engine.url
+    assert isinstance(url, str)
+    assert url.startswith("https://binaries.prisma.sh")
+    assert url.endswith("query-engine.exe.gz")
+
+
+def test_11_windows_get_url_without_dot_gz():
+    engine = Engine()
+    config.platform_name = "windows"
+    config.engine_url = config.engine_url.replace(".gz", "")
+    url = engine.url
+    assert isinstance(url, str)
+    assert url.startswith("https://binaries.prisma.sh")
+    assert url.endswith("query-engine.exe")
+
+
+def test_12_download_http_status_error():
+    engine = Engine()
+    engine_version = config.engine_version
+    path = config.global_temp_dir
+
+    config.global_temp_dir = Path(str(path).replace(engine_version, "error"))
+    config.engine_version = "error"
+
+    Path(engine._binary_path).unlink(missing_ok=True)
+
+    with pytest.raises(HTTPStatusError):
+        check_binary("test-binary")
+
+    config.engine_version = engine_version
+    config.global_temp_dir = path
