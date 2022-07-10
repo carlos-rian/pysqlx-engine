@@ -10,7 +10,7 @@ log: logging.Logger = logging.getLogger()
 
 
 @lru_cache(maxsize=None)
-def check_binary() -> str:
+def check_binary(*args, **kwargs) -> str:
     log.debug("Checking engine binary file.")
     ini = time()
     try:
@@ -18,6 +18,6 @@ def check_binary() -> str:
         path = engine.binary_path
         log.debug(f"Check binary ok. time: {time() - ini}")
         return path
-    except HTTPStatusError as error:
-        log.error("Error: Download of the prisma binary.")
-        raise error()
+    except HTTPStatusError:
+        log.error("Error: Download of the query binary.")
+        raise
