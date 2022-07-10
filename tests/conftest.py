@@ -6,49 +6,28 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 
 import pytest
-from sqlx_engine import SQLXEngine
+
+from tests import common
 
 
 @pytest.fixture
 async def db_sqlite():
-    uri = os.environ["DATABASE_URI_SQLITE"]
-    _db = SQLXEngine(provider="sqlite", uri=uri, improved_error_log=False)
-    await _db.connect()
-    return _db
+    return await common.db_sqlite()
 
 
 @pytest.fixture
 async def db_postgresql():
-    uri = os.environ["DATABASE_URI_POSTGRESQL"]
-    _db = SQLXEngine(provider="postgresql", uri=uri, improved_error_log=False)
-    await _db.connect()
-    return _db
+    return await common.db_postgresql()
 
 
 @pytest.fixture
 async def db_mssql():
-    uri = os.environ["DATABASE_URI_MSSQL"]
-    _db = SQLXEngine(provider="sqlserver", uri=uri, improved_error_log=False)
-    await _db.connect()
-    return _db
+    return await common.db_mssql()
 
 
 @pytest.fixture
 async def db_mysql():
-    uri = os.environ["DATABASE_URI_MYSQL"]
-    _db = SQLXEngine(provider="mysql", uri=uri, improved_error_log=False)
-    await _db.connect()
-    return _db
-
-
-@pytest.fixture(name="all_dbs")
-def get_all_dbs(db_sqlite, db_postgresql, db_mssql, db_mysql):
-    return {
-        "db_sqlite": db_sqlite,
-        "db_postgresql": db_postgresql,
-        "db_mssql": db_mssql,
-        "db_mysql": db_mysql,
-    }
+    return await common.db_mysql()
 
 
 @pytest.fixture(name="table", scope="session")
