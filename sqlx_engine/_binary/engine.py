@@ -16,17 +16,19 @@ log: logging.Logger = logging.getLogger()
 
 class Engine(BaseModel):
     name: str = "query-engine"
-    env: str = "ENGINE_BINARY"
+    env: str = "DIR_LOCAL_ENGINE_BINARY"
     _session: httpx.Client = httpx.Client()
     _binary_path: str = f"{Path(__file__).parent.absolute()}/.binary"
 
     def download(self) -> None:
+        # check .binary
         local_path = self._read_local_binary_path()
-        if local_path:
+        if self._read_local_binary_path() and Path(local_path).exists():
             log.debug(f"{self.name} is cached, skipping download")
             return
         url = self.url
         dest = self.path
+        # save .binary
         if dest.exists():
             log.debug(f"{self.name} is cached, skipping download")
             self._write_local_binary_path(to=str(dest.absolute()))
@@ -37,10 +39,8 @@ class Engine(BaseModel):
         log.debug(f"Downloaded {self.name} to {dest.absolute()}")
 
     def _download(self, url: str, to: str):
-        if Path(to).exists():
-            Path(to).parent.unlink()
-
         Path(to).parent.mkdir(parents=True, exist_ok=True)
+
         tmp = to + ".tmp"
         tar = to + ".gz.tmp"
 
