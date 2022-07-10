@@ -8,7 +8,7 @@ from pathlib import Path
 import httpx
 from pydantic import BaseModel
 
-from .const import ENGINE_URL, ENGINE_VERSION, GLOBAL_TEMP_DIR, check_extension
+from .._config import check_extension, config
 from .platform import binary_platform
 
 log: logging.Logger = logging.getLogger()
@@ -16,7 +16,7 @@ log: logging.Logger = logging.getLogger()
 
 class Engine(BaseModel):
     name: str = "query-engine"
-    env: str = "PRISMA_QUERY_ENGINE_BINARY"
+    env: str = "ENGINE_BINARY"
     _session: httpx.Client = httpx.Client()
     _binary_path: str = f"{Path(__file__).parent.absolute()}/.binary"
 
@@ -92,7 +92,7 @@ class Engine(BaseModel):
     @property
     def url(self) -> str:
         return check_extension(
-            ENGINE_URL.format(ENGINE_VERSION, binary_platform(), self.name)
+            config.engine_url.format(config.engine_version, binary_platform(), self.name)
         )
 
     @property
@@ -105,6 +105,6 @@ class Engine(BaseModel):
         binary_name = binary_platform()
         return Path(
             check_extension(
-                str(GLOBAL_TEMP_DIR.joinpath(f"prisma-{self.name}-{binary_name}"))
+                str(config.global_temp_dir.joinpath(f"prisma-{self.name}-{binary_name}"))
             )
         )

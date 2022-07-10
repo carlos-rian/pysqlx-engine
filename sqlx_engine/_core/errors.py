@@ -6,10 +6,10 @@ from pygments import highlight
 from pygments.formatters import TerminalFormatter
 from pygments.lexers import JsonLexer
 
+from .._config import config
 from ._base_error import GenericSQLXEngineError, SQLXEngineError
 from ._errors_mapping import COMMON_ERRORS_MAPPING, ENGINE_ERRORS_MAPPING
 from ._except_mapping import ERRORS_MAPPING
-from .config import config
 
 
 class AlreadyConnectedError(SQLXEngineError):

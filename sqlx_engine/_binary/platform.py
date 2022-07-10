@@ -4,29 +4,30 @@ import sys
 from functools import lru_cache
 from typing import Tuple
 
-from .const import PLATFORM_NAME
+from .._config import config
 
 
 @lru_cache(maxsize=None)
-def binary_platform() -> str:
-    if PLATFORM_NAME != "linux":
-        return PLATFORM_NAME
+def binary_platform(*args, **kwargs) -> str:
+    if config.platform_name != "linux":
+        return config.platform_name
 
     distro = linux_distro()
-    if distro == "alpine":
-        return "linux-musl"
-
     ssl = get_openssl()
-    return f"{distro}-openssl-{ssl}"
+
+    return "linux-musl" if distro == "alpine" else f"{distro}-openssl-{ssl}"
 
 
 def linux_distro() -> str:
-    distro_id, distro_id_like = _get_linux_distro_details()
-    if distro_id == "alpine":
-        return "alpine"
-    if any(distro in distro_id_like for distro in ["centos", "fedora", "rhel"]):
-        return "rhel"
-    return "debian"
+    dist_id, dist_like = _get_linux_distro_details()
+    types = {
+        "alpine": "alpine",
+        "rhel": "rhel",
+    }
+    _name = any([_d in dist_like for _d in ["centos", "fedora", "rhel"]])
+    distro = types.get(dist_id) or types.get("rhel" if _name else "")
+
+    return distro or "debian"  # default debian
 
 
 def _get_linux_distro_details() -> Tuple[str, str]:
@@ -52,8 +53,4 @@ def get_openssl() -> str:
 
 def parse_openssl_version(string: str) -> str:
     match = re.match(r"^OpenSSL\s(\d+\.\d+)\.\d+", string)
-    if match is None:
-        # default
-        return "1.1.x"
-
-    return match.group(1) + ".x"
+    return "1.1.x" if match is None else match.group(1) + ".x"

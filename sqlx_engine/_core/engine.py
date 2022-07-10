@@ -9,7 +9,7 @@ from typing import Any, Dict, List
 import httpx
 
 from .._binary import check_binary
-from .._binary.const import METHOD
+from .._config import config
 from . import common
 from .abc import AbstractEngine
 from .errors import (
@@ -138,7 +138,7 @@ class AsyncEngine(AbstractEngine):
         await self._check_connect()
 
     async def request(
-        self, method: METHOD, path: str, *, content: Any = None
+        self, method: config.method, path: str, *, content: Any = None
     ) -> Dict[str, Any]:
         if not self.url:
             raise NotConnectedError("Not connected to the engine")

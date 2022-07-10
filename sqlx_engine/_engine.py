@@ -2,9 +2,9 @@ from typing import Dict, List, Literal, Optional, Tuple, Union
 
 from typing_extensions import LiteralString
 
+from ._config import config
 from ._core.builder import QueryBuilder
 from ._core.common import BaseRow
-from ._core.config import config
 from ._core.engine import AsyncEngine as _AsyncEngine
 from ._core.errors import AlreadyConnectedError, NotConnectedError
 from ._core.parser import Deserialize
