@@ -1,3 +1,6 @@
+from sqlx_engine._core.errors import AlreadyConnectedError as AlreadyConnectedError
+from sqlx_engine._core.errors import NotConnectedError as NotConnectedError
+
 from ._core._base_error import GenericSQLXEngineError as GenericSQLXEngineError
 from ._core._base_error import SQLXEngineError as SQLXEngineError
 from ._core._except_mapping import FieldNotFoundError as FieldNotFoundError
