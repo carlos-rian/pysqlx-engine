@@ -91,26 +91,8 @@ async def test_06_insert_one_hundred_rows(
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("name", ["db_sqlite", "db_mysql", "db_postgresql", "db_mssql"])
-async def test_07_query_all_rows(name: SQLXEngine, all_dbs: dict):
-    db = all_dbs.get(name)
-    db: SQLXEngine = await db
-    rows = await db.query(query="SELECT * FROM test_table")
-    for row in rows:
-        assert isinstance(row.id, int)
-        assert isinstance(row.first_name, str)
-        assert isinstance(row.last_name, str) or row.last_name is None
-        assert isinstance(row.age, int) or row.age is None
-        assert isinstance(row.email, str) or row.email is None
-        assert isinstance(row.phone, str) or row.phone is None
-        # sqlite is str
-        assert isinstance(row.created_at, str) or isinstance(row.created_at, datetime)
-        assert isinstance(row.updated_at, str) or isinstance(row.updated_at, datetime)
-
-
-@pytest.mark.asyncio
 @pytest.mark.parametrize("name", ["db_mysql", "db_postgresql", "db_mssql", "db_sqlite"])
-async def test_08_update_all_rows(name: SQLXEngine, all_dbs: dict, rows: list):
+async def test_07_update_all_rows(name: SQLXEngine, all_dbs: dict, rows: list):
     db = all_dbs.get(name)
     db: SQLXEngine = await db
     _rows = await db.query(query="SELECT id FROM test_table")
