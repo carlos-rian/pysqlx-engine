@@ -79,14 +79,6 @@ class QueryBuilder:
 class AbstractNode(ABC):
     __slots__ = ()
 
-    @abstractmethod
-    def render(self) -> Optional[str]:
-        """Render the node to a string
-
-        None is returned if the node should not be rendered.
-        """
-        ...
-
     def should_render(self) -> bool:
         """If True, rendering of the node is skipped
 
@@ -123,20 +115,6 @@ class Node(AbstractNode):
         self.joiner = joiner
         self.indent = indent
         self.children = children if children is not None else []
-
-    def enter(self) -> Optional[str]:
-        """Get the string used to enter the node.
-
-        This string will be rendered *before* the children.
-        """
-        return None
-
-    def depart(self) -> Optional[str]:
-        """Get the string used to depart the node.
-
-        This string will be rendered *after* the children.
-        """
-        return None
 
     def render(self) -> Optional[str]:
         """Render the node and it's children and to string.
@@ -177,15 +155,6 @@ class Node(AbstractNode):
         """Add a child"""
         self.children.append(child)
 
-    def create_children(self) -> List[ChildType]:
-        """Create the node's children
-
-        If children are passed to the constructor, the children
-        returned from this method are used to extend the already
-        set children.
-        """
-        return []
-
     @classmethod
     def create(cls, builder: Optional[QueryBuilder] = None, **kwargs: Any) -> "Node":
         """Create the node and its children
@@ -209,8 +178,6 @@ class RootNode(Node):
 
     def render(self) -> str:
         content = super().render()
-        if not content:
-            raise RuntimeError("Could not generate query.")
         return content
 
 
@@ -221,11 +188,10 @@ class ResultNode(Node):
         super().__init__(indent=indent, **kwargs)
 
     def enter(self) -> str:
-        model = self.builder.model
-        if model is not None:
-            return f"result: {self.builder.method}{model}"
-
-        return f"result: {self.builder.method}"
+        # self.builder.model is None, model is empty string.
+        model = self.builder.model or ""
+        result = f"result: {self.builder.method}{model}"
+        return result
 
     def depart(self) -> Optional[str]:
         return None
@@ -263,81 +229,10 @@ class Arguments(Node):
         children: List[ChildType] = []
 
         for arg, value in self.arguments.items():
-            if value is None:
-                # ignore None values for convenience
-                continue
-
-            if isinstance(value, dict):
-                children.append(Key(arg, node=Data.create(self.builder, data=value)))
-            elif isinstance(value, ITERABLES):
-                # NOTE: we have a special case for execute_raw and query_raw
-                # here as prisma expects parameters to be passed as a json string
-                # value like "[\"John\",\"123\"]", and we encode twice to ensure
-                # that only the inner quotes are escaped
-                if self.builder.method in {"queryRaw", "executeRaw"}:
-                    children.append(f"{arg}: {dumps(dumps(value))}")
-                else:
-                    children.append(
-                        Key(arg, node=ListNode.create(self.builder, data=value))
-                    )
+            if isinstance(value, ITERABLES):
+                children.append(f"{arg}: {dumps(dumps(value))}")
             else:
                 children.append(f"{arg}: {dumps(value)}")
-
-        return children
-
-
-class Data(Node):
-    data: Mapping[str, Any]
-
-    __slots__ = ("data",)
-
-    def __init__(self, data: Mapping[str, Any], **kwargs: Any) -> None:
-        super().__init__(**kwargs)
-        self.data = data
-
-    def enter(self) -> str:
-        return "{"
-
-    def depart(self) -> str:
-        return "}"
-
-    def create_children(self) -> List[ChildType]:
-        children: List[ChildType] = []
-
-        for key, value in self.data.items():
-            if isinstance(value, dict):
-                children.append(Key(key, node=Data.create(self.builder, data=value)))
-            elif isinstance(value, (list, tuple, set)):
-                children.append(Key(key, node=ListNode.create(self.builder, data=value)))
-            else:
-                children.append(f"{key}: {dumps(value)}")
-
-        return children
-
-
-class ListNode(Node):
-    data: Iterable[Any]
-
-    __slots__ = ("data",)
-
-    def __init__(self, data: Iterable[Any], joiner: str = ",\n", **kwargs: Any) -> None:
-        super().__init__(joiner=joiner, **kwargs)
-        self.data = data
-
-    def enter(self) -> str:
-        return "["
-
-    def depart(self) -> str:
-        return "]"
-
-    def create_children(self) -> List[ChildType]:
-        children: List[ChildType] = []
-
-        for item in self.data:
-            if isinstance(item, dict):
-                children.append(Data.create(self.builder, data=item))
-            else:
-                children.append(dumps(item))
 
         return children
 
@@ -368,113 +263,11 @@ class Selection(Node):
     def should_render(self) -> bool:
         return bool(self.children)
 
-    def enter(self) -> str:
-        return "{"
-
-    def depart(self) -> str:
-        return "}"
-
     def create_children(self) -> List[ChildType]:
-        model = self.model
-        include = self.include
-        builder = self.builder
         children: List[ChildType] = []
-
-        # root_selection, if present overrides the default fields
-        # for a model as it is used by methods such as count()
-        # that do not support returning model fields
-        root_selection = self.root_selection
-        if root_selection is not None:
-            children.extend(root_selection)
-        elif model is not None:
-            children.extend(builder.get_default_fields(model))
-
-        if include is not None:
-            if model is None:
-                raise ValueError("Cannot include fields when model is None.")
-
-            for key, value in include.items():
-                if value is True:
-                    # e.g. posts { post_fields }
-                    children.append(
-                        Key(
-                            key,
-                            sep=" ",
-                            node=Selection.create(
-                                builder,
-                                include=None,
-                                model=builder.get_relational_model(
-                                    current_model=model, field=key
-                                ),
-                            ),
-                        )
-                    )
-                elif isinstance(value, dict):
-                    # e.g. given {'posts': {where': {'published': True}}} return
-                    # posts( where: { published: true }) { post_fields }
-                    args = value.copy()
-                    nested_include = args.pop("include", None)
-                    children.extend(
-                        [
-                            Key(
-                                key,
-                                sep="",
-                                node=Arguments.create(builder, arguments=args),
-                            ),
-                            Selection.create(
-                                builder,
-                                include=nested_include,
-                                model=builder.get_relational_model(
-                                    current_model=model, field=key
-                                ),
-                            ),
-                        ]
-                    )
-                elif value is False:
-                    continue
-                else:
-                    raise TypeError(
-                        f"Expected `bool` or `dict` include value but got {type(value)} instead."
-                    )
-
         return children
 
 
-class Key(AbstractNode):
-    key: str
-    sep: str
-    node: Node
-
-    __slots__ = (
-        "key",
-        "sep",
-        "node",
-    )
-
-    def __init__(self, key: str, node: Node, sep: str = ": ") -> None:
-        self.key = key
-        self.node = node
-        self.sep = sep
-
-    def render(self) -> str:
-        content = self.node.render()
-        if content:
-            return f"{self.key}{self.sep}{content}"
-        return f"{self.key}{self.sep}"
-
-
-@singledispatch
-def serializer(obj: Any):
-    """Single dispatch generic function for serializing objects to JSON"""
-    if inspect.isclass(obj):
-        typ = obj
-    else:
-        typ = type(obj)
-
-    raise TypeError(f"Type {typ} not serializable")
-
-
 def dumps(obj: Any, **kwargs: Any) -> str:
-    kwargs.setdefault("default", serializer)
     kwargs.setdefault("ensure_ascii", False)
     return json.dumps(obj, **kwargs)
