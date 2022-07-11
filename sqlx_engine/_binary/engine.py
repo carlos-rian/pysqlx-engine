@@ -16,7 +16,6 @@ log: logging.Logger = logging.getLogger()
 
 class Engine(BaseModel):
     name: str = "query-engine"
-    env: str = "DIR_LOCAL_ENGINE_BINARY"
     _session: httpx.Client = httpx.Client()
     _binary_path: str = f"{Path(__file__).parent.absolute()}/.binary"
 
@@ -97,11 +96,6 @@ class Engine(BaseModel):
 
     @property
     def path(self) -> Path:
-        env = environ.get(self.env)
-        if env is not None:
-            log.debug(f"Using environment variable location: {env} for {self.name}")
-            return Path(env)
-
         binary_name = binary_platform()
         return Path(
             check_extension(
