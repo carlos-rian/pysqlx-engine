@@ -1,0 +1,77 @@
+site_name: PySQLXEngine
+site_description: Python Async SQL Engines
+site_url: 'https://github.com/carlos-rian/pysqlx-engine'
+theme:
+  name: material
+  font:
+    code: Roboto Mono
+  palette:
+  - scheme: default
+    primary: black
+    accent: deep orange
+    toggle:
+      icon: material/lightbulb
+      name: Switch to dark mode
+  - scheme: slate
+    primary: black
+    accent: deep orange
+    toggle:
+      icon: material/lightbulb-outline
+      name: Switch to light mode
+  features:
+  - search.suggest
+  - search.highlight
+  - search.share
+  - search.suggest
+  - navigation.expand
+  - navigation.top
+  - header.autohide
+  icon:
+    repo: fontawesome/brands/github-alt
+  logo: img/favicon/favicon-16x16.png
+  favicon: img/favicon/favicon.ico
+  language: en
+repo_name: 'PySQLXEngine'
+repo_url: 'https://github.com/carlos-rian/pysqlx-engine'
+edit_uri: ''
+plugins:
+  - search
+  - mkdocs-video:
+      mark: "custom-marker"
+
+nav:
+- Home: index.md
+
+markdown_extensions:
+- toc:
+    permalink: true
+- markdown.extensions.codehilite:
+    guess_lang: false
+- markdown_include.include:
+    base_path: docs
+- pymdownx.emoji:
+    emoji_index: !!python/name:materialx.emoji.twemoji
+    emoji_generator: !!python/name:materialx.emoji.to_svg
+- admonition
+- attr_list
+- codehilite
+- extra
+- pymdownx.tabbed
+- pymdownx.smartsymbols
+- pymdownx.superfences:
+    custom_fences:
+    - name: mermaid
+      class: mermaid
+      format: !!python/name:pymdownx.superfences.fence_div_format ''
+copyright: Copyright &copy; 2020 - 2022 Carlos Rian
+
+extra_css:
+- css/termynal.css
+- css/custom.css
+- css/extras.css
+extra_javascript:
+- https://unpkg.com/mermaid@8.4.6/dist/mermaid.min.js
+- https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js
+- js/termynal.js
+- js/custom.js
+- js/table.js
