@@ -2,7 +2,6 @@ import gzip
 import logging
 import os
 import shutil
-from os import environ
 from pathlib import Path
 
 import httpx

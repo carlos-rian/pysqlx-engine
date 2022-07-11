@@ -1,7 +1,6 @@
 import json
 from typing import Any, Dict, List
 
-import httpx
 from pygments import highlight
 from pygments.formatters import TerminalFormatter
 from pygments.lexers import JsonLexer

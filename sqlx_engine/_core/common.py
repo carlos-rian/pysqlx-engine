@@ -1,5 +1,4 @@
 import socket
-from functools import lru_cache
 from pathlib import Path
 
 import aiofiles
