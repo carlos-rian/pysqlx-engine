@@ -31,7 +31,7 @@ p, span, a {
     transition: transform .25s cubic-bezier(.1,.7,.1,1),box-shadow .25s !important;
 }
 .md-header__button.md-logo img {
-    width: 110px;
+    width: 150px;
     height: auto;
 }
 .md-nav__link {

@@ -1,6 +1,9 @@
-# Welcome to MkDocs
+# **PySQLXEngine**
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+<p align="center">
+  <a href="https://github.com/carlos-rian/pysqlx-engine"><img src="./img/logo-text.png" alt="PySQLXEngine Logo"></a>
+</p>
+
 
 ## Commands
 

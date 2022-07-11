@@ -28,7 +28,7 @@ theme:
   - header.autohide
   icon:
     repo: fontawesome/brands/github-alt
-  logo: img/favicon/favicon-16x16.png
+  logo: img/logo2.png
   favicon: img/favicon/favicon.ico
   language: en
 repo_name: 'PySQLXEngine'
