@@ -28,10 +28,10 @@ class EngineRequestError(SQLXEngineError):
     ...
 
 
-class UnprocessableEntityError(SQLXEngineError):
-    def __init__(self, resp: httpx.Response, *args) -> None:
-        error_msg = f"status_code: {resp.status_code} -> body: {resp.json()}"
-        super().__init__(error_msg, *args)
+# class UnprocessableEntityError(SQLXEngineError):
+#    def __init__(self, resp: httpx.Response, *args) -> None:
+#        error_msg = f"status_code: {resp.status_code} -> body: {resp.json()}"
+#        super().__init__(error_msg, *args)
 
 
 class EngineError(SQLXEngineError):

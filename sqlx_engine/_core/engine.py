@@ -11,22 +11,20 @@ import httpx
 from .._binary import check_binary
 from .._config import config
 from . import common
-from .abc import AbstractEngine
-from .errors import (
+from .errors import (  # UnprocessableEntityError,
     AlreadyConnectedError,
     BaseStartEngineError,
     EngineConnectionError,
     EngineRequestError,
     NotConnectedError,
     StartEngineError,
-    UnprocessableEntityError,
     handler_error,
 )
 
 log: logging.Logger = logging.getLogger()
 
 
-class AsyncEngine(AbstractEngine):
+class AsyncEngine:
     __slots__ = (
         "db_uri",
         "db_provider",
@@ -100,7 +98,7 @@ class AsyncEngine(AbstractEngine):
                 raise StartEngineError(error=data)
             except (json.JSONDecodeError, TypeError):
                 await self.disconnect()
-                raise BaseStartEngineError(stderr)
+                raise BaseStartEngineError(std)
         except subprocess.TimeoutExpired:
             pass
 
@@ -169,8 +167,9 @@ class AsyncEngine(AbstractEngine):
 
             return response
 
-        elif resp.status == 422:
-            raise UnprocessableEntityError(resp)
+        # unused
+        # elif resp.status == 422:
+        #    raise UnprocessableEntityError(resp)
 
         raise EngineRequestError(f"{resp.status_code}: {resp.text}")
 
