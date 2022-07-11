@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+from pathlib import Path
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
@@ -8,6 +9,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 import pytest
 
 from tests import common
+
+Path("sqlx_engine/_binary/.binary").unlink(missing_ok=True)
 
 
 @pytest.fixture
