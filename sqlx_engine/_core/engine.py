@@ -55,6 +55,14 @@ class AsyncEngine:
         self.connected = False
         self._binary_path: Path = None
 
+    def __del__(self):
+        if self.process:
+            self.url = None
+            self.process.kill()
+            self.process = None
+            self.connected = False
+            self.session = None
+
     async def _close(self):
         if self.session and not self.session.is_closed:
             await self.session.aclose()

@@ -154,3 +154,18 @@ def test_13_aengine_handler_error_not_mapping_generic_sqlite():
     errors = []
     with pytest.raises(GenericSQLXEngineError):
         handler_error(errors=errors)
+
+
+@pytest.mark.asyncio
+async def test_14_aengine_auto_close_connection():
+    aengine = aengine = AsyncEngine(
+        db_uri=os.getenv("DATABASE_URI_SQLITE"), db_provider="sqlite"
+    )
+    await aengine.connect()
+
+    aengine.__del__()
+
+    assert aengine.url is None
+    assert aengine.connected == False
+    assert aengine.session is None
+    assert aengine.process is None
