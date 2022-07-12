@@ -10,25 +10,26 @@ theme:
     primary: black
     accent: deep orange
     toggle:
-      icon: material/lightbulb
+      icon: material/toggle-switch-off-outline
       name: Switch to dark mode
   - scheme: slate
     primary: black
     accent: deep orange
     toggle:
-      icon: material/lightbulb-outline
+      icon: material/toggle-switch
       name: Switch to light mode
   features:
-  - search.suggest
-  - search.highlight
-  - search.share
-  - search.suggest
-  - navigation.expand
-  - navigation.top
-  - header.autohide
+    - search.suggest
+    - search.highlight
+    - search.share
+    - search.suggest
+    - navigation.expand
+    - navigation.top
+    
+    - header.autohide
   icon:
     repo: fontawesome/brands/github-alt
-  logo: img/logo2.png
+  logo: img/favicon/icon.png
   favicon: img/favicon/favicon.ico
   language: en
 repo_name: 'PySQLXEngine'
@@ -43,26 +44,28 @@ nav:
 - Home: index.md
 
 markdown_extensions:
-- toc:
-    permalink: true
-- markdown.extensions.codehilite:
-    guess_lang: false
-- markdown_include.include:
-    base_path: docs
-- pymdownx.emoji:
-    emoji_index: !!python/name:materialx.emoji.twemoji
-    emoji_generator: !!python/name:materialx.emoji.to_svg
-- admonition
-- attr_list
-- codehilite
-- extra
-- pymdownx.tabbed
-- pymdownx.smartsymbols
-- pymdownx.superfences:
-    custom_fences:
-    - name: mermaid
-      class: mermaid
-      format: !!python/name:pymdownx.superfences.fence_div_format ''
+  - toc:
+      permalink: true
+  - markdown.extensions.codehilite:
+      guess_lang: false
+  - markdown_include.include:
+      base_path: docs
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - admonition
+  - attr_list
+  - extra
+  - pymdownx.smartsymbols
+
+  - pymdownx.superfences:
+      custom_fences:
+      - name: mermaid
+        class: mermaid
+        format: !!python/name:pymdownx.superfences.fence_div_format ''
+  - pymdownx.tabbed:
+      alternate_style: true
+
 copyright: Copyright &copy; 2020 - 2022 Carlos Rian
 
 extra_css:
