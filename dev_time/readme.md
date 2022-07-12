@@ -9,3 +9,4 @@ Date: 2022-07-10 | Day: Sunday   | Start: 09:46:00h | End: 11:30:00h
 Date: 2022-07-10 | Day: Sunday   | Start: 16:22:00h | End: 18:55:00h
 Date: 2022-07-11 | Day: Monday   | Start: 08:56:00h | End: 15:22:00h
 Date: 2022-07-11 | Day: Monday   | Start: 15:50:00h | End: 19:07:00h
+Date: 2022-07-12 | Day: Tuesday  | Start: 09:09:00h | End:
