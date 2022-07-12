@@ -8,13 +8,13 @@ theme:
   palette:
   - scheme: default
     primary: black
-    accent: deep orange
+    accent: indigo
     toggle:
       icon: material/toggle-switch-off-outline
       name: Switch to dark mode
   - scheme: slate
     primary: black
-    accent: deep orange
+    accent: indigo
     toggle:
       icon: material/toggle-switch
       name: Switch to light mode
@@ -32,7 +32,7 @@ theme:
   logo: img/favicon/icon.png
   favicon: img/favicon/favicon.ico
   language: en
-repo_name: 'PySQLXEngine'
+repo_name: 'carlos-rian/pysqlx-engine'
 repo_url: 'https://github.com/carlos-rian/pysqlx-engine'
 edit_uri: ''
 plugins:
@@ -42,6 +42,7 @@ plugins:
 
 nav:
 - Home: index.md
+- Usage: usage.md
 
 markdown_extensions:
   - toc:

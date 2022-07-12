@@ -60,7 +60,7 @@ p, span, a {
 .md-typeset .headerlink:focus, .md-typeset .headerlink:hover, .md-typeset :target>.headerlink {
     color: var(--primary);
 }
-.md-nav__link:focus, .md-nav__link:hover {
+/*.md-nav__link:focus, .md-nav__link:hover {
     color: var(--primary);
 }
 .md-typeset a {
@@ -104,12 +104,13 @@ span.md-ellipsis {
 }
 span.md-ellipsis::before {
     content: '/';
-    color: var(--primary);
+    color: #fd9827 !important;
     font-size: 33px;
     position: absolute;
     top: 0px;
     left: -14px;
 }
+/*
 .md-footer {
     background: var(--primary);
 }
@@ -117,7 +118,7 @@ span.md-ellipsis::before {
     padding: 0;
     background: var(--dark-gray);
 }
-/*
+
 p img,
 p iframe {
     max-width: 750px !important;
