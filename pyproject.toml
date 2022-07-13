@@ -10,7 +10,7 @@ repository = "https://github.com/carlos-rian/pysqlx-engine"
 keywords = ["async", "database", "sql", "engine"]
 
 packages = [
-    { include = "sqlx_engine", from = "sqlx_engine" },
+    { include = "sqlx_engine"},
 ]
 classifiers = [
     "Topic :: Database",
