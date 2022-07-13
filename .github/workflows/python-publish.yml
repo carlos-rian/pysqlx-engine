@@ -29,10 +29,10 @@ jobs:
       with:
         python-version: '3.x'
     
-    env:
-      POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}
-      POETRY_HTTP_BASIC_PYPI_USERNAME: carlos.rian
-      POETRY_HTTP_BASIC_PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      env:
+        POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}
+        POETRY_HTTP_BASIC_PYPI_USERNAME: carlos.rian
+        POETRY_HTTP_BASIC_PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
 
     - name: Update PIP
       run: |
