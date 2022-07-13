@@ -16,6 +16,7 @@ on: [push]
 permissions:
   contents: read
 
+
 jobs:
   deploy:
 
@@ -27,6 +28,11 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: '3.x'
+    
+    env:
+      POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}
+      POETRY_HTTP_BASIC_PYPI_USERNAME: carlos.rian
+      POETRY_HTTP_BASIC_PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
 
     - name: Update PIP
       run: |
@@ -38,9 +44,10 @@ jobs:
       
     - name: Install dependences
       run: python -m poetry install --no-dev
-        
+
     - name: Build package
       run: python -m poetry build
     
     - name: Publish package
-      run: python -m poetry publish
+      run: |
+        python -m poetry publish
