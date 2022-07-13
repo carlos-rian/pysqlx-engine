@@ -35,7 +35,7 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install --user poetry
         python -m poetry shell
-        python -m poetry install
+        python -m pip install -r requirements.txt
     - name: Export envs
       run: |
         export POETRY_PYPI_TOKEN_PYPI=${{ secrets.PYPI_API_TOKEN }}
