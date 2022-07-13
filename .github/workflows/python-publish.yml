@@ -49,4 +49,4 @@ jobs:
       run: python -m poetry build
     
     - name: Publish package
-      run: python -m poetry publish --build
+      run: python -m poetry publish
