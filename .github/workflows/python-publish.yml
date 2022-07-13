@@ -37,7 +37,7 @@ jobs:
 
       
     - name: Install dependences
-      run: python -m poetry install
+      run: python -m poetry install --no-dev
 
     - name: Export envs
       run: |
