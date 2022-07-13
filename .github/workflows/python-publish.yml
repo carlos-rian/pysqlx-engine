@@ -38,12 +38,6 @@ jobs:
       
     - name: Install dependences
       run: python -m poetry install --no-dev
-
-    - name: Export envs
-      run: |
-        export POETRY_PYPI_TOKEN_PYPI=${{ secrets.PYPI_API_TOKEN }}
-        export POETRY_HTTP_BASIC_PYPI_USERNAME="carlos.rian"
-        export POETRY_HTTP_BASIC_PYPI_PASSWORD=${{ secrets.PYPI_PASSWORD }}
         
     - name: Build package
       run: python -m poetry build
