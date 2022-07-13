@@ -36,7 +36,7 @@ jobs:
       run: python -m pip install --user poetry
 
     - name: Enable Poetry
-      run: python -m poetry --version
+      run: python -m poetry shell
       
     #- name: Install dependences
     #  run: python -m poetry install
