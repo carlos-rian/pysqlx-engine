@@ -42,7 +42,7 @@ plugins:
 
 nav:
 - Home: index.md
-- Usage: usage.md
+- tutorial.md
 
 markdown_extensions:
   - toc:
