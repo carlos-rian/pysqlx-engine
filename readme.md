@@ -60,3 +60,24 @@ Poetry
 ```console
 $ poetry add pysqlx-engine
 ```
+
+
+## Example
+
+
+```python
+import asyncio
+
+from sqlx_engine import SQLXEngine
+
+uri = "file:./db.db"
+db = SQLXEngine(provider="sqlite", uri=uri)
+
+async def main():
+    await db.connect()
+    rows = await db.query(query="select 1 as number")
+    print(rows)
+    # output: [ BaseRow(number=1) ]
+
+asyncio.run(main())
+```
