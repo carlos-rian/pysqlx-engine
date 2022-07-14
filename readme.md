@@ -64,6 +64,7 @@ $ poetry add pysqlx-engine
 
 ## Example
 
+* Create `main.py` file.
 
 ```python
 import asyncio
@@ -77,7 +78,17 @@ async def main():
     await db.connect()
     rows = await db.query(query="select 1 as number")
     print(rows)
-    # output: [ BaseRow(number=1) ]
 
 asyncio.run(main())
 ```
+
+* Run it
+
+<div class="termy">
+
+```console
+$ python3 main.py
+
+[BaseRow(number=1)]
+```
+</div>
