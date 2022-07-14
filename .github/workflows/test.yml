@@ -27,7 +27,7 @@ jobs:
           key: ${{ runner.os }}-python-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml') }}-test-v02
       
       - name: Docker Compose Up
-        run:  docker-compose up --file tests/docker/docker-compose.yml --build --detach
+        run:  docker-compose up --build --detach
       
       - name: Check Containers
         run: docker ps -a && sleep 20
