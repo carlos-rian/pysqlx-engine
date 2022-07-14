@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "pysqlx-engine"
 
-version = "0.1.6"
+version = "0.1.7"
 description = "Python Async SQL Engines"
 authors = ["carlos.rian <crian.rian@gmail.com>"]
 license = "MIT"

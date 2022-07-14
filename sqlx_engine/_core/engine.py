@@ -183,7 +183,8 @@ class AsyncEngine:
 
     async def _check_connect(self) -> None:
         last_err = None
-        for _ in range(int(self.db_timeout / 0.01)):
+        timeout = self.db_timeout or 30
+        for _ in range(int(timeout / 0.01)):
             try:
                 await self.request("GET", "/status")
                 self.connected = True

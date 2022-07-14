@@ -82,7 +82,7 @@ class SQLXEngine:
         Args:
             timeout in sec (int, optional):
             You can change the value if your database is slow to receive a new connection
-            Defaults to 10.
+            Defaults to 10. None to remove timeout.
         """
         if self._connection:
             raise AlreadyConnectedError("Already connected to the engine")
