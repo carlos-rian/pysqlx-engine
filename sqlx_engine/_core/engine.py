@@ -29,6 +29,7 @@ class AsyncEngine:
         "db_uri",
         "db_provider",
         "db_timeout",
+        "connect_timeout",
         "url",
         "process",
         "session",
@@ -41,6 +42,7 @@ class AsyncEngine:
         db_uri: str,
         db_provider: str,
         db_timeout: int = 10,
+        connect_timeout: int = 10,
         url: str = None,
         process: subprocess.Popen = None,
         session: httpx.AsyncClient = None,
@@ -48,6 +50,7 @@ class AsyncEngine:
         self.db_uri = db_uri
         self.db_provider = db_provider
         self.db_timeout = db_timeout
+        self.connect_timeout = connect_timeout
 
         self.url: str = url
         self.process: subprocess.Popen = process
@@ -183,8 +186,7 @@ class AsyncEngine:
 
     async def _check_connect(self) -> None:
         last_err = None
-        timeout = self.db_timeout or 30
-        for _ in range(int(timeout / 0.01)):
+        for _ in range(int(self.connect_timeout / 0.01)):
             try:
                 await self.request("GET", "/status")
                 self.connected = True

@@ -21,6 +21,7 @@ class SQLXEngine:
 
     `providers(str)`: postgresql, mysql, sqlserver or sqlite
     `uri(str)`:  Connection values.
+    `timeout(int)`: Default 10 sec, used to close the connection after this time. Or None to removed timeout.
     `improved_error_log(bool)`: Default True. Returns an error in json format with colors.
 
     Usage:
@@ -51,12 +52,13 @@ class SQLXEngine:
     ```
     """
 
-    __slots__ = ("provider", "uri", "connected", "_connection")
+    __slots__ = ("provider", "uri", "timeout", "connected", "_connection")
 
     def __init__(
         self,
         provider: Literal["postgresql", "mysql", "sqlserver", "sqlite"],
         uri: str,
+        timeout: int = 10,
         improved_error_log: bool = True,
     ) -> None:
         _providers = ["postgresql", "mysql", "sqlserver", "sqlite"]
@@ -70,6 +72,7 @@ class SQLXEngine:
         self.uri = uri
         self.provider = provider
         self.connected: bool = False
+        self.timeout: int = timeout
         self._connection: _AsyncEngine = None
 
         config.improved_error_log = improved_error_log
@@ -80,16 +83,19 @@ class SQLXEngine:
         database checked and a connection is created with it.
 
         Args:
-            timeout in sec (int, optional):
+            timeout in sec (int): time max to try connect with db.
             You can change the value if your database is slow to receive a new connection
-            Defaults to 10. None to remove timeout.
+            Defaults to 10 sec.
         """
+        if not isinstance(timeout, (int, float)):
+            raise ValueError("Invalid timeout, timeout must be a number.")
         if self._connection:
             raise AlreadyConnectedError("Already connected to the engine")
         self._connection = _AsyncEngine(
             db_uri=self.uri,
             db_provider=self.provider,
-            db_timeout=timeout,
+            db_timeout=self.timeout,
+            connect_timeout=timeout
         )
         await self._connection.connect()
         self.connected = self._connection.connected
@@ -220,5 +226,5 @@ class SQLXEngine:
         resp = data["data"]["result"]
         if resp:
             rows = Deserialize(rows=resp, as_base_row=as_base_row)
-            return list(rows.deserialize())
+            return rows.deserialize()
         return None
