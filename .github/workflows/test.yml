@@ -28,14 +28,10 @@ jobs:
       
       - name: Docker Compose Up
         run: docker-compose up --file tests/docker/docker-compose.yml --build --detach 
-          
-      - name: Install Flit
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: pip install flit
         
       - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: flit install --symlink
+        run: pip install -r requirements-dev.txt
         
       - name: Test
         run: pytest --cov=sqlx_engine --ignore=tests --cov-report=term-missing:skip-covered --cov-report=xml tests ${@}
