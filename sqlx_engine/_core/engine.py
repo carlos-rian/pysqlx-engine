@@ -72,7 +72,7 @@ class AsyncEngine:
         if self.process:
             raise AlreadyConnectedError("Already connected to the engine")
 
-        self.session: httpx.AsyncClient = httpx.AsyncClient()
+        self.session: httpx.AsyncClient = httpx.AsyncClient(timeout=self.db_timeout)
         self._binary_path = check_binary()
 
         try:
@@ -199,5 +199,7 @@ class AsyncEngine:
                 last_err = err
 
         await self._try_comunicate()
+
+        await self.disconnect()
 
         raise EngineConnectionError("Could not connect to the engine") from last_err

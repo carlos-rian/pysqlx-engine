@@ -33,3 +33,16 @@ services:
       - 4444:1433
     networks:
       - default
+  
+  mariadb:
+    image: mariadb
+    container_name: mariadb
+    restart: always
+    environment:
+      MARIADB_DATABASE: engine
+      MARIADB_ROOT_PASSWORD: Build!Test321
+    
+    ports:
+      - 4445:3808
+    networks:
+      - default
