@@ -26,7 +26,7 @@ TYPES = {
     # not implement
     "bytes": Any,  # bytes
     "enum": Any,  # Enum
-    "null": None,
+    "null": Any,
 }
 
 
