@@ -8,17 +8,17 @@
 </p>
 
 <p align="center">
-<a href="/" target="_blank">
-    <img src="https://github.com/tiangolo/fastapi/workflows/Test/badge.svg?event=push&branch=master" alt="Test">
+<a href="https://github.com/carlos-rian/pysqlx-engine/actions?query=workflow%3ATest+event%3Apush+branch%3Amain" target="_blank">
+    <img src="https://github.com/carlos-rian/pysqlx-engine/workflows/Test/badge.svg?event=push&branch=main" alt="Test">
 </a>
-<a href="/" target="_blank">
-    <img src="https://img.shields.io/codecov/c/github/tiangolo/fastapi?color=%2334D058" alt="Coverage">
+<a href="https://app.codecov.io/gh/carlos-rian/pysqlx-engine" target="_blank">
+    <img src="https://img.shields.io/codecov/c/github/carlos-rian/pysqlx-engine?color=%2334D058" alt="Coverage">
 </a>
-<a href="https://pypi.org/project/guvicorn-logger" target="_blank">
-    <img src="https://img.shields.io/pypi/v/guvicorn-logger?color=%2334D058&label=pypi%20package" alt="Package version">
+<a href="https://pypi.org/project/pysqlx-engine" target="_blank">
+    <img src="https://img.shields.io/pypi/v/pysqlx-engine?color=%2334D058&label=pypi%20package" alt="Package version">
 </a>
-<a href="https://pypi.org/project/guvicorn-logger" target="_blank">
-    <img src="https://img.shields.io/pypi/pyversions/guvicorn-logger.svg?color=%2334D058" alt="Supported Python versions">
+<a href="https://pypi.org/project/pysqlx-engine" target="_blank">
+    <img src="https://img.shields.io/pypi/pyversions/pysqlx-engine.svg?color=%2334D058" alt="Supported Python versions">
 </a>
 </p>
 
