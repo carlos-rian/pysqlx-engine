@@ -205,8 +205,9 @@ test.py
 htmlcov/
 .tox/
 .nox/
-#.coverage
-#.coverage.*
+.coverage
+.coverage.*
+/tests/results/*
 .cache
 nosetests.xml
 coverage.xml
