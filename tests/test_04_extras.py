@@ -169,3 +169,11 @@ async def test_14_aengine_auto_close_connection():
     assert aengine.connected == False
     assert aengine.session is None
     assert aengine.process is None
+
+
+@pytest.mark.asyncio
+async def test_14_engine_connect_timeout_none():
+    aengine = SQLXEngine(uri=os.getenv("DATABASE_URI_SQLITE"), provider="sqlite")
+
+    with pytest.raises(ValueError):
+        await aengine.connect(timeout=None)
