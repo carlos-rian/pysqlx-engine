@@ -42,8 +42,13 @@ class Deserialize:
     def deserialize(self):
         if self.as_base_row:
             self._create_base_types(self.rows[0])
-        data = [self._get_row(row=row) for row in self.rows]
-        return parse_obj_as(List[self._model], data)
+        mapper = map(self._get_row, self.rows)
+        if not self.as_base_row:
+            return mapper
+        return map(self._to_model, mapper)
+
+    def _to_model(self, row: dict) -> BaseRow:
+        return self._model(**row)
 
     def _create_base_types(self, first_row: dict):
         for key in first_row.keys():

@@ -95,7 +95,7 @@ class SQLXEngine:
             db_uri=self.uri,
             db_provider=self.provider,
             db_timeout=self.timeout,
-            connect_timeout=timeout
+            connect_timeout=timeout,
         )
         await self._connection.connect()
         self.connected = self._connection.connected
@@ -226,5 +226,5 @@ class SQLXEngine:
         resp = data["data"]["result"]
         if resp:
             rows = Deserialize(rows=resp, as_base_row=as_base_row)
-            return rows.deserialize()
+            return list(rows.deserialize())
         return None
