@@ -1,9 +1,16 @@
 name: Publish Github Pages
 
 on:
-  push:
-    branches: 
+  pull_request:
+    branches:
       - main
+    paths:
+      - '**.md'
+      - '**.css'
+      - '**.js'
+      - '**.png'
+      - 'docs/*'
+      - 'mkdocs.yml'
 
 jobs:
   deploy:
