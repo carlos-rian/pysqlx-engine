@@ -3,7 +3,7 @@ from decimal import Decimal
 from typing import Any, Dict, List, Tuple
 from uuid import UUID
 
-from pydantic import Json, create_model
+from pydantic import Json, create_model, parse_obj_as
 
 from .common import BaseRow
 
@@ -26,7 +26,7 @@ TYPES = {
     # not implement
     "bytes": Any,  # bytes
     "enum": Any,  # Enum
-    "null": None,
+    "null": Any,
 }
 
 
@@ -42,11 +42,17 @@ class Deserialize:
     def deserialize(self):
         if self.as_base_row:
             self._create_base_types(self.rows[0])
-        return map(self._get_row, self.rows)
+        mapper = map(self._get_row, self.rows)
+        if not self.as_base_row:
+            return mapper
+        return map(self._to_model, mapper)
+
+    def _to_model(self, row: dict) -> BaseRow:
+        return self._model(**row)
 
     def _create_base_types(self, first_row: dict):
         for key in first_row.keys():
-            _, _type = self._mapping_type(**first_row[key])
+            _type = TYPES.get(first_row[key]["prisma__type"], Any)
             self._base_model_type.update({key: (_type, None)})
         self._create_model()
 
@@ -57,12 +63,5 @@ class Deserialize:
     def _get_row(self, row: dict):
         mapper = {}
         for key in row.keys():
-            value, _ = self._mapping_type(**row[key])
-            mapper.update({key: value})
-        if self.as_base_row:
-            return self._model.parse_obj(mapper)
+            mapper.update({key: row[key]["prisma__value"]})
         return mapper
-
-    def _mapping_type(self, prisma__type: TYPES, prisma__value: Any) -> Tuple:
-        _type = TYPES.get(prisma__type, Any)
-        return (prisma__value, _type)
