@@ -13,6 +13,9 @@ jobs:
     steps:
       - name: Install HTTPX
         run: python3 -m pip install httpx
+      
+      - name: List DIR
+        run: ls -l
 
       - name: Update PyProject
         run: python3 toml_version.py
