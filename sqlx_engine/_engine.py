@@ -1,13 +1,18 @@
 from types import TracebackType
 from typing import Dict, List, Literal, Optional, Type, Union
 
+import httpx
 from typing_extensions import LiteralString
 
 from ._config import config
 from ._core.builder import QueryBuilder
 from ._core.common import BaseRow
 from ._core.engine import AsyncEngine as _AsyncEngine
-from ._core.errors import AlreadyConnectedError, NotConnectedError
+from ._core.errors import (
+    AlreadyConnectedError,
+    NotConnectedError,
+    SQLXEngineTimeoutError,
+)
 from ._core.parser import Deserialize
 
 
@@ -171,6 +176,7 @@ class SQLXEngine:
         - `Raises`:
             * `RawQueryError`: Default
             * `SQLXEngineError`
+            * `SQLXEngineTimeoutError`
             * `GenericSQLXEngineError`
         """
         if not self._connection:
@@ -185,8 +191,14 @@ class SQLXEngine:
             },
         )
         content = builder.build()
-        data = await self._connection.request(method="POST", path="/", content=content)
-
+        try:
+            data = await self._connection.request(
+                method="POST", path="/", content=content
+            )
+        except (httpx.TimeoutException):
+            raise SQLXEngineTimeoutError(
+                f"Error on .execute - Timeout after: {self.timeout} secs"
+            )
         return int(data["data"]["result"])
 
     async def query(
@@ -215,6 +227,7 @@ class SQLXEngine:
         - `Raises`:
             * `RawQueryError` Default
             * `SQLXEngineError`
+            * `SQLXEngineTimeoutError`
             * `GenericSQLXEngineError`
 
         """
@@ -229,8 +242,14 @@ class SQLXEngine:
             },
         )
         content = builder.build()
-        data = await self._connection.request(method="POST", path="/", content=content)
-
+        try:
+            data = await self._connection.request(
+                method="POST", path="/", content=content
+            )
+        except (httpx.TimeoutException):
+            raise SQLXEngineTimeoutError(
+                f"Error on .query - Timeout after: {self.timeout} secs"
+            )
         resp = data["data"]["result"]
         if resp:
             rows = Deserialize(rows=resp, as_base_row=as_base_row)

@@ -1,5 +1,6 @@
 import os
 import subprocess
+from time import time
 
 import pytest
 from sqlx_engine import SQLXEngine
@@ -8,6 +9,7 @@ from sqlx_engine._core.errors import (
     BaseStartEngineError,
     EngineConnectionError,
     EngineRequestError,
+    SQLXEngineTimeoutError,
     StartEngineError,
     handler_error,
 )
@@ -186,3 +188,17 @@ async def test_15_engine_using_async_with():
         query = "SELECT * FROM test_table"
         resp = await db.query(query)
         assert resp is not None
+
+
+@pytest.mark.asyncio
+async def test_16_engine_timeout_error():
+    db = SQLXEngine(provider="sqlite", uri="file:./dev.db")
+    await db.connect()
+    db._connection.session.timeout = 0.001
+    with pytest.raises(SQLXEngineTimeoutError):
+        query = "SELECT * FROM test_table"
+        await db.query(query)
+
+    with pytest.raises(SQLXEngineTimeoutError):
+        query = "SELECT * FROM test_table"
+        await db.execute(query)

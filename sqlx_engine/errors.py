@@ -12,3 +12,4 @@ from ._core._except_mapping import TableNotFoundError as TableNotFoundError
 from ._core._except_mapping import UniqueViolationError as UniqueViolationError
 from ._core.errors import AlreadyConnectedError as AlreadyConnectedError
 from ._core.errors import NotConnectedError as NotConnectedError
+from ._core.errors import SQLXEngineTimeoutError as SQLXEngineTimeoutError
