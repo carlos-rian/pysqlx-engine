@@ -15,8 +15,12 @@ class SQLXEngine:
     SQLXEngine is an engine to run pure sql with queries, inserts,
     deletes, updates, create/alter/drop tables etc.
 
-    It is a CORE for pure SQL, NOT an engine to execute
-    ROUTINES/PROCEDURES/FUNCTIONS in the database.
+    All SQL that is executed using the SQLXEngine is atomic; that is,
+    only one statement is performed at a time. Only the first one will
+    be completed if you send an Insert and a select.
+    This is one of the ways to deal with SQL ingestion.
+
+    Always `COMMIT` and `ROLLBACK` is automatic!!! This is not changeable...
 
 
     `providers(str)`: postgresql, mysql, sqlserver or sqlite
@@ -115,8 +119,6 @@ class SQLXEngine:
     async def execute(self, stmt: LiteralString) -> int:
         """Execute statement to change, add or delete etc.
         ---
-        ROUTINES/PROCEDURES/FUNCTIONS Can execute without error, but has no returns.
-
         Always `COMMIT` and `ROLLBACK` is automatic!!! This is not changeable...
         if you transaction failed your receive a except with error.
         ---
@@ -156,14 +158,6 @@ class SQLXEngine:
             * `RawQueryError`: Default
             * `SQLXEngineError`
             * `GenericSQLXEngineError`
-            * `UniqueViolationError`
-            * `ForeignKeyViolationError`
-            * `FieldNotFoundError`
-            * `MissingRequiredValueError`
-            * `InputError`
-            * `TableNotFoundError`
-            * `RecordNotFoundError`
-
         """
         if not self._connection:
             raise NotConnectedError("Not connected")
@@ -189,7 +183,7 @@ class SQLXEngine:
         """Execute query on db
         ---
         - `Args`:
-            * `query (LiteralString)`: Only query/select!
+            * `query (LiteralString)`: for example, `SELECT * FROM user` to return actual records.
             * `as_base_row (bool)`: By default is True, BaseRow is an object typing.
 
         ---

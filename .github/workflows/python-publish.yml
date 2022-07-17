@@ -4,11 +4,19 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'sqlx_engine/*'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Install HTTPX
+        run: python3 -m pip install httpx
+
+      - name: Update PyProject
+        run: python3 toml_version.py
+
       - uses: actions/checkout@v2
       - name: Build and publish to pypi
         uses: JRubics/poetry-publish@v1.12

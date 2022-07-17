@@ -43,6 +43,8 @@ plugins:
 nav:
 - Home: index.md
 - tutorial.md
+- support.md
+- advanced.md
 
 markdown_extensions:
   - toc:
