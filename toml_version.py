@@ -15,12 +15,15 @@ def get_version():
 
 
 version: str = get_version()
+print("Package version:", version)
 
 MAJOR, MINOR, PATCH = version.split(".")
 
 PATCH = int(PATCH) + 1
 
 new_version: str = ".".join([MAJOR, MINOR, str(PATCH)])
+
+print("Package new version:", new_version)
 
 new_text = text.replace(f'version = "{version}"', f'version = "{new_version}"')
 
