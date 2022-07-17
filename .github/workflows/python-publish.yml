@@ -14,16 +14,16 @@ jobs:
     steps:    
       - uses: actions/checkout@v2
 
-      - name: Install HTTPX
-        run: python3 -m pip install httpx
+      - name: Install dependencies
+        run: python3 -m pip install httpx toml
         
-      - name: Before Cat PyProject
+      - name: Before pyproject.toml
         run: cat pyproject.toml
 
       - name: Update PyProject
         run: python3 toml_version.py
       
-      - name: After Cat PyProject
+      - name: After pyproject.toml
         run: cat pyproject.toml
 
       - name: Build and publish to pypi

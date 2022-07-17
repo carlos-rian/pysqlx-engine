@@ -1,4 +1,5 @@
 import httpx
+import toml
 
 with open("pyproject.toml", mode="r") as file:
     text: str = file.read()
@@ -14,6 +15,8 @@ def get_version():
     return json["info"]["version"]
 
 
+file_version = toml.loads(text)["tool"]["poetry"]["version"]
+
 version: str = get_version()
 print("Package version:", version)
 
@@ -25,7 +28,7 @@ new_version: str = ".".join([MAJOR, MINOR, str(PATCH)])
 
 print("Package new version:", new_version)
 
-new_text = text.replace(f'version = "{version}"', f'version = "{new_version}"')
+new_text = text.replace(f'version = "{file_version}"', f'version = "{new_version}"')
 
 with open("pyproject.toml", mode="w") as file:
     file.write(new_text)
