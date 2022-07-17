@@ -8,7 +8,7 @@ PySQLXEngine exposes four methods, two that allow you to send raw queries and tw
 * `.connect()` create connection with db
 * `.query()` to return actual records (for example, using SELECT)
 * `.execute()` to return a count of affected rows (for example, after an UPDATE or DELETE)
-* `.close()` is disconnected from db
+* `.close()` disconnected from db
 
 ## SQLXEngine arguments
 
@@ -76,6 +76,21 @@ After you create an instance of SQLXEngine; This instance is `Lazy`, after calli
 
 
 * Modify the file main.py, add two lines:
+
+!!! Note
+    `PySQLXEngine` also supports `async with`, where the connection is automatically opened and closed.
+
+    ```Python hl_lines="6"
+    from sqlx_engine import SQLXEngine
+
+    uri = "file:./db.db"
+
+    async def main():
+        async with SQLXEngine(provider="sqlite", uri=uri) as db:
+            ...
+    ```
+
+
 
 ```Python hl_lines="6-7"
 from sqlx_engine import SQLXEngine
@@ -261,6 +276,19 @@ You might also want the result to come as a standard list of dict with python's 
 </details>
 
 * Modify the main.py file, close connection.
+
+!!! warning
+    Skip this step if you are using `async with`, as the connection is automatically closed.
+
+    ```Python hl_lines="6"
+    from sqlx_engine import SQLXEngine
+
+    uri = "file:./db.db"
+
+    async def main():
+        async with SQLXEngine(provider="sqlite", uri=uri) as db:
+            ...
+    ```
 
 ```Python hl_lines="17"
 {!./python/close.py!}
