@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'sqlx_engine/*'
+      - '.github/workflows/python-publish.yml'
 
 jobs:
   build:
