@@ -24,7 +24,7 @@
 
 ---
 
-**Documentation**: <a href="." target="_blank">Here</a>
+**Documentation**: <a href="https://carlos-rian.github.io/pysqlx-engine/" target="_blank">https://carlos-rian.github.io/pysqlx-engine/</a>
 
 **Source Code**: <a href="https://github.com/carlos-rian/pysqlx-engine" target="_blank">https://github.com/carlos-rian/pysqlx-engine</a>
 
