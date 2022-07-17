@@ -18,6 +18,7 @@ from sqlx_engine.errors import (
     RawQueryError,
     SQLXEngineError,
 )
+from sqlx_engine.types import BaseRow
 
 from tests.common import get_all_dbs
 
@@ -177,3 +178,11 @@ async def test_14_engine_connect_timeout_none():
 
     with pytest.raises(ValueError):
         await aengine.connect(timeout=None)
+
+
+@pytest.mark.asyncio
+async def test_15_engine_using_async_with():
+    async with SQLXEngine(provider="sqlite", uri="file:./dev.db") as db:
+        query = "SELECT * FROM test_table"
+        resp = await db.query(query)
+        assert resp is not None
