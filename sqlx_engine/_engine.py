@@ -1,4 +1,5 @@
-from typing import Dict, List, Literal, Optional, Union
+from types import TracebackType
+from typing import Dict, List, Literal, Optional, Type, Union
 
 from typing_extensions import LiteralString
 
@@ -80,6 +81,19 @@ class SQLXEngine:
         self._connection: _AsyncEngine = None
 
         config.improved_error_log = improved_error_log
+
+    async def __aenter__(self) -> "SQLXEngine":
+        await self.connect()
+        return self
+
+    async def __aexit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
+    ):
+        if self._connection:
+            await self.close()
 
     async def connect(self, timeout: int = 10) -> None:
         """
