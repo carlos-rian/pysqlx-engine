@@ -58,6 +58,10 @@ class StartEngineError(BaseStartEngineError):
         super().__init__(complete_msg)
 
 
+class SQLXEngineTimeoutError(SQLXEngineError):
+    ...
+
+
 def _colorizer_json(dumps: str):
     return highlight(dumps, JsonLexer(), TerminalFormatter())
 
