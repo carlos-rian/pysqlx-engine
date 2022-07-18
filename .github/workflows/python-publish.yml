@@ -7,6 +7,7 @@ on:
     paths:
       - 'sqlx_engine/*'
       - '.github/workflows/python-publish.yml'
+      - 'pyproject.toml'
 
 jobs:
   build:
