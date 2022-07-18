@@ -11,6 +11,7 @@ on:
       - '**.png'
       - 'docs/*'
       - 'mkdocs.yml'
+      - 'pyproject.toml'
 
 jobs:
   deploy:
