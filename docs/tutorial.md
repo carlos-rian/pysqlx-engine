@@ -10,7 +10,7 @@ PySQLXEngine exposes four methods, two that allow you to send raw queries and tw
 * `.execute()` to return a count of affected rows (for example, after an UPDATE or DELETE)
 * `.close()` disconnected from db
 
-## SQLXEngine arguments
+## PySQLXEngine arguments
 
 ---
 
@@ -103,7 +103,7 @@ async def main():
 
 ```
 
-With SQLXEngine built for asynchronous programming, it is necessary to use the `async def` clause to `await` the coroutine termination.
+With PySQLXEngine built for asynchronous programming, it is necessary to use the `async def` clause to `await` the coroutine termination.
 
 
 * Modify the file main.py, import the `asyncio` module to run the coroutine:

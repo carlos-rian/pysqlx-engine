@@ -1,10 +1,10 @@
 # Advanced Guide
 
-Although SQLXEngine has only two methods to deal with the database, being the query and execute.
+Although PySQLXEngine has only two methods to deal with the database, being the `query` and `execute`.
 
 `execute` always returns the number of rows affected. Maybe this is not useful, because if you make an `insert` and want the `id` as a return, the `execute` will limit you.
 
-Although sql statements are atomic, one execution at a time, most modern databases bring sensational features like `retuning` or `output` in the case of SQL Server that can return a value after the insert .
+Although sql statements are atomic, one execution at a time, most modern databases bring sensational features like **`RETUNING`** or **`OUTPUT`** in the case of *SQL Server* that can return a value after the insert .
 
 So since we need something to be returned, we can use the `query`.
 

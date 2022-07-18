@@ -35,7 +35,7 @@ PySQLXEngine supports the option of sending **raw sql** to your database.
 The PySQLXEngine is a minimalist **Async** SQL engine. Currently this lib only supports *asynchronous programming*, you need to code your code using `await` in all methods.
 
 
-All SQL that is executed using the SQLXEngine is atomic; that is, only one statement is performed at a time. Only the first one will be completed if you send an Insert and a select. This is one of the ways to deal with SQL ingestion. 
+All SQL that is executed using the PySQLXEngine is atomic; that is, only one statement is performed at a time. Only the first one will be completed if you send an Insert and a select. This is one of the ways to deal with SQL ingestion. 
 One detail is that `COMMIT` and `ROLLBACK` are automatic!!! This is not changeable
 
 
