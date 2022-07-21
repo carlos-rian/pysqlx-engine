@@ -162,7 +162,7 @@ async def create_table(db: SQLXEngine):
     """
     print("creating...")
     resp = await db.execute(stmt)
-    # resp is zero because not have rows affect.
+    # resp is zero because it has no rows affected
     print(f"created: {resp}")
     
 
