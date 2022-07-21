@@ -31,3 +31,13 @@ jobs:
         uses: JRubics/poetry-publish@v1.12
         with:
           pypi_token: ${{ secrets.PYPI_TOKEN }}
+      
+      - name: Add pyproject.toml
+        run: git add pyproject.toml
+      
+      - name: Commit pyproject.toml
+        run: git commit -m "update pyproject.toml"
+      
+      - name: Push pyproject.toml
+        run: git push origin HEAD:main
+      
