@@ -32,7 +32,7 @@
 
 PySQLXEngine supports the option of sending **raw sql** to your database.
 
-The PySQLXEngine is a minimalist **Async** SQL engine. Currently this lib only supports *asynchronous programming*, you need to code your code using `await` in all methods.
+The PySQLXEngine is a minimalist **Async** SQL engine. Currently this lib only supports *asynchronous programming*, you need to use `await` in all methods.
 
 Database Support:
 
