@@ -33,6 +33,11 @@ jobs:
           pypi_token: ${{ secrets.PYPI_TOKEN }}
       
       - name: Add pyproject.toml
+        run: |
+          git config --global user.email "crian.rian@gmail.com"
+          git config --global user.name "carlos-rian"
+
+      - name: Add pyproject.toml
         run: git add pyproject.toml
       
       - name: Commit pyproject.toml
