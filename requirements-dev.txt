@@ -35,7 +35,7 @@ pydantic==1.9.1; python_full_version >= "3.6.1"
 pygments==2.12.0; python_version >= "3.6"
 pymdown-extensions==9.5; python_version >= "3.7"
 pyparsing==3.0.9; python_full_version >= "3.6.8" and python_version >= "3.7"
-pytest-asyncio==0.18.3; python_version >= "3.7"
+pytest-asyncio==0.19.0; python_version >= "3.7"
 pytest-cov==3.0.0; python_version >= "3.6"
 pytest-dotenv==0.5.2
 pytest-forked==1.4.0; python_version >= "3.6"
