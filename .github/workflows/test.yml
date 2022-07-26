@@ -8,6 +8,8 @@ on:
     paths:
       - 'sqlx_engine/*'
       - 'tests/*'
+      - 'requirements*'
+      - 'pyproject.toml'
 
 jobs:
   test:
