@@ -2,7 +2,6 @@ from types import TracebackType
 from typing import Dict, List, Literal, Optional, Type, Union
 
 import httpx
-from typing_extensions import LiteralString
 
 from ._config import config
 from ._core.builder import QueryBuilder
@@ -14,6 +13,8 @@ from ._core.errors import (
     SQLXEngineTimeoutError,
 )
 from ._core.parser import Deserialize
+
+LiteralString = str
 
 
 class SQLXEngine:
