@@ -1,0 +1,51 @@
+name: Windows Run and Publish Test
+
+on:
+  push:
+    branches:
+      - 'main'
+      - 'dependabot*'
+    paths:
+      - 'sqlx_engine/*'
+      - 'tests/*'
+      - 'requirements*'
+      - 'pyproject.toml'
+      - 'test-windows.yml'
+
+jobs:
+  test:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+      fail-fast: true
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          
+      - uses: actions/cache@v2
+        id: cache
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ runner.os }}-python-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml') }}-test-v02
+      
+      - name: Docker Compose Up
+        run:  docker-compose up --build --detach
+      
+      - name: Check Containers
+        run: docker ps -a && sleep 20
+        
+      - name: Install Dependencies
+        run: pip install -r requirements-dev.txt
+        
+      - name: Test
+        run: pytest --cov=sqlx_engine --ignore=tests --cov-report=term-missing:skip-covered --cov-report=xml tests ${@}
+        
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }} 
