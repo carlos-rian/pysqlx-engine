@@ -20,5 +20,12 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: 3.10.0
+          
+      - name: Install Poetry
+        run: pip install poetry --user
+      
+      - name: Export Poetry Requirements
+        run: poetry export --dev -f requirements.txt --output requirements-dev.txt  --without-hashes
+      
       - run: pip install -r requirements-dev.txt 
       - run: mkdocs gh-deploy --force
