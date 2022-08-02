@@ -49,7 +49,8 @@ Database Support:
 OS Support:
 
 * `Linux`
-* `Windows` <small>Experimental! Unit tests were not run on Windows.</small>
+* `MacOS`
+* `Windows`
 
 ## Installation
 

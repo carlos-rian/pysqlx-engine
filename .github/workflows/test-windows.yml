@@ -38,6 +38,12 @@ jobs:
       
       - name: Check Containers
         run: docker ps -a && sleep 20
+      
+      - name: Install Poetry
+        run: pip install poetry --user
+      
+      - name: Export Poetry Requirements
+        run: poetry export --dev -f requirements.txt --output requirements-dev.txt  --without-hashes
         
       - name: Install Dependencies
         run: pip install -r requirements-dev.txt

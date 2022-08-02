@@ -44,7 +44,8 @@ Database Support:
 OS Support:
 
 * `Linux`
-* `Windows` *Experimental! Unit tests were not run on Windows.*
+* `MacOS`
+* `Windows`
 
 ## Installation
 
