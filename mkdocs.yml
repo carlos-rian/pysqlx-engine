@@ -34,7 +34,7 @@ theme:
   language: en
 repo_name: 'carlos-rian/pysqlx-engine'
 repo_url: 'https://github.com/carlos-rian/pysqlx-engine'
-edit_uri: ''
+#edit_uri: ''
 plugins:
   - search
   - mkdocs-video:
