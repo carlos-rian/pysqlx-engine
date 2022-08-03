@@ -1,9 +1,9 @@
 from datetime import date, datetime, time
 from decimal import Decimal
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List
 from uuid import UUID
 
-from pydantic import Json, create_model, parse_obj_as
+from pydantic import Json, create_model
 
 from .common import BaseRow
 

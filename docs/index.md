@@ -4,7 +4,7 @@
   <a href="/"><img src="./img/logo-text3.png" alt="PySQLXEngine Logo"></a>
 </p>
 <p align="center">
-    <em>PySQLXEngine, a minimalist asynchronous SQL engine</em>
+    <em>PySQLXEngine, a minimalist asynchronous SQL engine, ready for production</em>
 </p>
 
 <p align="center">
@@ -32,31 +32,32 @@
 
 PySQLXEngine supports the option of sending **raw sql** to your database.
 
-The PySQLXEngine is a minimalist **Async** SQL engine. Currently this lib only supports *asynchronous programming*, you need to use `await` in all methods.
+The PySQLXEngine is a minimalist [**Async** SQL engine](https://github.com/carlos-rian/pysqlx-engine). Currently this lib only supports [*asynchronous programming*](https://docs.python.org/3/library/asyncio.html), you need to use [`await`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbquery) in all methods.
 
 
 All SQL that is executed using the PySQLXEngine is atomic; that is, only one statement is performed at a time. Only the first one will be completed if you send an Insert and a select. This is one of the ways to deal with SQL ingestion. 
-One detail is that `COMMIT` and `ROLLBACK` are automatic!!! This is not changeable
+One detail is that [`COMMIT`](https://www.geeksforgeeks.org/difference-between-commit-and-rollback-in-sql) and [`ROLLBACK`](https://www.geeksforgeeks.org/difference-between-commit-and-rollback-in-sql) are automatic!!! This is not changeable.
+
 
 
 Database Support:
 
-* `SQLite`
-* `PostgreSQL`
-* `MySQL`
-* `Microsoft SQL Server`
+* [`SQLite`](https://www.sqlite.org/index.html)
+* [`PostgreSQL`](https://www.postgresql.org/)
+* [`MySQL`](https://www.mysql.com/)
+* [`Microsoft SQL Server`](https://www.microsoft.com/sql-server)
 
 OS Support:
 
-* `Linux`
-* `MacOS`
-* `Windows`
+* [`Linux`](https://pt.wikipedia.org/wiki/Linux)
+* [`MacOS`](https://pt.wikipedia.org/wiki/Macos)
+* [`Windows`](https://pt.wikipedia.org/wiki/Microsoft_Windows)
 
 ## Installation
 
 
 === "PIP"
-
+    <small>[Pip](https://pypi.org)</small>
     <div class="termy">
 
     ```console
@@ -66,7 +67,7 @@ OS Support:
     </div>
 
 === "Poetry"
-
+    <small>[Poetry](https://python-poetry.org)</small>
     <div class="termy">
 
     ```console
