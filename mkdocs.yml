@@ -1,6 +1,9 @@
 site_name: PySQLXEngine
+
 site_description: Python Async SQL Engines
+
 site_url: 'https://github.com/carlos-rian/pysqlx-engine'
+
 theme:
   name: material
   font:
@@ -25,26 +28,29 @@ theme:
     - search.suggest
     - navigation.expand
     - navigation.top
-    
     - header.autohide
   icon:
     repo: fontawesome/brands/github-alt
   logo: img/favicon/icon.png
   favicon: img/favicon/favicon.ico
   language: en
+
 repo_name: 'carlos-rian/pysqlx-engine'
+
 repo_url: 'https://github.com/carlos-rian/pysqlx-engine'
-#edit_uri: ''
+
 plugins:
   - search
   - mkdocs-video:
       mark: "custom-marker"
 
 nav:
-- Home: index.md
-- tutorial.md
-- advanced.md
-- support.md
+  - Home: index.md
+  - tutorial.md
+  - advanced.md
+  - support.md
+  - return_types.md
+  - core_engine.md
 
 markdown_extensions:
   - toc:
@@ -69,15 +75,16 @@ markdown_extensions:
   - pymdownx.tabbed:
       alternate_style: true
 
-copyright: Copyright &copy; 2020 - 2022 Carlos Rian
+copyright: Copyright &copy; 2022 - 2022 Carlos Rian
 
 extra_css:
-- css/termynal.css
-- css/custom.css
-- css/extras.css
+  - css/termynal.css
+  - css/custom.css
+  - css/extras.css
+
 extra_javascript:
-- https://unpkg.com/mermaid@8.4.6/dist/mermaid.min.js
-- https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js
-- js/termynal.js
-- js/custom.js
-- js/table.js
+  - https://unpkg.com/mermaid@8.4.6/dist/mermaid.min.js
+  - https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js
+  - js/termynal.js
+  - js/custom.js
+  - js/table.js

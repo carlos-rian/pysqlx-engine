@@ -24,3 +24,6 @@ requirements-dev:
 req:
 	make requirements && \
 	make requirements-dev
+
+server-docs:
+	mkdocs serve
