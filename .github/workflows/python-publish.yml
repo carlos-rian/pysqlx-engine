@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'sqlx_engine/*'
+      - '/sqlx_engine/*'
       - '.github/workflows/python-publish.yml'
       - 'pyproject.toml'
 
