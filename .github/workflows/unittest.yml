@@ -38,7 +38,7 @@ jobs:
 
 
       - name: Up Database
-        run: docker-compose up --build
+        run: docker-compose up --build --detach
 
       - name: Check Containers
         run: |
