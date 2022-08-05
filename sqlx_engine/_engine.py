@@ -1,7 +1,8 @@
 from types import TracebackType
-from typing import Dict, List, Literal, Optional, Type, Union
+from typing import Dict, List, Optional, Type, Union
 
 import httpx
+from typing_extensions import Literal
 
 from ._config import config
 from ._core.builder import QueryBuilder
