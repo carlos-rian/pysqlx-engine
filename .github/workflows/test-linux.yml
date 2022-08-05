@@ -6,8 +6,8 @@ on:
       - 'main'
       - 'dependabot*'
     paths:
-      - 'sqlx_engine/*'
-      - 'tests/*'
+      - '/sqlx_engine/*'
+      - '/tests/*'
       - 'requirements*'
       - 'pyproject.toml'
       - '.github/workflows/test-linux.yml'
