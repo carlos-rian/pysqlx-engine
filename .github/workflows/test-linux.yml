@@ -10,7 +10,7 @@ on:
       - 'tests/*'
       - 'requirements*'
       - 'pyproject.toml'
-      - 'test-linux.yml'
+      - '.github/workflows/test-linux.yml'
 
 jobs:
   test:
