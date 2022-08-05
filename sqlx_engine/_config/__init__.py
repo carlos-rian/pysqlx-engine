@@ -1,9 +1,9 @@
 import platform
 import tempfile
 from pathlib import Path
-from typing import Literal
 
 from pydantic import BaseConfig
+from typing_extensions import Literal
 
 
 class Config(BaseConfig):
