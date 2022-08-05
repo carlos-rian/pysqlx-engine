@@ -14,10 +14,23 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    name: Run Unit Test
+    runs-on: ${{ matrix.os }}
     strategy:
+      max-parallel: 3
       matrix:
-        python-version: ["3.8", "3.9", "3.10"]
+        os: [ubuntu-latest, windows-2019, windows-2022]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
+        include:
+          - os: ubuntu-latest
+            base: alpine-3.14
+            file: Dockerfile.linux
+          - os: windows-2019
+            base: nanoserver-1809
+            file: Dockerfile.windows
+          - os: windows-2022
+            base: nanoserver-ltsc2022
+            file: Dockerfile.windows
       fail-fast: true
 
     steps:
