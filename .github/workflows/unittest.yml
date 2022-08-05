@@ -39,10 +39,11 @@ jobs:
           key: ${{ runner.os }}-python-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml') }}-test-v02
 
 
-      - uses: actions/checkout@v3
-      - uses: isbang/compose-action@v1.1.0
-        with:
-          compose-file: "docker-compose.yml"
+      - name: Up Database
+        run: |
+          docker run -e ACCEPT_EULA=Y -e SA_PASSWORD=Build!Test321 -p 4444:1433 -d mcr.microsoft.com/mssql/server:2019-latest && \
+          docker run -e MYSQL_DATABASE=engine -e MYSQL_ROOT_PASSWORD=Build!Test321 -p 4443:3306 -d mysql:latest && \
+          docker run -e POSTGRES_DB=engine -e POSTGRES_PASSWORD=Build!Test321 -p 4442:5432 -d postgres:latest
       
       - name: Check Containers
         run: |
