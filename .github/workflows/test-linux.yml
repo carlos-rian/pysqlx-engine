@@ -19,23 +19,10 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
+        # os: [ubuntu-latest, windows-2019, windows-2022]
         os: [ubuntu-latest]
-        #, windows-2019, windows-2022]
-        python-version: ["3.8", ] 
-        #"3.9", "3.10"]
-        include:
-          - os: ubuntu-latest
-            base: alpine-3.14
-            file: Dockerfile.linux
-            tag: phillipsj/pstools:${{ github.event.release.tag_name }}-linux-amd64
-          - os: windows-2019
-            base: nanoserver-1809
-            file: Dockerfile.windows
-            tag: phillipsj/pstools:${{ github.event.release.tag_name }}-windows-ltsc2019-amd64
-          - os: windows-2022
-            base: nanoserver-ltsc2022
-            file: Dockerfile.windows
-            tag: phillipsj/pstools:${{ github.event.release.tag_name }}-windows-ltsc2022-amd64
+        #python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.8"]
       fail-fast: true
 
     steps:
@@ -51,15 +38,14 @@ jobs:
           path: ${{ env.pythonLocation }}
           key: ${{ runner.os }}-python-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml') }}-test-v02
 
-      - name: Docker Manifest
-        run: |
-          docker manifest create phillipsj/pstools:${{ github.event.release.tag_name }} \
-            --amend phillipsj/pstools:${{ github.event.release.tag_name }}-linux-amd64 \
-            --amend phillipsj/pstools:${{ github.event.release.tag_name }}-windows-ltsc2019-amd64 \
-            --amend phillipsj/pstools:${{ github.event.release.tag_name }}-windows-ltsc2022-amd64
-        
-      - name: Docker Compose Up
-        run:  docker-compose up --build --detach
+
+      - uses: actions/checkout@v3
+      - uses: isbang/compose-action@v1.1.0
+        with:
+          compose-file: "docker-compose.yml"
+
+      #- name: Docker Compose Up
+      #  run:  docker-compose up --build --detach
       
       - name: Check Containers
         run: docker ps -a && sleep 20
