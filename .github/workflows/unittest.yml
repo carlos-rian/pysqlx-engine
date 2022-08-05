@@ -1,4 +1,4 @@
-name: Linux Run and Publish Test
+name: Unit Test Run and Publish
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
       - '/tests/*'
       - 'requirements*'
       - 'pyproject.toml'
-      - '.github/workflows/test-linux.yml'
+      - '.github/workflows/unittest.yml'
 
 jobs:
   test:
@@ -19,8 +19,8 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        # os: [ubuntu-latest, windows-2019, windows-2022]
-        os: [ubuntu-latest]
+        # os: [ubuntu-latest, windows-2019, windows-latest]
+        os: [windows-latest]
         #python-version: ["3.8", "3.9", "3.10"]
         python-version: ["3.8"]
       fail-fast: true
@@ -43,18 +43,16 @@ jobs:
       - uses: isbang/compose-action@v1.1.0
         with:
           compose-file: "docker-compose.yml"
-
-      #- name: Docker Compose Up
-      #  run:  docker-compose up --build --detach
       
       - name: Check Containers
-        run: docker ps -a && sleep 20
+        run: |
+          docker ps -a && \
+          sleep 20
 
-      - name: Install Poetry
-        run: pip install poetry --user
-      
-      - name: Export Poetry Requirements
-        run: poetry export --dev -f requirements.txt --output requirements-dev.txt  --without-hashes
+      - name: Poetry Install and Export
+        run: |
+          pip install poetry --user && \
+          poetry export --dev -f requirements.txt --output requirements-dev.txt  --without-hashes
       
       - name: Install Dependencies
         run: pip install -r requirements-dev.txt
@@ -65,4 +63,5 @@ jobs:
       - name: Upload coverage
         uses: codecov/codecov-action@v3
         with:
-          token: ${{ secrets.CODECOV_TOKEN }} 
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: pytest ${{ matrix.os }}-${{ matrix.python-version }}
