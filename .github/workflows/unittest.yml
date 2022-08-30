@@ -5,8 +5,8 @@ on:
     branches:
       - '*'
     paths:
-      - '/sqlx_engine/*'
-      - '/tests/*'
+      - 'sqlx_engine/*'
+      - 'tests/*'
       - 'requirements*'
       - 'pyproject.toml'
       - '.github/workflows/unittest.yml'
