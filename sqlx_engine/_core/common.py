@@ -13,10 +13,17 @@ def get_open_port() -> int:
     return int(port)
 
 
-async def get_dml() -> str:
+async def a_get_dml() -> str:
     path = f"{Path(__file__).parent.absolute()}/schema.prisma"
     async with aiofiles.open(path, mode="r") as file:
         content = await file.read()
+    return content
+
+
+def get_dml() -> str:
+    path = f"{Path(__file__).parent.absolute()}/schema.prisma"
+    with open(path, mode="r") as file:
+        content = file.read()
     return content
 
 

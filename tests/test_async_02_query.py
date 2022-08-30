@@ -3,13 +3,13 @@ from datetime import datetime
 import pytest
 from sqlx_engine import SQLXEngine
 
-from tests.common import get_all_dbs
+from tests.common import get_all_adbs
 
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("name", ["db_sqlite", "db_mysql", "db_postgresql", "db_mssql"])
 async def test_01_query_all_rows_with_base_row(name: SQLXEngine):
-    db = get_all_dbs(name)
+    db = get_all_adbs(name)
     db: SQLXEngine = await db()
     rows = await db.query(query="SELECT * FROM test_table")
     for row in rows:
@@ -28,7 +28,7 @@ async def test_01_query_all_rows_with_base_row(name: SQLXEngine):
 @pytest.mark.asyncio
 @pytest.mark.parametrize("name", ["db_sqlite", "db_mysql", "db_postgresql", "db_mssql"])
 async def test_02_query_all_rows_with_dict(name: SQLXEngine):
-    db = get_all_dbs(name)
+    db = get_all_adbs(name)
     db: SQLXEngine = await db()
     rows = await db.query(query="SELECT * FROM test_table", as_base_row=False)
     for row in rows:

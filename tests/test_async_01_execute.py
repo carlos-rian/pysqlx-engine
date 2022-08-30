@@ -3,7 +3,7 @@ from typing import Dict, List, Literal
 import pytest
 from sqlx_engine import SQLXEngine
 
-from tests.common import get_all_dbs
+from tests.common import get_all_adbs
 
 
 async def remove_table(db: SQLXEngine):
@@ -17,10 +17,10 @@ async def remove_table(db: SQLXEngine):
 
 @pytest.mark.asyncio
 async def test_01_create_table_sqlite(
-    db_sqlite: SQLXEngine,
+    adb_sqlite: SQLXEngine,
     table: Dict[Literal["sqlite"], str],
 ):
-    db = await db_sqlite
+    db = await adb_sqlite
     await remove_table(db=db)
 
     sql = table["sqlite"]
@@ -31,10 +31,10 @@ async def test_01_create_table_sqlite(
 
 @pytest.mark.asyncio
 async def test_02_create_table_postgresql(
-    db_postgresql: SQLXEngine,
+    adb_postgresql: SQLXEngine,
     table: Dict[Literal["postgresql"], str],
 ):
-    db = await db_postgresql
+    db = await adb_postgresql
     await remove_table(db=db)
 
     sql = table["postgresql"]
@@ -45,10 +45,10 @@ async def test_02_create_table_postgresql(
 
 @pytest.mark.asyncio
 async def test_03_create_table_mssql(
-    db_mssql: SQLXEngine,
+    adb_mssql: SQLXEngine,
     table: Dict[Literal["mssql"], str],
 ):
-    db = await db_mssql
+    db = await adb_mssql
     await remove_table(db=db)
 
     sql = table["mssql"]
@@ -59,10 +59,10 @@ async def test_03_create_table_mssql(
 
 @pytest.mark.asyncio
 async def test_04_create_table_mysql(
-    db_mysql: SQLXEngine,
+    adb_mysql: SQLXEngine,
     table: Dict[Literal["mysql"], str],
 ):
-    db = await db_mysql
+    db = await adb_mysql
     await remove_table(db=db)
 
     sql = table["mysql"]
@@ -74,7 +74,7 @@ async def test_04_create_table_mysql(
 @pytest.mark.asyncio
 @pytest.mark.parametrize("name", ["db_sqlite", "db_postgresql", "db_mssql", "db_mysql"])
 async def test_05_check_table_was_created(name: str):
-    db = get_all_dbs(name)
+    db = get_all_adbs(name)
     db: SQLXEngine = await db()
     sql = "SELECT * FROM test_table;"
     row = await db.query(query=sql)
@@ -85,7 +85,7 @@ async def test_05_check_table_was_created(name: str):
 @pytest.mark.asyncio
 @pytest.mark.parametrize("name", ["db_sqlite", "db_mysql", "db_postgresql", "db_mssql"])
 async def test_06_insert_one_hundred_rows(name: SQLXEngine, inserts: List[Dict]):
-    db = get_all_dbs(name)
+    db = get_all_adbs(name)
     db: SQLXEngine = await db()
     for sql in inserts:
         resp = await db.execute(stmt=sql)
@@ -98,7 +98,7 @@ async def test_06_insert_one_hundred_rows(name: SQLXEngine, inserts: List[Dict])
 @pytest.mark.asyncio
 @pytest.mark.parametrize("name", ["db_mysql", "db_postgresql", "db_mssql", "db_sqlite"])
 async def test_07_update_all_rows(name: SQLXEngine, rows: list):
-    db = get_all_dbs(name)
+    db = get_all_adbs(name)
     db: SQLXEngine = await db()
     _rows = await db.query(query="SELECT id FROM test_table")
 

@@ -5,9 +5,9 @@ import httpx
 from typing_extensions import Literal
 
 from ._config import config
+from ._core.aengine import AsyncEngine as _AsyncEngine
 from ._core.builder import QueryBuilder
 from ._core.common import BaseRow
-from ._core.engine import SyncEngine
 from ._core.errors import (
     AlreadyConnectedError,
     NotConnectedError,
@@ -18,12 +18,12 @@ from ._core.parser import Deserialize
 LiteralString = str
 
 
-class SQLXEngineSync:
+class SQLXEngine:
     """
-    SQLXEngineSync is an engine to run pure sql with queries, inserts,
+    SQLXEngine is an engine to run pure sql with queries, inserts,
     deletes, updates, create/alter/drop tables etc.
 
-    All SQL that is executed using the SQLXEngineSync is atomic; that is,
+    All SQL that is executed using the SQLXEngine is atomic; that is,
     only one statement is performed at a time. Only the first one will
     be completed if you send an Insert and a select.
     This is one of the ways to deal with SQL ingestion.
@@ -40,25 +40,25 @@ class SQLXEngineSync:
     ``` python
     >>> ##### PostgreSQL
     >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
-    >>> conn = SQLXEngineSync(provider="postgresql", uri=uri)
+    >>> conn = SQLXEngine(provider="postgresql", uri=uri)
 
     #------------------------------------------
 
     >>> ##### MySQL
     >>> uri = "mysql://user:pass@host:port/db?schema=sample"
-    >>> conn = SQLXEngineSync(provider="mysql", uri=uri)
+    >>> conn = SQLXEngine(provider="mysql", uri=uri)
 
     #------------------------------------------
 
     >>> ##### Microsoft SQL Server
     >>> uri = "sqlserver://host:port;initial catalog=sample;user=sa;password=pass;"
-    >>> conn = SQLXEngineSync(provider="sqlserver", uri=uri)
+    >>> conn = SQLXEngine(provider="sqlserver", uri=uri)
 
     #------------------------------------------
 
     >>> ##### SQLite
     >>> uri = "file:./dev.db"
-    >>> conn = SQLXEngineSync(provider="sqlite", uri=uri)
+    >>> conn = SQLXEngine(provider="sqlite", uri=uri)
 
     # URI Reference: https://www.prisma.io/docs/reference/database-reference/connection-urls
     ```
@@ -85,24 +85,24 @@ class SQLXEngineSync:
         self.provider = provider
         self.connected: bool = False
         self.timeout: int = timeout
-        self._connection: SyncEngine = None
+        self._connection: _AsyncEngine = None
 
         config.improved_error_log = improved_error_log
 
-    def __enter__(self) -> "SQLXEngineSync":
-        self.connect()
+    async def __aenter__(self) -> "SQLXEngine":
+        await self.connect()
         return self
 
-    def __exit__(
+    async def __aexit__(
         self,
         exc_type: Optional[Type[BaseException]],
         exc: Optional[BaseException],
         exc_tb: Optional[TracebackType],
     ):
         if self._connection:
-            self.close()
+            await self.close()
 
-    def connect(self, timeout: int = 10) -> None:
+    async def connect(self, timeout: int = 10) -> None:
         """
         Every connection instance is lazy, only after the connect is the
         database checked and a connection is created with it.
@@ -116,16 +116,16 @@ class SQLXEngineSync:
             raise ValueError("Invalid timeout, timeout must be a number.")
         if self._connection:
             raise AlreadyConnectedError("Already connected to the engine")
-        self._connection = SyncEngine(
+        self._connection = _AsyncEngine(
             db_uri=self.uri,
             db_provider=self.provider,
             db_timeout=self.timeout,
             connect_timeout=timeout,
         )
-        self._connection.connect()
+        await self._connection.connect()
         self.connected = self._connection.connected
 
-    def close(self) -> None:
+    async def close(self) -> None:
         """Is good always close the connection, but!
         Even if you don't close the connection, don't worry,
         when the process ends automatically the connections will
@@ -133,11 +133,11 @@ class SQLXEngineSync:
         """
         if not self._connection:
             raise NotConnectedError("Not connected")
-        self._connection.disconnect()
+        await self._connection.disconnect()
         self.connected = False
         self._connection = None
 
-    def execute(self, stmt: LiteralString) -> int:
+    async def execute(self, stmt: LiteralString) -> int:
         """Execute statement to change, add or delete etc.
         ---
         Always `COMMIT` and `ROLLBACK` is automatic!!! This is not changeable...
@@ -167,8 +167,8 @@ class SQLXEngineSync:
         ---
         - `Usage`:
 
-            >>> db.execute(query="INSERT INTO table(name) values ('rian')")
-            >>> db.execute(query="INSERT INTO table(name) values (?)")
+            >>> await db.execute(query="INSERT INTO table(name) values ('rian')")
+            >>> await db.execute(query="INSERT INTO table(name) values (?)")
 
         ---
         - `Returns`:
@@ -177,9 +177,9 @@ class SQLXEngineSync:
         ---
         - `Raises`:
             * `RawQueryError`: Default
-            * `SQLXEngineSyncError`
+            * `SQLXEngineError`
             * `SQLXEngineTimeoutError`
-            * `GenericSQLXEngineSyncError`
+            * `GenericSQLXEngineError`
         """
         if not self._connection:
             raise NotConnectedError("Not connected")
@@ -194,15 +194,19 @@ class SQLXEngineSync:
         )
         content = builder.build()
         try:
-            data = self._connection.request(method="POST", path="/", content=content)
+            data = await self._connection.request(
+                method="POST", path="/", content=content
+            )
         except (httpx.TimeoutException):
             raise SQLXEngineTimeoutError(
                 f"Error on .execute - Timeout after: {self.timeout} secs"
             )
         return int(data["data"]["result"])
 
-    def query(
-        self, query: LiteralString, as_base_row: bool = True
+    async def query(
+        self,
+        query: LiteralString,
+        as_base_row: bool = True,
     ) -> Optional[Union[List[BaseRow], List[Dict]]]:
         """Execute query on db
         ---
@@ -213,7 +217,7 @@ class SQLXEngineSync:
         ---
         - `Usage`:
 
-            >>> db.query(query="SELECT 1")
+            >>> await db.query(query="SELECT 1")
 
         ---
         - `Returns`:
@@ -224,9 +228,9 @@ class SQLXEngineSync:
         ---
         - `Raises`:
             * `RawQueryError` Default
-            * `SQLXEngineSyncError`
+            * `SQLXEngineError`
             * `SQLXEngineTimeoutError`
-            * `GenericSQLXEngineSyncError`
+            * `GenericSQLXEngineError`
 
         """
         if not self._connection:
@@ -241,7 +245,9 @@ class SQLXEngineSync:
         )
         content = builder.build()
         try:
-            data = self._connection.request(method="POST", path="/", content=content)
+            data = await self._connection.request(
+                method="POST", path="/", content=content
+            )
         except (httpx.TimeoutException):
             raise SQLXEngineTimeoutError(
                 f"Error on .query - Timeout after: {self.timeout} secs"
