@@ -195,3 +195,7 @@ async def test_16_aengine_timeout_error():
     with pytest.raises(SQLXEngineTimeoutError):
         query = "SELECT * FROM test_table"
         await db.query(query)
+
+    with pytest.raises(SQLXEngineTimeoutError):
+        query = "SELECT * FROM test_table"
+        await db.execute(query)

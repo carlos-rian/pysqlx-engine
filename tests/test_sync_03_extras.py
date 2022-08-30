@@ -184,3 +184,7 @@ def test_16_engine_timeout_error():
     with pytest.raises(SQLXEngineTimeoutError):
         query = "SELECT * FROM test_table"
         db.query(query)
+
+    with pytest.raises(SQLXEngineTimeoutError):
+        query = "SELECT * FROM test_table"
+        db.execute(query)
