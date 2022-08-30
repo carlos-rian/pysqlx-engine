@@ -2,6 +2,9 @@
 
 PySQLXEngine exposes four methods, two that allow you to send raw queries and two to handle the connection.
 
+!!! Note
+    **All examples are async, but you can use SQLXEngineSync if you don't want to use asyncio.**
+
 ## Methods
 ---
 
@@ -72,13 +75,13 @@ uri = "file:./db.db"
 db = SQLXEngine(provider="sqlite", uri=uri)
 ```
 
-After you create an instance of SQLXEngine; This instance is [`Lazy`](https://www.oreilly.com/library/view/python-cookbook/0596001673/ch08s12.html), after calling the [`await db.connect()`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbconnect) method, the connection to the database will be made.
+After you create an instance of SQLXEngine; This instance is [`Lazy`](https://www.oreilly.com/library/view/python-cookbook/0596001673/ch08s12.html), after calling the [`db.connect()`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbconnect) method, the connection to the database will be made.
 
 
 * Modify the file main.py, add two lines:
 
 !!! Note
-    [`PySQLXEngine`](https://pypi.org/project/pysqlx-engine/) also supports [`async with`](https://docs.python.org/pt-br/3/whatsnew/3.5.html?highlight=async%20with#whatsnew-pep-492), where the connection is automatically opened and closed.
+    [`PySQLXEngine`](https://pypi.org/project/pysqlx-engine/) also supports [`async with` and `with`](https://docs.python.org/pt-br/3/whatsnew/3.5.html?highlight=async%20with#whatsnew-pep-492), where the connection is automatically opened and closed.
 
     ```Python hl_lines="6"
     from sqlx_engine import SQLXEngine
@@ -90,7 +93,7 @@ After you create an instance of SQLXEngine; This instance is [`Lazy`](https://ww
             ...
     ```
 
-
+**Code**
 
 ```Python hl_lines="6-7"
 from sqlx_engine import SQLXEngine
@@ -103,14 +106,26 @@ async def main():
 
 ```
 
+
 With [`PySQLXEngine`](https://pypi.org/project/pysqlx-engine/) built for [*asynchronous programming*](https://docs.python.org/3/library/asyncio.html), it is necessary to use the `async def` clause to `await` the coroutine termination.
 
 
 * Modify the file [main.py](./python/connect.py), import the [`asyncio`](https://docs.python.org/3/library/asyncio.html) module to run the [coroutine](https://en.wikipedia.org/wiki/Coroutine):
 
-```Python hl_lines="1 9-11 13"
-{!./python/connect.py!}
+```Python hl_lines="2 10 12 14"
+import asyncio
 
+from sqlx_engine import SQLXEngine
+
+uri = "file:./db.db"
+db = SQLXEngine(provider="sqlite", uri=uri)
+
+async def main():
+    print("connecting...")
+    await db.connect()
+    print(f"it`s connected: {db.connected}")
+
+asyncio.run(main())
 ```
 
 * Run code using [Python3](https://www.python.org/)
@@ -134,7 +149,15 @@ it`s connected: True
 ### **`db.execute()`**
 
 <details markdown="1">
-<summary>Complete code</summary>
+<summary>Complete code - Async</summary>
+
+```Python
+{!./python/aexecute.py!}
+```
+</details>
+
+<details markdown="1">
+<summary>Complete code - Sync</summary>
 
 ```Python
 {!./python/execute.py!}
@@ -143,8 +166,7 @@ it`s connected: True
 
 * Modify the file [main.py](./python/execute.py), add changes with highlighters to create a `user` table.
 
-
-```Python hl_lines="7-20 28"
+```Python hl_lines="7-19 28"
 import asyncio
 from sqlx_engine import SQLXEngine
 
