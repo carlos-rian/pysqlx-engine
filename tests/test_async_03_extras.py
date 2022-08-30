@@ -189,18 +189,13 @@ async def test_15_aengine_using_async_with():
 
 @pytest.mark.asyncio
 async def test_16_aengine_timeout_error():
-    db = SQLXEngine(provider="sqlite", uri="file:./dev.db")
+    db = SQLXEngine(provider="mysql", uri=os.getenv("DATABASE_URI_MYSQL"))
     await db.connect()
-    db._connection.session.timeout = 0.000001
+    db._connection.session.timeout = 0.01
     with pytest.raises(SQLXEngineTimeoutError):
-        query = "SELECT * FROM test_table"
+        query = "DO SLEEP(5);"
         await db.query(query)
-    await db.close()
-    #
-    db = SQLXEngine(provider="sqlite", uri="file:./dev.db")
-    await db.connect()
-    db._connection.session.timeout = 0.000001
     with pytest.raises(SQLXEngineTimeoutError):
-        query = "SELECT * FROM test_table"
+        query = "DO SLEEP(5);"
         await db.execute(query)
     await db.close()
