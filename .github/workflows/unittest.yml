@@ -3,8 +3,7 @@ name: Unit Test Run and Publish
 on:
   push:
     branches:
-      - 'main'
-      - 'dependabot*'
+      - '*'
     paths:
       - '/sqlx_engine/*'
       - '/tests/*'

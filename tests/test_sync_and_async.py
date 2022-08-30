@@ -4,7 +4,6 @@ import subprocess
 import pytest
 from sqlx_engine import SQLXEngine, SQLXEngineSync
 from sqlx_engine._core.aengine import AsyncEngine
-from sqlx_engine._core.common import BaseRow  # noqa
 from sqlx_engine._core.engine import SyncEngine
 from sqlx_engine._core.errors import (
     BaseStartEngineError,
@@ -21,6 +20,7 @@ from sqlx_engine.errors import (
     RawQueryError,
     SQLXEngineError,
 )
+from sqlx_engine.types import BaseRow  # noqa
 
 from tests.common import get_all_adbs, get_all_dbs
 
