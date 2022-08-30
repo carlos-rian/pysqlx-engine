@@ -180,7 +180,7 @@ def test_15_engine_using_async_with():
 def test_16_engine_timeout_error():
     db = SQLXEngineSync(provider="sqlite", uri="file:./dev.db")
     db.connect()
-    db._connection.session.timeout = 0.001
+    db._connection.session.timeout = 0.0001
     with pytest.raises(SQLXEngineTimeoutError):
         query = "SELECT * FROM test_table"
         db.query(query)
