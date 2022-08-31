@@ -16,11 +16,11 @@ jobs:
     name: Run Unit Test
     runs-on: ${{ matrix.os }}
     strategy:
-      max-parallel: 5
+      max-parallel: 1
       matrix:
         os: [ubuntu-latest]
         python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
-      fail-fast: false
+      fail-fast: true
 
     steps:
       - uses: actions/checkout@v3
@@ -47,8 +47,10 @@ jobs:
       - name: Install Dependencies
         run: |
           pip install poetry --user && \
-          poetry export --dev -f requirements.txt --output requirements-dev.txt  --without-hashes && \
-          pip install -r requirements-dev.txt
+          poetry shell && \
+          poetry install
+          # poetry export --dev -f requirements.txt --output requirements-dev.txt  --without-hashes && \
+          # pip install -r requirements-dev.txt
         
       - name: Test
         run: pytest --cov=sqlx_engine --ignore=tests --cov-report=term-missing:skip-covered --cov-report=xml tests ${@}
