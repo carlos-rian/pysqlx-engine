@@ -1,6 +1,6 @@
 # Return Types
 
-PySQLXEngine always returns a list with two data types.
+PySQLXEngine always returns a list with one of the two types below..
 
 * [**BaseRow**](https://pydantic-docs.helpmanual.io/) (default) is a class created from [Pydantic](https://pydantic-docs.helpmanual.io/).
 * [**Dict**](https://docs.python.org/3/tutorial/datastructures.html#dictionaries) is a standard and builtin python object.
