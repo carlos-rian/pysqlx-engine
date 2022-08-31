@@ -395,3 +395,5 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/python,rust,windows,linux,macos,visualstudiocode,pycharm
 
 .binary
+
+_requirements.txt
