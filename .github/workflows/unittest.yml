@@ -57,4 +57,4 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          #flags: pytest ${{ matrix.os }}-${{ matrix.python-version }}
+          flags: ${{ matrix.os }}_${{ matrix.python-version }}
