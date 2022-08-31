@@ -48,7 +48,7 @@ jobs:
       - name: Install Dependencies
         run: |
           pip install poetry --user && \
-          poetry shell && \
+          poetry run poetry shell && \
           poetry install
           # poetry export --dev -f requirements.txt --output requirements-dev.txt  --without-hashes && \
           # pip install -r requirements-dev.txt
