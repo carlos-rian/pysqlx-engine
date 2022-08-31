@@ -1,7 +1,8 @@
-from typing import Dict, List, Literal
+from typing import Dict, List
 
 import pytest
 from sqlx_engine import SQLXEngine
+from typing_extensions import Literal
 
 from tests.common import get_all_adbs
 

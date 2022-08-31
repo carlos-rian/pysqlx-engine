@@ -391,7 +391,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-poetry.lock
+#poetry.lock
 # End of https://www.toptal.com/developers/gitignore/api/python,rust,windows,linux,macos,visualstudiocode,pycharm
 
 .binary

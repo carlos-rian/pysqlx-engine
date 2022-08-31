@@ -10,8 +10,8 @@ import pytest
 
 from tests import common
 
-Path("sqlx_engine/_binary/.binary").unlink(missing_ok=True)
-
+if Path("sqlx_engine/_binary/.binary").exists():
+    Path("sqlx_engine/_binary/.binary").unlink()
 
 @pytest.fixture
 async def adb_sqlite():

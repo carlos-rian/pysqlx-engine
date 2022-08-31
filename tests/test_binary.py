@@ -28,11 +28,14 @@ def test_02_platform_windows():
 
 def test_03_download_without_dot_binary():
     engine = Engine()
-    Path(engine._binary_path).unlink(missing_ok=True)
+    if Path(engine._binary_path).exists():
+        Path(engine._binary_path).unlink()
+        
+    if engine.path.exists():
+        engine.path.unlink()
 
-    # remove file and folder where save binary
-    engine.path.unlink(missing_ok=True)
-    engine.path.parent.rmdir()
+    if engine.path.parent.exists():
+        engine.path.parent.rmdir()
 
     assert engine.download() is None
 
@@ -57,7 +60,8 @@ def test_05_binary_path_with_dot_binary():
 
 def test_06_binary_path_without_dot_binary():
     engine = Engine()
-    Path(engine._binary_path).unlink(missing_ok=True)
+    if Path(engine._binary_path).exists():
+        Path(engine._binary_path).unlink()
     path = engine.binary_path
     assert isinstance(path, str)
 
@@ -97,7 +101,8 @@ def test_10_download_http_status_error():
     config.engine_version = "error"
 
     engine = Engine()
-    Path(engine._binary_path).unlink(missing_ok=True)
+    if Path(engine._binary_path).exists():
+        Path(engine._binary_path).unlink()
 
     with pytest.raises(HTTPStatusError):
         check_binary("test-binary")
