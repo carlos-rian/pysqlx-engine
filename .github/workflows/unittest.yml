@@ -9,6 +9,7 @@ on:
       - 'tests/*'
       - 'requirements*'
       - 'pyproject.toml'
+      - 'poetry.lock'
       - '.github/workflows/unittest.yml'
 
 jobs:
