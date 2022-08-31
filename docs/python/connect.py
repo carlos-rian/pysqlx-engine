@@ -1,13 +1,13 @@
-import asyncio
-
-from sqlx_engine import SQLXEngine
+from sqlx_engine import SQLXEngineSync
 
 uri = "file:./db.db"
-db = SQLXEngine(provider="sqlite", uri=uri)
+db = SQLXEngineSync(provider="sqlite", uri=uri)
 
-async def main():
+
+def main():
     print("connecting...")
-    await db.connect()
+    db.connect()
     print(f"it`s connected: {db.connected}")
 
-asyncio.run(main())
+
+main()

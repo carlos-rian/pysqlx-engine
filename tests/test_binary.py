@@ -1,8 +1,6 @@
-from io import StringIO
 from pathlib import Path
 
 import pytest
-from dotenv import load_dotenv
 from httpx import HTTPStatusError
 from sqlx_engine._binary.download import check_binary
 from sqlx_engine._binary.engine import Engine

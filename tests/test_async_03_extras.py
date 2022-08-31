@@ -1,10 +1,9 @@
 import os
 import subprocess
-from time import time
 
 import pytest
 from sqlx_engine import SQLXEngine
-from sqlx_engine._core.engine import AsyncEngine
+from sqlx_engine._core.aengine import AsyncEngine
 from sqlx_engine._core.errors import (
     BaseStartEngineError,
     EngineConnectionError,
@@ -20,9 +19,9 @@ from sqlx_engine.errors import (
     RawQueryError,
     SQLXEngineError,
 )
-from sqlx_engine.types import BaseRow
+from sqlx_engine.types import BaseRow  # noqa
 
-from tests.common import get_all_dbs
+from tests.common import get_all_adbs, get_all_dbs
 
 
 def test_01_generic_sqlx_engine_error():
@@ -30,20 +29,20 @@ def test_01_generic_sqlx_engine_error():
     assert error.name == "GenericSQLXEngineError"
 
 
-def test_02_engine_raises_provider():
+def test_02_aengine_raises_provider():
     with pytest.raises(ValueError):
         SQLXEngine(provider="test", uri=None)
 
 
-def test_03_engine_raises_url():
+def test_03_aengine_raises_url():
     with pytest.raises(ValueError):
         SQLXEngine(provider="mysql", uri="test")
 
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("name", ["db_sqlite", "db_mysql", "db_postgresql", "db_mssql"])
-async def test_04_engine_raises_already_connected(name: str):
-    db = get_all_dbs(name)
+async def test_04_aengine_raises_already_connected(name: str):
+    db = get_all_adbs(name)
     db: SQLXEngine = await db()
     with pytest.raises(AlreadyConnectedError):
         await db.connect()
@@ -53,8 +52,8 @@ async def test_04_engine_raises_already_connected(name: str):
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("name", ["db_sqlite", "db_mysql", "db_postgresql", "db_mssql"])
-async def test_05_engine_raises_not_connected_error(name: str):
-    db = get_all_dbs(name)
+async def test_05_aengine_raises_not_connected_error(name: str):
+    db = get_all_adbs(name)
     db: SQLXEngine = await db()
     await db.close()
     with pytest.raises(NotConnectedError):
@@ -161,9 +160,7 @@ def test_13_aengine_handler_error_not_mapping_generic_sqlite():
 
 @pytest.mark.asyncio
 async def test_14_aengine_auto_close_connection():
-    aengine = aengine = AsyncEngine(
-        db_uri=os.getenv("DATABASE_URI_SQLITE"), db_provider="sqlite"
-    )
+    aengine = AsyncEngine(db_uri=os.getenv("DATABASE_URI_SQLITE"), db_provider="sqlite")
     await aengine.connect()
 
     aengine.__del__()
@@ -175,7 +172,7 @@ async def test_14_aengine_auto_close_connection():
 
 
 @pytest.mark.asyncio
-async def test_14_engine_connect_timeout_none():
+async def test_14_aengine_connect_timeout_none():
     aengine = SQLXEngine(uri=os.getenv("DATABASE_URI_SQLITE"), provider="sqlite")
 
     with pytest.raises(ValueError):
@@ -183,7 +180,7 @@ async def test_14_engine_connect_timeout_none():
 
 
 @pytest.mark.asyncio
-async def test_15_engine_using_async_with():
+async def test_15_aengine_using_async_with():
     async with SQLXEngine(provider="sqlite", uri="file:./dev.db") as db:
         query = "SELECT * FROM test_table"
         resp = await db.query(query)
@@ -191,14 +188,14 @@ async def test_15_engine_using_async_with():
 
 
 @pytest.mark.asyncio
-async def test_16_engine_timeout_error():
-    db = SQLXEngine(provider="sqlite", uri="file:./dev.db")
+async def test_16_aengine_timeout_error():
+    db = SQLXEngine(provider="mysql", uri=os.getenv("DATABASE_URI_MYSQL"))
     await db.connect()
-    db._connection.session.timeout = 0.001
+    db._connection.session.timeout = 0.01
     with pytest.raises(SQLXEngineTimeoutError):
-        query = "SELECT * FROM test_table"
+        query = "DO SLEEP(5);"
         await db.query(query)
-
     with pytest.raises(SQLXEngineTimeoutError):
-        query = "SELECT * FROM test_table"
+        query = "DO SLEEP(5);"
         await db.execute(query)
+    await db.close()

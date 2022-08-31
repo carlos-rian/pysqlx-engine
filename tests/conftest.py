@@ -14,23 +14,43 @@ Path("sqlx_engine/_binary/.binary").unlink(missing_ok=True)
 
 
 @pytest.fixture
-async def db_sqlite():
-    return await common.db_sqlite()
+async def adb_sqlite():
+    return await common.adb_sqlite()
 
 
 @pytest.fixture
-async def db_postgresql():
-    return await common.db_postgresql()
+async def adb_postgresql():
+    return await common.adb_postgresql()
 
 
 @pytest.fixture
-async def db_mssql():
-    return await common.db_mssql()
+async def adb_mssql():
+    return await common.adb_mssql()
 
 
 @pytest.fixture
-async def db_mysql():
-    return await common.db_mysql()
+async def adb_mysql():
+    return await common.adb_mysql()
+
+
+@pytest.fixture
+def db_sqlite():
+    return common.db_sqlite()
+
+
+@pytest.fixture
+def db_postgresql():
+    return common.db_postgresql()
+
+
+@pytest.fixture
+def db_mssql():
+    return common.db_mssql()
+
+
+@pytest.fixture
+def db_mysql():
+    return common.db_mysql()
 
 
 @pytest.fixture(name="table", scope="session")

@@ -4,7 +4,7 @@
   <a href="/"><img src="./img/logo-text3.png" alt="PySQLXEngine Logo"></a>
 </p>
 <p align="center">
-    <em>PySQLXEngine, a minimalist asynchronous SQL engine, ready for production</em>
+    <em>PySQLXEngine, a minimalist SQL engine, ready for production</em>
 </p>
 
 <p align="center">
@@ -32,8 +32,7 @@
 
 PySQLXEngine supports the option of sending **raw sql** to your database.
 
-The PySQLXEngine is a minimalist [**Async** SQL engine](https://github.com/carlos-rian/pysqlx-engine). Currently this lib only supports [*asynchronous programming*](https://docs.python.org/3/library/asyncio.html), you need to use [`await`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbquery) in all methods.
-
+The PySQLXEngine is a minimalist [SQL engine](https://github.com/carlos-rian/pysqlx-engine). Supports [**async**](https://docs.python.org/3/library/asyncio.html) and [**sync**](https://deepsource.io/glossary/synchronous-programming/) programming.
 
 All SQL that is executed using the PySQLXEngine is atomic; that is, only one statement is performed at a time. Only the first one will be completed if you send an Insert and a select. This is one of the ways to deal with SQL ingestion. 
 One detail is that [`COMMIT`](https://www.geeksforgeeks.org/difference-between-commit-and-rollback-in-sql) and [`ROLLBACK`](https://www.geeksforgeeks.org/difference-between-commit-and-rollback-in-sql) are automatic!!! This is not changeable.
@@ -81,21 +80,36 @@ OS Support:
 
 * Create `main.py` file.
 
-```python
-import asyncio
+=== "Async"
+    ```python
+    import asyncio
+    from sqlx_engine import SQLXEngine
 
-from sqlx_engine import SQLXEngine
+    uri = "file:./db.db"
+    db = SQLXEngine(provider="sqlite", uri=uri)
 
-uri = "file:./db.db"
-db = SQLXEngine(provider="sqlite", uri=uri)
+    async def main():
+        await db.connect()
+        rows = await db.query(query="select 1 as number")
+        print(rows)
 
-async def main():
-    await db.connect()
-    rows = await db.query(query="select 1 as number")
-    print(rows)
+    asyncio.run(main())
+    ```
+=== "Sync"
+    ```python
+    
+    from sqlx_engine import SQLXEngineSync
 
-asyncio.run(main())
-```
+    uri = "file:./db.db"
+    db = SQLXEngineSync(provider="sqlite", uri=uri)
+
+    def main():
+        db.connect()
+        rows = db.query(query="select 1 as number")
+        print(rows)
+
+    main()
+    ```
 
 * Run it
 

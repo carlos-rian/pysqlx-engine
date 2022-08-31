@@ -1,10 +1,11 @@
-from sqlx_engine import SQLXEngineSync
+import asyncio
+
+from sqlx_engine import SQLXEngine
 
 uri = "file:./db.db"
-db = SQLXEngineSync(provider="sqlite", uri=uri)
+db = SQLXEngine(provider="sqlite", uri=uri)
 
-
-def create_table(db: SQLXEngineSync):
+async def create_table(db: SQLXEngine):
     stmt = """CREATE TABLE user (
         id          INTEGER   PRIMARY KEY,
         first_name  TEXT      not null,
@@ -14,11 +15,10 @@ def create_table(db: SQLXEngineSync):
     );
     """
     print("creating...")
-    resp = db.execute(stmt)
+    resp = await db.execute(stmt)
     print(f"created: {resp}")
 
-
-def insert_row(db: SQLXEngineSync):
+async def insert_row(db: SQLXEngine):
     stmt = """
         INSERT INTO user(
             first_name,
@@ -33,17 +33,16 @@ def insert_row(db: SQLXEngineSync):
         );
     """
     print(f"inserting...")
-    resp = db.execute(stmt)
+    resp = await db.execute(stmt)
     print(f"inserted: {resp} affect")
 
-
-def main():
-    db.connect()
+async def main():
+    await db.connect()
 
     # create table user
-    create_table(db)
+    await create_table(db)
     # insert row
-    insert_row(db)
+    await insert_row(db)
+    
 
-
-main()
+asyncio.run(main())

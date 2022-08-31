@@ -1,9 +1,9 @@
+import asyncio
 import json
 import logging
 import subprocess
 from os import environ
 from pathlib import Path
-from time import sleep
 from typing import Any, Dict, List
 
 import httpx
@@ -24,7 +24,7 @@ from .errors import (  # UnprocessableEntityError,
 log: logging.Logger = logging.getLogger()
 
 
-class SyncEngine:
+class AsyncEngine:
     __slots__ = (
         "db_uri",
         "db_provider",
@@ -45,7 +45,7 @@ class SyncEngine:
         connect_timeout: int = 10,
         url: str = None,
         process: subprocess.Popen = None,
-        session: httpx.Client = None,
+        session: httpx.AsyncClient = None,
     ) -> None:
         self.db_uri = db_uri
         self.db_provider = db_provider
@@ -54,7 +54,7 @@ class SyncEngine:
 
         self.url: str = url
         self.process: subprocess.Popen = process
-        self.session: httpx.Client = session
+        self.session: httpx.AsyncClient = session
         self.connected = False
         self._binary_path: Path = None
 
@@ -66,26 +66,26 @@ class SyncEngine:
             self.connected = False
             self.session = None
 
-    def _close(self):
+    async def _close(self):
         if self.session and not self.session.is_closed:
-            self.session.close()
+            await self.session.aclose()
         self.session = None
 
-    def connect(self) -> None:
+    async def connect(self) -> None:
         if self.process:
             raise AlreadyConnectedError("Already connected to the engine")
 
-        self.session: httpx.Client = httpx.Client(timeout=self.db_timeout)
+        self.session: httpx.AsyncClient = httpx.AsyncClient(timeout=self.db_timeout)
         self._binary_path = check_binary()
 
         try:
-            self.spawn(file=Path(self._binary_path))
+            await self.spawn(file=Path(self._binary_path))
         except Exception:
-            self._close()
+            await self._close()
             raise
 
-    def disconnect(self) -> None:
-        self._close()
+    async def disconnect(self) -> None:
+        await self._close()
         if not self.process:
             raise NotConnectedError("Not connected")
 
@@ -94,7 +94,7 @@ class SyncEngine:
         self.process = None
         self.connected = False
 
-    def _try_comunicate(self):
+    async def _try_comunicate(self):
         try:
             stdout, stderr = self.process.communicate(timeout=0.03)
 
@@ -105,21 +105,21 @@ class SyncEngine:
 
             try:
                 data = json.loads(std)
-                self.disconnect()
+                await self.disconnect()
                 raise StartEngineError(error=data)
             except (json.JSONDecodeError, TypeError):
-                self.disconnect()
+                await self.disconnect()
                 raise BaseStartEngineError(std)
         except subprocess.TimeoutExpired:
             pass
 
-    def spawn(self, file: Path) -> None:
+    async def spawn(self, file: Path) -> None:
         port = common.get_open_port()
         log.debug(f"Running engine on port: {port}")
 
         self.url = f"http://localhost:{port}"
 
-        dml = common.get_dml()
+        dml = await common.a_get_dml()
 
         dml = dml.replace("postgres", self.db_provider)
         dml = dml.replace("DATASOURCE_URL", self.db_uri)
@@ -142,11 +142,11 @@ class SyncEngine:
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
-        self._try_comunicate()
+        await self._try_comunicate()
 
-        self._check_connect()
+        await self._check_connect()
 
-    def request(
+    async def request(
         self, method: config.method, path: str, *, content: Any = None
     ) -> Dict[str, Any]:
         if not self.url:
@@ -165,7 +165,7 @@ class SyncEngine:
         url = self.url + path
         log.debug(f"Sending {method} request to {url} with content: {content}")
 
-        resp = self.session.request(method=method, url=url, **kwargs)
+        resp = await self.session.request(method=method, url=url, **kwargs)
 
         if resp.is_success:
             response = resp.json()
@@ -174,21 +174,25 @@ class SyncEngine:
 
             errors_data = response.get("errors")
             if errors_data:
-                handler_error(errors=errors_data)
+                return handler_error(errors=errors_data)
 
             return response
 
+        # unused
+        # elif resp.status == 422:
+        #    raise UnprocessableEntityError(resp)
+
         raise EngineRequestError(f"{resp.status_code}: {resp.text}")
 
-    def _check_connect(self) -> None:
+    async def _check_connect(self) -> None:
         last_err = None
         for _ in range(int(self.connect_timeout / 0.01)):
             try:
-                self.request("GET", "/status")
+                await self.request("GET", "/status")
                 self.connected = True
                 return
             except Exception as err:
-                sleep(0.01)
+                await asyncio.sleep(0.01)
                 log.debug(
                     (
                         "Could not connect to engine due to "
@@ -197,8 +201,8 @@ class SyncEngine:
                 )
                 last_err = err
 
-        self._try_comunicate()
+        await self._try_comunicate()
 
-        self.disconnect()
+        await self.disconnect()
 
         raise EngineConnectionError("Could not connect to the engine") from last_err
