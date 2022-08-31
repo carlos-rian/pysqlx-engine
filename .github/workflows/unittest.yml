@@ -1,4 +1,4 @@
-name: Test
+name: Unit Tests
 
 on:
   push:
@@ -16,10 +16,10 @@ jobs:
     name: Run Unit Test
     runs-on: ${{ matrix.os }}
     strategy:
-      max-parallel: 3
+      max-parallel: 5
       matrix:
         os: [ubuntu-latest]
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
       fail-fast: false
 
     steps:
