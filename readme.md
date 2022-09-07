@@ -4,7 +4,7 @@
   <a href="/"><img src="https://carlos-rian.github.io/pysqlx-engine/img/logo-text3.png" alt="PySQLXEngine Logo"></a>
 </p>
 <p align="center">
-    <em>PySQLXEngine, a minimalist asynchronous SQL engine</em>
+    <em>PySQLXEngine, a minimalist SQL engine</em>
 </p>
 
 <p align="center">
@@ -32,7 +32,7 @@
 
 PySQLXEngine supports the option of sending **raw sql** to your database.
 
-The PySQLXEngine is a minimalist **Async** SQL engine. Currently this lib only supports *asynchronous programming*, you need to use `await` in all methods.
+The PySQLXEngine is a minimalist **Async** SQL engine. Currently this lib only supports *async and sync programming*.
 
 Database Support:
 
@@ -63,7 +63,7 @@ $ poetry add pysqlx-engine
 ```
 
 
-## Example
+## Async Example
 
 * Create `main.py` file.
 
