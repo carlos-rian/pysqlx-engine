@@ -30,12 +30,18 @@
 
 ---
 
+!!! warning
+    I'm writing a new version with native support between Rust and Python using the Pyo3 lib, making this lib smaller and extremely faster, in some tests it's even 10x faster than the current version! 
+
+    *The version 1.0.0 may have some changes in the type core, but it will become very friendly, but there will be a break in compatibility between version zero and 1.0.0!*
+
+
 PySQLXEngine supports the option of sending **raw sql** to your database.
 
 The PySQLXEngine is a minimalist [SQL engine](https://github.com/carlos-rian/pysqlx-engine). Supports [**async**](https://docs.python.org/3/library/asyncio.html) and [**sync**](https://deepsource.io/glossary/synchronous-programming/) programming.
 
 All SQL that is executed using the PySQLXEngine is atomic; that is, only one statement is performed at a time. Only the first one will be completed if you send an Insert and a select. This is one of the ways to deal with SQL ingestion. 
-One detail is that [`COMMIT`](https://www.geeksforgeeks.org/difference-between-commit-and-rollback-in-sql) and [`ROLLBACK`](https://www.geeksforgeeks.org/difference-between-commit-and-rollback-in-sql) are automatic!!! This is not changeable.
+_One detail is that [`COMMIT`](https://www.geeksforgeeks.org/difference-between-commit-and-rollback-in-sql) and [`ROLLBACK`](https://www.geeksforgeeks.org/difference-between-commit-and-rollback-in-sql) are automatic!!! This is not changeable now_ (__version 1.0.0 will bring this future__).
 
 
 
