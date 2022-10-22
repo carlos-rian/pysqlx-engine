@@ -30,14 +30,6 @@
 
 ---
 
-<small>
-I'm writing a new version with native support between Rust and Python using the Pyo3 lib, making this lib smaller and extremely faster, in some tests it's even 10x faster than the current version! 
-
-*The version 1.0.0 may have some changes in the type core, but it will become very friendly, but there will be a break in compatibility between version zero and 1.0.0!*
-
-</small>
-
-
 PySQLXEngine supports the option of sending **raw sql** to your database.
 
 The PySQLXEngine is a minimalist **Async** SQL engine. Currently this lib only supports *async and sync programming*.
@@ -101,3 +93,9 @@ $ python3 main.py
 [BaseRow(number=1)]
 ```
 </div>
+
+
+### about version 1.0.0
+I'm writing a new version with native support between Rust and Python using the Pyo3 lib, making this lib smaller and extremely faster, in some tests it's even 80% faster than the current version! 
+
+*The version 1.0.0 may have some changes in the type core, but it will become very friendly, but there will be a break in compatibility between version 0.1.* and 1.0.0!*
