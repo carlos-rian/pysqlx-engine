@@ -10,15 +10,15 @@ LiteralString = str
 
 class PySQLXEngine:
     """
-    PySQLXEngine is an engine to run pure sql with queries, inserts,
-    deletes, updates, create/alter/drop tables etc.
+    PySQLXEngine is an engine to run pure sql, but you have flexibility to use how you want.
 
     All SQL that is executed using the PySQLXEngine is atomic; that is,
     only one statement is performed at a time. Only the first one will
     be completed if you send an Insert and a select.
     This is one of the ways to deal with SQL ingestion.
 
-    Always `COMMIT` and `ROLLBACK` is automatic!!! This is not changeable...
+    By default the `BEGIN`, `COMMIT` and `ROLLBACK` is automatic, if the sql is valid, is committed, if not, is rolled back.
+    But you can use the `BEGIN` and `COMMIT` or `ROLLBACK` to control the transaction.
 
     `providers(str)`: postgresql, mysql, sqlserver or sqlite
     `uri(str)`:  Connection values.
@@ -193,7 +193,7 @@ class PySQLXEngine:
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
-    async def start_transaction(self, isolation_level: Union[pysqlx_core.IsolationLevel, None] ) -> None:
+    async def start_transaction(self, isolation_level: Union[pysqlx_core.IsolationLevel, None] = None) -> None:
         """Starts a transaction with BEGIN. by default, does not set the isolation level."""
         self._check_connection()
         try:
