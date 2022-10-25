@@ -1,61 +1,17 @@
 [tool.poetry]
 name = "pysqlx-engine"
-
-version = "0.1.23"
-description = "Python Async SQL Engines"
-authors = ["Carlos Rian <crian.rian@gmail.com>"]
-license = "MIT"
-readme = "readme.md"
-repository = "https://github.com/carlos-rian/pysqlx-engine"
-homepage = "https://carlos-rian.github.io/pysqlx-engine"
-documentation = "https://carlos-rian.github.io/pysqlx-engine"
-keywords = ["async", "database", "sql", "engine", "fastapi"]
-
-packages = [
-    { include = "sqlx_engine"},
-]
-classifiers = [
-    "Framework :: AsyncIO",
-    "Intended Audience :: Developers",
-    "Intended Audience :: Information Technology",
-    "Intended Audience :: System Administrators",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python",
-    "Topic :: Database",
-    "Topic :: Internet",
-    "Topic :: Software Development :: Libraries :: Application Frameworks",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Software Development :: Libraries",
-    "Topic :: Software Development",
-    "Typing :: Typed",
-]
+version = "1.0.0"
+description = ""
+authors = ["carlos-rian <crian.rian@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
-pydantic = "^1.9.1"
-httpx = "^0.23.0"
-aiofiles = ">=0.8,<22.2"
-Pygments = "^2.12.0"
-typing-extensions = "^4.3.0"
+pysqlx-core = "^0.1.15"
+pydantic = "^1.10.2"
 
 [tool.poetry.dev-dependencies]
-black = "^22.8.0"
+black = "^22.10.0"
 isort = "^5.10.1"
-pytest = "^7.1.3"
-pytest-cov = "^4.0.0"
-pytest-xdist = "^2.5.0"
-pytest-asyncio = "^0.20.1"
-mkdocs-material = "^8.4.2"
-mkdocs-video = "^1.3.0"
-markdown-include = "^0.7.0"
-mkdocs-material-extensions = "^1.0.3"
-pytest-dotenv = "^0.5.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
