@@ -6,8 +6,9 @@ authors = ["carlos-rian <crian.rian@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
-pysqlx-core = "^0.1.15"
 pydantic = "^1.10.2"
+Pygments = "^2.13.0"
+pysqlx-core = "^0.1.20"
 
 [tool.poetry.dev-dependencies]
 black = "^22.10.0"
