@@ -5,6 +5,7 @@ from pysqlx_engine._core.errors import (
     ConnectError,
     ExecuteError,
     IsoLevelError,
+    NotConnectedError,
     PySQLXError,
     QueryError,
     RawCmdError,
@@ -47,12 +48,14 @@ def force_sync(fn):
 
 def pysqlx_get_error(err: _PySQLXError) -> PySQLXError:
     types_err = {
-        "QueryError": QueryError,
-        "ExecuteError": ExecuteError,
         "ConnectError": ConnectError,
+        "ExecuteError": ExecuteError,
+        "NotConnectedError": NotConnectedError,
         "IsoLevelError": IsoLevelError,
-        "StartTransactionError": StartTransactionError,
+        "PySQLXError": PySQLXError,
+        "QueryError": QueryError,
         "RawCmdError": RawCmdError,
+        "StartTransactionError": StartTransactionError,
     }
     error: PySQLXError = types_err.get(err.error())
     if error is not None:

@@ -2,6 +2,7 @@ import os
 import sys
 
 import pytest
+import pytest_asyncio
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
@@ -9,22 +10,22 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 from tests import common
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def adb_sqlite():
     return await common.adb_sqlite()
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def adb_pgsql():
     return await common.adb_pgsql()
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def adb_mssql():
     return await common.adb_mssql()
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def adb_mysql():
     return await common.adb_mysql()
 

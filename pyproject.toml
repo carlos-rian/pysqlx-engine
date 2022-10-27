@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pysqlx-engine"
-version = "1.0.0"
+version = "0.2.0"
 description = ""
 authors = ["carlos-rian <crian.rian@gmail.com>"]
 
