@@ -7,6 +7,7 @@ from pysqlx_engine._core.errors import (
     IsoLevelError,
     PySQLXError,
     QueryError,
+    RawCmdError,
     StartTransactionError,
 )
 
@@ -48,9 +49,10 @@ def pysqlx_get_error(err: _PySQLXError) -> PySQLXError:
     types_err = {
         "QueryError": QueryError,
         "ExecuteError": ExecuteError,
-        "ConnectionError": ConnectError,
+        "ConnectError": ConnectError,
         "IsoLevelError": IsoLevelError,
         "StartTransactionError": StartTransactionError,
+        "RawCmdError": RawCmdError,
     }
     error: PySQLXError = types_err.get(err.error())
     if error is not None:

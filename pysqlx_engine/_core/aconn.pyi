@@ -26,13 +26,12 @@ class PySQLXEngine:
 
     ---
 
-    #### parameters:
-
-    `uri(str)`:  uri of the database, example: `postgresql://user:pass@host:port/db?schema=sample`
+    #### Arguments:
+        `uri(str)`:  uri of the database, Example `postgresql://user:pass@host:port/db?schema=sample`
 
     ---
 
-    #### uri starts with:
+    #### URI Starts With:
         * `postgresql`
         * `mysql`
         * `sqlite`
@@ -74,17 +73,39 @@ class PySQLXEngine:
         ...
     def is_healthy(self) -> "bool":
         """
+        ## Description
+
         Check if the connection is healthy.
+
         Returns false, if connection is considered to not be in a working state.
+
+        * Arguments: `None`
+
+        * Returns: `bool`
+
+        * Raises: `None`
+
         """
         ...
     def requires_isolation_first(self) -> "bool":
-        """Returns `True` if the connection requires isolation first, `False` otherwise.
+        """
+        ## Description
+        Returns `True` if the connection requires isolation first, `False` otherwise.
+
         This is used to determine if the connection should be isolated before executing a query.
-        for example, sqlserver requires isolation before executing a statement using begin in some cases.
 
-        - Signals if the isolation level SET needs to happen before or after the BEGIN
+        For example, sqlserver requires isolation before executing a statement using begin in some cases.
 
+        Signals if the isolation level SET needs to happen before or after the BEGIN.
+
+        * Arguments: `None`
+
+        * Returns: `bool`
+
+        * Raises: `None`
+
+        ---
+        ### Extra documentation:
         * [SQL Server documentation]: (https://learn.microsoft.com/en-us/sql/t-sql/language-elements/transaction-isolation-levels)
         * [Postgres documentation]: (https://www.postgresql.org/docs/current/sql-set-transaction.html)
         * [MySQL documentation]: (https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html)
@@ -92,13 +113,17 @@ class PySQLXEngine:
         """
         ...
     async def __aenter__(self) -> "PySQLXEngine":
-        """Open a connection to the database. using `async with`"""
+        """
+        ## Description
+        Open a connection to the database. using `async with`
+        """
         ...
     async def __aexit__(
         self, exc_type: Optional[Type[BaseException]], exc: Optional[BaseException], exc_tb: Optional[TracebackType]
     ): ...
     async def connect(self) -> "None":
         """
+        ## Description
         Every connection instance is lazy, only after the .connect() is the
         database checked and a connection is created with it.
 
@@ -106,18 +131,34 @@ class PySQLXEngine:
 
         when you use `async with` the connection is automatically opened and closed.
 
-        example:
+        * Arguments: `None`
+
+        * Returns: `None`
+
+        * Raises: `ConnectError`
+
+        ---
+        ### Example
             >>> db = PySQLXEngineSync(uri=uri)
             >>> await db.connect()
         """
         raise ConnectError()
     async def close(self) -> "None":
-        """Is good always close the connection, but!
+        """
+        ## Description
+        Is good always close the connection, but!
         Even if you don't close the connection, don't worry,
         when the process ends automatically the connections will
         be closed so the bank doesn't have an idle connection.
 
-        example:
+        * Arguments: `None`
+
+        * Returns: `None`
+
+        * Raises: `None`
+
+        ---
+        ### Example
             >>> db = PySQLXEngineSync(uri=uri)
             >>> await db.connect()
             >>> await db.close()
@@ -126,20 +167,38 @@ class PySQLXEngine:
         ...
     async def raw_cmd(self, sql: LiteralString) -> "None":
         """
+        ## Description
         Run a command in the database, for queries that can't be run using prepared statements.
 
-        Example: `SET TRANSACTION ISOLATION LEVEL READ COMMITTED;`
+        * Arguments: `sql(str)`:  sql to be executed
+
+        * Returns: `None`
+
+        * Raises: `RawCmdError`
+
+        ---
+        ### Example
+        `SET TRANSACTION ISOLATION LEVEL READ COMMITTED;`
+
         """
         ...
     async def query(self, query: LiteralString) -> "Union[List[BaseRow], List]":
         """
+        ## Description
         Returns all rows of the query result with List of `BaseRow` or empty List.
 
         BaseRow is a class that represents a row of the result of a query.
 
         BaseRow is a class created from `Pydantic`, then you have all the benefits of `Pydantic`.
 
-        example:
+        * Arguments: `query(str)`:  sql to be executed
+
+        * Returns: `Union[List[BaseRow], List]`: List of `BaseRow` or empty List
+
+        * Raises: `QueryError`
+
+        ---
+        ### Example
             >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
             >>> conn = PySQLXEngine(uri=uri)
             >>> await conn.connect()
@@ -151,13 +210,21 @@ class PySQLXEngine:
         raise QueryError()
     async def query_first(self, query: LiteralString) -> "Union[BaseRow, None]":
         """
+        ## Description
         Returns the first row of the query result with BaseRow or None case result is empty.
 
         BaseRow is a class that represents a row of the result of a query.
 
         BaseRow is a class created from `Pydantic`, then you have all the benefits of `Pydantic`.
 
-        example:
+        * Arguments: `query(str)`:  sql to be executed
+
+        * Returns: `Union[BaseRow, None]`: a `BaseRow` or None
+
+        * Raises: `QueryError`
+
+        ---
+        ### Example
             >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
             >>> conn = PySQLXEngine(uri=uri)
             >>> await conn.connect()
@@ -169,9 +236,17 @@ class PySQLXEngine:
         raise QueryError()
     async def query_as_list(self, query: LiteralString) -> "Union[List[Dict[str, Any]], List]":
         """
+        ## Description
         Returns a list of dictionaries representing the rows of the query result.
 
-        example:
+        * Arguments: `query(str)`:  sql to be executed
+
+        * Returns: `Union[List[Dict[str, Any]], List]`: List of `Dict[str, Any]` or empty List
+
+        * Raises: `QueryError`
+
+        ---
+        ### Example
             >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
             >>> conn = PySQLXEngine(uri=uri)
             >>> await conn.connect()
@@ -182,9 +257,17 @@ class PySQLXEngine:
         raise QueryError()
     async def query_first_as_dict(self, query: LiteralString) -> "Union[Dict[str, Any], None]":
         """
+        ## Description
         Returns the first row as dict or None case not data.
 
-        example:
+        * Arguments: `query(str)`:  sql to be executed
+
+        * Returns: `Union[Dict[str, Any], None]`: a `Dict[str, Any]` or None
+
+        * Raises: `QueryError`
+
+        ---
+        ### Example
             >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
             >>> conn = PySQLXEngine(uri=uri)
             >>> await conn.connect()
@@ -195,13 +278,21 @@ class PySQLXEngine:
         raise QueryError()
     async def execute(self, stmt: LiteralString) -> "int":
         """
+        ## Description
         Executes a query/sql and returns the number of rows affected.
 
-        example:
+        * Arguments: `stmt(str)`:  sql to be executed
+
+        * Returns: `int`: number of rows affected
+
+        * Raises: `ExecuteError`
+
+        ---
+        ### Example
             >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
             >>> conn = PySQLXEngine(uri=uri)
             >>> await conn.connect()
-            >>> result = await conn.execute("INSERT INTO users (name) VALUES ("rian")")
+            >>> result = await conn.execute("INSERT INTO users (name) VALUES ('rian')")
             >>> print(f"rows_affected = {result}")
             >>> # output -> rows_affected = 1
 
@@ -209,18 +300,27 @@ class PySQLXEngine:
         raise ExecuteError()
     async def set_isolation_level(self, isolation_level: ISOLATION_LEVEL) -> "None":
         """
+        ## Description
         Sets the isolation level of the connection.
 
         The isolation level is set before the transaction is started.
         Is used to separate the transaction per level.
 
-        example:
+        * Arguments: `isolation_level(str)`:  isolation level to be set (ReadUncommitted, ReadCommitted, RepeatableRead, Snapshot, Serializable)
+
+        * Returns: `None`
+
+        * Raises: `IsolationLevelError`, `ValueError`
+
+        ---
+        ### Example
             >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
             >>> conn = PySQLXEngine(uri=uri)
             >>> await conn.connect()
             >>> await conn.set_isolation_level(isolation_level="READ_COMMITTED")
 
-        isolation_level help:
+        ---
+        ### Isolation Level Help
             * [SQL Server documentation]: (https://learn.microsoft.com/en-us/sql/t-sql/language-elements/transaction-isolation-levels)
             * [Postgres documentation]: (https://www.postgresql.org/docs/current/sql-set-transaction.html)
             * [MySQL documentation]: (https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html)
@@ -229,18 +329,27 @@ class PySQLXEngine:
         ...
     async def start_transaction(self, isolation_level: Union[ISOLATION_LEVEL, None] = None) -> "None":
         """
+        ## Description
         Starts a transaction with BEGIN. by default, does not set the isolation level.
 
-        example:
+        * Arguments: `isolation_level(str)`: by default is None. Isolation level to be set (ReadUncommitted, ReadCommitted, RepeatableRead, Snapshot, Serializable)
+
+        * Returns: `None`
+
+        * Raises: (`IsolationLevelError`, `StartTransactionError` `ValueError`)
+
+        ---
+        ### Example
             >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
             >>> conn = PySQLXEngine(uri=uri)
             >>> await conn.connect()
             >>> # with isolation level
-            >>> await conn.start_transaction(isolation_level="READ_COMMITTED")
+            >>> await conn.start_transaction(isolation_level="ReadCommitted")
             >>> # without isolation level
             >>> await conn.start_transaction()
 
-        isolation_level help:
+        ---
+        ### Isolation Level Help
             * [SQL Server documentation]: (https://learn.microsoft.com/en-us/sql/t-sql/language-elements/transaction-isolation-levels)
             * [Postgres documentation]: (https://www.postgresql.org/docs/current/sql-set-transaction.html)
             * [MySQL documentation]: (https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html)
