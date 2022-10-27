@@ -40,7 +40,7 @@ class Parser:
     def parse(self) -> List[BaseRow]:
         if len(self.result) == 0:
             return []
-        return parse_obj_as(self.create_model(), self.result.get_all())
+        return parse_obj_as(List[self.create_model()], self.result.get_all())
 
     def parse_first(self) -> Union[BaseRow, None]:
         if len(self.result) == 0:

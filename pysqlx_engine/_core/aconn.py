@@ -1,9 +1,10 @@
 import pysqlx_core
 from typing_extensions import Literal
 
-from .errors import NotConnectedError, pysqlx_get_error
+from .errors import NotConnectedError
 from .helper import isolation_error_message, not_connected_error_message
 from .parser import Parser
+from .until import pysqlx_get_error
 
 LiteralString = str
 ISOLATION_LEVEL = Literal["ReadUncommitted", "ReadCommitted", "RepeatableRead", "Snapshot", "Serializable"]

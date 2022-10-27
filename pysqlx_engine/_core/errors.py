@@ -2,7 +2,7 @@ from os import getenv
 
 from pysqlx_core import PySQLXError as _PySQLXError
 
-from helper import fe_json
+from .helper import fe_json
 
 
 class PySQLXError(Exception):
@@ -47,20 +47,6 @@ class StartTransactionError(PySQLXError):
 
 class NotConnectedError(Exception):
     ...
-
-
-def pysqlx_get_error(err: PySQLXError) -> PySQLXError:
-    types_err = {
-        "QueryError": QueryError,
-        "ExecuteError": ExecuteError,
-        "ConnectionError": ConnectError,
-        "IsoLevelError": IsoLevelError,
-        "StartTransactionError": StartTransactionError,
-    }
-    error: PySQLXError = types_err.get(err.error())
-    if error is not None:
-        return error(err=error)
-    return err
 
 
 if __name__ == "__main__":

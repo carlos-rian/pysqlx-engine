@@ -12,9 +12,9 @@ ISOLATION_LEVEL = Literal["ReadUncommitted", "ReadCommitted", "RepeatableRead", 
 
 class PySQLXEngine:
     """
-    PySQLXEngine is an engine to run pure sql, but you have flexibility to use how you want.
+    PySQLXEngineSync is an engine to run pure sql, but you have flexibility to use how you want.
 
-    All SQL that is executed using the PySQLXEngine is atomic; that is,
+    All SQL that is executed using the PySQLXEngineSync is atomic; that is,
     only one statement is performed at a time. Only the first one will
     be completed if you send an Insert and a select.
     This is one of the ways to deal with SQL ingestion.
@@ -27,29 +27,27 @@ class PySQLXEngine:
 
     init uri dbs: `postgresql://`, `mysql://`, `sqlite://`, `mssql://`
 
-
-
     Usage:
     ``` python
     >>> ##### PostgreSQL
     >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
-    >>> conn = PySQLXEngine(uri=uri)
-    >>> await conn.connect()
+    >>> conn = PySQLXEngineSync(uri=uri)
+    >>> conn.connect()
     #------------------------------------------
     >>> ##### MySQL
     >>> uri = "mysql://user:pass@host:port/db?schema=sample"
-    >>> conn = PySQLXEngine( uri=uri)
-    >>> await conn.connect()
+    >>> conn = PySQLXEngineSync( uri=uri)
+    >>> conn.connect()
     #------------------------------------------
     >>> ##### Microsoft SQL Server
     >>> uri = "sqlserver://host:port;initial catalog=sample;user=sa;password=pass;"
-    >>> conn = PySQLXEngine(uri=uri)
-    >>> await conn.connect()
+    >>> conn = PySQLXEngineSync(uri=uri)
+    >>> conn.connect()
     #------------------------------------------
     >>> ##### SQLite
     >>> uri = "sqlite:./dev.db"
-    >>> conn = PySQLXEngine(uri=uri)
-    >>> await conn.connect()
+    >>> conn = PySQLXEngineSync(uri=uri)
+    >>> conn.connect()
     ```
     """
 
@@ -80,27 +78,27 @@ class PySQLXEngine:
         * [SQLite documentation]: (https://www.sqlite.org/isolation.html)
         """
         ...
-    async def __aenter__(self) -> "PySQLXEngine":
-        """Open a connection to the database. using `async with`"""
+    def __enter__(self) -> "PySQLXEngine":
+        """Open a connection to the database. using `with`"""
         ...
-    async def __aexit__(
+    def __exit__(
         self, exc_type: Optional[Type[BaseException]], exc: Optional[BaseException], exc_tb: Optional[TracebackType]
     ): ...
-    async def connect(self) -> "None":
+    def connect(self) -> "None":
         """
         Every connection instance is lazy, only after the .connect() is the
         database checked and a connection is created with it.
 
         .connect() establishes a connection to the database.
 
-        when you use `async with` the connection is automatically opened and closed.
+        when you use `with` the connection is automatically opened and closed.
 
         example:
             >>> db = PySQLXEngineSync(uri=uri)
-            >>> await db.connect()
+            >>> db.connect()
         """
         raise ConnectError()
-    async def close(self) -> "None":
+    def close(self) -> "None":
         """Is good always close the connection, but!
         Even if you don't close the connection, don't worry,
         when the process ends automatically the connections will
@@ -108,19 +106,19 @@ class PySQLXEngine:
 
         example:
             >>> db = PySQLXEngineSync(uri=uri)
-            >>> await db.connect()
-            >>> await db.close()
+            >>> db.connect()
+            >>> db.close()
 
         """
         ...
-    async def raw_cmd(self, sql: LiteralString) -> "None":
+    def raw_cmd(self, sql: LiteralString) -> "None":
         """
         Run a command in the database, for queries that can't be run using prepared statements.
 
         Example: `SET TRANSACTION ISOLATION LEVEL READ COMMITTED;`
         """
         ...
-    async def query(self, query: LiteralString) -> "Union[List[BaseRow], List]":
+    def query(self, query: LiteralString) -> "Union[List[BaseRow], List]":
         """
         Returns all rows of the query result with List of `BaseRow` or empty List.
 
@@ -130,15 +128,15 @@ class PySQLXEngine:
 
         example:
             >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
-            >>> conn = PySQLXEngine(uri=uri)
-            >>> await conn.connect()
-            >>> result = await conn.query("SELECT 1 as id, 'rian' as name")
+            >>> conn = PySQLXEngineSync(uri=uri)
+            >>> conn.connect()
+            >>> result = conn.query("SELECT 1 as id, 'rian' as name")
             >>> print(result)
-            >>> # output -> [BaseRow(id=1, name='rian')]
+            >>> # output ->  [BaseRow(id=1, name='rian')]
 
         """
         raise QueryError()
-    async def query_first(self, query: LiteralString) -> "Union[BaseRow, None]":
+    def query_first(self, query: LiteralString) -> "Union[BaseRow, None]":
         """
         Returns the first row of the query result with BaseRow or None case result is empty.
 
@@ -148,55 +146,55 @@ class PySQLXEngine:
 
         example:
             >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
-            >>> conn = PySQLXEngine(uri=uri)
-            >>> await conn.connect()
-            >>> result = await conn.query_first("SELECT 1 as id, 'rian' as name")
+            >>> conn = PySQLXEngineSync(uri=uri)
+            >>> conn.connect()
+            >>> result = conn.query_first("SELECT 1 as id, 'rian' as name")
             >>> print(result)
             >>> # output -> BaseRow(id=1, name='rian')
 
         """
         raise QueryError()
-    async def query_as_list(self, query: LiteralString) -> "Union[List[Dict[str, Any]], List]":
+    def query_as_list(self, query: LiteralString) -> "Union[List[Dict[str, Any]], List]":
         """
         Returns a list of dictionaries representing the rows of the query result.
 
         example:
             >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
-            >>> conn = PySQLXEngine(uri=uri)
-            >>> await conn.connect()
-            >>> result = await conn.query_as_list("SELECT 1 as id, 'rian' as name")
+            >>> conn = PySQLXEngineSync(uri=uri)
+            >>> conn.connect()
+            >>> result = conn.query_as_list("SELECT 1 as id, 'rian' as name")
             >>> print(result)
             >>> # output -> [{"id": 1, "name": "rian"}]
         """
         raise QueryError()
-    async def query_first_as_dict(self, query: LiteralString) -> "Union[Dict[str, Any], None]":
+    def query_first_as_dict(self, query: LiteralString) -> "Union[Dict[str, Any], None]":
         """
         Returns the first row as dict or None case not data.
 
         example:
             >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
-            >>> conn = PySQLXEngine(uri=uri)
-            >>> await conn.connect()
-            >>> result = await conn.query_first_as_dict("SELECT 1 as id, 'rian' as name")
+            >>> conn = PySQLXEngineSync(uri=uri)
+            >>> conn.connect()
+            >>> result = conn.query_first_as_dict("SELECT 1 as id, 'rian' as name")
             >>> print(result)
             >>> # output -> {"id": 1, "name": "rian"}
         """
         raise QueryError()
-    async def execute(self, stmt: LiteralString) -> "int":
+    def execute(self, stmt: LiteralString) -> "int":
         """
         Executes a query/sql and returns the number of rows affected.
 
         example:
             >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
-            >>> conn = PySQLXEngine(uri=uri)
-            >>> await conn.connect()
-            >>> result = await conn.execute("INSERT INTO users (name) VALUES ("rian")")
+            >>> conn = PySQLXEngineSync(uri=uri)
+            >>> conn.connect()
+            >>> result = conn.execute("INSERT INTO users (name) VALUES ("rian")")
             >>> print(f"rows_affected = {result}")
             >>> # output -> rows_affected = 1
 
         """
         raise ExecuteError()
-    async def set_isolation_level(self, isolation_level: ISOLATION_LEVEL) -> "None":
+    def set_isolation_level(self, isolation_level: ISOLATION_LEVEL) -> "None":
         """
         Sets the isolation level of the connection.
 
@@ -205,9 +203,9 @@ class PySQLXEngine:
 
         example:
             >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
-            >>> conn = PySQLXEngine(uri=uri)
-            >>> await conn.connect()
-            >>> await conn.set_isolation_level(isolation_level="READ_COMMITTED")
+            >>> conn = PySQLXEngineSync(uri=uri)
+            >>> conn.connect()
+            >>> conn.set_isolation_level(isolation_level="READ_COMMITTED")
 
         isolation_level help:
             * [SQL Server documentation]: (https://learn.microsoft.com/en-us/sql/t-sql/language-elements/transaction-isolation-levels)
@@ -216,18 +214,18 @@ class PySQLXEngine:
             * [SQLite documentation]: (https://www.sqlite.org/isolation.html)
         """
         ...
-    async def start_transaction(self, isolation_level: Union[ISOLATION_LEVEL, None] = None) -> "None":
+    def start_transaction(self, isolation_level: Union[ISOLATION_LEVEL, None] = None) -> "None":
         """
         Starts a transaction with BEGIN. by default, does not set the isolation level.
 
         example:
             >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
-            >>> conn = PySQLXEngine(uri=uri)
-            >>> await conn.connect()
+            >>> conn = PySQLXEngineSync(uri=uri)
+            >>> conn.connect()
             >>> # with isolation level
-            >>> await conn.start_transaction(isolation_level="READ_COMMITTED")
+            >>> conn.start_transaction(isolation_level="READ_COMMITTED")
             >>> # without isolation level
-            >>> await conn.start_transaction()
+            >>> conn.start_transaction()
 
         isolation_level help:
             * [SQL Server documentation]: (https://learn.microsoft.com/en-us/sql/t-sql/language-elements/transaction-isolation-levels)
