@@ -12,6 +12,7 @@ ISOLATION_LEVEL = Literal["ReadUncommitted", "ReadCommitted", "RepeatableRead", 
 
 class PySQLXEngine:
     """
+    ### Description
     PySQLXEngineSync is an engine to run pure sql, but you have flexibility to use how you want.
 
     All SQL that is executed using the PySQLXEngineSync is atomic; that is,
@@ -23,11 +24,23 @@ class PySQLXEngine:
     if the sql is valid, is committed, if not, is rolled back.
     But you can use the `BEGIN` and `COMMIT` or `ROLLBACK` to control the transaction.
 
+    ---
+
+    #### parameters:
+
     `uri(str)`:  uri of the database, example: `postgresql://user:pass@host:port/db?schema=sample`
 
-    init uri dbs: `postgresql://`, `mysql://`, `sqlite://`, `mssql://`
+    ---
 
-    Usage:
+    #### uri starts with:
+        * `postgresql`
+        * `mysql`
+        * `sqlite`
+        * `mssql`
+    ---
+
+    #### Usage:
+
     ``` python
     >>> ##### PostgreSQL
     >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
