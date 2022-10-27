@@ -1,3 +1,16 @@
+"""
+This module contains the errors that can be raised by the PySQLXEngine.
+
+* PySQLXError
+* QueryError
+* ExecuteError
+* ConnectError
+* IsoLevelError
+* StartTransactionError
+* NotConnectedError
+
+"""
+
 from os import getenv
 
 from pysqlx_core import PySQLXError as _PySQLXError
