@@ -69,7 +69,11 @@ class PySQLXEngine:
 
     def __init__(self, uri: str) -> "None": ...
     def __del__(self):
-        """Automatically close the connection when the object is deleted."""
+        """
+        ## Description
+
+        Automatically close the connection when the object is deleted.
+        """
         ...
     def is_healthy(self) -> "bool":
         """
@@ -182,20 +186,28 @@ class PySQLXEngine:
 
         """
         ...
-    async def query(self, query: LiteralString) -> "Union[List[BaseRow], List]":
+    async def query(self, query: LiteralString, as_dict: bool = False) -> "Union[List[BaseRow], List[Dict], List]":
         """
         ## Description
-        Returns all rows of the query result with List of `BaseRow` or empty List.
+        Returns all rows of the query result with List of `BaseRow` or List of Dict or empty List.
 
-        BaseRow is a class that represents a row of the result of a query.
+        #### BaseRow
+            Is a class that represents a row of the result of a query.
+            Is a class created from `Pydantic`, then you have all the benefits of `Pydantic`.
 
-        BaseRow is a class created from `Pydantic`, then you have all the benefits of `Pydantic`.
+        #### Dict
+            Is a dict that represents a row of the result of a query.
 
-        * Arguments: `query(str)`:  sql to be executed
+        #### Helper
+            * Arguments:
 
-        * Returns: `Union[List[BaseRow], List]`: List of `BaseRow` or empty List
+                `query(str)`:  sql to be executed
 
-        * Raises: `QueryError`
+                `as_dict(bool)`: (Default is False) if True, returns a list of dict, if False, returns a list of BaseRow
+
+            * Returns: `Union[List[BaseRow], List[Dict], List]`: List of `BaseRow` or List of Dict or empty List
+
+            * Raises: `QueryError`
 
         ---
         ### Example
@@ -205,23 +217,35 @@ class PySQLXEngine:
             >>> result = await conn.query("SELECT 1 as id, 'rian' as name")
             >>> print(result)
             >>> # output -> [BaseRow(id=1, name='rian')]
+            >>> result = await conn.query("SELECT 1 as id, 'rian' as name", as_dict=True)
+            >>> print(result)
+            >>> # output -> [{'id': 1, 'name': 'rian'}]
 
         """
         raise QueryError()
-    async def query_first(self, query: LiteralString) -> "Union[BaseRow, None]":
+    async def query_first(self, query: LiteralString, as_dict: bool = False) -> "Union[BaseRow, Dict, None]":
         """
         ## Description
-        Returns the first row of the query result with BaseRow or None case result is empty.
+        Returns the first row of the query result with BaseRow or Dict(case as_dict=True) or None case result is empty.
 
-        BaseRow is a class that represents a row of the result of a query.
+        #### BaseRow
+            Is a class that represents a row of the result of a query.
+            Is a class created from `Pydantic`, then you have all the benefits of `Pydantic`.
 
-        BaseRow is a class created from `Pydantic`, then you have all the benefits of `Pydantic`.
+        #### Dict
+            Is a dict that represents a row of the result of a query.
 
-        * Arguments: `query(str)`:  sql to be executed
+        #### Helper
 
-        * Returns: `Union[BaseRow, None]`: a `BaseRow` or None
+            * Arguments:
 
-        * Raises: `QueryError`
+                `query(str)`:  sql to be executed
+
+                `as_dict(bool)`: (Default is False) if True, returns a dict, if False, returns a BaseRow
+
+            * Returns: `Union[BaseRow, Dict, None]`: a `BaseRow` or Dict or None
+
+            * Raises: `QueryError`
 
         ---
         ### Example
@@ -231,49 +255,10 @@ class PySQLXEngine:
             >>> result = await conn.query_first("SELECT 1 as id, 'rian' as name")
             >>> print(result)
             >>> # output -> BaseRow(id=1, name='rian')
-
-        """
-        raise QueryError()
-    async def query_as_list(self, query: LiteralString) -> "Union[List[Dict[str, Any]], List]":
-        """
-        ## Description
-        Returns a list of dictionaries representing the rows of the query result.
-
-        * Arguments: `query(str)`:  sql to be executed
-
-        * Returns: `Union[List[Dict[str, Any]], List]`: List of `Dict[str, Any]` or empty List
-
-        * Raises: `QueryError`
-
-        ---
-        ### Example
-            >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
-            >>> conn = PySQLXEngine(uri=uri)
-            >>> await conn.connect()
-            >>> result = await conn.query_as_list("SELECT 1 as id, 'rian' as name")
+            >>> result = await conn.query_first("SELECT 1 as id, 'rian' as name", as_dict=True)
             >>> print(result)
-            >>> # output -> [{"id": 1, "name": "rian"}]
-        """
-        raise QueryError()
-    async def query_first_as_dict(self, query: LiteralString) -> "Union[Dict[str, Any], None]":
-        """
-        ## Description
-        Returns the first row as dict or None case not data.
+            >>> # output -> {'id': 1, 'name': 'rian'}
 
-        * Arguments: `query(str)`:  sql to be executed
-
-        * Returns: `Union[Dict[str, Any], None]`: a `Dict[str, Any]` or None
-
-        * Raises: `QueryError`
-
-        ---
-        ### Example
-            >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
-            >>> conn = PySQLXEngine(uri=uri)
-            >>> await conn.connect()
-            >>> result = await conn.query_first_as_dict("SELECT 1 as id, 'rian' as name")
-            >>> print(result)
-            >>> # output -> {"id": 1, "name": "rian"}
         """
         raise QueryError()
     async def execute(self, stmt: LiteralString) -> "int":

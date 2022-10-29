@@ -64,36 +64,25 @@ class PySQLXEngine:
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
-    async def query(self, query: LiteralString):
+    async def query(self, query: LiteralString, as_dict: bool = False):
         self._check_connection()
         try:
+            if as_dict is True:
+                return await self._conn.query_as_list(sql=query)
             result = await self._conn.query(sql=query)
             return Parser(result).parse()
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
-    async def query_first(self, query: LiteralString):
+    async def query_first(self, query: LiteralString, as_dict: bool = False):
         self._check_connection()
         try:
+            if as_dict is True:
+                row = await self._conn.query_first_as_dict(sql=query)
+                return row if row else None
+
             result = await self._conn.query(sql=query)
             return Parser(result).parse_first()
-        except pysqlx_core.PySQLXError as e:
-            raise pysqlx_get_error(err=e)
-
-    async def query_as_list(self, query: LiteralString):
-        self._check_connection()
-        try:
-            return await self._conn.query_as_list(sql=query)
-        except pysqlx_core.PySQLXError as e:
-            raise pysqlx_get_error(err=e)
-
-    async def query_first_as_dict(self, query: LiteralString):
-        self._check_connection()
-        try:
-            row = await self._conn.query_first_as_dict(sql=query)
-            if row:
-                return row
-            return None
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 

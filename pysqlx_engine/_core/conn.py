@@ -73,12 +73,14 @@ class PySQLXEngine:
 
         return _raw_cmd()
 
-    def query(self, query: LiteralString):
+    def query(self, query: LiteralString, as_dict: bool = False):
         self._check_connection()
 
         @force_sync
         async def _query():
             try:
+                if as_dict is True:
+                    return await self._conn.query_as_list(sql=query)
                 result = await self._conn.query(sql=query)
                 return Parser(result).parse()
             except pysqlx_core.PySQLXError as e:
@@ -86,45 +88,22 @@ class PySQLXEngine:
 
         return _query()
 
-    def query_first(self, query: LiteralString):
+    def query_first(self, query: LiteralString, as_dict: bool = False):
         self._check_connection()
 
         @force_sync
         async def _query_first():
             try:
+                if as_dict is True:
+                    row = await self._conn.query_first_as_dict(sql=query)
+                    return row if row else None
+
                 result = await self._conn.query(sql=query)
                 return Parser(result).parse_first()
             except pysqlx_core.PySQLXError as e:
                 raise pysqlx_get_error(err=e)
 
         return _query_first()
-
-    def query_as_list(self, query: LiteralString):
-        self._check_connection()
-
-        @force_sync
-        async def _query_as_list():
-            try:
-                return await self._conn.query_as_list(sql=query)
-            except pysqlx_core.PySQLXError as e:
-                raise pysqlx_get_error(err=e)
-
-        return _query_as_list()
-
-    def query_first_as_dict(self, query: LiteralString):
-        self._check_connection()
-
-        @force_sync
-        async def _query_first_as_dict():
-            try:
-                row = await self._conn.query_first_as_dict(sql=query)
-                if row:
-                    return row
-                return None
-            except pysqlx_core.PySQLXError as e:
-                raise pysqlx_get_error(err=e)
-
-        return _query_first_as_dict()
 
     def execute(self, stmt: LiteralString):
         self._check_connection()
