@@ -3,7 +3,14 @@ from typing import Any, Dict, List, Optional, Type, Union
 
 from typing_extensions import Literal
 
-from .errors import ConnectError, ExecuteError, QueryError
+from .errors import (
+    ConnectError,
+    ExecuteError,
+    IsoLevelError,
+    QueryError,
+    RawCmdError,
+    StartTransactionError,
+)
 from .parser import BaseRow
 
 LiteralString = str
@@ -311,7 +318,90 @@ class PySQLXEngine:
             * [MySQL documentation]: (https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html)
             * [SQLite documentation]: (https://www.sqlite.org/isolation.html)
         """
-        ...
+        IsoLevelError()
+    def begin(self) -> "None":
+        """
+        ## Description
+        Starts a transaction using `BEGIN`.
+
+        begin() is equivalent to start_transaction() without setting the isolation level.
+
+        * Arguments: `None`
+
+        * Returns: `None`
+
+        * Raises: `StartTransactionError`
+
+        ---
+        ### Example
+            >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
+            >>> conn = PySQLXEngine(uri=uri)
+            >>> conn.connect()
+            >>> conn.begin()
+
+        """
+        raise StartTransactionError()
+    def commit(self) -> "None":
+        """
+        ## Description
+        Commits the current transaction.
+
+        The begin() method must be called before calling commit().
+
+        If the database not need set the isolation level, maybe you can not use begin() and commit().
+
+        The PySQLXEngine by default uses the begin() and commit() in all transactions.
+
+        * Arguments: `None`
+
+        * Returns: `None`
+
+        * Raises: `RawCmdError`
+
+        ---
+        ### Example
+            >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
+            >>> conn = PySQLXEngine(uri=uri)
+            >>> conn.connect()
+            >>> conn.begin()
+            >>> conn.execute("CREATE TABLE users (id serial PRIMARY KEY, name varchar(255))")
+            >>> conn.execute("INSERT INTO users (name) VALUES ('rian')")
+            >>> conn.commit()
+
+        """
+        raise RawCmdError()
+    def rollback(self) -> "None":
+        """
+        ## Description
+        Rollbacks the current transaction.
+
+        Rollback is used to cancel the transaction, when you uses the rollback,
+        the transaction is canceled and the changes are not saved.
+
+        The begin() method must be called before calling rollback().
+
+        If the database not need set the isolation level, maybe you can not use begin() and rollback().
+
+        The PySQLXEngine by default uses the begin() and commit() in all transactions.
+
+        * Arguments: `None`
+
+        * Returns: `None`
+
+        * Raises: `RawCmdError`
+
+        ---
+        ### Example
+            >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
+            >>> conn = PySQLXEngine(uri=uri)
+            >>> conn.connect()
+            >>> conn.begin()
+            >>> conn.execute("CREATE TABLE users (id serial PRIMARY KEY, name varchar(255))")
+            >>> conn.execute("INSERT INTO users (name) VALUES ('rian')")
+            >>> conn.rollback()
+
+        """
+        raise RawCmdError()
     def start_transaction(self, isolation_level: Union[ISOLATION_LEVEL, None] = None) -> "None":
         """
         ## Description

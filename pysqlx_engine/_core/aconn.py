@@ -101,6 +101,15 @@ class PySQLXEngine:
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
+    async def begin(self):
+        await self.start_transaction()
+
+    async def commit(self):
+        await self.raw_cmd(sql="COMMIT")
+
+    async def rollback(self):
+        await self.raw_cmd(sql="ROLLBACK")
+
     async def start_transaction(self, isolation_level: ISOLATION_LEVEL = None):
         self._check_connection()
         if isolation_level is not None:

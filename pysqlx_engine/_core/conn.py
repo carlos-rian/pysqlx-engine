@@ -130,6 +130,27 @@ class PySQLXEngine:
 
         return _set_isolation_level()
 
+    def begin(self):
+        @force_sync
+        async def _begin():
+            await self.start_transaction()
+
+        return _begin()
+
+    def commit(self):
+        @force_sync
+        async def _commit():
+            await self.raw_cmd(sql="COMMIT")
+
+        return _commit()
+
+    def rollback(self):
+        @force_sync
+        async def _rollback():
+            await self.raw_cmd(sql="ROLLBACK")
+
+        return _rollback()
+
     def start_transaction(self, isolation_level: ISOLATION_LEVEL = None):
         self._check_connection()
         if isolation_level is not None:
