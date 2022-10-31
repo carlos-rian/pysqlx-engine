@@ -193,7 +193,9 @@ class PySQLXEngine:
 
         """
         ...
-    async def query(self, query: LiteralString, as_dict: bool = False) -> "Union[List[BaseRow], List[Dict], List]":
+    async def query(
+        self, query: LiteralString, as_dict: bool = False
+    ) -> "Union[List[BaseRow], List[Dict[str, Any]], List]":
         """
         ## Description
         Returns all rows of the query result with List of `BaseRow` or List of Dict or empty List.
@@ -230,7 +232,7 @@ class PySQLXEngine:
 
         """
         raise QueryError()
-    async def query_first(self, query: LiteralString, as_dict: bool = False) -> "Union[BaseRow, Dict, None]":
+    async def query_first(self, query: LiteralString, as_dict: bool = False) -> "Union[BaseRow, Dict[str, Any], None]":
         """
         ## Description
         Returns the first row of the query result with BaseRow or Dict(case as_dict=True) or None case result is empty.
@@ -330,7 +332,7 @@ class PySQLXEngine:
 
         * Returns: `None`
 
-        * Raises: `StartTransactionError`
+        * Raises: `RawCmdError`
 
         ---
         ### Example
@@ -340,7 +342,7 @@ class PySQLXEngine:
             >>> await conn.begin()
 
         """
-        raise StartTransactionError()
+        raise RawCmdError()
     async def commit(self) -> "None":
         """
         ## Description

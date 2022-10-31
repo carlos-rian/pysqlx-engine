@@ -133,7 +133,7 @@ class PySQLXEngine:
     def begin(self):
         @force_sync
         async def _begin():
-            await self.start_transaction()
+            await self.raw_cmd(sql="BEGIN")
 
         return _begin()
 

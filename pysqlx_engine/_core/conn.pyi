@@ -193,7 +193,7 @@ class PySQLXEngine:
 
         """
         ...
-    def query(self, query: LiteralString, as_dict: bool = False) -> "Union[List[BaseRow], List[Dict], List]":
+    def query(self, query: LiteralString, as_dict: bool = False) -> "Union[List[BaseRow], List[Dict[str, Any]], List]":
         """
         ## Description
         Returns all rows of the query result with List of `BaseRow` or List of Dict or empty List.
@@ -230,7 +230,7 @@ class PySQLXEngine:
 
         """
         raise QueryError()
-    def query_first(self, query: LiteralString, as_dict: bool = False) -> "Union[BaseRow, Dict, None]":
+    def query_first(self, query: LiteralString, as_dict: bool = False) -> "Union[BaseRow, Dict[str, Any], None]":
         """
         ## Description
         Returns the first row of the query result with BaseRow or Dict(case as_dict=True) or None case result is empty.
@@ -330,7 +330,7 @@ class PySQLXEngine:
 
         * Returns: `None`
 
-        * Raises: `StartTransactionError`
+        * Raises: `RawCmdError`
 
         ---
         ### Example
@@ -340,7 +340,7 @@ class PySQLXEngine:
             >>> conn.begin()
 
         """
-        raise StartTransactionError()
+        raise RawCmdError()
     def commit(self) -> "None":
         """
         ## Description
@@ -430,4 +430,4 @@ class PySQLXEngine:
             * [MySQL documentation]: (https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html)
             * [SQLite documentation]: (https://www.sqlite.org/isolation.html)
         """
-        ...
+        raise StartTransactionError()

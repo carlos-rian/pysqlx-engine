@@ -27,6 +27,7 @@ class PySQLXEngine:
 
     def __del__(self):
         if self.connected:
+            del self._conn
             self._conn = None
             self.connected = False
 
@@ -54,6 +55,7 @@ class PySQLXEngine:
             raise pysqlx_get_error(err=e)
 
     async def close(self):
+        del self._conn
         self._conn = None
         self.connected = False
 
@@ -102,7 +104,7 @@ class PySQLXEngine:
             raise pysqlx_get_error(err=e)
 
     async def begin(self):
-        await self.start_transaction()
+        await self.raw_cmd(sql="BEGIN")
 
     async def commit(self):
         await self.raw_cmd(sql="COMMIT")
