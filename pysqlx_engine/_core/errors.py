@@ -57,10 +57,16 @@ class IsoLevelError(PySQLXError):
 class StartTransactionError(PySQLXError):
     ...
 
+
 class RawCmdError(PySQLXError):
     ...
 
+
 class NotConnectedError(Exception):
+    ...
+
+
+class ConnectionAlreadyExistsError(Exception):
     ...
 
 

@@ -1,7 +1,7 @@
 import pysqlx_core
 from typing_extensions import Literal
 
-from .errors import NotConnectedError
+from .errors import ConnectionAlreadyExistsError, NotConnectedError
 from .helper import isolation_error_message, not_connected_error_message
 from .parser import Parser
 from .until import pysqlx_get_error
@@ -11,7 +11,10 @@ ISOLATION_LEVEL = Literal["ReadUncommitted", "ReadCommitted", "RepeatableRead", 
 
 
 class PySQLXEngine:
-    __slots__ = ("_conn", "_uri", "connected")
+    __slots__ = ["uri", "connected", "_conn"]
+
+    uri: str
+    connected: bool
 
     def __init__(self, uri: str):
         _providers = ["postgresql", "mysql", "sqlserver", "sqlite"]
@@ -21,9 +24,9 @@ class PySQLXEngine:
         if uri.startswith("sqlite"):
             uri = uri.replace("sqlite", "file", 1)
 
-        self._uri: str = uri
-        self._conn: pysqlx_core.Connection = None
+        self.uri: str = uri
         self.connected: bool = False
+        self._conn: pysqlx_core.Connection = None
 
     def __del__(self):
         if self.connected:
@@ -44,12 +47,14 @@ class PySQLXEngine:
         return self
 
     async def __aexit__(self, exc_type, exc, exc_tb):
-        if self.connected():
+        if self.connected:
             await self.close()
 
     async def connect(self):
+        if self.connected:
+            raise ConnectionAlreadyExistsError("connection already exists")
         try:
-            self._conn = await pysqlx_core.new(uri=self._uri)
+            self._conn = await pysqlx_core.new(uri=self.uri)
             self.connected = True
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)

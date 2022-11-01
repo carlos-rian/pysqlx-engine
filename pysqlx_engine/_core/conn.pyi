@@ -70,9 +70,10 @@ class PySQLXEngine:
     ```
     """
 
-    __slots__ = "_uri"
+    __slots__ = ["uri", "connected", "_conn"]
 
     uri: str
+    connected: bool
 
     def __init__(self, uri: str) -> "None": ...
     def __del__(self):

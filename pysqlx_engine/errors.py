@@ -1,8 +1,9 @@
 from ._core.errors import (
     ConnectError,
+    ConnectionAlreadyExistsError,
     ExecuteError,
-    NotConnectedError,
     IsoLevelError,
+    NotConnectedError,
     PySQLXError,
     QueryError,
     RawCmdError,

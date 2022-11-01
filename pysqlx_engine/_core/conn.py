@@ -1,7 +1,7 @@
 import pysqlx_core
 from typing_extensions import Literal
 
-from .errors import NotConnectedError
+from .errors import ConnectionAlreadyExistsError, NotConnectedError
 from .helper import isolation_error_message, not_connected_error_message
 from .parser import Parser
 from .until import force_sync, pysqlx_get_error
@@ -11,7 +11,10 @@ ISOLATION_LEVEL = Literal["ReadUncommitted", "ReadCommitted", "RepeatableRead", 
 
 
 class PySQLXEngine:
-    __slots__ = ("_conn", "_uri", "connected")
+    __slots__ = ["uri", "connected", "_conn"]
+
+    uri: str
+    connected: bool
 
     def __init__(self, uri: str):
         _providers = ["postgresql", "mysql", "sqlserver", "sqlite"]
@@ -49,6 +52,8 @@ class PySQLXEngine:
     def connect(self):
         @force_sync
         async def _connect():
+            if self.connected:
+                raise ConnectionAlreadyExistsError("connection already exists")
             try:
                 self._conn = await pysqlx_core.new(uri=self._uri)
                 self.connected = True
