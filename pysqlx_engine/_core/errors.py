@@ -66,7 +66,11 @@ class NotConnectedError(Exception):
     ...
 
 
-class ConnectionAlreadyExistsError(Exception):
+class AlreadyConnectedError(ValueError):
+    ...
+
+
+class NotConnectedError(ValueError):
     ...
 
 

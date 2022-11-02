@@ -3,7 +3,7 @@ from os import environ
 
 import pytest
 from pysqlx_engine import PySQLXEngine
-from pysqlx_engine.errors import ConnectError
+from pysqlx_engine.errors import AlreadyConnectedError, ConnectError
 from tests.common import adb_mssql, adb_mysql, adb_pgsql, adb_sqlite
 
 
@@ -75,3 +75,21 @@ async def test_error_using_context_manager():
     with pytest.raises(ConnectError):
         async with PySQLXEngine(uri=uri):
             ...
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("db", [adb_sqlite, adb_pgsql, adb_mssql, adb_mysql])
+async def test_delete_default_connection(db: PySQLXEngine):
+    conn: PySQLXEngine = await db()
+    assert conn.connected is True
+    conn.__del__()
+    assert conn.connected is False
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("db", [adb_sqlite, adb_pgsql, adb_mssql, adb_mysql])
+async def test_connection_already_exists_error(db: PySQLXEngine):
+    conn: PySQLXEngine = await db()
+    assert conn.connected is True
+    with pytest.raises(AlreadyConnectedError):
+        await conn.connect()

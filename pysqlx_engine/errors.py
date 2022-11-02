@@ -1,6 +1,6 @@
 from ._core.errors import (
     ConnectError,
-    ConnectionAlreadyExistsError,
+    AlreadyConnectedError,
     ExecuteError,
     IsoLevelError,
     NotConnectedError,

@@ -1,7 +1,7 @@
 import pysqlx_core
 from typing_extensions import Literal
 
-from .errors import ConnectionAlreadyExistsError, NotConnectedError
+from .errors import AlreadyConnectedError, NotConnectedError
 from .helper import isolation_error_message, not_connected_error_message
 from .parser import Parser
 from .until import force_sync, pysqlx_get_error
@@ -53,7 +53,7 @@ class PySQLXEngine:
         @force_sync
         async def _connect():
             if self.connected:
-                raise ConnectionAlreadyExistsError("connection already exists")
+                raise AlreadyConnectedError("connection already exists")
             try:
                 self._conn = await pysqlx_core.new(uri=self._uri)
                 self.connected = True
