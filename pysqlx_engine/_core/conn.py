@@ -11,7 +11,7 @@ ISOLATION_LEVEL = Literal["ReadUncommitted", "ReadCommitted", "RepeatableRead", 
 
 
 class PySQLXEngine:
-    __slots__ = ["uri", "connected", "_conn"]
+    __slots__ = ["uri", "connected", "_conn", "_provider"]
 
     uri: str
     connected: bool
@@ -24,12 +24,19 @@ class PySQLXEngine:
         if uri.startswith("sqlite"):
             uri = uri.replace("sqlite", "file", 1)
 
-        self._uri: str = uri
-        self._conn: pysqlx_core.Connection = None
+        self.uri: str = uri
         self.connected: bool = False
+        self._conn: pysqlx_core.Connection = None
+
+        self._provider = "sqlite"
+
+        for prov in _providers:
+            if self.uri.startswith(prov):
+                self._provider = prov
 
     def __del__(self):
         if self.connected:
+            del self._conn
             self._conn = None
             self.connected = False
 
@@ -46,8 +53,7 @@ class PySQLXEngine:
         return self
 
     def __exit__(self, exc_type, exc, exc_tb):
-        if self.connected():
-            self.close()
+        self.close()
 
     def connect(self):
         @force_sync
@@ -55,7 +61,7 @@ class PySQLXEngine:
             if self.connected:
                 raise AlreadyConnectedError("connection already exists")
             try:
-                self._conn = await pysqlx_core.new(uri=self._uri)
+                self._conn = await pysqlx_core.new(uri=self.uri)
                 self.connected = True
             except pysqlx_core.PySQLXError as e:
                 raise pysqlx_get_error(err=e)
@@ -63,8 +69,10 @@ class PySQLXEngine:
         return _connect()
 
     def close(self):
-        self._conn = None
-        self.connected = False
+        if self.connected:
+            del self._conn
+            self._conn = None
+            self.connected = False
 
     def raw_cmd(self, sql: LiteralString):
         self._check_connection()
@@ -129,40 +137,34 @@ class PySQLXEngine:
         @force_sync
         async def _set_isolation_level():
             try:
-                await self._conn.set_isolation_level(level=isolation_level)
+                await self._conn.set_isolation_level(isolation_level=isolation_level)
             except pysqlx_core.PySQLXError as e:
                 raise pysqlx_get_error(err=e)
 
         return _set_isolation_level()
 
     def begin(self):
-        @force_sync
-        async def _begin():
-            await self.raw_cmd(sql="BEGIN")
-
-        return _begin()
+        self.start_transaction()
 
     def commit(self):
-        @force_sync
-        async def _commit():
-            await self.raw_cmd(sql="COMMIT")
-
-        return _commit()
+        if self._provider == "sqlserver":
+            self.raw_cmd(sql="COMMIT TRANSACTION;")
+        else:
+            self.raw_cmd(sql="COMMIT;")
 
     def rollback(self):
-        @force_sync
-        async def _rollback():
-            await self.raw_cmd(sql="ROLLBACK")
-
-        return _rollback()
+        if self._provider == "sqlserver":
+            self.raw_cmd(sql="ROLLBACK TRANSACTION;")
+        else:
+            self.raw_cmd(sql="ROLLBACK;")
 
     def start_transaction(self, isolation_level: ISOLATION_LEVEL = None):
-        self._check_connection()
-        if isolation_level is not None:
-            self._check_isolation_level(isolation_level=isolation_level)
-
         @force_sync
         async def _start_transaction():
+            self._check_connection()
+            if isolation_level is not None:
+                self._check_isolation_level(isolation_level=isolation_level)
+
             try:
                 await self._conn.start_transaction(isolation_level=isolation_level)
             except pysqlx_core.PySQLXError as e:

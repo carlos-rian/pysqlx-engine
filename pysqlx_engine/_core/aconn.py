@@ -11,7 +11,7 @@ ISOLATION_LEVEL = Literal["ReadUncommitted", "ReadCommitted", "RepeatableRead", 
 
 
 class PySQLXEngine:
-    __slots__ = ["uri", "connected", "_conn"]
+    __slots__ = ["uri", "connected", "_conn", "_provider"]
 
     uri: str
     connected: bool
@@ -27,6 +27,12 @@ class PySQLXEngine:
         self.uri: str = uri
         self.connected: bool = False
         self._conn: pysqlx_core.Connection = None
+
+        self._provider = "sqlite"
+
+        for prov in _providers:
+            if self.uri.startswith(prov):
+                self._provider = prov
 
     def __del__(self):
         if self.connected:
@@ -104,23 +110,30 @@ class PySQLXEngine:
         self._check_connection()
         self._check_isolation_level(isolation_level=isolation_level)
         try:
-            await self._conn.set_isolation_level(level=isolation_level)
+            await self._conn.set_isolation_level(isolation_level=isolation_level)
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
     async def begin(self):
-        await self.raw_cmd(sql="BEGIN")
+        await self.start_transaction()
 
     async def commit(self):
-        await self.raw_cmd(sql="COMMIT")
+        if self._provider == "sqlserver":
+            await self.raw_cmd(sql="COMMIT TRANSACTION;")
+        else:
+            await self.raw_cmd(sql="COMMIT;")
 
     async def rollback(self):
-        await self.raw_cmd(sql="ROLLBACK")
+        if self._provider == "sqlserver":
+            await self.raw_cmd(sql="ROLLBACK TRANSACTION;")
+        else:
+            await self.raw_cmd(sql="ROLLBACK;")
 
     async def start_transaction(self, isolation_level: ISOLATION_LEVEL = None):
         self._check_connection()
         if isolation_level is not None:
             self._check_isolation_level(isolation_level=isolation_level)
+
         try:
             await self._conn.start_transaction(isolation_level=isolation_level)
         except pysqlx_core.PySQLXError as e:
