@@ -70,7 +70,7 @@ class PySQLXEngine:
     ```
     """
 
-    __slots__ = ["uri", "connected", "_conn"]
+    __slots__ = ["uri", "connected", "_conn", "_provider"]
 
     uri: str
     connected: bool
@@ -299,6 +299,10 @@ class PySQLXEngine:
         The isolation level is set before the transaction is started.
         Is used to separate the transaction per level.
 
+        The `Snapshot` isolation level is supported by MS SQL Server.
+
+        The Sqlite does not support the isolation level.
+
         * Arguments: `isolation_level(str)`:  isolation level to be set (ReadUncommitted, ReadCommitted, RepeatableRead, Snapshot, Serializable)
 
         * Returns: `None`
@@ -407,6 +411,10 @@ class PySQLXEngine:
         """
         ## Description
         Starts a transaction with BEGIN. by default, does not set the isolation level.
+
+        The `Snapshot` isolation level is supported by MS SQL Server.
+
+        The Sqlite does not support the isolation level.
 
         * Arguments: `isolation_level(str)`: by default is None. Isolation level to be set (ReadUncommitted, ReadCommitted, RepeatableRead, Snapshot, Serializable)
 
