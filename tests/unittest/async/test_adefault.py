@@ -1,16 +1,21 @@
 import os
-from os import environ
 
 import pytest
 
 from pysqlx_engine import PySQLXEngine
-from pysqlx_engine.errors import AlreadyConnectedError, ConnectError
+from pysqlx_engine._core.until import force_sync, pysqlx_get_error
+from pysqlx_engine.errors import (
+    AlreadyConnectedError,
+    ConnectError,
+    NotConnectedError,
+    RawCmdError,
+)
 from tests.common import adb_mssql, adb_mysql, adb_pgsql, adb_sqlite
 
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("db", [adb_sqlite, adb_pgsql, adb_mssql, adb_mysql])
-async def test_success_connect_success(db: PySQLXEngine):
+async def test_connect_success(db: PySQLXEngine):
     conn: PySQLXEngine = await db()
     assert conn.connected is True
 
@@ -31,28 +36,28 @@ async def test_error_connect_with_wrong_password():
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("db", [adb_sqlite, adb_pgsql, adb_mssql, adb_mysql])
-async def test_success_is_healthy(db: PySQLXEngine):
+async def test_is_healthy(db: PySQLXEngine):
     conn: PySQLXEngine = await db()
     assert conn.is_healthy() is True
 
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("db", [adb_sqlite, adb_pgsql])
-async def test_success_requires_isolation_first_equal_false(db: PySQLXEngine):
+async def test_requires_isolation_first_equal_false(db: PySQLXEngine):
     conn: PySQLXEngine = await db()
     assert conn.requires_isolation_first() is False
 
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("db", [adb_mssql, adb_mysql])
-async def test_success_requires_isolation_first_equal_true(db: PySQLXEngine):
+async def test_requires_isolation_first_equal_true(db: PySQLXEngine):
     conn: PySQLXEngine = await db()
     assert conn.requires_isolation_first() is True
 
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("db", [adb_sqlite, adb_pgsql, adb_mssql, adb_mysql])
-async def test_success_query_success(db):
+async def test_query_success(db):
     conn: PySQLXEngine = await db()
     assert conn.connected is True
 
@@ -63,15 +68,10 @@ async def test_success_query_success(db):
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
-    "uri",
-    [
-        os.environ["DATABASE_URI_SQLITE"],
-        os.environ["DATABASE_URI_POSTGRESQL"],
-        os.environ["DATABASE_URI_MSSQL"],
-        os.environ["DATABASE_URI_MYSQL"],
-    ],
+    "environment", ["DATABASE_URI_SQLITE", "DATABASE_URI_POSTGRESQL", "DATABASE_URI_MSSQL", "DATABASE_URI_MYSQL"]
 )
-async def test_success_using_context_manager(uri: str):
+async def test_using_context_manager(environment: str):
+    uri = os.environ[environment]
     async with PySQLXEngine(uri=uri) as conn:
         assert conn.connected is True
     assert conn.connected is False
@@ -82,7 +82,7 @@ async def test_error_using_context_manager():
     uri = "postgresql://postgres:wrongPass@localhost:4442"
     with pytest.raises(ConnectError):
         async with PySQLXEngine(uri=uri):
-            ...
+            ...  # pragma: no cover
 
 
 @pytest.mark.asyncio
@@ -101,3 +101,45 @@ async def test_connection_already_exists_error(db: PySQLXEngine):
     assert conn.connected is True
     with pytest.raises(AlreadyConnectedError):
         await conn.connect()
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "environment", ["DATABASE_URI_SQLITE", "DATABASE_URI_POSTGRESQL", "DATABASE_URI_MSSQL", "DATABASE_URI_MYSQL"]
+)
+async def test_connection_not_connected_error(environment):
+    uri = os.environ[environment]
+    conn: PySQLXEngine = PySQLXEngine(uri=uri)
+    assert conn.connected is False
+
+    with pytest.raises(NotConnectedError):
+        await conn.query("SELECT 1 AS number")
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("db", [adb_sqlite, adb_pgsql, adb_mssql, adb_mysql])
+async def test_execute_raw_cmd_error(db: PySQLXEngine):
+    conn: PySQLXEngine = await db()
+    assert conn.connected is True
+    with pytest.raises(RawCmdError):
+        await conn.raw_cmd("wrong_cmd = 1")
+
+    await conn.close()
+    assert conn.connected is False
+
+
+def test_pysqlx_get_error_default():
+    class GenericError(Exception):
+        def error(self):
+            return "generic"
+
+    error = pysqlx_get_error(err=GenericError())
+    assert isinstance(error, GenericError)
+
+
+def test_force_sync():
+    @force_sync
+    async def async_func():
+        return 1
+
+    assert async_func() == 1
