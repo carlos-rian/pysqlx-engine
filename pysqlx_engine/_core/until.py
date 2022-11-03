@@ -1,6 +1,7 @@
 import functools
 
 from pysqlx_core import PySQLXError as _PySQLXError
+
 from pysqlx_engine._core.errors import (
     ConnectError,
     ExecuteError,
@@ -11,23 +12,6 @@ from pysqlx_engine._core.errors import (
     RawCmdError,
     StartTransactionError,
 )
-
-
-def force_async(fn):
-    """
-    turns a sync function to async function using threads
-    """
-    import asyncio
-    from concurrent.futures import ThreadPoolExecutor
-
-    pool = ThreadPoolExecutor()
-
-    @functools.wraps(fn)
-    def wrapper(*args, **kwargs):
-        future = pool.submit(fn, *args, **kwargs)
-        return asyncio.wrap_future(future)  # make it awaitable
-
-    return wrapper
 
 
 def force_sync(fn):
