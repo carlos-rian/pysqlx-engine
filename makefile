@@ -8,8 +8,8 @@ tests-coverage:
 	make tests-databases && \
 	poetry run pytest tests -v -x \
 		--doctest-modules \
-		--ignore=tests/ \
 		--cov=pysqlx_engine \
+		--cov=tests \
 		--durations=0 \
 		--cov-report=html:tests/results/html \
 		--junitxml=tests/results/xml/test-results.xml
