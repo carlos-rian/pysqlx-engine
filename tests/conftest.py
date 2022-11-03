@@ -50,8 +50,8 @@ def db_mysql():
     return common.db_mysql()
 
 
-@pytest.fixture(name="table", scope="session")
-def get_table_sql():
+@pytest.fixture(name="create_table", scope="session")
+def get_create_table():
     return {
         "sqlite": """
             create table test_table (
@@ -65,7 +65,7 @@ def get_table_sql():
                 updated_at  text      not null
             );
         """,
-        "postgresql": """
+        "pgsql": """
             create table test_table (
                 id         serial        not null,
                 first_name varchar(100)  not null,
@@ -108,28 +108,3 @@ def get_table_sql():
             );
         """,
     }
-
-    sql = """
-        INSERT INTO test_table(
-            first_name,
-            last_name,
-            age,
-            email,
-            phone,
-            created_at,
-            updated_at
-        ) VALUES ('{0}', '{1}', {2}, '{3}', '{4}', '{5}', '{6}');
-    """
-
-    return [
-        sql.format(
-            row.get("first_name"),
-            row.get("last_name"),
-            row.get("age"),
-            row.get("email"),
-            row.get("phone"),
-            row.get("created_at"),
-            row.get("updated_at"),
-        )
-        for row in rows
-    ]
