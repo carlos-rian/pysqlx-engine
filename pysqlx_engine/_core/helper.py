@@ -63,8 +63,3 @@ def not_connected_error_message():
                 db.connect()
                 ''')}
     """
-
-
-if __name__ == "__main__":
-    # try using value error
-    raise ValueError(not_connected_error_message())
