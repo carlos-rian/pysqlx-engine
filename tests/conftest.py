@@ -2,52 +2,8 @@ import os
 import sys
 
 import pytest
-import pytest_asyncio
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-
-
-from tests import common
-
-
-@pytest_asyncio.fixture
-async def adb_sqlite():
-    return await common.adb_sqlite()
-
-
-@pytest_asyncio.fixture
-async def adb_pgsql():
-    return await common.adb_pgsql()
-
-
-@pytest_asyncio.fixture
-async def adb_mssql():
-    return await common.adb_mssql()
-
-
-@pytest_asyncio.fixture
-async def adb_mysql():
-    return await common.adb_mysql()
-
-
-@pytest.fixture
-def db_sqlite():
-    return common.db_sqlite()
-
-
-@pytest.fixture
-def db_postgresql():
-    return common.db_postgresql()
-
-
-@pytest.fixture
-def db_mssql():
-    return common.db_mssql()
-
-
-@pytest.fixture
-def db_mysql():
-    return common.db_mysql()
 
 
 @pytest.fixture(name="create_table", scope="session")
