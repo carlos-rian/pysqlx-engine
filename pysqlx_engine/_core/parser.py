@@ -22,14 +22,16 @@ TYPES = {
     "decimal": Decimal,
 }
 
+
 class BaseRow(BaseModel):
     """
     BaseRow class for a row returned by PySQLXEngine.
-    
+
     BaseRow is a class that represents a row of the result of a query.
 
     BaseRow is a class created from `Pydantic`, then you have all the benefits of `Pydantic`.
     """
+
     ...
 
 
@@ -42,7 +44,12 @@ class Parser:
     def create_model(self) -> BaseRow:
         fields = {}
         for key, value in self.result.get_types().items():
-            fields[key] = (TYPES.get(value, Any), None)
+            if value.startswith("list_"):
+                _, v = value.split("_")
+                type_ = TYPES.get(v, Any)
+                fields[key] = (List[type_], None)
+            else:
+                fields[key] = (TYPES.get(value, Any), None)
         return create_model("BaseRow", **fields)
 
     def parse(self) -> List[BaseRow]:
