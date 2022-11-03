@@ -16,7 +16,7 @@ def _colorizer_json_message(dumps: str):
 
 def fe_py(message: str) -> str:
     """create a error message format for python code"""
-    if getenv("PYSQLX_ERROR_COLORIZE", "1") == "1":
+    if getenv("PYSQLX_ERROR_COLORIZE", "0") == "1":
         return _colorizer_py_code_message(message)
     return message
 
@@ -24,7 +24,7 @@ def fe_py(message: str) -> str:
 def fe_json(data: dict) -> str:
     """create a error message format for python code"""
     dumps = json.dumps(data, indent=2)
-    if getenv("PYSQLX_ENGINE_COLORIZE", "1") == "1":
+    if getenv("PYSQLX_ENGINE_COLORIZE", "0") == "1":
         return "\n" + _colorizer_json_message(dumps)
     return "\n" + dumps
 
