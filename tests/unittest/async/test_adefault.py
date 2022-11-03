@@ -2,6 +2,7 @@ import os
 from os import environ
 
 import pytest
+
 from pysqlx_engine import PySQLXEngine
 from pysqlx_engine.errors import AlreadyConnectedError, ConnectError
 from tests.common import adb_mssql, adb_mysql, adb_pgsql, adb_sqlite
@@ -36,8 +37,15 @@ async def test_success_is_healthy(db: PySQLXEngine):
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("db", [adb_sqlite, adb_pgsql, adb_mssql, adb_mysql])
-async def test_success_requires_isolation_first(db: PySQLXEngine):
+@pytest.mark.parametrize("db", [adb_sqlite, adb_pgsql])
+async def test_success_requires_isolation_first_equal_false(db: PySQLXEngine):
+    conn: PySQLXEngine = await db()
+    assert conn.requires_isolation_first() is False
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("db", [adb_mssql, adb_mysql])
+async def test_success_requires_isolation_first_equal_true(db: PySQLXEngine):
     conn: PySQLXEngine = await db()
     assert conn.requires_isolation_first() is True
 
@@ -65,7 +73,7 @@ async def test_success_query_success(db):
 )
 async def test_success_using_context_manager(uri: str):
     async with PySQLXEngine(uri=uri) as conn:
-        assert conn.connect is True
+        assert conn.connected is True
     assert conn.connected is False
 
 

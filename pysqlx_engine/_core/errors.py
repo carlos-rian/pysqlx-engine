@@ -72,21 +72,3 @@ class AlreadyConnectedError(ValueError):
 
 class NotConnectedError(ValueError):
     ...
-
-
-if __name__ == "__main__":
-
-    class _X:
-        def __init__(self):
-            ...
-
-        def code(self):
-            return "CFRE"
-
-        def message(self):
-            return "MEHHT"
-
-        def error(self):
-            return "TEST"
-
-    raise PySQLXError(err=_X())

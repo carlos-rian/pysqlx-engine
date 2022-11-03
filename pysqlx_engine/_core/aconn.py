@@ -47,8 +47,7 @@ class PySQLXEngine:
         return self
 
     async def __aexit__(self, exc_type, exc, exc_tb):
-        if self.connected:
-            await self.close()
+        await self.close()
 
     async def connect(self):
         if self.connected:
@@ -60,9 +59,10 @@ class PySQLXEngine:
             raise pysqlx_get_error(err=e)
 
     async def close(self):
-        del self._conn
-        self._conn = None
-        self.connected = False
+        if self.connected:
+            del self._conn
+            self._conn = None
+            self.connected = False
 
     async def raw_cmd(self, sql: LiteralString):
         self._check_connection()
