@@ -31,15 +31,6 @@ async def adb_mysql():
     return _db
 
 
-def get_all_adbs(db: str):
-    return {
-        "db_sqlite": adb_sqlite,
-        "db_postgresql": adb_pgsql,
-        "db_mssql": adb_mssql,
-        "db_mysql": adb_mysql,
-    }.get(db)
-
-
 def db_sqlite():
     uri = os.environ["DATABASE_URI_SQLITE"]
     _db = PySQLXEngineSync(uri=uri)
@@ -47,7 +38,7 @@ def db_sqlite():
     return _db
 
 
-def db_postgresql():
+def db_pgsql():
     uri = os.environ["DATABASE_URI_POSTGRESQL"]
     _db = PySQLXEngineSync(uri=uri)
     _db.connect()
@@ -66,12 +57,3 @@ def db_mysql():
     _db = PySQLXEngineSync(uri=uri)
     _db.connect()
     return _db
-
-
-def get_all_dbs(db: str):
-    return {
-        "db_sqlite": db_sqlite,
-        "db_postgresql": db_postgresql,
-        "db_mssql": db_mssql,
-        "db_mysql": db_mysql,
-    }.get(db)
