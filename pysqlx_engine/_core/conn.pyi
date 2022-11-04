@@ -219,9 +219,11 @@ class PySQLXEngine:
 
                 `as_dict(bool)`: (Default is False) if True, returns a list of dict, if False, returns a list of BaseRow
 
+                `model(BaseRow)`: (Default is None) if not None, returns a list of your model
+
             * Returns: `Union[List[BaseRow], List[Dict], List]`: List of `BaseRow` or List of Dict or empty List
 
-            * Raises: `QueryError`
+            * Raises: `QueryError`, `TypeError`
 
         ---
         ### Example
@@ -267,9 +269,11 @@ class PySQLXEngine:
 
                 `as_dict(bool)`: (Default is False) if True, returns a dict, if False, returns a BaseRow
 
+                `model(BaseRow)`: (Default is None) if not None, returns a row of your model
+
             * Returns: `Union[BaseRow, Dict, None]`: a `BaseRow` or Dict or None
 
-            * Raises: `QueryError`
+            * Raises: `QueryError`, `TypeError`
 
         ---
         ### Example

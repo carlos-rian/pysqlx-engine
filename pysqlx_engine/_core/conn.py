@@ -2,8 +2,12 @@ import pysqlx_core
 from typing_extensions import Literal
 
 from .errors import AlreadyConnectedError, NotConnectedError
-from .helper import isolation_error_message, not_connected_error_message
-from .parser import Parser
+from .helper import (
+    isolation_error_message,
+    model_parameter_error_message,
+    not_connected_error_message,
+)
+from .parser import BaseRow, Model, Parser
 from .until import force_sync, pysqlx_get_error
 
 LiteralString = str
@@ -86,7 +90,7 @@ class PySQLXEngine:
 
         return _raw_cmd()
 
-    def query(self, query: LiteralString, as_dict: bool = False):
+    def query(self, query: LiteralString, as_dict: bool = False, model: Model = None):
         self._check_connection()
 
         @force_sync
@@ -94,14 +98,18 @@ class PySQLXEngine:
             try:
                 if as_dict is True:
                     return await self._conn.query_as_list(sql=query)
+
+                if model is not None and not issubclass(model, BaseRow):
+                    raise TypeError(model_parameter_error_message())
+
                 result = await self._conn.query(sql=query)
-                return Parser(result).parse()
+                return Parser(result=result, model=model).parse()
             except pysqlx_core.PySQLXError as e:
                 raise pysqlx_get_error(err=e)
 
         return _query()
 
-    def query_first(self, query: LiteralString, as_dict: bool = False):
+    def query_first(self, query: LiteralString, as_dict: bool = False, model: Model = None):
         self._check_connection()
 
         @force_sync
@@ -111,8 +119,11 @@ class PySQLXEngine:
                     row = await self._conn.query_first_as_dict(sql=query)
                     return row if row else None
 
+                if model is not None and not issubclass(model, BaseRow):
+                    raise TypeError(model_parameter_error_message())
+
                 result = await self._conn.query(sql=query)
-                return Parser(result).parse_first()
+                return Parser(result=result, model=model).parse_first()
             except pysqlx_core.PySQLXError as e:
                 raise pysqlx_get_error(err=e)
 
