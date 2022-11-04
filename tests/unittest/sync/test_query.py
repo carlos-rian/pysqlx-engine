@@ -365,3 +365,51 @@ def test_query_first_with_null_dict_values(db, typ, create_table: dict):
 
     conn.close()
     assert conn.connected is False
+
+
+@pytest.mark.parametrize(
+    "db,typ", [(db_sqlite, "sqlite"), (db_pgsql, "pgsql"), (db_mssql, "mssql"), (db_mysql, "mysql")]
+)
+def test_query_first_get_column_types(db, typ, create_table: dict):
+    table = create_table.get(typ)
+
+    conn: PySQLXEngineSync = db()
+
+    assert conn.connected is True
+
+    resp = conn.execute(stmt=table)
+    assert resp == 0
+
+    with open("tests/unittest/sql/insert.sql", "r") as f:
+        rows = f.readlines()
+
+    resp = conn.execute(stmt=rows[0].replace("\n", ""))
+    assert resp == 1
+
+    row = conn.query_first(query="SELECT * FROM test_table")
+
+    assert isinstance(row.first_name, str)
+    assert isinstance(row.last_name, (str, type(None)))
+    assert isinstance(row.age, (int, type(None)))
+    assert isinstance(row.email, (str, type(None)))
+    assert isinstance(row.phone, (str, type(None)))
+    assert isinstance(row.created_at, (str, datetime))
+    assert isinstance(row.updated_at, (str, datetime))
+
+    columns = row.get_columns()
+    assert isinstance(columns, dict)
+    assert len(columns) == 8
+
+    assert columns["first_name"] == str
+    assert columns["last_name"] == str
+    assert columns["age"] == int
+    assert columns["email"] == str
+    assert columns["phone"] == str
+    assert columns["created_at"] == str or columns["created_at"] == datetime  # sqlite not support datetime
+    assert columns["updated_at"] == str or columns["updated_at"] == datetime  # sqlite not support datetime
+
+    resp = conn.execute(stmt="DROP TABLE test_table;")
+    assert isinstance(resp, int)
+
+    conn.close()
+    assert conn.connected is False
