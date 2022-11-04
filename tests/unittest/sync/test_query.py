@@ -1,8 +1,9 @@
 from datetime import datetime
 
 import pytest
+from pydantic import BaseModel
 
-from pysqlx_engine import PySQLXEngineSync
+from pysqlx_engine import BaseRow, PySQLXEngineSync
 from pysqlx_engine._core.errors import QueryError
 from tests.common import db_mssql, db_mysql, db_pgsql, db_sqlite
 
@@ -413,3 +414,58 @@ def test_query_first_get_column_types(db, typ, create_table: dict):
 
     conn.close()
     assert conn.connected is False
+
+
+@pytest.mark.parametrize("db", [db_sqlite, db_pgsql, db_mssql, db_mysql])
+def test_query_with_my_model(db):
+    conn: PySQLXEngineSync = db()
+
+    class MyModel(BaseRow):
+        id: int
+        name: str
+
+    rows = conn.query(query="SELECT 1 AS id, 'Rian' AS name", model=MyModel)
+
+    row = rows[0]
+    assert isinstance(row, MyModel)
+    assert row.id == 1
+    assert row.name == "Rian"
+
+
+@pytest.mark.parametrize("db", [db_sqlite, db_pgsql, db_mssql, db_mysql])
+def test_query_with_invalid_model(db):
+    conn: PySQLXEngineSync = db()
+
+    class MyModel(BaseModel):
+        id: int
+        name: str
+
+    with pytest.raises(TypeError):
+        conn.query(query="SELECT 1 AS id, 'Rian' AS name", model=MyModel)
+
+
+@pytest.mark.parametrize("db", [db_sqlite, db_pgsql, db_mssql, db_mysql])
+def test_query_first_with_my_model(db):
+    conn: PySQLXEngineSync = db()
+
+    class MyModel(BaseRow):
+        id: int
+        name: str
+
+    row = conn.query_first(query="SELECT 1 AS id, 'Rian' AS name", model=MyModel)
+
+    assert isinstance(row, MyModel)
+    assert row.id == 1
+    assert row.name == "Rian"
+
+
+@pytest.mark.parametrize("db", [db_sqlite, db_pgsql, db_mssql, db_mysql])
+def test_query_first_with_invalid_model(db):
+    conn: PySQLXEngineSync = db()
+
+    class MyModel(BaseModel):
+        id: int
+        name: str
+
+    with pytest.raises(TypeError):
+        conn.query_first(query="SELECT 1 AS id, 'Rian' AS name", model=MyModel)

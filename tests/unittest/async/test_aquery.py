@@ -1,8 +1,9 @@
 from datetime import datetime
 
 import pytest
+from pydantic import BaseModel
 
-from pysqlx_engine import PySQLXEngine
+from pysqlx_engine import BaseRow, PySQLXEngine
 from pysqlx_engine._core.errors import QueryError
 from tests.common import adb_mssql, adb_mysql, adb_pgsql, adb_sqlite
 
@@ -423,11 +424,70 @@ async def test_query_first_get_column_types(db, typ, create_table: dict):
     assert columns["age"] == int
     assert columns["email"] == str
     assert columns["phone"] == str
-    assert columns["created_at"] == str or columns["created_at"] == datetime # sqlite not support datetime
-    assert columns["updated_at"] == str or columns["updated_at"] == datetime # sqlite not support datetime
+    assert columns["created_at"] == str or columns["created_at"] == datetime  # sqlite not support datetime
+    assert columns["updated_at"] == str or columns["updated_at"] == datetime  # sqlite not support datetime
 
     resp = await conn.execute(stmt="DROP TABLE test_table;")
     assert isinstance(resp, int)
 
     await conn.close()
     assert conn.connected is False
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("db", [adb_sqlite, adb_pgsql, adb_mssql, adb_mysql])
+async def test_query_with_my_model(db):
+    conn: PySQLXEngine = await db()
+
+    class MyModel(BaseRow):
+        id: int
+        name: str
+
+    rows = await conn.query(query="SELECT 1 AS id, 'Rian' AS name", model=MyModel)
+
+    row = rows[0]
+    assert isinstance(row, MyModel)
+    assert row.id == 1
+    assert row.name == "Rian"
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("db", [adb_sqlite, adb_pgsql, adb_mssql, adb_mysql])
+async def test_query_with_invalid_model(db):
+    conn: PySQLXEngine = await db()
+
+    class MyModel(BaseModel):
+        id: int
+        name: str
+
+    with pytest.raises(TypeError):
+        await conn.query(query="SELECT 1 AS id, 'Rian' AS name", model=MyModel)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("db", [adb_sqlite, adb_pgsql, adb_mssql, adb_mysql])
+async def test_query_first_with_my_model(db):
+    conn: PySQLXEngine = await db()
+
+    class MyModel(BaseRow):
+        id: int
+        name: str
+
+    row = await conn.query_first(query="SELECT 1 AS id, 'Rian' AS name", model=MyModel)
+
+    assert isinstance(row, MyModel)
+    assert row.id == 1
+    assert row.name == "Rian"
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("db", [adb_sqlite, adb_pgsql, adb_mssql, adb_mysql])
+async def test_query_first_with_invalid_model(db):
+    conn: PySQLXEngine = await db()
+
+    class MyModel(BaseModel):
+        id: int
+        name: str
+
+    with pytest.raises(TypeError):
+        await conn.query_first(query="SELECT 1 AS id, 'Rian' AS name", model=MyModel)
