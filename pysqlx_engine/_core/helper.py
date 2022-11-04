@@ -31,7 +31,7 @@ def fe_json(data: dict) -> str:
 
 def isolation_error_message():
     return f"""
-    the isolation_level must be a valid value..
+    the isolation_level must be a valid value.
 
     possible values:
         >> ReadUncommitted
@@ -63,3 +63,33 @@ def not_connected_error_message():
                 db.connect()
                 ''')}
     """
+
+
+def model_parameter_error_message():
+    return f"""
+        model parameter must be a subclass of BaseRow
+
+        try importing the BaseRow class from the pysqlx_engine package.
+
+        example of use:
+            {fe_py('''
+            
+            # import the BaseRow class
+            from pysqlx_engine import BaseRow
+
+            class MyModel(BaseRow): # <- subclass of BaseRow
+                id: int
+                name: str
+    
+            # async
+            db = PySQLXEngine(uri="postgresql://user:pass@host:port/db?schema=sample")
+            await db.connect()
+            await db.query(query="SELECT 1 AS id, 'Rian' AS name", model=MyModel) # <- using how model parameter
+
+            # sync
+            db = PySQLXEngineSync(uri="postgresql://user:pass@host:port/db?schema=sample")
+            db.connect()
+            db.query(query="SELECT 1 AS id, 'Rian' AS name", model=MyModel) # <- using how model parameter
+            ''')
+            }
+        """
