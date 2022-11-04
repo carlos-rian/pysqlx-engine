@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pytest
 
 from pysqlx_engine import PySQLXEngine
@@ -227,6 +229,156 @@ async def test_error_invalid_query_first_as_dict(db):
 
     with pytest.raises(QueryError):
         await conn.query_first(query="SELECT * FROM invalid_table", as_dict=True)
+
+    await conn.close()
+    assert conn.connected is False
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "db,typ", [(adb_sqlite, "sqlite"), (adb_pgsql, "pgsql"), (adb_mssql, "mssql"), (adb_mysql, "mysql")]
+)
+async def test_query_with_null_values(db, typ, create_table: dict):
+    table = create_table.get(typ)
+
+    conn: PySQLXEngine = await db()
+
+    assert conn.connected is True
+
+    resp = await conn.execute(stmt=table)
+    assert resp == 0
+
+    with open("tests/unittest/sql/insert.sql", "r") as f:
+        rows = f.readlines()
+
+    for row in rows:
+        resp = await conn.execute(stmt=row.replace("\n", ""))
+        assert resp == 1
+
+    rows = await conn.query(query="SELECT * FROM test_table")
+    for row in rows:
+        assert isinstance(row.first_name, str)
+        assert isinstance(row.last_name, (str, type(None)))
+        assert isinstance(row.age, (int, type(None)))
+        assert isinstance(row.email, (str, type(None)))
+        assert isinstance(row.phone, (str, type(None)))
+        assert isinstance(row.created_at, (str, datetime))
+        assert isinstance(row.updated_at, (str, datetime))
+
+    resp = await conn.execute(stmt="DROP TABLE test_table;")
+    assert isinstance(resp, int)
+
+    await conn.close()
+    assert conn.connected is False
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "db,typ", [(adb_sqlite, "sqlite"), (adb_pgsql, "pgsql"), (adb_mssql, "mssql"), (adb_mysql, "mysql")]
+)
+async def test_query_with_null_dict_values(db, typ, create_table: dict):
+    table = create_table.get(typ)
+
+    conn: PySQLXEngine = await db()
+
+    assert conn.connected is True
+
+    resp = await conn.execute(stmt=table)
+    assert resp == 0
+
+    with open("tests/unittest/sql/insert.sql", "r") as f:
+        rows = f.readlines()
+
+    for row in rows:
+        resp = await conn.execute(stmt=row.replace("\n", ""))
+        assert resp == 1
+
+    rows = await conn.query(query="SELECT * FROM test_table", as_dict=True)
+    for row in rows:
+        assert isinstance(row["first_name"], str)
+        assert isinstance(row["last_name"], (str, type(None)))
+        assert isinstance(row["age"], (int, type(None)))
+        assert isinstance(row["email"], (str, type(None)))
+        assert isinstance(row["phone"], (str, type(None)))
+        assert isinstance(row["created_at"], str)
+        assert isinstance(row["updated_at"], str)
+
+    resp = await conn.execute(stmt="DROP TABLE test_table;")
+    assert isinstance(resp, int)
+
+    await conn.close()
+    assert conn.connected is False
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "db,typ", [(adb_sqlite, "sqlite"), (adb_pgsql, "pgsql"), (adb_mssql, "mssql"), (adb_mysql, "mysql")]
+)
+async def test_query_first_with_null_values(db, typ, create_table: dict):
+    table = create_table.get(typ)
+
+    conn: PySQLXEngine = await db()
+
+    assert conn.connected is True
+
+    resp = await conn.execute(stmt=table)
+    assert resp == 0
+
+    with open("tests/unittest/sql/insert.sql", "r") as f:
+        rows = f.readlines()
+
+    resp = await conn.execute(stmt=rows[0].replace("\n", ""))
+    assert resp == 1
+
+    row = await conn.query_first(query="SELECT * FROM test_table")
+
+    assert isinstance(row.first_name, str)
+    assert isinstance(row.last_name, (str, type(None)))
+    assert isinstance(row.age, (int, type(None)))
+    assert isinstance(row.email, (str, type(None)))
+    assert isinstance(row.phone, (str, type(None)))
+    assert isinstance(row.created_at, (str, datetime))
+    assert isinstance(row.updated_at, (str, datetime))
+
+    resp = await conn.execute(stmt="DROP TABLE test_table;")
+    assert isinstance(resp, int)
+
+    await conn.close()
+    assert conn.connected is False
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "db,typ", [(adb_sqlite, "sqlite"), (adb_pgsql, "pgsql"), (adb_mssql, "mssql"), (adb_mysql, "mysql")]
+)
+async def test_query_first_with_null_dict_values(db, typ, create_table: dict):
+    table = create_table.get(typ)
+
+    conn: PySQLXEngine = await db()
+
+    assert conn.connected is True
+
+    resp = await conn.execute(stmt=table)
+    assert resp == 0
+
+    with open("tests/unittest/sql/insert.sql", "r") as f:
+        rows = f.readlines()
+
+    resp = await conn.execute(stmt=rows[0].replace("\n", ""))
+    assert resp == 1
+
+    row = await conn.query_first(query="SELECT * FROM test_table", as_dict=True)
+
+    assert isinstance(row["first_name"], str)
+    assert isinstance(row["last_name"], (str, type(None)))
+    assert isinstance(row["age"], (int, type(None)))
+    assert isinstance(row["email"], (str, type(None)))
+    assert isinstance(row["phone"], (str, type(None)))
+    assert isinstance(row["created_at"], str)
+    assert isinstance(row["updated_at"], str)
+
+    resp = await conn.execute(stmt="DROP TABLE test_table;")
+    assert isinstance(resp, int)
 
     await conn.close()
     assert conn.connected is False
