@@ -1,5 +1,5 @@
 from types import TracebackType
-from typing import Any, Dict, List, Optional, Type, Union
+from typing import Any, Dict, List, Optional, Type, Union, overload
 
 from typing_extensions import Literal
 
@@ -11,7 +11,7 @@ from .errors import (
     RawCmdError,
     StartTransactionError,
 )
-from .parser import BaseRow
+from .parser import BaseRow, Model
 
 LiteralString = str
 
@@ -193,8 +193,10 @@ class PySQLXEngine:
         `SET TRANSACTION ISOLATION LEVEL READ COMMITTED;`
 
         """
-        ...
-    def query(self, query: LiteralString, as_dict: bool = False) -> "Union[List[BaseRow], List[Dict[str, Any]], List]":
+        raise RawCmdError()
+    # all
+    @overload
+    def query(self, query: LiteralString) -> Union[List[BaseRow], List]:
         """
         ## Description
         Returns all rows of the query result with List of `BaseRow` or List of Dict or empty List.
@@ -202,6 +204,10 @@ class PySQLXEngine:
         #### BaseRow
             Is a class that represents a row of the result of a query.
             Is a class created from `Pydantic`, then you have all the benefits of `Pydantic`.
+
+        #### Model
+            Is a class that represents a row of the result of a query.
+            This class is created by the user, it is a class that inherits from `BaseRow`.
 
         #### Dict
             Is a dict that represents a row of the result of a query.
@@ -231,7 +237,13 @@ class PySQLXEngine:
 
         """
         raise QueryError()
-    def query_first(self, query: LiteralString, as_dict: bool = False) -> "Union[BaseRow, Dict[str, Any], None]":
+    @overload
+    def query(self, query: LiteralString, model: Type["Model"] = None) -> Union[List[Type["Model"]], List]: ...
+    @overload
+    def query(self, query: LiteralString, as_dict: bool = False) -> Union[List[Dict[str, Any]], List]: ...
+    # fisrt
+    @overload
+    def query_first(self, query: LiteralString) -> Union[BaseRow, None]:
         """
         ## Description
         Returns the first row of the query result with BaseRow or Dict(case as_dict=True) or None case result is empty.
@@ -239,6 +251,10 @@ class PySQLXEngine:
         #### BaseRow
             Is a class that represents a row of the result of a query.
             Is a class created from `Pydantic`, then you have all the benefits of `Pydantic`.
+
+        #### Model
+            Is a class that represents a row of the result of a query.
+            This class is created by the user, it is a class that inherits from `BaseRow`.
 
         #### Dict
             Is a dict that represents a row of the result of a query.
@@ -269,6 +285,11 @@ class PySQLXEngine:
 
         """
         raise QueryError()
+    @overload
+    def query_first(self, query: LiteralString, model: Type["Model"] = None) -> Union[Type["Model"], None]: ...
+    @overload
+    def query_first(self, query: LiteralString, as_dict: bool = False) -> Union[Dict[str, Any], None]: ...
+    # --
     def execute(self, stmt: LiteralString) -> "int":
         """
         ## Description
