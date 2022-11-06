@@ -26,9 +26,7 @@ class PySQLXError(Exception):
         self.message: str = err.message()
         self._type: str = err.error()
 
-        msg = f"{self._type}(code={self.code}, message={self.message})"
-
-        if getenv("PYSQLX_ERROR_JSON_FMT", "1") == "1":
+        if getenv("PYSQLX_ERROR_JSON_FMT", "0") == "1":
             msg = fe_json(
                 {
                     "code": self.code,
@@ -36,8 +34,10 @@ class PySQLXError(Exception):
                     "error": self._type,
                 }
             )
-
-        super().__init__(msg)
+            super().__init__(msg)
+        else:
+            msg = f"{self._type}(code='{self.code}', message='{self.message}')"
+            super().__init__(msg)
 
     def code(self) -> str:
         """Return the error code."""
@@ -108,9 +108,22 @@ class NotConnectedError(Exception):
     ...
 
 
-class AlreadyConnectedError(ValueError):
+class AlreadyConnectedError(Exception):
     """
     Raised when the user tries to connect to the database but is already connected.
     """
 
-    ...
+    def __init__(self, *args: object) -> None:
+        if getenv("PYSQLX_ERROR_JSON_FMT", "0") == "1":
+            msg = fe_json(
+                {
+                    "code": "0",
+                    "message": "Already connected to the database",
+                    "error": "AlreadyConnectedError",
+                }
+            )
+
+            super().__init__(msg)
+        else:
+            msg = f"AlreadyConnectedError(code=0, message='Already connected to the database')"
+            super().__init__(msg)

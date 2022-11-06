@@ -63,7 +63,7 @@ class PySQLXEngine:
         @force_sync
         async def _connect():
             if self.connected:
-                raise AlreadyConnectedError("connection already exists")
+                raise AlreadyConnectedError()
             try:
                 self._conn = await pysqlx_core.new(uri=self.uri)
                 self.connected = True
