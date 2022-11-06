@@ -39,14 +39,6 @@ class PySQLXError(Exception):
             msg = f"{self._type}(code='{self.code}', message='{self.message}')"
             super().__init__(msg)
 
-    def code(self) -> str:
-        """Return the error code."""
-        return self.code
-
-    def message(self) -> str:
-        """Return the error message."""
-        return self.message
-
     def error(self) -> str:
         """Return the error type."""
         return self._type
