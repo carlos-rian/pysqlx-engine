@@ -491,3 +491,25 @@ async def test_query_first_with_invalid_model(db):
 
     with pytest.raises(TypeError):
         await conn.query_first(query="SELECT 1 AS id, 'Rian' AS name", model=MyModel)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("db", [adb_sqlite, adb_pgsql, adb_mssql, adb_mysql])
+async def test_query_with_my_model_get_columns(db):
+    conn: PySQLXEngine = await db()
+
+    class MyModel(BaseRow):
+        id: int
+        name: str
+
+    rows = await conn.query(query="SELECT 1 AS id, 'Rian' AS name", model=MyModel)
+
+    row = rows[0]
+    assert isinstance(row, MyModel)
+    assert row.id == 1
+    assert row.name == "Rian"
+
+    columns = row.get_columns()
+
+    assert columns["id"] == int
+    assert columns["name"] == str

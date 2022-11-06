@@ -34,7 +34,7 @@ class BaseRow(BaseModel):
     BaseRow is a class created from `Pydantic`, then you have all the benefits of `Pydantic`.
     """
 
-    _columns: Dict[str, Any] = None
+    _baserow_columns: Dict[str, Any] = None
 
     class Config:
         orm_mode = True
@@ -49,7 +49,13 @@ class BaseRow(BaseModel):
         Returns:
             Dict[str, Any]: The columns of the row.
         """
-        return self._columns
+        if self._baserow_columns is None:
+            values = self.dict()
+            columns = {}
+            for key, value in values.items():
+                columns[key] = type(value)
+            return columns
+        return self._baserow_columns
 
 
 class Parser:
@@ -72,7 +78,7 @@ class Parser:
                 fields[key] = (type_, None)
             columns[key] = type_
 
-        fields["_columns"] = (Dict[str, Any], columns)
+        fields["_baserow_columns"] = (Dict[str, Any], columns)
         model = create_model("BaseRow", **fields, __base__=BaseRow)
         return model
 
