@@ -13,7 +13,7 @@ def test_sample_query(db):
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
-    rows = conn.query(query="SELECT 1 as number")
+    rows = conn.query(sql="SELECT 1 as number")
     assert rows[0].number == 1
     conn.close()
     assert conn.connected is False
@@ -24,12 +24,12 @@ def test_sample_query_with_empty_table(db):
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
-    conn.execute(stmt="CREATE TABLE pysql_empty (id INT)")
+    conn.execute(sql="CREATE TABLE pysql_empty (id INT)")
 
-    rows = conn.query(query="SELECT * FROM pysql_empty")
+    rows = conn.query(sql="SELECT * FROM pysql_empty")
     assert rows == []
 
-    conn.execute(stmt="DROP TABLE pysql_empty")
+    conn.execute(sql="DROP TABLE pysql_empty")
     conn.close()
     assert conn.connected is False
 
@@ -39,7 +39,7 @@ def test_sample_query_first(db):
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
-    row = conn.query_first(query="SELECT 1 as number")
+    row = conn.query_first(sql="SELECT 1 as number")
     assert row.number == 1
     conn.close()
     assert conn.connected is False
@@ -50,12 +50,12 @@ def test_sample_query_first_with_empty_table(db):
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
-    conn.execute(stmt="CREATE TABLE pysql_empty (id INT)")
+    conn.execute(sql="CREATE TABLE pysql_empty (id INT)")
 
-    rows = conn.query_first(query="SELECT * FROM pysql_empty")
+    rows = conn.query_first(sql="SELECT * FROM pysql_empty")
     assert rows is None
 
-    conn.execute(stmt="DROP TABLE pysql_empty")
+    conn.execute(sql="DROP TABLE pysql_empty")
     conn.close()
     assert conn.connected is False
 
@@ -65,7 +65,7 @@ def test_sample_query_with_dict(db):
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
-    rows = conn.query(query="SELECT 1 as number", as_dict=True)
+    rows = conn.query(sql="SELECT 1 as number", as_dict=True)
     assert rows[0]["number"] == 1
 
     conn.close()
@@ -77,12 +77,12 @@ def test_sample_query_with_empty_table_as_dict(db):
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
-    conn.execute(stmt="CREATE TABLE pysql_empty (id INT)")
+    conn.execute(sql="CREATE TABLE pysql_empty (id INT)")
 
-    rows = conn.query(query="SELECT * FROM pysql_empty", as_dict=True)
+    rows = conn.query(sql="SELECT * FROM pysql_empty", as_dict=True)
     assert rows == []
 
-    conn.execute(stmt="DROP TABLE pysql_empty")
+    conn.execute(sql="DROP TABLE pysql_empty")
 
     conn.close()
     assert conn.connected is False
@@ -93,7 +93,7 @@ def test_sample_query_first_with_dict(db):
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
-    row = conn.query_first(query="SELECT 1 as number", as_dict=True)
+    row = conn.query_first(sql="SELECT 1 as number", as_dict=True)
     assert row["number"] == 1
     conn.close()
     assert conn.connected is False
@@ -104,12 +104,12 @@ def test_sample_query_first_with_empty_table_as_dict(db):
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
-    conn.execute(stmt="CREATE TABLE pysql_empty (id INT)")
+    conn.execute(sql="CREATE TABLE pysql_empty (id INT)")
 
-    row = conn.query_first(query="SELECT * FROM pysql_empty", as_dict=True)
+    row = conn.query_first(sql="SELECT * FROM pysql_empty", as_dict=True)
     assert row is None
 
-    conn.execute(stmt="DROP TABLE pysql_empty")
+    conn.execute(sql="DROP TABLE pysql_empty")
     conn.close()
     assert conn.connected is False
 
@@ -125,14 +125,14 @@ def test_complex_query_pgsql():
 
     with open("tests/unittest/sql/postgresql/create.sql", "r") as f:
         type_, table, *_ = f.read().split(";")
-        conn.execute(stmt=type_)
-        conn.execute(stmt=table)
+        conn.execute(sql=type_)
+        conn.execute(sql=table)
 
     with open("tests/unittest/sql/postgresql/insert.sql", "r") as f:
         insert = f.read().split(";")[0]
-        conn.execute(stmt=insert)
+        conn.execute(sql=insert)
 
-    row = (conn.query(query="SELECT * FROM pysqlx_table"))[0]
+    row = (conn.query(sql="SELECT * FROM pysqlx_table"))[0]
 
     assert isinstance(row.type_smallint, int)
     assert isinstance(row.type_bigint, int)
@@ -167,8 +167,8 @@ def test_complex_query_pgsql():
     assert isinstance(row.type_array_uuid, list)
     assert isinstance(row.type_array_uuid[0], UUID)
 
-    conn.execute(stmt="DROP TABLE pysqlx_table")
-    conn.execute(stmt="DROP TYPE colors CASCADE")
+    conn.execute(sql="DROP TABLE pysqlx_table")
+    conn.execute(sql="DROP TYPE colors CASCADE")
 
     conn.close()
     assert conn.connected is False
@@ -180,7 +180,7 @@ def test_error_invalid_query(db):
     assert conn.connected is True
 
     with pytest.raises(QueryError):
-        conn.query(query="SELECT * FROM invalid_table")
+        conn.query(sql="SELECT * FROM invalid_table")
 
     conn.close()
     assert conn.connected is False
@@ -192,7 +192,7 @@ def test_error_invalid_query_as_dict(db):
     assert conn.connected is True
 
     with pytest.raises(QueryError):
-        conn.query(query="SELECT * FROM invalid_table", as_dict=True)
+        conn.query(sql="SELECT * FROM invalid_table", as_dict=True)
 
     conn.close()
     assert conn.connected is False
@@ -204,7 +204,7 @@ def test_error_invalid_query_first(db):
     assert conn.connected is True
 
     with pytest.raises(QueryError):
-        conn.query_first(query="SELECT * FROM invalid_table")
+        conn.query_first(sql="SELECT * FROM invalid_table")
 
     conn.close()
     assert conn.connected is False
@@ -216,7 +216,7 @@ def test_error_invalid_query_first_as_dict(db):
     assert conn.connected is True
 
     with pytest.raises(QueryError):
-        conn.query_first(query="SELECT * FROM invalid_table", as_dict=True)
+        conn.query_first(sql="SELECT * FROM invalid_table", as_dict=True)
 
     conn.close()
     assert conn.connected is False
@@ -232,17 +232,17 @@ def test_query_with_null_values(db, typ, create_table: dict):
 
     assert conn.connected is True
 
-    resp = conn.execute(stmt=table)
+    resp = conn.execute(sql=table)
     assert resp == 0
 
     with open("tests/unittest/sql/insert.sql", "r") as f:
         rows = f.readlines()
 
     for row in rows:
-        resp = conn.execute(stmt=row.replace("\n", ""))
+        resp = conn.execute(sql=row.replace("\n", ""))
         assert resp == 1
 
-    rows = conn.query(query="SELECT * FROM test_table")
+    rows = conn.query(sql="SELECT * FROM test_table")
     for row in rows:
         assert isinstance(row.first_name, str)
         assert isinstance(row.last_name, (str, type(None)))
@@ -252,7 +252,7 @@ def test_query_with_null_values(db, typ, create_table: dict):
         assert isinstance(row.created_at, (str, datetime))
         assert isinstance(row.updated_at, (str, datetime))
 
-    resp = conn.execute(stmt="DROP TABLE test_table;")
+    resp = conn.execute(sql="DROP TABLE test_table;")
     assert isinstance(resp, int)
 
     conn.close()
@@ -269,17 +269,17 @@ def test_query_with_null_dict_values(db, typ, create_table: dict):
 
     assert conn.connected is True
 
-    resp = conn.execute(stmt=table)
+    resp = conn.execute(sql=table)
     assert resp == 0
 
     with open("tests/unittest/sql/insert.sql", "r") as f:
         rows = f.readlines()
 
     for row in rows:
-        resp = conn.execute(stmt=row.replace("\n", ""))
+        resp = conn.execute(sql=row.replace("\n", ""))
         assert resp == 1
 
-    rows = conn.query(query="SELECT * FROM test_table", as_dict=True)
+    rows = conn.query(sql="SELECT * FROM test_table", as_dict=True)
     for row in rows:
         assert isinstance(row["first_name"], str)
         assert isinstance(row["last_name"], (str, type(None)))
@@ -289,7 +289,7 @@ def test_query_with_null_dict_values(db, typ, create_table: dict):
         assert isinstance(row["created_at"], str)
         assert isinstance(row["updated_at"], str)
 
-    resp = conn.execute(stmt="DROP TABLE test_table;")
+    resp = conn.execute(sql="DROP TABLE test_table;")
     assert isinstance(resp, int)
 
     conn.close()
@@ -306,16 +306,16 @@ def test_query_first_with_null_values(db, typ, create_table: dict):
 
     assert conn.connected is True
 
-    resp = conn.execute(stmt=table)
+    resp = conn.execute(sql=table)
     assert resp == 0
 
     with open("tests/unittest/sql/insert.sql", "r") as f:
         rows = f.readlines()
 
-    resp = conn.execute(stmt=rows[0].replace("\n", ""))
+    resp = conn.execute(sql=rows[0].replace("\n", ""))
     assert resp == 1
 
-    row = conn.query_first(query="SELECT * FROM test_table")
+    row = conn.query_first(sql="SELECT * FROM test_table")
 
     assert isinstance(row.first_name, str)
     assert isinstance(row.last_name, (str, type(None)))
@@ -325,7 +325,7 @@ def test_query_first_with_null_values(db, typ, create_table: dict):
     assert isinstance(row.created_at, (str, datetime))
     assert isinstance(row.updated_at, (str, datetime))
 
-    resp = conn.execute(stmt="DROP TABLE test_table;")
+    resp = conn.execute(sql="DROP TABLE test_table;")
     assert isinstance(resp, int)
 
     conn.close()
@@ -342,16 +342,16 @@ def test_query_first_with_null_dict_values(db, typ, create_table: dict):
 
     assert conn.connected is True
 
-    resp = conn.execute(stmt=table)
+    resp = conn.execute(sql=table)
     assert resp == 0
 
     with open("tests/unittest/sql/insert.sql", "r") as f:
         rows = f.readlines()
 
-    resp = conn.execute(stmt=rows[0].replace("\n", ""))
+    resp = conn.execute(sql=rows[0].replace("\n", ""))
     assert resp == 1
 
-    row = conn.query_first(query="SELECT * FROM test_table", as_dict=True)
+    row = conn.query_first(sql="SELECT * FROM test_table", as_dict=True)
 
     assert isinstance(row["first_name"], str)
     assert isinstance(row["last_name"], (str, type(None)))
@@ -361,7 +361,7 @@ def test_query_first_with_null_dict_values(db, typ, create_table: dict):
     assert isinstance(row["created_at"], str)
     assert isinstance(row["updated_at"], str)
 
-    resp = conn.execute(stmt="DROP TABLE test_table;")
+    resp = conn.execute(sql="DROP TABLE test_table;")
     assert isinstance(resp, int)
 
     conn.close()
@@ -378,16 +378,16 @@ def test_query_first_get_column_types(db, typ, create_table: dict):
 
     assert conn.connected is True
 
-    resp = conn.execute(stmt=table)
+    resp = conn.execute(sql=table)
     assert resp == 0
 
     with open("tests/unittest/sql/insert.sql", "r") as f:
         rows = f.readlines()
 
-    resp = conn.execute(stmt=rows[0].replace("\n", ""))
+    resp = conn.execute(sql=rows[0].replace("\n", ""))
     assert resp == 1
 
-    row = conn.query_first(query="SELECT * FROM test_table")
+    row = conn.query_first(sql="SELECT * FROM test_table")
 
     assert isinstance(row.first_name, str)
     assert isinstance(row.last_name, (str, type(None)))
@@ -409,7 +409,7 @@ def test_query_first_get_column_types(db, typ, create_table: dict):
     assert columns["created_at"] == str or columns["created_at"] == datetime  # sqlite not support datetime
     assert columns["updated_at"] == str or columns["updated_at"] == datetime  # sqlite not support datetime
 
-    resp = conn.execute(stmt="DROP TABLE test_table;")
+    resp = conn.execute(sql="DROP TABLE test_table;")
     assert isinstance(resp, int)
 
     conn.close()
@@ -424,7 +424,7 @@ def test_query_with_my_model(db):
         id: int
         name: str
 
-    rows = conn.query(query="SELECT 1 AS id, 'Rian' AS name", model=MyModel)
+    rows = conn.query(sql="SELECT 1 AS id, 'Rian' AS name", model=MyModel)
 
     row = rows[0]
     assert isinstance(row, MyModel)
@@ -441,7 +441,7 @@ def test_query_with_invalid_model(db):
         name: str
 
     with pytest.raises(TypeError):
-        conn.query(query="SELECT 1 AS id, 'Rian' AS name", model=MyModel)
+        conn.query(sql="SELECT 1 AS id, 'Rian' AS name", model=MyModel)
 
 
 @pytest.mark.parametrize("db", [db_sqlite, db_pgsql, db_mssql, db_mysql])
@@ -452,7 +452,7 @@ def test_query_first_with_my_model(db):
         id: int
         name: str
 
-    row = conn.query_first(query="SELECT 1 AS id, 'Rian' AS name", model=MyModel)
+    row = conn.query_first(sql="SELECT 1 AS id, 'Rian' AS name", model=MyModel)
 
     assert isinstance(row, MyModel)
     assert row.id == 1
@@ -468,17 +468,18 @@ def test_query_first_with_invalid_model(db):
         name: str
 
     with pytest.raises(TypeError):
-        conn.query_first(query="SELECT 1 AS id, 'Rian' AS name", model=MyModel)
+        conn.query_first(sql="SELECT 1 AS id, 'Rian' AS name", model=MyModel)
 
 
 @pytest.mark.parametrize("db", [db_sqlite, db_pgsql, db_mssql, db_mysql])
 def test_query_with_my_model_get_columns(db):
     conn: PySQLXEngineSync = db()
+
     class MyModel(BaseRow):
         id: int
         name: str
 
-    rows = conn.query(query="SELECT 1 AS id, 'Rian' AS name", model=MyModel)
+    rows = conn.query(sql="SELECT 1 AS id, 'Rian' AS name", model=MyModel)
 
     row = rows[0]
     assert isinstance(row, MyModel)
@@ -486,6 +487,27 @@ def test_query_with_my_model_get_columns(db):
     assert row.name == "Rian"
 
     columns = row.get_columns()
-    
+
     assert columns["id"] == int
     assert columns["name"] == str
+
+
+@pytest.mark.parametrize("db", [db_pgsql])
+def test_invalid_sql_type(db):
+    conn: PySQLXEngineSync = db()
+    assert conn.connected is True
+
+    with pytest.raises(TypeError):
+        conn.query_first(sql=1)
+
+    with pytest.raises(TypeError):
+        conn.query(sql=None)
+
+    with pytest.raises(TypeError):
+        conn.raw_cmd(sql={})
+
+    with pytest.raises(TypeError):
+        conn.execute(sql=[])
+
+    conn.close()
+    assert conn.connected is False

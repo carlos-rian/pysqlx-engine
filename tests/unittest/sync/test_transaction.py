@@ -18,24 +18,24 @@ def test_execute_transaction_commit(db):
     resp = conn.begin()
     assert resp is None
 
-    resp = conn.execute(stmt="CREATE TABLE test_table (id INT);")
+    resp = conn.execute(sql="CREATE TABLE test_table (id INT);")
     assert resp == 0
 
-    resp = conn.execute(stmt="INSERT INTO test_table VALUES (1);")
+    resp = conn.execute(sql="INSERT INTO test_table VALUES (1);")
     assert resp == 1
 
     conn2: PySQLXEngineSync = db()
 
     with pytest.raises(QueryError):
-        conn2.query(query="SELECT * FROM test_table;")
+        conn2.query(sql="SELECT * FROM test_table;")
 
     resp = conn.commit()
     assert resp is None
 
-    resp = conn2.query(query="SELECT * FROM test_table;")
+    resp = conn2.query(sql="SELECT * FROM test_table;")
     assert len(resp) == 1
 
-    resp = conn.execute(stmt="DROP TABLE test_table;")
+    resp = conn.execute(sql="DROP TABLE test_table;")
 
 
 @pytest.mark.parametrize("db", [db_mysql])
@@ -43,26 +43,26 @@ def test_execute_transaction_commit_mysql(db):
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
-    resp = conn.execute(stmt="CREATE TABLE test_table (id INT);")
+    resp = conn.execute(sql="CREATE TABLE test_table (id INT);")
     assert resp == 0
 
     resp = conn.begin()
     assert resp is None
 
-    resp = conn.execute(stmt="INSERT INTO test_table VALUES (1);")
+    resp = conn.execute(sql="INSERT INTO test_table VALUES (1);")
     assert resp == 1
 
     conn2: PySQLXEngineSync = db()
-    resp = conn2.query(query="SELECT * FROM test_table;")
+    resp = conn2.query(sql="SELECT * FROM test_table;")
     assert len(resp) == 0
 
     resp = conn.commit()
     assert resp is None
 
-    resp = conn2.query(query="SELECT * FROM test_table;")
+    resp = conn2.query(sql="SELECT * FROM test_table;")
     assert len(resp) == 1
 
-    resp = conn.execute(stmt="DROP TABLE test_table;")
+    resp = conn.execute(sql="DROP TABLE test_table;")
     assert resp == 0
 
 
@@ -74,19 +74,19 @@ def test_execute_transaction_commit_mssql(db):
     resp = conn.begin()
     assert resp is None
 
-    resp = conn.execute(stmt="CREATE TABLE test_table (id INT);")
+    resp = conn.execute(sql="CREATE TABLE test_table (id INT);")
     assert resp == 0
 
-    resp = conn.execute(stmt="INSERT INTO test_table VALUES (1);")
+    resp = conn.execute(sql="INSERT INTO test_table VALUES (1);")
     assert resp == 1
 
     resp = conn.commit()
     assert resp is None
 
-    resp = conn.query(query="SELECT * FROM test_table;")
+    resp = conn.query(sql="SELECT * FROM test_table;")
     assert len(resp) == 1
 
-    resp = conn.execute(stmt="DROP TABLE test_table;")
+    resp = conn.execute(sql="DROP TABLE test_table;")
     assert resp == 0
 
 
@@ -95,21 +95,21 @@ def test_execute_transaction_rollback_insert(db):
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
-    resp = conn.execute(stmt="CREATE TABLE test_table (id INT);")
+    resp = conn.execute(sql="CREATE TABLE test_table (id INT);")
     assert resp == 0
 
     resp = conn.begin()
     assert resp is None
 
-    resp = conn.execute(stmt="INSERT INTO test_table VALUES (1);")
+    resp = conn.execute(sql="INSERT INTO test_table VALUES (1);")
 
     resp = conn.rollback()
     assert resp is None
 
-    resp = conn.query(query="SELECT * FROM test_table;")
+    resp = conn.query(sql="SELECT * FROM test_table;")
     assert len(resp) == 0
 
-    resp = conn.execute(stmt="DROP TABLE test_table;")
+    resp = conn.execute(sql="DROP TABLE test_table;")
     assert isinstance(resp, int)
 
 
@@ -125,14 +125,14 @@ def test_execute_transaction_rollback_create(db):
     resp = conn.begin()
     assert resp is None
 
-    resp = conn.execute(stmt="CREATE TABLE test_table (id INT);")
+    resp = conn.execute(sql="CREATE TABLE test_table (id INT);")
     assert resp == 0
 
     resp = conn.rollback()
     assert resp is None
 
     with pytest.raises(QueryError):
-        conn.query(query="SELECT * FROM test_table;")
+        conn.query(sql="SELECT * FROM test_table;")
 
 
 @pytest.mark.parametrize("db", [db_mysql, db_mssql, db_pgsql])

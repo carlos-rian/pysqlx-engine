@@ -19,24 +19,24 @@ async def test_execute_transaction_commit(db):
     resp = await conn.begin()
     assert resp is None
 
-    resp = await conn.execute(stmt="CREATE TABLE test_table (id INT);")
+    resp = await conn.execute(sql="CREATE TABLE test_table (id INT);")
     assert resp == 0
 
-    resp = await conn.execute(stmt="INSERT INTO test_table VALUES (1);")
+    resp = await conn.execute(sql="INSERT INTO test_table VALUES (1);")
     assert resp == 1
 
     conn2: PySQLXEngine = await db()
 
     with pytest.raises(QueryError):
-        await conn2.query(query="SELECT * FROM test_table;")
+        await conn2.query(sql="SELECT * FROM test_table;")
 
     resp = await conn.commit()
     assert resp is None
 
-    resp = await conn2.query(query="SELECT * FROM test_table;")
+    resp = await conn2.query(sql="SELECT * FROM test_table;")
     assert len(resp) == 1
 
-    resp = await conn.execute(stmt="DROP TABLE test_table;")
+    resp = await conn.execute(sql="DROP TABLE test_table;")
 
 
 @pytest.mark.asyncio
@@ -45,26 +45,26 @@ async def test_execute_transaction_commit_mysql(db):
     conn: PySQLXEngine = await db()
     assert conn.connected is True
 
-    resp = await conn.execute(stmt="CREATE TABLE test_table (id INT);")
+    resp = await conn.execute(sql="CREATE TABLE test_table (id INT);")
     assert resp == 0
 
     resp = await conn.begin()
     assert resp is None
 
-    resp = await conn.execute(stmt="INSERT INTO test_table VALUES (1);")
+    resp = await conn.execute(sql="INSERT INTO test_table VALUES (1);")
     assert resp == 1
 
     conn2: PySQLXEngine = await db()
-    resp = await conn2.query(query="SELECT * FROM test_table;")
+    resp = await conn2.query(sql="SELECT * FROM test_table;")
     assert len(resp) == 0
 
     resp = await conn.commit()
     assert resp is None
 
-    resp = await conn2.query(query="SELECT * FROM test_table;")
+    resp = await conn2.query(sql="SELECT * FROM test_table;")
     assert len(resp) == 1
 
-    resp = await conn.execute(stmt="DROP TABLE test_table;")
+    resp = await conn.execute(sql="DROP TABLE test_table;")
     assert resp == 0
 
 
@@ -77,19 +77,19 @@ async def test_execute_transaction_commit_mssql(db):
     resp = await conn.begin()
     assert resp is None
 
-    resp = await conn.execute(stmt="CREATE TABLE test_table (id INT);")
+    resp = await conn.execute(sql="CREATE TABLE test_table (id INT);")
     assert resp == 0
 
-    resp = await conn.execute(stmt="INSERT INTO test_table VALUES (1);")
+    resp = await conn.execute(sql="INSERT INTO test_table VALUES (1);")
     assert resp == 1
 
     resp = await conn.commit()
     assert resp is None
 
-    resp = await conn.query(query="SELECT * FROM test_table;")
+    resp = await conn.query(sql="SELECT * FROM test_table;")
     assert len(resp) == 1
 
-    resp = await conn.execute(stmt="DROP TABLE test_table;")
+    resp = await conn.execute(sql="DROP TABLE test_table;")
     assert resp == 0
 
 
@@ -99,21 +99,21 @@ async def test_execute_transaction_rollback_insert(db):
     conn: PySQLXEngine = await db()
     assert conn.connected is True
 
-    resp = await conn.execute(stmt="CREATE TABLE test_table (id INT);")
+    resp = await conn.execute(sql="CREATE TABLE test_table (id INT);")
     assert resp == 0
 
     resp = await conn.begin()
     assert resp is None
 
-    resp = await conn.execute(stmt="INSERT INTO test_table VALUES (1);")
+    resp = await conn.execute(sql="INSERT INTO test_table VALUES (1);")
 
     resp = await conn.rollback()
     assert resp is None
 
-    resp = await conn.query(query="SELECT * FROM test_table;")
+    resp = await conn.query(sql="SELECT * FROM test_table;")
     assert len(resp) == 0
 
-    resp = await conn.execute(stmt="DROP TABLE test_table;")
+    resp = await conn.execute(sql="DROP TABLE test_table;")
     assert isinstance(resp, int)
 
 
@@ -128,14 +128,14 @@ async def test_execute_transaction_rollback_create(db):
     resp = await conn.begin()
     assert resp is None
 
-    resp = await conn.execute(stmt="CREATE TABLE test_table (id INT);")
+    resp = await conn.execute(sql="CREATE TABLE test_table (id INT);")
     assert resp == 0
 
     resp = await conn.rollback()
     assert resp is None
 
     with pytest.raises(QueryError):
-        await conn.query(query="SELECT * FROM test_table;")
+        await conn.query(sql="SELECT * FROM test_table;")
 
 
 @pytest.mark.asyncio

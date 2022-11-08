@@ -16,10 +16,10 @@ async def test_execute_create_table(db, typ, create_table: dict):
 
     assert conn.connected is True
 
-    resp = await conn.execute(stmt=table)
+    resp = await conn.execute(sql=table)
     assert resp == 0
 
-    resp = await conn.execute(stmt="DROP TABLE test_table;")
+    resp = await conn.execute(sql="DROP TABLE test_table;")
     assert resp == 0
 
     await conn.close()
@@ -37,17 +37,17 @@ async def test_execute_insert(db, typ, create_table: dict):
 
     assert conn.connected is True
 
-    resp = await conn.execute(stmt=table)
+    resp = await conn.execute(sql=table)
     assert resp == 0
 
     with open("tests/unittest/sql/insert.sql", "r") as f:
         rows = f.readlines()
 
     for row in rows:
-        resp = await conn.execute(stmt=row.replace("\n", ""))
+        resp = await conn.execute(sql=row.replace("\n", ""))
         assert resp == 1
 
-    resp = await conn.execute(stmt="DROP TABLE test_table;")
+    resp = await conn.execute(sql="DROP TABLE test_table;")
     assert isinstance(resp, int)
 
     await conn.close()
@@ -61,7 +61,7 @@ async def test_error_execute_invalid_table_insert(db):
     assert conn.connected is True
 
     with pytest.raises(ExecuteError):
-        await conn.execute(stmt="INSERT INTO invalid_table (id) VALUES (1)")
+        await conn.execute(sql="INSERT INTO invalid_table (id) VALUES (1)")
 
     await conn.close()
     assert conn.connected is False
