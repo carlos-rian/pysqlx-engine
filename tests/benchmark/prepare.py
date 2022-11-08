@@ -62,15 +62,17 @@ def sample_create_and_insert_100_rows():
     resp = conn.execute("drop table if exists test_benchmark_sample_table_100")
     assert resp == 0
 
-    resp = conn.execute(stmt=sample_table.format(table_name=100))
+    resp = conn.execute(sql=sample_table.format(table_name=100))
     assert resp == 0
 
     with open("tests/benchmark/sql/pgsql/sample.sql", "r") as f:
         rows = f.readlines()[0:100]
 
     for row in rows:
-        resp = conn.execute(stmt=row.replace("\n", ""))
+        resp = conn.execute(sql=row.replace("\n", ""))
         assert resp == 1
+
+    conn.execute("drop table if exists test_benchmark_sample_table_100")
 
 
 def sample_create_and_insert_1_000_rows():
@@ -78,18 +80,20 @@ def sample_create_and_insert_1_000_rows():
     conn: PySQLXEngineSync = PySQLXEngineSync(uri)
     assert conn.connected is True
 
-    resp = conn.execute("drop table if exists test_benchmark_sample_table_1000")
+    resp = conn.execute("drop table if exists test_benchmark_sample_table_1_000")
     assert resp == 0
 
-    resp = conn.execute(stmt=sample_table)
+    resp = conn.execute(sql=sample_table)
     assert resp == 0
 
     with open("tests/benchmark/sql/pgsql/sample.sql", "r") as f:
         rows = f.readlines()[0:1_000]
 
     for row in rows:
-        resp = conn.execute(stmt=row.replace("\n", ""))
+        resp = conn.execute(sql=row.replace("\n", ""))
         assert resp == 1
+
+    conn.execute("drop table if exists test_benchmark_sample_table_1_000")
 
 
 def sample_create_and_insert_10_000_rows():
@@ -97,18 +101,20 @@ def sample_create_and_insert_10_000_rows():
     conn: PySQLXEngineSync = PySQLXEngineSync(uri)
     assert conn.connected is True
 
-    resp = conn.execute("drop table if exists test_benchmark_sample_table_10000")
+    resp = conn.execute("drop table if exists test_benchmark_sample_table_10_000")
     assert resp == 0
 
-    resp = conn.execute(stmt=sample_table)
+    resp = conn.execute(sql=sample_table)
     assert resp == 0
 
     with open("tests/benchmark/sql/pgsql/sample.sql", "r") as f:
         rows = f.readlines()[0:10_000]
 
     for row in rows:
-        resp = conn.execute(stmt=row.replace("\n", ""))
+        resp = conn.execute(sql=row.replace("\n", ""))
         assert resp == 1
+
+    conn.execute("drop table if exists test_benchmark_sample_table_10_000")
 
 
 def sample_create_and_insert_100_000_rows():
@@ -116,18 +122,20 @@ def sample_create_and_insert_100_000_rows():
     conn: PySQLXEngineSync = PySQLXEngineSync(uri)
     assert conn.connected is True
 
-    resp = conn.execute("drop table if exists test_benchmark_sample_table_100000")
+    resp = conn.execute("drop table if exists test_benchmark_sample_table_100_000")
     assert resp == 0
 
-    resp = conn.execute(stmt=sample_table)
+    resp = conn.execute(sql=sample_table)
     assert resp == 0
 
     with open("tests/benchmark/sql/pgsql/sample.sql", "r") as f:
         rows = f.readlines()
 
     for row in rows:
-        resp = conn.execute(stmt=row.replace("\n", ""))
+        resp = conn.execute(sql=row.replace("\n", ""))
         assert resp == 1
+
+    conn.execute("drop table if exists test_benchmark_sample_table_100_000")
 
 
 # complex
@@ -145,15 +153,18 @@ def complex_create_and_insert_100_rows():
     resp = conn.execute("create type colors as enum ('blue', 'red', 'gray', 'black');")
     assert resp == 0
 
-    resp = conn.execute(stmt=sample_table.format(table_name=100))
+    resp = conn.execute(sql=sample_table.format(table_name=100))
     assert resp == 0
 
     with open("tests/benchmark/sql/pgsql/complex.sql", "r") as f:
         rows = f.readlines()[0:100]
 
     for row in rows:
-        resp = conn.execute(stmt=row.replace("\n", ""))
+        resp = conn.execute(sql=row.replace("\n", ""))
         assert resp == 1
+
+    conn.execute("drop table if exists test_benchmark_complex_table_100")
+    conn.execute("drop type if exists colors")
 
 
 def complex_create_and_insert_1_000_rows():
@@ -161,18 +172,27 @@ def complex_create_and_insert_1_000_rows():
     conn: PySQLXEngineSync = PySQLXEngineSync(uri)
     assert conn.connected is True
 
-    resp = conn.execute("drop table if exists test_benchmark_complex_table_1000")
+    resp = conn.execute("drop table if exists test_benchmark_complex_table_1_000")
     assert resp == 0
 
-    resp = conn.execute(stmt=sample_table)
+    resp = conn.execute("drop type if exists colors")
+    assert resp == 0
+
+    resp = conn.execute("create type colors as enum ('blue', 'red', 'gray', 'black');")
+    assert resp == 0
+
+    resp = conn.execute(sql=sample_table.format(table_name=1_000))
     assert resp == 0
 
     with open("tests/benchmark/sql/pgsql/complex.sql", "r") as f:
         rows = f.readlines()[0:1_000]
 
     for row in rows:
-        resp = conn.execute(stmt=row.replace("\n", ""))
+        resp = conn.execute(sql=row.replace("\n", ""))
         assert resp == 1
+
+    conn.execute("drop table if exists test_benchmark_complex_table_1_000")
+    conn.execute("drop type if exists colors")
 
 
 def complex_create_and_insert_10_000_rows():
@@ -180,18 +200,27 @@ def complex_create_and_insert_10_000_rows():
     conn: PySQLXEngineSync = PySQLXEngineSync(uri)
     assert conn.connected is True
 
-    resp = conn.execute("drop table if exists test_benchmark_complex_table_10000")
+    resp = conn.execute("drop table if exists test_benchmark_complex_table_10_000")
     assert resp == 0
 
-    resp = conn.execute(stmt=sample_table)
+    resp = conn.execute("drop type if exists colors")
+    assert resp == 0
+
+    resp = conn.execute("create type colors as enum ('blue', 'red', 'gray', 'black');")
+    assert resp == 0
+
+    resp = conn.execute(sql=sample_table.format(table_name=10_000))
     assert resp == 0
 
     with open("tests/benchmark/sql/pgsql/complex.sql", "r") as f:
         rows = f.readlines()[0:10_000]
 
     for row in rows:
-        resp = conn.execute(stmt=row.replace("\n", ""))
+        resp = conn.execute(sql=row.replace("\n", ""))
         assert resp == 1
+
+    conn.execute("drop table if exists test_benchmark_complex_table_10_000")
+    conn.execute("drop type if exists colors")
 
 
 def complex_create_and_insert_100_000_rows():
@@ -199,16 +228,24 @@ def complex_create_and_insert_100_000_rows():
     conn: PySQLXEngineSync = PySQLXEngineSync(uri)
     assert conn.connected is True
 
-    resp = conn.execute("drop table if exists test_benchmark_complex_table_100000")
+    resp = conn.execute("drop table if exists test_benchmark_complex_table_100_000")
     assert resp == 0
 
-    resp = conn.execute(stmt=sample_table)
+    resp = conn.execute("drop type if exists colors")
+    assert resp == 0
+
+    resp = conn.execute("create type colors as enum ('blue', 'red', 'gray', 'black');")
+    assert resp == 0
+
+    resp = conn.execute(sql=sample_table.format(table_name=100_000))
     assert resp == 0
 
     with open("tests/benchmark/sql/pgsql/complex.sql", "r") as f:
         rows = f.readlines()
 
     for row in rows:
-        resp = conn.execute(stmt=row.replace("\n", ""))
+        resp = conn.execute(sql=row.replace("\n", ""))
         assert resp == 1
 
+    conn.execute("drop table if exists test_benchmark_complex_table_100_000")
+    conn.execute("drop type if exists colors")
