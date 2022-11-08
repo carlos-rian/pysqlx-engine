@@ -53,10 +53,14 @@ complex_table = """
 """
 
 
+def insert_rows(conn: PySQLXEngineSync, rows: list, table: str):
+    for row in rows:
+        sql = row.replace("\n", "").replace("test_table", table)
+        resp = conn.execute(sql=sql)
+        assert resp == 1
+
 # sample
-def sample_create_and_insert_100_rows():
-    uri = os.environ["DATABASE_URI_POSTGRESQL"]
-    conn: PySQLXEngineSync = PySQLXEngineSync(uri)
+def pgsql_sample_create_and_insert_100_rows(conn: PySQLXEngineSync):
     assert conn.connected is True
 
     resp = conn.execute("drop table if exists test_benchmark_sample_table_100")
@@ -68,16 +72,12 @@ def sample_create_and_insert_100_rows():
     with open("tests/benchmark/sql/pgsql/sample.sql", "r") as f:
         rows = f.readlines()[0:100]
 
-    for row in rows:
-        resp = conn.execute(sql=row.replace("\n", ""))
-        assert resp == 1
+    insert_rows(conn=conn, rows=rows, table="test_benchmark_sample_table_100")
 
-    conn.execute("drop table if exists test_benchmark_sample_table_100")
+    # conn.execute("drop table if exists test_benchmark_sample_table_100")
 
 
-def sample_create_and_insert_1_000_rows():
-    uri = os.environ["DATABASE_URI_POSTGRESQL"]
-    conn: PySQLXEngineSync = PySQLXEngineSync(uri)
+def pgsql_sample_create_and_insert_1_000_rows(conn: PySQLXEngineSync):
     assert conn.connected is True
 
     resp = conn.execute("drop table if exists test_benchmark_sample_table_1_000")
@@ -88,17 +88,12 @@ def sample_create_and_insert_1_000_rows():
 
     with open("tests/benchmark/sql/pgsql/sample.sql", "r") as f:
         rows = f.readlines()[0:1_000]
-
-    for row in rows:
-        resp = conn.execute(sql=row.replace("\n", ""))
-        assert resp == 1
-
-    conn.execute("drop table if exists test_benchmark_sample_table_1_000")
+        
+    insert_rows(conn=conn, rows=rows, table="test_benchmark_sample_table_1_000")
+    # conn.execute("drop table if exists test_benchmark_sample_table_1_000")
 
 
-def sample_create_and_insert_10_000_rows():
-    uri = os.environ["DATABASE_URI_POSTGRESQL"]
-    conn: PySQLXEngineSync = PySQLXEngineSync(uri)
+def pgsql_sample_create_and_insert_10_000_rows(conn: PySQLXEngineSync):
     assert conn.connected is True
 
     resp = conn.execute("drop table if exists test_benchmark_sample_table_10_000")
@@ -110,16 +105,11 @@ def sample_create_and_insert_10_000_rows():
     with open("tests/benchmark/sql/pgsql/sample.sql", "r") as f:
         rows = f.readlines()[0:10_000]
 
-    for row in rows:
-        resp = conn.execute(sql=row.replace("\n", ""))
-        assert resp == 1
-
-    conn.execute("drop table if exists test_benchmark_sample_table_10_000")
+    insert_rows(conn=conn, rows=rows, table="test_benchmark_sample_table_10_000")
+    # conn.execute("drop table if exists test_benchmark_sample_table_10_000")
 
 
-def sample_create_and_insert_100_000_rows():
-    uri = os.environ["DATABASE_URI_POSTGRESQL"]
-    conn: PySQLXEngineSync = PySQLXEngineSync(uri)
+def pgsql_sample_create_and_insert_100_000_rows(conn: PySQLXEngineSync):
     assert conn.connected is True
 
     resp = conn.execute("drop table if exists test_benchmark_sample_table_100_000")
@@ -131,17 +121,12 @@ def sample_create_and_insert_100_000_rows():
     with open("tests/benchmark/sql/pgsql/sample.sql", "r") as f:
         rows = f.readlines()
 
-    for row in rows:
-        resp = conn.execute(sql=row.replace("\n", ""))
-        assert resp == 1
-
-    conn.execute("drop table if exists test_benchmark_sample_table_100_000")
+    insert_rows(conn=conn, rows=rows, table="test_benchmark_sample_table_100_000")
+    # conn.execute("drop table if exists test_benchmark_sample_table_100_000")
 
 
 # complex
-def complex_create_and_insert_100_rows():
-    uri = os.environ["DATABASE_URI_POSTGRESQL"]
-    conn: PySQLXEngineSync = PySQLXEngineSync(uri)
+def pgsql_complex_create_and_insert_100_rows(conn: PySQLXEngineSync):
     assert conn.connected is True
 
     resp = conn.execute("drop table if exists test_benchmark_complex_table_100")
@@ -159,17 +144,13 @@ def complex_create_and_insert_100_rows():
     with open("tests/benchmark/sql/pgsql/complex.sql", "r") as f:
         rows = f.readlines()[0:100]
 
-    for row in rows:
-        resp = conn.execute(sql=row.replace("\n", ""))
-        assert resp == 1
+    insert_rows(conn=conn, rows=rows, table="test_benchmark_complex_table_100")
 
-    conn.execute("drop table if exists test_benchmark_complex_table_100")
-    conn.execute("drop type if exists colors")
+    # conn.execute("drop table if exists test_benchmark_complex_table_100")
+    # conn.execute("drop type if exists colors")
 
 
-def complex_create_and_insert_1_000_rows():
-    uri = os.environ["DATABASE_URI_POSTGRESQL"]
-    conn: PySQLXEngineSync = PySQLXEngineSync(uri)
+def pgsql_complex_create_and_insert_1_000_rows(conn: PySQLXEngineSync):
     assert conn.connected is True
 
     resp = conn.execute("drop table if exists test_benchmark_complex_table_1_000")
@@ -187,17 +168,13 @@ def complex_create_and_insert_1_000_rows():
     with open("tests/benchmark/sql/pgsql/complex.sql", "r") as f:
         rows = f.readlines()[0:1_000]
 
-    for row in rows:
-        resp = conn.execute(sql=row.replace("\n", ""))
-        assert resp == 1
+    insert_rows(conn=conn, rows=rows, table="test_benchmark_complex_table_1_000")
 
-    conn.execute("drop table if exists test_benchmark_complex_table_1_000")
-    conn.execute("drop type if exists colors")
+    # conn.execute("drop table if exists test_benchmark_complex_table_1_000")
+    # conn.execute("drop type if exists colors")
 
 
-def complex_create_and_insert_10_000_rows():
-    uri = os.environ["DATABASE_URI_POSTGRESQL"]
-    conn: PySQLXEngineSync = PySQLXEngineSync(uri)
+def pgsql_complex_create_and_insert_10_000_rows(conn: PySQLXEngineSync):
     assert conn.connected is True
 
     resp = conn.execute("drop table if exists test_benchmark_complex_table_10_000")
@@ -215,17 +192,13 @@ def complex_create_and_insert_10_000_rows():
     with open("tests/benchmark/sql/pgsql/complex.sql", "r") as f:
         rows = f.readlines()[0:10_000]
 
-    for row in rows:
-        resp = conn.execute(sql=row.replace("\n", ""))
-        assert resp == 1
+    insert_rows(conn=conn, rows=rows, table="test_benchmark_complex_table_10_000")
 
-    conn.execute("drop table if exists test_benchmark_complex_table_10_000")
-    conn.execute("drop type if exists colors")
+    # conn.execute("drop table if exists test_benchmark_complex_table_10_000")
+    # conn.execute("drop type if exists colors")
 
 
-def complex_create_and_insert_100_000_rows():
-    uri = os.environ["DATABASE_URI_POSTGRESQL"]
-    conn: PySQLXEngineSync = PySQLXEngineSync(uri)
+def pgsql_complex_create_and_insert_100_000_rows(conn: PySQLXEngineSync):
     assert conn.connected is True
 
     resp = conn.execute("drop table if exists test_benchmark_complex_table_100_000")
@@ -243,9 +216,7 @@ def complex_create_and_insert_100_000_rows():
     with open("tests/benchmark/sql/pgsql/complex.sql", "r") as f:
         rows = f.readlines()
 
-    for row in rows:
-        resp = conn.execute(sql=row.replace("\n", ""))
-        assert resp == 1
+    insert_rows(conn=conn, rows=rows, table="test_benchmark_complex_table_100_000")
 
-    conn.execute("drop table if exists test_benchmark_complex_table_100_000")
-    conn.execute("drop type if exists colors")
+    # conn.execute("drop table if exists test_benchmark_complex_table_100_000")
+    # conn.execute("drop type if exists colors")

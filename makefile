@@ -4,6 +4,7 @@ tests-databases:
 	--build \
 	--detach 
 
+#--ignore=tests/benchmark 
 tests-coverage:
 	make tests-databases && \
 	poetry run pytest tests -v -x \
@@ -11,7 +12,6 @@ tests-coverage:
 		--cov=pysqlx_engine \
 		--cov=tests \
 		--durations=0 \
-		--ignore=tests/benchmark \
 		--cov-report=html:tests/results/html \
 		--junitxml=tests/results/xml/test-results.xml
 
