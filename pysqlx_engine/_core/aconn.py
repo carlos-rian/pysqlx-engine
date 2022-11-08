@@ -76,49 +76,46 @@ class PySQLXEngine:
             self.connected = False
 
     async def raw_cmd(self, sql: LiteralString):
-        self._check_connection()
-        self._check_sql_type(sql=sql)
+        self._check_conn_and_sql(sql=sql)
         try:
             return await self._conn.raw_cmd(sql=sql)
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
-    async def query(self, query: LiteralString, as_dict: bool = False, model: Model = None):
-        self._check_connection()
-        self._check_sql_type(sql=query)
+    async def query(self, sql: LiteralString, as_dict: bool = False, model: Model = None):
+        self._check_conn_and_sql(sql=sql)
+
         try:
             if as_dict is True:
-                return await self._conn.query_as_list(sql=query)
+                return await self._conn.query_as_list(sql=sql)
 
             if model is not None and not issubclass(model, BaseRow):
                 raise TypeError(model_parameter_error_message())
 
-            result = await self._conn.query(sql=query)
+            result = await self._conn.query(sql=sql)
             return Parser(result=result, model=model).parse()
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
-    async def query_first(self, query: LiteralString, as_dict: bool = False, model: Model = None):
-        self._check_connection()
-        self._check_sql_type(sql=query)
+    async def query_first(self, sql: LiteralString, as_dict: bool = False, model: Model = None):
+        self._check_conn_and_sql(sql=sql)
         try:
             if as_dict is True:
-                row = await self._conn.query_first_as_dict(sql=query)
+                row = await self._conn.query_first_as_dict(sql=sql)
                 return row if row else None
 
             if model is not None and not issubclass(model, BaseRow):
                 raise TypeError(model_parameter_error_message())
 
-            result = await self._conn.query(sql=query)
+            result = await self._conn.query(sql=sql)
             return Parser(result=result, model=model).parse_first()
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
-    async def execute(self, stmt: LiteralString):
-        self._check_connection()
-        self._check_sql_type(sql=stmt)
+    async def execute(self, sql: LiteralString):
+        self._check_conn_and_sql(sql=sql)
         try:
-            return await self._conn.execute(sql=stmt)
+            return await self._conn.execute(sql=sql)
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
@@ -155,16 +152,17 @@ class PySQLXEngine:
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
-    def _check_connection(self):
-        if not self.connected:
-            raise NotConnectedError(not_connected_error_message())
-
     def _check_isolation_level(self, isolation_level: ISOLATION_LEVEL):
         levels = ["ReadUncommitted", "ReadCommitted", "RepeatableRead", "Snapshot", "Serializable"]
         if isinstance(isolation_level, str) and any([isolation_level == level for level in levels]):
             return isolation_level
         raise ValueError(isolation_error_message())
 
-    def _check_sql_type(self, sql: LiteralString):
+    def _check_connection(self):
+        if not self.connected:
+            raise NotConnectedError(not_connected_error_message())
+
+    def _check_conn_and_sql(self, sql: LiteralString):
+        self._check_connection()
         if not isinstance(sql, str):
             raise TypeError(sql_type_error_message())
