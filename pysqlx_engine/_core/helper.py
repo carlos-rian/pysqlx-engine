@@ -93,3 +93,33 @@ def model_parameter_error_message():
             ''')
             }
         """
+
+
+def sql_type_error_message():
+    return f"""
+        the queries and statements must be a string.
+
+        you can not use a type other than string.
+
+        example of use:
+            {fe_py('''
+            
+            # async
+            db = PySQLXEngine(uri="postgresql://user:pass@host:port/db?schema=sample")
+            await db.connect()
+            await db.query(query="SELECT 1 AS id, 'Rian' AS name") # <- Literal string
+            # or
+            sql = "SELECT 1 AS id, 'Rian' AS name"
+            await db.query(query=sql) # <- Variable string
+
+
+            # sync
+            db = PySQLXEngineSync(uri="postgresql://user:pass@host:port/db?schema=sample")
+            db.connect()
+            db.query(query="SELECT 1 AS id, 'Rian' AS name") # <- Literal string
+            # or
+            sql = "SELECT 1 AS id, 'Rian' AS name"
+            db.query(query=sql) # <- Variable string
+
+            ''')}
+    """

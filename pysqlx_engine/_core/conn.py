@@ -6,6 +6,7 @@ from .helper import (
     isolation_error_message,
     model_parameter_error_message,
     not_connected_error_message,
+    sql_type_error_message,
 )
 from .parser import BaseRow, Model, Parser
 from .until import force_sync, pysqlx_get_error
@@ -80,6 +81,7 @@ class PySQLXEngine:
 
     def raw_cmd(self, sql: LiteralString):
         self._check_connection()
+        self._check_sql_type(sql=sql)
 
         @force_sync
         async def _raw_cmd():
@@ -92,6 +94,7 @@ class PySQLXEngine:
 
     def query(self, query: LiteralString, as_dict: bool = False, model: Model = None):
         self._check_connection()
+        self._check_sql_type(sql=query)
 
         @force_sync
         async def _query():
@@ -111,6 +114,7 @@ class PySQLXEngine:
 
     def query_first(self, query: LiteralString, as_dict: bool = False, model: Model = None):
         self._check_connection()
+        self._check_sql_type(sql=query)
 
         @force_sync
         async def _query_first():
@@ -131,6 +135,7 @@ class PySQLXEngine:
 
     def execute(self, stmt: LiteralString):
         self._check_connection()
+        self._check_sql_type(sql=stmt)
 
         @force_sync
         async def _execute():
@@ -192,3 +197,7 @@ class PySQLXEngine:
         if isinstance(isolation_level, str) and any([isolation_level == level for level in levels]):
             return isolation_level
         raise ValueError(isolation_error_message())
+
+    def _check_sql_type(self, sql: LiteralString):
+        if not isinstance(sql, str):
+            raise TypeError(sql_type_error_message())

@@ -513,3 +513,15 @@ async def test_query_with_my_model_get_columns(db):
 
     assert columns["id"] == int
     assert columns["name"] == str
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("db", [adb_pgsql])
+async def test_py_sqlx_error_invalid_query_type(db):
+    conn: PySQLXEngine = await db()
+    assert conn.connected is True
+
+    with pytest.raises(QueryError):
+        await conn.query(query=1)
+
+    await conn.close()
+    assert conn.connected is False

@@ -6,6 +6,7 @@ from .helper import (
     isolation_error_message,
     model_parameter_error_message,
     not_connected_error_message,
+    sql_type_error_message,
 )
 from .parser import BaseRow, Model, Parser
 from .until import pysqlx_get_error
@@ -76,6 +77,7 @@ class PySQLXEngine:
 
     async def raw_cmd(self, sql: LiteralString):
         self._check_connection()
+        self._check_sql_type(sql=sql)
         try:
             return await self._conn.raw_cmd(sql=sql)
         except pysqlx_core.PySQLXError as e:
@@ -83,6 +85,7 @@ class PySQLXEngine:
 
     async def query(self, query: LiteralString, as_dict: bool = False, model: Model = None):
         self._check_connection()
+        self._check_sql_type(sql=query)
         try:
             if as_dict is True:
                 return await self._conn.query_as_list(sql=query)
@@ -97,6 +100,7 @@ class PySQLXEngine:
 
     async def query_first(self, query: LiteralString, as_dict: bool = False, model: Model = None):
         self._check_connection()
+        self._check_sql_type(sql=query)
         try:
             if as_dict is True:
                 row = await self._conn.query_first_as_dict(sql=query)
@@ -112,6 +116,7 @@ class PySQLXEngine:
 
     async def execute(self, stmt: LiteralString):
         self._check_connection()
+        self._check_sql_type(sql=stmt)
         try:
             return await self._conn.execute(sql=stmt)
         except pysqlx_core.PySQLXError as e:
@@ -159,3 +164,7 @@ class PySQLXEngine:
         if isinstance(isolation_level, str) and any([isolation_level == level for level in levels]):
             return isolation_level
         raise ValueError(isolation_error_message())
+
+    def _check_sql_type(self, sql: LiteralString):
+        if not isinstance(sql, str):
+            raise TypeError(sql_type_error_message())
