@@ -196,7 +196,7 @@ class PySQLXEngine:
         raise RawCmdError()
     # all
     @overload
-    async def query(self, query: LiteralString) -> Union[List[BaseRow], List]:
+    async def query(self, sql: LiteralString) -> Union[List[BaseRow], List]:
         """
         ## Description
         Returns all rows of the query result with List of `BaseRow` or List of Dict or empty List.
@@ -215,7 +215,7 @@ class PySQLXEngine:
         #### Helper
             * Arguments:
 
-                `query(str)`:  sql to be executed
+                `sql(str)`: sql query to be executed
 
                 `as_dict(bool)`: (Default is False) if True, returns a list of dict, if False, returns a list of BaseRow
 
@@ -240,12 +240,12 @@ class PySQLXEngine:
         """
         raise QueryError()
     @overload
-    async def query(self, query: LiteralString, model: Type["Model"] = None) -> Union[List[Type["Model"]], List]: ...
+    async def query(self, sql: LiteralString, model: Type["Model"] = None) -> Union[List[Type["Model"]], List]: ...
     @overload
-    async def query(self, query: LiteralString, as_dict: bool = False) -> Union[List[Dict[str, Any]], List]: ...
+    async def query(self, sql: LiteralString, as_dict: bool = False) -> Union[List[Dict[str, Any]], List]: ...
     # fisrt
     @overload
-    async def query_first(self, query: LiteralString) -> Union[BaseRow, None]:
+    async def query_first(self, sql: LiteralString) -> Union[BaseRow, None]:
         """
         ## Description
         Returns the first row of the query result with BaseRow or Dict(case as_dict=True) or None case result is empty.
@@ -265,7 +265,7 @@ class PySQLXEngine:
 
             * Arguments:
 
-                `query(str)`:  sql to be executed
+                `sql(str)`:  sql to be executed
 
                 `as_dict(bool)`: (Default is False) if True, returns a dict, if False, returns a BaseRow
 
@@ -290,16 +290,16 @@ class PySQLXEngine:
         """
         raise QueryError()
     @overload
-    async def query_first(self, query: LiteralString, model: Type["Model"] = None) -> Union[Type["Model"], None]: ...
+    async def query_first(self, sql: LiteralString, model: Type["Model"] = None) -> Union[Type["Model"], None]: ...
     @overload
-    async def query_first(self, query: LiteralString, as_dict: bool = False) -> Union[Dict[str, Any], None]: ...
+    async def query_first(self, sql: LiteralString, as_dict: bool = False) -> Union[Dict[str, Any], None]: ...
     # --
-    async def execute(self, stmt: LiteralString) -> "int":
+    async def execute(self, sql: LiteralString) -> "int":
         """
         ## Description
         Executes a query/sql and returns the number of rows affected.
 
-        * Arguments: `stmt(str)`:  sql to be executed
+        * Arguments: `sql(str)`:  sql to be executed
 
         * Returns: `int`: number of rows affected
 
