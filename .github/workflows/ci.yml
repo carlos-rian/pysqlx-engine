@@ -37,7 +37,9 @@ jobs:
           key: ${{ runner.os }}-python-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml') }}-test-v02
       
       - name: up database
-        run: docker-compose up --build --detach --file tests/docker/docker-compose.yml
+        run:
+          cp tests/docker/docker-compose.yml docker-compose.yml &&
+          docker-compose up --build --detach
       
       - name: wait container up
         run: |
