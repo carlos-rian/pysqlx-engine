@@ -1,14 +1,48 @@
 [tool.poetry]
 name = "pysqlx-engine"
+
 version = "0.2.0"
-description = ""
-authors = ["carlos-rian <crian.rian@gmail.com>"]
+description = "Python Async and Sync SQL Engines"
+authors = ["Carlos Rian <crian.rian@gmail.com>"]
+license = "MIT"
+readme = "readme.md"
+repository = "https://github.com/carlos-rian/pysqlx-engine"
+homepage = "https://carlos-rian.github.io/pysqlx-engine"
+documentation = "https://carlos-rian.github.io/pysqlx-engine"
+keywords = ["async", "database", "sql", "engine", "fastapi"]
+
+packages = [
+    { include = "pysqlx_engine"},
+]
+
+classifiers = [
+    "Framework :: AsyncIO",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python",
+    "Topic :: Database",
+    "Topic :: Internet",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development",
+    "Typing :: Typed",
+]
 
 [tool.poetry.dependencies]
 python = "^3.7"
 pydantic = "^1.10.2"
 Pygments = "^2.13.0"
 pysqlx-core = "^0.1.22"
+typing-extensions = "^4.3.0"
 
 [tool.poetry.dev-dependencies]
 black = "^22.10.0"
