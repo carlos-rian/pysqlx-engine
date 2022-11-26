@@ -9,6 +9,7 @@ tests-coverage:
 	make tests-databases && \
 	poetry run pytest tests -v -x \
 		--doctest-modules \
+		--ignore=tests/benchmark \
 		--cov=pysqlx_engine \
 		--cov=tests \
 		--durations=0 \
