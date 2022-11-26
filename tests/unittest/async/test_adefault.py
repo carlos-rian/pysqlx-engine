@@ -175,8 +175,7 @@ async def test_py_sqlx_error_json_fmt_no_colorize(db):
     env = StringIO(
         """
         DATABASE_URI_POSTGRESQL="postgresql://postgres:Build!Test321@localhost:4442/engine"
-        PYSQLX_ERROR_COLORIZE=1
-        PYSQLX_ENGINE_COLORIZE=0
+        PYSQLX_ERROR_COLORIZE=0
         PYSQLX_ERROR_JSON_FMT=1
         """
     )

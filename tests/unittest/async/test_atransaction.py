@@ -260,7 +260,6 @@ async def test_set_isolation_level_pgsql_with_colored_log(db):
         """
         DATABASE_URI_POSTGRESQL="postgresql://postgres:Build!Test321@localhost:4442/engine"
         PYSQLX_ERROR_COLORIZE=1
-        PYSQLX_ENGINE_COLORIZE=1
         PYSQLX_ERROR_JSON_FMT=1
         """
     )
@@ -281,7 +280,7 @@ async def test_start_transaction_with_invalid_isolation_level_with_colored_log(d
         """
         DATABASE_URI_POSTGRESQL="postgresql://postgres:Build!Test321@localhost:4442/engine"
         PYSQLX_ERROR_COLORIZE=1
-        PYSQLX_ENGINE_COLORIZE=1
+        PYSQLX_ERROR_JSON_FMT=1
         """
     )
     load_dotenv(stream=env, override=True)

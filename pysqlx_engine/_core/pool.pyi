@@ -2,7 +2,7 @@ from types import TracebackType
 from typing import Optional, Type
 from .conn import PySQLXEngine as PySQLXEngineSync
 
-class PySQLXEnginePoolSync:
+class PySQLXEnginePool:
     """
     The PySQLXEnginePoolSync class is a simple connection pool for PySQLXEngine.
     It is thread-safe and can be used in thread or process to run multiple queries in parallel.

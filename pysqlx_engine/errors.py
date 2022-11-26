@@ -8,4 +8,5 @@ from ._core.errors import (
     QueryError,
     RawCmdError,
     StartTransactionError,
+    PoolMaxConnectionsError,
 )
