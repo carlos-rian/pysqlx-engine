@@ -4,9 +4,10 @@ on:
   push:
     branches:
       - main
+      - release/*
     paths:
-      - '/sqlx_engine/*'
-      - '.github/workflows/python-publish.yml'
+      - '/pysqlx_engine/*'
+      - '.github/workflows/ci.yml'
       - 'pyproject.toml'
 
 jobs:
