@@ -7,6 +7,7 @@ on:
       - release/*
     paths:
       - '/pysqlx_engine/*'
+      - '/tests/*'
       - '.github/workflows/ci.yml'
       - 'pyproject.toml'
 
