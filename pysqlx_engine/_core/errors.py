@@ -26,7 +26,7 @@ class PySQLXError(Exception):
         self.message: str = err.message()
         self._type: str = err.error()
 
-        if getenv("PYSQLX_ERROR_JSON_FMT", "0") == "1":
+        if getenv("PYSQLX_ERROR_JSON_FMT", "0") != "0":
             msg = fe_json(
                 {
                     "code": self.code,
@@ -106,7 +106,7 @@ class AlreadyConnectedError(Exception):
     """
 
     def __init__(self, *args: object) -> None:
-        if getenv("PYSQLX_ERROR_JSON_FMT", "0") == "1":
+        if getenv("PYSQLX_ERROR_JSON_FMT", "0") != "0":
             msg = fe_json(
                 {
                     "code": "0",
@@ -118,4 +118,26 @@ class AlreadyConnectedError(Exception):
             super().__init__(msg)
         else:
             msg = f"AlreadyConnectedError(code=0, message='Already connected to the database')"
+            super().__init__(msg)
+
+
+class PoolMaxConnectionsError(Exception):
+    """
+    Raised when the user tries to get a connection from the pool
+    but the maximum number of connections has been reached.
+    """
+
+    def __init__(self, *args: object) -> None:
+        if getenv("PYSQLX_ERROR_JSON_FMT", "0") != "0":
+            msg = fe_json(
+                {
+                    "code": "0",
+                    "message": "Maximum number of connections reached",
+                    "error": "PoolMaxConnectionsError",
+                }
+            )
+
+            super().__init__(msg)
+        else:
+            msg = f"PoolMaxConnectionsError(code=0, message='Maximum number of connections reached')"
             super().__init__(msg)
