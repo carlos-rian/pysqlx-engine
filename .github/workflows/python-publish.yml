@@ -10,39 +10,68 @@ on:
       - 'pyproject.toml'
 
 jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      max-parallel: 4
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
+      fail-fast: false
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      
+      - name: enable cache
+        uses: actions/cache@v2
+        id: cache
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ runner.os }}-python-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml') }}-test-v02
+      
+      - name: up database
+        run: docker-compose up --build --detach
+      
+      - name: wait container up
+        run: |
+          docker ps -a && \
+          sleep 20
+      
+      - name: install poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.1.12
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+      
+      - name: install python dependencies
+        run: poetry install --no-interaction
+        if: steps.cache-deps.outputs.cache-hit != 'true'
+      
+      - name: run unittest
+        run: 
+          poetry run pytest --ignore=tests/benchmark --cov=pysqlx_engine --cov=tests --cov-report=term-missing:skip-covered --cov-report=xml tests ${@}
+
+      - name: upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: ${{ matrix.os }}_${{ matrix.python-version }}
+
   build:
     runs-on: ubuntu-latest
+    needs: [test]
     steps:    
-      - uses: actions/checkout@v3
-
-      - name: Install dependencies
-        run: python3 -m pip install httpx toml
-        
-      - name: Before pyproject.toml
-        run: cat pyproject.toml
-
-      - name: Update PyProject
-        run: python3 toml_version.py
+      - name: checkout
+        uses: actions/checkout@v3
       
-      - name: After pyproject.toml
-        run: cat pyproject.toml
-
-      - name: Build and publish to pypi
+      - name: build and publish to pypi
         uses: JRubics/poetry-publish@v1.13
         with:
           pypi_token: ${{ secrets.PYPI_TOKEN }}
-      
-      - name: Add pyproject.toml
-        run: |
-          git config --global user.email "crian.rian@gmail.com"
-          git config --global user.name "carlos-rian"
-
-      - name: Add pyproject.toml
-        run: git add pyproject.toml
-      
-      - name: Commit pyproject.toml
-        run: git commit -m "update pyproject.toml"
-      
-      - name: Push pyproject.toml
-        run: git push origin HEAD:main
-      
