@@ -12,7 +12,7 @@ documentation = "https://carlos-rian.github.io/pysqlx-engine"
 keywords = ["async", "database", "sql", "engine", "fastapi"]
 
 packages = [
-    { include = "sqlx_engine"},
+    { include = "pysqlx_engine "},
 ]
 classifiers = [
     "Framework :: AsyncIO",

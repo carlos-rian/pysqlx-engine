@@ -1,11 +1,11 @@
-from sqlx_engine import SQLXEngineSync
+from pysqlx_engine import PySQLXEngineSync
 
-uri = "file:./db.db"
-db = SQLXEngineSync(provider="sqlite", uri=uri)
+uri = "sqlite:./db.db"
+db = PySQLXEngineSync(uri=uri)
 
 
-def create_table(db: SQLXEngineSync):
-    stmt = """CREATE TABLE user (
+def create_table(db: PySQLXEngineSync):
+    stmt = """CREATE TABLE IF NOT EXISTS user (
         id          INTEGER   PRIMARY KEY,
         first_name  TEXT      not null,
         last_name   TEXT      null,
@@ -18,7 +18,7 @@ def create_table(db: SQLXEngineSync):
     print(f"created: {resp}")
 
 
-def insert_row(db: SQLXEngineSync):
+def insert_row(db: PySQLXEngineSync):
     stmt = """
         INSERT INTO user(
             first_name,

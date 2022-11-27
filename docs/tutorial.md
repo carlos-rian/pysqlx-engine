@@ -3,21 +3,40 @@
 PySQLXEngine exposes four methods, two that allow you to send raw queries and two to handle the connection.
 
 !!! Note
-    **All examples are async, but you can use SQLXEngineSync if you don't want to use asyncio.**
+    **All examples are async, but you can usePySQLXEngineSync if you don't want to use asyncio.**
 
 ## Methods
 ---
 
-* [`.connect()`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbconnect) create connection with db
-* [`.query()`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbquery) to return actual records (for example, using SELECT)
-* [`.execute()`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbexecute) to return a count of affected rows (for example, after an UPDATE or DELETE)
-* [`.close()`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbclose) disconnected from db
+* [`.connect()`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbconnect) create connection with db.
+
+* [`.close()`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbclose) disconnected from db.
+
+* [`.is_healthy()`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbis_healthy) check if the connection is healthy.
+
+* [`.requires_isolation_first()`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbrequires_isolation_first) this is used to determine if the connection should be isolated before executing a sql.
+
+* [`.raw_cmd()`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbraw_cmd) run a command in the database, for queries that can't be run using prepared statements.
+
+* [`.query() and .query_first()`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbquery) to return actual records (for example, using SELECT).
+
+* [`.execute()`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbexecute) to return a count of affected rows (for example, after an UPDATE or DELETE).
+
+* [`.set_isolation_level()`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbset_isolation_level) the isolation level is set before the transaction is started. Is used to separate the transaction per level.
+
+* [`.begin()`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbbegin) starts a transaction.
+
+* [`.commit()`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbcommit) commits a transaction.
+
+* [`.rollback()`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbrollback) rollbacks a transaction.
+
+* [`.start_transaction()`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbstart_transaction) starts a transaction with BEGIN. by default, does not set the isolation level. But is possible to set the isolation level using the parameter `isolation_level`.
 
 ## PySQLXEngine arguments
 
 ---
 
-Providers
+Providers/Drivers | Initial URI
 
 * [`sqlite`](https://www.sqlite.org/index.html)
 * [`postgresql`](https://www.postgresql.org/)
@@ -29,7 +48,7 @@ URIs
 * [sqlite](https://www.sqlite.org/index.html)
 
 ```Python 
-uri = "file:./dev.db"
+uri = "sqlite:./dev.db"
 ```
 
 * [postgresql](https://www.postgresql.org/)
@@ -51,7 +70,7 @@ uri = "sqlserver://host:port;initial catalog=sample;user=sa;password=pass;"
 ```
 
 
-## Examples
+## Simple Examples
 ---
 
 ### **`db.connect()`**
@@ -69,13 +88,13 @@ Create file [`main.py`](./python/connect.py)
 * Create a file [main.py](./python/connect.py) with:
 
 ```Python
-from sqlx_engine import SQLXEngine
+from pysqlx_engine  import PySQLXEngine
 
-uri = "file:./db.db"
-db = SQLXEngine(provider="sqlite", uri=uri)
+uri = "sqlite:./db.db"
+db =PySQLXEngine(uri=uri)
 ```
 
-After you create an instance of SQLXEngine; This instance is [`Lazy`](https://www.oreilly.com/library/view/python-cookbook/0596001673/ch08s12.html), after calling the [`db.connect()`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbconnect) method, the connection to the database will be made.
+After you create an instance ofPySQLXEngine; This instance is [`Lazy`](https://www.oreilly.com/library/view/python-cookbook/0596001673/ch08s12.html), after calling the [`db.connect()`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbconnect) method, the connection to the database will be made.
 
 
 * Modify the file main.py, add two lines:
@@ -84,22 +103,22 @@ After you create an instance of SQLXEngine; This instance is [`Lazy`](https://ww
     [`PySQLXEngine`](https://pypi.org/project/pysqlx-engine/) also supports [`async with` and `with`](https://docs.python.org/pt-br/3/whatsnew/3.5.html?highlight=async%20with#whatsnew-pep-492), where the connection is automatically opened and closed.
 
     ```Python hl_lines="6"
-    from sqlx_engine import SQLXEngine
+    from pysqlx_engine  import PySQLXEngine
 
-    uri = "file:./db.db"
+    uri = "sqlite:./db.db"
 
     async def main():
-        async with SQLXEngine(provider="sqlite", uri=uri) as db:
+        async withPySQLXEngine(uri=uri) as db:
             ...
     ```
 
 **Code**
 
 ```Python hl_lines="6-7"
-from sqlx_engine import SQLXEngine
+from pysqlx_engine  import PySQLXEngine
 
-uri = "file:./db.db"
-db = SQLXEngine(provider="sqlite", uri=uri)
+uri = "sqlite:./db.db"
+db =PySQLXEngine(uri=uri)
 
 async def main():
     await db.connect()
@@ -115,10 +134,10 @@ With [`PySQLXEngine`](https://pypi.org/project/pysqlx-engine/) built for [*async
 ```Python hl_lines="1 9 11 13"
 import asyncio
 
-from sqlx_engine import SQLXEngine
+from pysqlx_engine  import PySQLXEngine
 
-uri = "file:./db.db"
-db = SQLXEngine(provider="sqlite", uri=uri)
+uri = "sqlite:./db.db"
+db =PySQLXEngine(uri=uri)
 
 async def main():
     print("connecting...")
@@ -168,13 +187,13 @@ it`s connected: True
 
 ```Python hl_lines="7-19 28"
 import asyncio
-from sqlx_engine import SQLXEngine
+from pysqlx_engine  import PySQLXEngine
 
-uri = "file:./db.db"
-db = SQLXEngine(provider="sqlite", uri=uri)
+uri = "sqlite:./db.db"
+db =PySQLXEngine(uri=uri)
 
-async def create_table(db: SQLXEngine):
-    stmt = """CREATE TABLE user (
+async def create_table(db:PySQLXEngine):
+    stmt = """CREATE TABLE IF NOT EXISTS user (
         id          INTEGER   PRIMARY KEY,
         first_name  TEXT      not null,
         last_name   TEXT      null,
@@ -207,8 +226,6 @@ asyncio.run(main())
 
 * Run code using [Python3](https://www.python.org/)
 
-!!! warning
-    Delete the `db.db` file created before.
 
 <div class="termy">
 
@@ -248,13 +265,13 @@ You might also want the result to come as a standard list of dict with python's 
 === "List of BaseRow"
 
     ```Python
-    await db.query(query=query)
+    await db.query(sql=query)
     ```
 
 === "List of Dict"
 
     ```Python
-    await db.query(query=query, as_base_row=False)
+    await db.query(sql=query, as_base_row=False)
     ```
 </details>
 
@@ -303,12 +320,12 @@ You might also want the result to come as a standard list of dict with python's 
     Skip this step if you are using `async with`, as the connection is automatically closed.
 
     ```Python hl_lines="6"
-    from sqlx_engine import SQLXEngine
+    from pysqlx_engine  import PySQLXEngine
 
-    uri = "file:./db.db"
+    uri = "sqlite:./db.db"
 
     async def main():
-        async with SQLXEngine(provider="sqlite", uri=uri) as db:
+        async withPySQLXEngine(uri=uri) as db:
             ...
     ```
 

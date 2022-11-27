@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-<a href="https://github.com/carlos-rian/pysqlx-engine/actions?query=workflow%3ATest+event%3Apush+branch%3Amain" target="_blank">
+<a href="https://github.com/carlos-rian/pysqlx-engine/actions?sql=workflow%3ATest+event%3Apush+branch%3Amain" target="_blank">
     <img src="https://github.com/carlos-rian/pysqlx-engine/workflows/Test/badge.svg?event=push&branch=main" alt="Test">
 </a>
 <a href="https://app.codecov.io/gh/carlos-rian/pysqlx-engine" target="_blank">
@@ -24,25 +24,24 @@
 
 ---
 
-**Documentation**: <a href="https://carlos-rian.github.io/pysqlx-engine/" target="_blank">https://carlos-rian.github.io/pysqlx-engine/</a>
+**Documentation**: <a href="https://carlos-rian.github.io/pysqlx-engine" target="_blank">https://carlos-rian.github.io/pysqlx-engine/</a>
 
 **Source Code**: <a href="https://github.com/carlos-rian/pysqlx-engine" target="_blank">https://github.com/carlos-rian/pysqlx-engine</a>
 
 ---
 
-!!! warning
-    I'm writing a new version with native support between Rust and Python using the Pyo3 lib, making this lib smaller and extremely faster, in some tests it's even 10x faster than the current version! 
-
-    *The version 1.0.0 may have some changes in the type core, but it will become very friendly, but there will be a break in compatibility between version zero and 1.0.0!*
-
-
 PySQLXEngine supports the option of sending **raw sql** to your database.
 
-The PySQLXEngine is a minimalist [SQL engine](https://github.com/carlos-rian/pysqlx-engine). Supports [**async**](https://docs.python.org/3/library/asyncio.html) and [**sync**](https://deepsource.io/glossary/synchronous-programming/) programming.
+The PySQLXEngine is a minimalist [SQL engine](https://github.com/carlos-rian/pysqlx-engine). Currently this lib have supports [**async**](https://docs.python.org/3/library/asyncio.html) and [**sync**](https://deepsource.io/glossary/synchronous-programming/) programming.
 
-All SQL that is executed using the PySQLXEngine is atomic; that is, only one statement is performed at a time. Only the first one will be completed if you send an Insert and a select. This is one of the ways to deal with SQL ingestion. 
-_One detail is that [`COMMIT`](https://www.geeksforgeeks.org/difference-between-commit-and-rollback-in-sql) and [`ROLLBACK`](https://www.geeksforgeeks.org/difference-between-commit-and-rollback-in-sql) are automatic!!! This is not changeable now_ (__version 1.0.0 will bring this future__).
+The PySQLXEngine was created and thought to be minimalistic, but very efficient. The core is write in [**Rust**](https://www.rust-lang.org), making communication between database and [**Python**](https://python-poetry.org) more efficient.
 
+All SQL executed using PySQLXEngine is atomic; only one instruction is executed at a time. Only the first one will be completed if you send an Insert and a select. This is one of the ways to handle SQL ingestion. As of version **0.2.0**, PySQLXEngine supports transactions, where you can control [`COMMIT`](https://www.geeksforgeeks.org/difference-between-commit-and-rollback-in-sql), [ `ROLLBACK` ](https://www.geeksforgeeks.org/difference-between-commit-and-rollback-in-sql), [IsolationLevel](https://levelup.gitconnected.com/understanding-isolation-levels-in-a-database-transaction-af78aea3f44), etc. as you wish.
+
+!!! Note
+    Minimalism is not the lack of something, but having exactly what you need.
+
+    PySQLXEngine aims to expose an easy interface for you to communicate with the database in a simple, intuitive way and with good help through documentation, autocompletion, typing, and good practices.
 
 
 Database Support:
@@ -67,6 +66,8 @@ OS Support:
 
     ```console
     $ pip install pysqlx-engine
+
+    ---> 100%
     ```
     
     </div>
@@ -77,26 +78,32 @@ OS Support:
 
     ```console
     $ poetry add pysqlx-engine
+
+    ---> 100%
     ```
     
     </div>
 
 
-## Example
+## Running
 
 * Create `main.py` file.
 
 === "Async"
     ```python
     import asyncio
-    from sqlx_engine import SQLXEngine
-
-    uri = "file:./db.db"
-    db = SQLXEngine(provider="sqlite", uri=uri)
+    from pypysqlx_engine  import PySQLXEngine
 
     async def main():
+        db = PySQLXEngine(uri="sqlite:./db.db")
         await db.connect()
-        rows = await db.query(query="select 1 as number")
+
+        await db.execute(sql="CREATE TABLE IF NOT EXISTS users (id INT PRIMARY KEY, name TEXT, age INT)")
+        await db.execute(sql="INSERT INTO users (name, age) VALUES ('Rian', '28')")
+        await db.execute(sql="INSERT INTO users (name, age) VALUES ('Carlos', '29')")
+
+        rows = await db.query(sql="SELECT * FROM users")
+
         print(rows)
 
     asyncio.run(main())
@@ -104,14 +111,18 @@ OS Support:
 === "Sync"
     ```python
     
-    from sqlx_engine import SQLXEngineSync
-
-    uri = "file:./db.db"
-    db = SQLXEngineSync(provider="sqlite", uri=uri)
+    from pypysqlx_engine  import PySQLXEngineSync
 
     def main():
+        db = PySQLXEngineSync(uri="sqlite:./db.db")
         db.connect()
-        rows = db.query(query="select 1 as number")
+
+        db.execute(sql="CREATE TABLE IF NOT EXISTS users (id INT PRIMARY KEY, name TEXT, age INT)")
+        db.execute(sql="INSERT INTO users (name, age) VALUES ('Rian', '28')")
+        db.execute(sql="INSERT INTO users (name, age) VALUES ('Carlos', '29')")
+
+        rows = db.query(sql="SELECT * FROM users")
+
         print(rows)
 
     main()
@@ -124,6 +135,9 @@ OS Support:
 ```console
 $ python3 main.py
 
-[BaseRow(number=1)]
+[
+BaseRow(id=1, name='Rian', age=28), 
+BaseRow(id=2, name='Carlos', age=29)
+]
 ```
 </div>

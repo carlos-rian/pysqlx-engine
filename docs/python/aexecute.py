@@ -1,12 +1,13 @@
 import asyncio
 
-from sqlx_engine import SQLXEngine
+from pysqlx_engine import PySQLXEngine
 
-uri = "file:./db.db"
-db = SQLXEngine(provider="sqlite", uri=uri)
+uri = "sqlite:./db.db"
+db = PySQLXEngine(uri=uri)
 
-async def create_table(db: SQLXEngine):
-    stmt = """CREATE TABLE user (
+
+async def create_table(db: PySQLXEngine):
+    stmt = """CREATE TABLE IF NOT EXISTS user (
         id          INTEGER   PRIMARY KEY,
         first_name  TEXT      not null,
         last_name   TEXT      null,
@@ -18,7 +19,8 @@ async def create_table(db: SQLXEngine):
     resp = await db.execute(stmt)
     print(f"created: {resp}")
 
-async def insert_row(db: SQLXEngine):
+
+async def insert_row(db: PySQLXEngine):
     stmt = """
         INSERT INTO user(
             first_name,
@@ -36,6 +38,7 @@ async def insert_row(db: SQLXEngine):
     resp = await db.execute(stmt)
     print(f"inserted: {resp} affect")
 
+
 async def main():
     await db.connect()
 
@@ -43,6 +46,6 @@ async def main():
     await create_table(db)
     # insert row
     await insert_row(db)
-    
+
 
 asyncio.run(main())

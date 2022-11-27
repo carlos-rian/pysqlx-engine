@@ -1,24 +1,26 @@
-# Advanced Guide
+# DML with output
 
-Although PySQLXEngine has only two methods to deal with the database, being the [`query`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbquery) and [`execute`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbexecute).
+Although PySQLXEngine has a method for DML [`execute`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbexecute) which returns the number of rows affected.
+
+It is possible to use the [`query`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbquery) and [`query_first`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbquery) methods to get an output.
 
 [`execute`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbexecute) always returns the number of rows affected. Maybe this is not useful, because if you make an `insert` and want the `id` as a return, the [`execute`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbexecute) will limit you.
 
 Although sql statements are atomic, one execution at a time, most modern databases bring sensational features like [**`RETUNING`**](https://www.postgresql.org/docs/current/dml-returning.html) or [**`OUTPUT`**](https://docs.microsoft.com/en-us/sql/t-sql/queries/output-clause-transact-sql) in the case of [*SQL Server*](https://www.microsoft.com/sql-server) that can return a value after the insert .
 
-So since we need something to be returned, we can use the [`query`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbquery).
+So since we need something to be returned, we can use the [`query`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbquery) or [`query_first`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbquery) methods.
 
 ## Examples
 
-In this examples we use the user table, which has the structure below. 
+In this examples we use the `user` table, which has the structure below. 
 Change the types to your database types. In this [`SQLite`](https://www.sqlite.org/index.html) is used.
 
 ```sql
-CREATE TABLE user (
-    id          INTEGER  PRIMARY KEY,
-    first_name  TEXT
-    last_name   TEXT
-    created_at  TEXT
+CREATE TABLE IF NOT EXISTS user (
+    id          INTEGER PRIMARY KEY,
+    first_name  TEXT,
+    last_name   TEXT,
+    created_at  TEXT,
     updated_at  TEXT
 )
 ```
@@ -30,10 +32,10 @@ CREATE TABLE user (
 
 ### PostgreSQL, SQLite and MariaDB
 
-* Create [`main.py`](./python/advanced.py) file with:
+* Create [`main.py`](./python/dml_with_output.py) file with:
 
 ```Python hl_lines="24 27"
-{!./python/advanced.py!}
+{!./python/dml_with_output.py!}
 ```
 
 * Run it
@@ -49,10 +51,10 @@ $ python3 main.py
 
 ### Microsoft SQL Server 
 
-* Create [`main.py`](./python/advanced_sql_server.py) file with:
+* Create [`main.py`](./python/dml_with_output_sql_server.py) file with:
 
 ```Python hl_lines="18 27"
-{!./python/advanced_sql_server.py!}
+{!./python/dml_with_output_sql_server.py!}
 ```
 
 * Run it

@@ -1,18 +1,21 @@
 import asyncio
 
-from sqlx_engine import SQLXEngine
+from pysqlx_engine import PySQLXEngine
 
-uri = "file:./db.db"
-db = SQLXEngine(provider="sqlite", uri=uri)
+uri = "sqlite:./db.db"
+db = PySQLXEngine(uri=uri)
 
-async def select(db: SQLXEngine):
+
+async def select(db: PySQLXEngine):
     query = "SELECT * FROM user"
     # use arg as_base_row=False to return a list of dict
-    return await db.query(query=query)
+    return await db.query(sql=query)
+
 
 async def main():
     await db.connect()
     rows = await select(db)
     print(rows)
+
 
 asyncio.run(main())

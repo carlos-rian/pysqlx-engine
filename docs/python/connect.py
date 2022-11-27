@@ -1,7 +1,7 @@
-from sqlx_engine import SQLXEngineSync
+from pysqlx_engine import PySQLXEngineSync
 
-uri = "file:./db.db"
-db = SQLXEngineSync(provider="sqlite", uri=uri)
+uri = "sqlite:./db.db"
+db = PySQLXEngineSync(uri=uri)
 
 
 def main():

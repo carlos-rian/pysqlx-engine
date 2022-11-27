@@ -1,9 +1,9 @@
 import asyncio
 
-from sqlx_engine import SQLXEngine
+from pysqlx_engine import PySQLXEngine
 
-uri = "file:./db.db"
-db = SQLXEngine(provider="sqlite", uri=uri)
+uri = "sqlite:./db.db"
+db = PySQLXEngine(uri=uri)
 
 
 async def main():
@@ -14,14 +14,14 @@ async def main():
             first_name, 
             last_name, 
             created_at, 
-            updated_at) 
+            updated_at)
+        OUTPUT Inserted.id
         VALUES (
             'bob', 
             'test', 
             '2022-05-30 05:47:51', 
             '2022-05-30 05:47:51'
-        )
-        RETURNING id;
+        );
     """
 
     row = await db.query(sql)

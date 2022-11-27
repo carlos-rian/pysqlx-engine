@@ -47,7 +47,8 @@ plugins:
 nav:
   - Home: index.md
   - tutorial.md
-  - advanced.md
+  - Advanced Guide:
+    - dml_with_output.md
   - support.md
   - return_types.md
   - core_engine.md
