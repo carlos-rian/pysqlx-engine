@@ -34,7 +34,7 @@ class PySQLXEngine:
     ---
 
     #### Arguments:
-        `uri(str)`:  uri of the database, Example `postgresql://user:pass@host:port/db?schema=sample`
+        `uri(str)`:  uri of the database, example `postgresql://user:pass@host:port/db?schema=sample`
 
     ---
 
@@ -47,26 +47,32 @@ class PySQLXEngine:
 
     #### Usage:
 
-    ``` python
-    >>> ##### PostgreSQL
-    >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
-    >>> conn = PySQLXEngine(uri=uri)
-    >>> await conn.connect()
-    #------------------------------------------
-    >>> ##### MySQL
-    >>> uri = "mysql://user:pass@host:port/db?schema=sample"
-    >>> conn = PySQLXEngine( uri=uri)
-    >>> await conn.connect()
-    #------------------------------------------
-    >>> ##### Microsoft SQL Server
-    >>> uri = "sqlserver://host:port;initial catalog=sample;user=sa;password=pass;"
-    >>> conn = PySQLXEngine(uri=uri)
-    >>> await conn.connect()
-    #------------------------------------------
-    >>> ##### SQLite
-    >>> uri = "sqlite:./dev.db"
-    >>> conn = PySQLXEngine(uri=uri)
-    >>> await conn.connect()
+    ##### PostgreSQL
+    ```python
+    uri = "postgresql://user:pass@host:port/db?schema=sample"
+    conn = PySQLXEngine(uri=uri)
+    await conn.connect()
+    ```
+    ---
+    ##### MySQL
+    ```python
+    uri = "mysql://user:pass@host:port/db?schema=sample"
+    conn = PySQLXEngine( uri=uri)
+    await conn.connect()
+    ```
+    ---
+    ##### Microsoft SQL Server
+    ```python
+    uri = "sqlserver://host:port;initial catalog=sample;user=sa;password=pass;"
+    conn = PySQLXEngine(uri=uri)
+    await conn.connect()
+    ```
+    ---
+    ##### SQLite
+    ```python
+    uri = "sqlite:./dev.db"
+    conn = PySQLXEngine(uri=uri)
+    await conn.connect()
     ```
     """
 
@@ -151,8 +157,10 @@ class PySQLXEngine:
 
         ---
         ### Example
-            >>> db = PySQLXEngineSync(uri=uri)
-            >>> await db.connect()
+        ```python
+            db = PySQLXEngineSync(uri=uri)
+            await db.connect()
+        ```
         """
         raise ConnectError()
     async def close(self) -> "None":
@@ -171,10 +179,11 @@ class PySQLXEngine:
 
         ---
         ### Example
-            >>> db = PySQLXEngineSync(uri=uri)
-            >>> await db.connect()
-            >>> await db.close()
-
+        ```python
+            db = PySQLXEngineSync(uri=uri)
+            await db.connect()
+            await db.close()
+        ```
         """
         ...
     async def raw_cmd(self, sql: LiteralString) -> "None":
@@ -227,16 +236,20 @@ class PySQLXEngine:
 
         ---
         ### Example
-            >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
-            >>> conn = PySQLXEngine(uri=uri)
-            >>> await conn.connect()
-            >>> result = await conn.query("SELECT 1 as id, 'rian' as name")
-            >>> print(result)
-            >>> # output -> [BaseRow(id=1, name='rian')]
-            >>> result = await conn.query("SELECT 1 as id, 'rian' as name", as_dict=True)
-            >>> print(result)
-            >>> # output -> [{'id': 1, 'name': 'rian'}]
+        ```python
+            uri = "postgresql://user:pass@host:port/db?schema=sample"
+            conn = PySQLXEngine(uri=uri)
+            await conn.connect()
 
+            result = await conn.query("SELECT 1 as id, 'rian' as name")
+            print(result)
+            # output -> [BaseRow(id=1, name='rian')]
+
+            result = await conn.query("SELECT 1 as id, 'rian' as name", as_dict=True)
+            print(result)
+            # output -> [{'id': 1, 'name': 'rian'}]
+
+        ```
         """
         raise QueryError()
     @overload
@@ -277,16 +290,19 @@ class PySQLXEngine:
 
         ---
         ### Example
-            >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
-            >>> conn = PySQLXEngine(uri=uri)
-            >>> await conn.connect()
-            >>> result = await conn.query_first("SELECT 1 as id, 'rian' as name")
-            >>> print(result)
-            >>> # output -> BaseRow(id=1, name='rian')
-            >>> result = await conn.query_first("SELECT 1 as id, 'rian' as name", as_dict=True)
-            >>> print(result)
-            >>> # output -> {'id': 1, 'name': 'rian'}
+        ```python
+            uri = "postgresql://user:pass@host:port/db?schema=sample"
+            conn = PySQLXEngine(uri=uri)
+            await conn.connect()
 
+            result = await conn.query_first("SELECT 1 as id, 'rian' as name")
+            print(result)
+            # output -> BaseRow(id=1, name='rian')
+
+            result = await conn.query_first("SELECT 1 as id, 'rian' as name", as_dict=True)
+            print(result)
+            # output -> {'id': 1, 'name': 'rian'}
+        ```
         """
         raise QueryError()
     @overload
@@ -307,13 +323,15 @@ class PySQLXEngine:
 
         ---
         ### Example
-            >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
-            >>> conn = PySQLXEngine(uri=uri)
-            >>> await conn.connect()
-            >>> result = await conn.execute("INSERT INTO users (name) VALUES ('rian')")
-            >>> print(f"rows_affected = {result}")
-            >>> # output -> rows_affected = 1
+        ```python
+            uri = "postgresql://user:pass@host:port/db?schema=sample"
+            conn = PySQLXEngine(uri=uri)
+            await conn.connect()
 
+            result = await conn.execute("INSERT INTO users (name) VALUES ('rian')")
+            print(f"rows_affected = {result}")
+            # output -> rows_affected = 1
+        ```
         """
         raise ExecuteError()
     async def set_isolation_level(self, isolation_level: ISOLATION_LEVEL) -> "None":
@@ -328,7 +346,7 @@ class PySQLXEngine:
 
         The Sqlite does not support the isolation level.
 
-        * Arguments: `isolation_level(str)`:  isolation level to be set (ReadUncommitted, ReadCommitted, RepeatableRead, Snapshot, Serializable)
+        * Arguments: `isolation_level(str)`:  isolation level to be set (`ReadUncommitted`,`ReadCommitted`,`RepeatableRead`,`Snapshot`,`Serializable`)
 
         * Returns: `None`
 
@@ -336,11 +354,12 @@ class PySQLXEngine:
 
         ---
         ### Example
-            >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
-            >>> conn = PySQLXEngine(uri=uri)
-            >>> await conn.connect()
-            >>> await conn.set_isolation_level(isolation_level="READ_COMMITTED")
-
+        ```python
+            uri = "postgresql://user:pass@host:port/db?schema=sample"
+            conn = PySQLXEngine(uri=uri)
+            await conn.connect()
+            await conn.set_isolation_level(isolation_level="READ_COMMITTED")
+        ```
         ---
         ### Isolation Level Help
             * [SQL Server documentation]: (https://learn.microsoft.com/en-us/sql/t-sql/language-elements/transaction-isolation-levels)
@@ -364,11 +383,12 @@ class PySQLXEngine:
 
         ---
         ### Example
-            >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
-            >>> conn = PySQLXEngine(uri=uri)
-            >>> await conn.connect()
-            >>> await conn.begin()
-
+        ```python
+            uri = "postgresql://user:pass@host:port/db?schema=sample"
+            conn = PySQLXEngine(uri=uri)
+            await conn.connect()
+            await conn.begin()
+        ```
         """
         raise RawCmdError()
     async def commit(self) -> "None":
@@ -376,11 +396,11 @@ class PySQLXEngine:
         ## Description
         Commits the current transaction.
 
-        The begin() method must be called before calling commit().
+        The `begin()` method must be called before calling `commit()`.
 
-        If the database not need set the isolation level, maybe you can not use begin() and commit().
+        If the database not need set the isolation level, maybe you can not use `begin()` and `commit()`.
 
-        The PySQLXEngine by default uses the begin() and commit() in all transactions.
+        The PySQLXEngine by default uses the `begin()` and `commit()` in all transactions.
 
         * Arguments: `None`
 
@@ -390,14 +410,16 @@ class PySQLXEngine:
 
         ---
         ### Example
-            >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
-            >>> conn = PySQLXEngine(uri=uri)
-            >>> await conn.connect()
-            >>> await conn.begin()
-            >>> await conn.execute("CREATE TABLE users (id serial PRIMARY KEY, name varchar(255))")
-            >>> await conn.execute("INSERT INTO users (name) VALUES ('rian')")
-            >>> await conn.commit()
+        ```python
+            uri = "postgresql://user:pass@host:port/db?schema=sample"
+            conn = PySQLXEngine(uri=uri)
+            await conn.connect()
 
+            await conn.begin()
+            await conn.execute("CREATE TABLE users (id serial PRIMARY KEY, name varchar(255))")
+            await conn.execute("INSERT INTO users (name) VALUES ('rian')")
+            await conn.commit()
+        ```
         """
         raise RawCmdError()
     async def rollback(self) -> "None":
@@ -408,11 +430,11 @@ class PySQLXEngine:
         Rollback is used to cancel the transaction, when you uses the rollback,
         the transaction is canceled and the changes are not saved.
 
-        The begin() method must be called before calling rollback().
+        The `begin()` method must be called before calling `rollback()`.
 
-        If the database not need set the isolation level, maybe you can not use begin() and rollback().
+        If the database not need set the isolation level, maybe you can not use `begin()` and `rollback()`.
 
-        The PySQLXEngine by default uses the begin() and commit() in all transactions.
+        The PySQLXEngine by default try uses the `begin()` and `commit()` in all transactions.
 
         * Arguments: `None`
 
@@ -422,14 +444,16 @@ class PySQLXEngine:
 
         ---
         ### Example
-            >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
-            >>> conn = PySQLXEngine(uri=uri)
-            >>> await conn.connect()
-            >>> await conn.begin()
-            >>> await conn.execute("CREATE TABLE users (id serial PRIMARY KEY, name varchar(255))")
-            >>> await conn.execute("INSERT INTO users (name) VALUES ('rian')")
-            >>> await conn.rollback()
+        ```python
+            uri = "postgresql://user:pass@host:port/db?schema=sample"
+            conn = PySQLXEngine(uri=uri)
+            await conn.connect()
 
+            await conn.begin()
+            await conn.execute("CREATE TABLE users (id serial PRIMARY KEY, name varchar(255))")
+            await conn.execute("INSERT INTO users (name) VALUES ('rian')")
+            await conn.rollback()
+        ```
         """
         raise RawCmdError()
     async def start_transaction(self, isolation_level: Union[ISOLATION_LEVEL, None] = None) -> "None":
@@ -449,14 +473,17 @@ class PySQLXEngine:
 
         ---
         ### Example
-            >>> uri = "postgresql://user:pass@host:port/db?schema=sample"
-            >>> conn = PySQLXEngine(uri=uri)
-            >>> await conn.connect()
-            >>> # with isolation level
-            >>> await conn.start_transaction(isolation_level="ReadCommitted")
-            >>> # without isolation level
-            >>> await conn.start_transaction()
+        ```python
+            uri = "postgresql://user:pass@host:port/db?schema=sample"
+            conn = PySQLXEngine(uri=uri)
+            await conn.connect()
 
+            # with isolation level
+            await conn.start_transaction(isolation_level="ReadCommitted")
+
+            # without isolation level
+            await conn.start_transaction()
+        ```
         ---
         ### Isolation Level Help
             * [SQL Server documentation]: (https://learn.microsoft.com/en-us/sql/t-sql/language-elements/transaction-isolation-levels)

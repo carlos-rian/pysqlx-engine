@@ -8,31 +8,33 @@ class PySQLXEnginePool:
     It is thread-safe and can be used in async code to run multiple queries in parallel.
 
     Example:
-        # imports
-        >>> import asyncio
-        >>> from pysqlx_engine import PySQLXEnginePool
-        # create a pool
-        >>> pool = PySQLXEnginePool("postgresql://user:pass@host:port/db?schema=sample", max_connections=3)
-        >>> async def main():
-        ...
-        >>>     conn1 = await pool.new_connection()
-        >>>     conn2 = await pool.new_connection()
-        >>>     conn3 = await pool.new_connection()
-        ...
-        >>>     # multiple queries can be run in parallel
-        >>>     coro = [
+    ```python
+        import asyncio
+        from pysqlx_engine import PySQLXEnginePool
+
+        pool = PySQLXEnginePool("postgresql://user:pass@host:port/db?schema=sample", max_connections=3)
+
+        async def main():
+            conn1 = await pool.new_connection()
+            conn2 = await pool.new_connection()
+            conn3 = await pool.new_connection()
+
+            # multiple queries can be run in parallel
+            coro = [
                     await conn1.fetch("SELECT 1 AS one"),
                     await conn2.fetch("SELECT 2 AS two"),
                     await conn3.fetch("SELECT 3 AS three")
                 ]
-        >>>     # wait for all queries to finish
-        >>>     results = await asyncio.gather(*coro)
-        >>>     print(results)
-        >>>     # [[BaseRow(one=1)], [BaseRow(two=2)], [BaseRow(three=3)]]
-        >>>
-        >>>     # try creating a connection when the pool is full
-        >>>     conn4 = await pool.new_connection() # raises PoolMaxConnectionsError
-        >>> asyncio.run(main())
+            # wait for all queries to finish
+            results = await asyncio.gather(*coro)
+            print(results)
+            # [[BaseRow(one=1)], [BaseRow(two=2)], [BaseRow(three=3)]]
+
+            # try creating a connection when the pool is full
+            conn4 = await pool.new_connection() # raises PoolMaxConnectionsError
+
+        asyncio.run(main())
+    ```
     """
 
     uri: str
@@ -64,12 +66,14 @@ class PySQLXEnginePool:
 
         ## Example
         ```python
-        >>> from pysqlx_engine import PySQLXEnginePool
-        >>>
-        >>> pool = PySQLXEnginePool("postgresql://user:pass@host:port/db?schema=sample", max_connections=3)
-        >>> async def main():
-        >>>     conn1 = await pool.new_connection() # return a new PySQLXEngine instance
-        >>>     conn2 = await pool.new_connection() # return a new PySQLXEngine instance
-        >>>     conn3 = await pool.new_connection() # return a new PySQLXEngine instance
+        from pysqlx_engine import PySQLXEnginePool
+
+        pool = PySQLXEnginePool("postgresql://user:pass@host:port/db?schema=sample", max_connections=3)
+
+        async def main():
+            conn1 = await pool.new_connection() # return a new PySQLXEngine instance
+            conn2 = await pool.new_connection() # return a new PySQLXEngine instance
+            conn3 = await pool.new_connection() # return a new PySQLXEngine instance
+        ```
         """
         ...
