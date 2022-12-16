@@ -209,7 +209,7 @@ plugins = ["importlib-metadata"]
 
 [[package]]
 name = "pysqlx-core"
-version = "0.1.25"
+version = "0.1.26"
 description = "A fast and async SQL database wrapper for Python, with support for MySQL, PostgreSQL, SQLite and MS SQL Server."
 category = "main"
 optional = false
@@ -349,7 +349,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "flake8 (<5)", "pytest-co
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "0e6ce548c90022d59ebe9c7e54d6c019dbb3c0b6b5ee6809d1d40308e24d8b3b"
+content-hash = "f75a525309ee2e782411f537c397a004d67335ba387c152804e899267ce8f041"
 
 [metadata.files]
 attrs = []
