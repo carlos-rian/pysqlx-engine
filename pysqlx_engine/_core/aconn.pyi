@@ -192,10 +192,10 @@ class PySQLXEngine:
         ...
     # all
     @overload
-    async def query(self, sql: LiteralString) -> Union[List[BaseRow], List]:
+    async def query(self, sql: LiteralString) -> Union[List[Type["Model"]], List]:
         """
         ## Description
-        Returns all rows of the query result with List of `BaseRow` or List of Dict or empty List.
+        Returns all rows of the query result with List of `BaseRow` or empty List.
 
         #### BaseRow
             Is a class that represents a row of the result of a query.
@@ -205,19 +205,14 @@ class PySQLXEngine:
             Is a class that represents a row of the result of a query.
             This class is created by the user, it is a class that inherits from `BaseRow`.
 
-        #### Dict
-            Is a dict that represents a row of the result of a query.
-
         #### Helper
             * Arguments:
 
                 `sql(str)`: sql query to be executed
 
-                `as_dict(bool)`: (Default is False) if True, returns a list of dict, if False, returns a list of BaseRow
-
                 `model(BaseRow)`: (Default is None) if not None, returns a list of your model
 
-            * Returns: `Union[List[BaseRow], List[Dict], List]`: List of `BaseRow` or List of Dict or empty List
+            * Returns: `List[Type["Model"]]`: list of `BaseRow` or empty list
 
             * Raises: `QueryError`, `TypeError`
 
@@ -231,21 +226,46 @@ class PySQLXEngine:
             result = await conn.query("SELECT 1 as id, 'rian' as name")
             print(result)
             # output -> [BaseRow(id=1, name='rian')]
+        ```
+        """
+        ...
+    @overload
+    async def query(self, sql: LiteralString, model: Type["Model"] = None) -> Union[List[Type["Model"]], List]: ...
+    # dict
+    async def query_as_dict(self, sql: LiteralString) -> Union[List[Dict[str, Any]], List]:
+        """
+        ## Description
+        Returns all rows of the query result with List of Dict or empty List.
 
-            result = await conn.query("SELECT 1 as id, 'rian' as name", as_dict=True)
+        #### Dict
+            Is a dict that represents a row of the result of a query.
+
+        #### Helper
+            * Arguments:
+
+                `sql(str)`: sql query to be executed
+
+            * Returns: `List[Dict]`: List of Dict or empty List
+
+            * Raises: `QueryError`, `TypeError`
+
+        ---
+        ### Example
+        ```python
+            uri = "postgresql://user:pass@host:port/db?schema=sample"
+            conn = PySQLXEngine(uri=uri)
+            await conn.connect()
+
+            result = await conn.query_as_dict("SELECT 1 as id, 'rian' as name")
             print(result)
             # output -> [{'id': 1, 'name': 'rian'}]
 
         ```
         """
         ...
-    @overload
-    async def query(self, sql: LiteralString, model: Type["Model"] = None) -> Union[List[Type["Model"]], List]: ...
-    @overload
-    async def query(self, sql: LiteralString, as_dict: bool = False) -> Union[List[Dict[str, Any]], List]: ...
     # fisrt
     @overload
-    async def query_first(self, sql: LiteralString) -> Union[BaseRow, None]:
+    async def query_first(self, sql: LiteralString) -> Optional[Type["Model"]]:
         """
         ## Description
         Returns the first row of the query result with BaseRow or Dict(case as_dict=True) or None case result is empty.
@@ -293,9 +313,39 @@ class PySQLXEngine:
         """
         ...
     @overload
-    async def query_first(self, sql: LiteralString, model: Type["Model"] = None) -> Union[Type["Model"], None]: ...
-    @overload
-    async def query_first(self, sql: LiteralString, as_dict: bool = False) -> Union[Dict[str, Any], None]: ...
+    async def query_first(self, sql: LiteralString, model: Type["Model"] = None) -> Optional[Type["Model"]]: ...
+    # dict
+    async def query_first_as_dict(self, sql: LiteralString) -> Optional[Dict[str, Any]]:
+        """
+        ## Description
+        Returns the first row of the query result with Dict or None case result is empty.
+
+        #### Dict
+            Is a dict that represents a row of the result of a query.
+
+        #### Helper
+
+            * Arguments:
+
+                `sql(str)`: sql to be executed
+
+            * Returns: `Optional[Dict[str, Any]]`: a Dict or None
+
+            * Raises: `QueryError`, `TypeError`
+
+        ---
+        ### Example
+        ```python
+            uri = "postgresql://user:pass@host:port/db?schema=sample"
+            conn = PySQLXEngine(uri=uri)
+            await conn.connect()
+
+            result = await conn.query_first_as_dict("SELECT 1 as id, 'rian' as name")
+            print(result)
+            # output -> {'id': 1, 'name': 'rian'}
+        ```
+        """
+        ...
     # --
     async def execute(self, sql: LiteralString) -> "int":
         """
