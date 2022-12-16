@@ -2,7 +2,7 @@
 name = "pysqlx-engine"
 
 version = "0.2.0"
-description = "Python Async and Sync SQL Engines"
+description = "Python Async and Sync SQL Engine"
 authors = ["Carlos Rian <crian.rian@gmail.com>"]
 license = "MIT"
 readme = "readme.md"
@@ -41,7 +41,7 @@ classifiers = [
 python = "^3.7"
 pydantic = "^1.10.2"
 Pygments = "^2.13.0"
-pysqlx-core = "^0.1.22"
+pysqlx-core = "^0.1.25"
 typing-extensions = "^4.3.0"
 
 [tool.poetry.dev-dependencies]
@@ -52,6 +52,7 @@ pytest-asyncio = "^0.20.1"
 pytest-cov = "^4.0.0"
 pytest-dotenv = "^0.5.2"
 pytest-xdist = "^3.0.2"
+mypy = "^0.991"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
