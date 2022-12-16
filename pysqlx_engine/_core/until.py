@@ -1,4 +1,5 @@
 import functools
+import asyncio
 
 from pysqlx_core import PySQLXError as _PySQLXError
 
@@ -18,7 +19,6 @@ def force_sync(fn):
     """
     turn an async function to sync function
     """
-    import asyncio
 
     @functools.wraps(fn)
     def wrapper(*args, **kwargs):
