@@ -40,7 +40,7 @@ class PySQLXEnginePool:
     uri: str
     max_connections: int
 
-    def __init__(self, uri: str, max_connections: int = None): ...
+    def __init__(self, uri: str, max_connections: Optional[int] = None): ...
     async def __aenter__(self) -> "PySQLXEngine":
         """
         ## Description

@@ -1,21 +1,8 @@
 from types import TracebackType
 from typing import Any, Dict, List, Optional, Type, Union, overload
 
-from typing_extensions import Literal
-
-from .errors import (
-    ConnectError,
-    ExecuteError,
-    IsoLevelError,
-    QueryError,
-    RawCmdError,
-    StartTransactionError,
-)
-from .parser import BaseRow, Model
-
-LiteralString = str
-
-ISOLATION_LEVEL = Literal["ReadUncommitted", "ReadCommitted", "RepeatableRead", "Snapshot", "Serializable"]
+from .._core.parser import BaseRow, Model  # import necessary using _core to not subscribe default parser
+from .const import ISOLATION_LEVEL, LiteralString
 
 class PySQLXEngine:
     """
@@ -162,7 +149,7 @@ class PySQLXEngine:
             await db.connect()
         ```
         """
-        raise ConnectError()
+        ...
     async def close(self) -> "None":
         """
         ## Description
@@ -202,7 +189,7 @@ class PySQLXEngine:
         `SET TRANSACTION ISOLATION LEVEL READ COMMITTED;`
 
         """
-        raise RawCmdError()
+        ...
     # all
     @overload
     async def query(self, sql: LiteralString) -> Union[List[BaseRow], List]:
@@ -251,7 +238,7 @@ class PySQLXEngine:
 
         ```
         """
-        raise QueryError()
+        ...
     @overload
     async def query(self, sql: LiteralString, model: Type["Model"] = None) -> Union[List[Type["Model"]], List]: ...
     @overload
@@ -304,7 +291,7 @@ class PySQLXEngine:
             # output -> {'id': 1, 'name': 'rian'}
         ```
         """
-        raise QueryError()
+        ...
     @overload
     async def query_first(self, sql: LiteralString, model: Type["Model"] = None) -> Union[Type["Model"], None]: ...
     @overload
@@ -333,7 +320,7 @@ class PySQLXEngine:
             # output -> rows_affected = 1
         ```
         """
-        raise ExecuteError()
+        ...
     async def set_isolation_level(self, isolation_level: ISOLATION_LEVEL) -> "None":
         """
         ## Description
@@ -367,7 +354,7 @@ class PySQLXEngine:
             * [MySQL documentation]: (https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html)
             * [SQLite documentation]: (https://www.sqlite.org/isolation.html)
         """
-        IsoLevelError()
+        ...
     async def begin(self) -> "None":
         """
         ## Description
@@ -390,7 +377,7 @@ class PySQLXEngine:
             await conn.begin()
         ```
         """
-        raise RawCmdError()
+        ...
     async def commit(self) -> "None":
         """
         ## Description
@@ -421,7 +408,7 @@ class PySQLXEngine:
             await conn.commit()
         ```
         """
-        raise RawCmdError()
+        ...
     async def rollback(self) -> "None":
         """
         ## Description
@@ -455,7 +442,7 @@ class PySQLXEngine:
             await conn.rollback()
         ```
         """
-        raise RawCmdError()
+        ...
     async def start_transaction(self, isolation_level: Union[ISOLATION_LEVEL, None] = None) -> "None":
         """
         ## Description
@@ -491,4 +478,4 @@ class PySQLXEngine:
             * [MySQL documentation]: (https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html)
             * [SQLite documentation]: (https://www.sqlite.org/isolation.html)
         """
-        raise StartTransactionError()
+        ...
