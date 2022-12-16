@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, TypeVar, Union
+from typing import Any, Dict, List, TypeVar, Union, Sequence
 from pydantic import BaseModel, create_model, parse_obj_as
 from pysqlx_core import PySQLXResult
 from .const import TYPES_OUT
@@ -50,10 +50,10 @@ class ParserIn:
         fields = {}
         columns = {}
         for key, value in self.result.get_types().items():
-            if value.startswith("list_"):
+            if value.startswith("array_"):
                 _, v = value.split("_")
                 type_ = TYPES_OUT.get(v, Any)
-                fields[key] = (List[type_], None)
+                fields[key] = (Sequence[type_], None)
             else:
                 type_ = TYPES_OUT.get(value, Any)
                 fields[key] = (type_, None)
