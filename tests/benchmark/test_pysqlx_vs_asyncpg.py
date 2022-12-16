@@ -16,7 +16,7 @@ def test_pysqlx_query_all(benchmark):
     async def query():
         db = PySQLXEngine(uri="postgresql://postgres:Build!Test321@localhost:4442/engine")
         await db.connect()
-        result = await db.query(sql="select * from test_benchmark_sample_table_100", as_dict=True)
+        result = await db.query_as_dict(sql="select * from test_benchmark_sample_table_100")
         db.close()
         assert len(result) == 100
 

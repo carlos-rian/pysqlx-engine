@@ -65,7 +65,7 @@ def test_sample_query_with_dict(db):
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
-    rows = conn.query(sql="SELECT 1 as number", as_dict=True)
+    rows = conn.query_as_dict(sql="SELECT 1 as number")
     assert rows[0]["number"] == 1
 
     conn.close()
@@ -79,7 +79,7 @@ def test_sample_query_with_empty_table_as_dict(db):
 
     conn.execute(sql="CREATE TABLE pysql_empty (id INT)")
 
-    rows = conn.query(sql="SELECT * FROM pysql_empty", as_dict=True)
+    rows = conn.query_as_dict(sql="SELECT * FROM pysql_empty")
     assert rows == []
 
     conn.execute(sql="DROP TABLE pysql_empty")
@@ -93,7 +93,7 @@ def test_sample_query_first_with_dict(db):
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
-    row = conn.query_first(sql="SELECT 1 as number", as_dict=True)
+    row = conn.query_first_as_dict(sql="SELECT 1 as number")
     assert row["number"] == 1
     conn.close()
     assert conn.connected is False
@@ -106,7 +106,7 @@ def test_sample_query_first_with_empty_table_as_dict(db):
 
     conn.execute(sql="CREATE TABLE pysql_empty (id INT)")
 
-    row = conn.query_first(sql="SELECT * FROM pysql_empty", as_dict=True)
+    row = conn.query_first_as_dict(sql="SELECT * FROM pysql_empty")
     assert row is None
 
     conn.execute(sql="DROP TABLE pysql_empty")
@@ -194,7 +194,7 @@ def test_error_invalid_query_as_dict(db):
     assert conn.connected is True
 
     with pytest.raises(QueryError):
-        conn.query(sql="SELECT * FROM invalid_table", as_dict=True)
+        conn.query_as_dict(sql="SELECT * FROM invalid_table")
 
     conn.close()
     assert conn.connected is False
@@ -218,7 +218,7 @@ def test_error_invalid_query_first_as_dict(db):
     assert conn.connected is True
 
     with pytest.raises(QueryError):
-        conn.query_first(sql="SELECT * FROM invalid_table", as_dict=True)
+        conn.query_first_as_dict(sql="SELECT * FROM invalid_table")
 
     conn.close()
     assert conn.connected is False
@@ -281,7 +281,7 @@ def test_query_with_null_dict_values(db, typ, create_table: dict):
         resp = conn.execute(sql=row.replace("\n", ""))
         assert resp == 1
 
-    rows = conn.query(sql="SELECT * FROM test_table", as_dict=True)
+    rows = conn.query_as_dict(sql="SELECT * FROM test_table")
     for row in rows:
         assert isinstance(row["first_name"], str)
         assert isinstance(row["last_name"], (str, type(None)))
@@ -353,7 +353,7 @@ def test_query_first_with_null_dict_values(db, typ, create_table: dict):
     resp = conn.execute(sql=rows[0].replace("\n", ""))
     assert resp == 1
 
-    row = conn.query_first(sql="SELECT * FROM test_table", as_dict=True)
+    row = conn.query_first_as_dict(sql="SELECT * FROM test_table")
 
     assert isinstance(row["first_name"], str)
     assert isinstance(row["last_name"], (str, type(None)))

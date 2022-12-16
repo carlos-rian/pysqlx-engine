@@ -70,7 +70,7 @@ async def test_sample_query_with_dict(db):
     conn: PySQLXEngine = await db()
     assert conn.connected is True
 
-    rows = await conn.query(sql="SELECT 1 as number", as_dict=True)
+    rows = await conn.query_as_dict(sql="SELECT 1 as number")
     assert rows[0]["number"] == 1
 
     await conn.close()
@@ -85,7 +85,7 @@ async def test_sample_query_with_empty_table_as_dict(db):
 
     await conn.execute(sql="CREATE TABLE pysql_empty (id INT)")
 
-    rows = await conn.query(sql="SELECT * FROM pysql_empty", as_dict=True)
+    rows = await conn.query_as_dict(sql="SELECT * FROM pysql_empty")
     assert rows == []
 
     await conn.execute(sql="DROP TABLE pysql_empty")
@@ -100,7 +100,7 @@ async def test_sample_query_first_with_dict(db):
     conn: PySQLXEngine = await db()
     assert conn.connected is True
 
-    row = await conn.query_first(sql="SELECT 1 as number", as_dict=True)
+    row = await conn.query_first_as_dict(sql="SELECT 1 as number")
     assert row["number"] == 1
     await conn.close()
     assert conn.connected is False
@@ -114,7 +114,7 @@ async def test_sample_query_first_with_empty_table_as_dict(db):
 
     await conn.execute(sql="CREATE TABLE pysql_empty (id INT)")
 
-    row = await conn.query_first(sql="SELECT * FROM pysql_empty", as_dict=True)
+    row = await conn.query_first_as_dict(sql="SELECT * FROM pysql_empty")
     assert row is None
 
     await conn.execute(sql="DROP TABLE pysql_empty")
@@ -205,7 +205,7 @@ async def test_error_invalid_query_as_dict(db):
     assert conn.connected is True
 
     with pytest.raises(QueryError):
-        await conn.query(sql="SELECT * FROM invalid_table", as_dict=True)
+        await conn.query_as_dict(sql="SELECT * FROM invalid_table")
 
     await conn.close()
     assert conn.connected is False
@@ -231,7 +231,7 @@ async def test_error_invalid_query_first_as_dict(db):
     assert conn.connected is True
 
     with pytest.raises(QueryError):
-        await conn.query_first(sql="SELECT * FROM invalid_table", as_dict=True)
+        await conn.query_first_as_dict(sql="SELECT * FROM invalid_table")
 
     await conn.close()
     assert conn.connected is False
@@ -296,7 +296,7 @@ async def test_query_with_null_dict_values(db, typ, create_table: dict):
         resp = await conn.execute(sql=row.replace("\n", ""))
         assert resp == 1
 
-    rows = await conn.query(sql="SELECT * FROM test_table", as_dict=True)
+    rows = await conn.query_as_dict(sql="SELECT * FROM test_table")
     for row in rows:
         assert isinstance(row["first_name"], str)
         assert isinstance(row["last_name"], (str, type(None)))
@@ -370,7 +370,7 @@ async def test_query_first_with_null_dict_values(db, typ, create_table: dict):
     resp = await conn.execute(sql=rows[0].replace("\n", ""))
     assert resp == 1
 
-    row = await conn.query_first(sql="SELECT * FROM test_table", as_dict=True)
+    row = await conn.query_first_as_dict(sql="SELECT * FROM test_table")
 
     assert isinstance(row["first_name"], str)
     assert isinstance(row["last_name"], (str, type(None)))
