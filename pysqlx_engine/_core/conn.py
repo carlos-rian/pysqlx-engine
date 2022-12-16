@@ -89,15 +89,12 @@ class PySQLXEngine:
 
         return _raw_cmd()
 
-    def query(self, sql: LiteralString, as_dict: bool = False, model: Optional[Model] = None):
+    def query(self, sql: LiteralString, model: Optional[Model] = None):
         self._check_conn_and_sql(sql=sql)
 
         @force_sync
         async def _query():
             try:
-                if as_dict is True:
-                    return await self._conn.query_as_list(sql=sql)
-
                 if model is not None and not issubclass(model, BaseRow):
                     raise TypeError(model_parameter_error_message())
 
@@ -108,16 +105,24 @@ class PySQLXEngine:
 
         return _query()
 
-    def query_first(self, sql: LiteralString, as_dict: bool = False, model: Optional[Model] = None):
+    def query_as_dict(self, sql: LiteralString):
+        self._check_conn_and_sql(sql=sql)
+
+        @force_sync
+        async def _query_as_dict():
+            try:
+                return await self._conn.query_as_list(sql=sql)
+            except pysqlx_core.PySQLXError as e:
+                raise pysqlx_get_error(err=e)
+
+        return _query_as_dict()
+
+    def query_first(self, sql: LiteralString, model: Optional[Model] = None):
         self._check_conn_and_sql(sql=sql)
 
         @force_sync
         async def _query_first():
             try:
-                if as_dict is True:
-                    row = await self._conn.query_first_as_dict(sql=sql)
-                    return row if row else None
-
                 if model is not None and not issubclass(model, BaseRow):
                     raise TypeError(model_parameter_error_message())
 
@@ -127,6 +132,19 @@ class PySQLXEngine:
                 raise pysqlx_get_error(err=e)
 
         return _query_first()
+
+    def query_first_as_dict(self, sql: LiteralString):
+        self._check_conn_and_sql(sql=sql)
+
+        @force_sync
+        async def _query_first_as_dict():
+            try:
+                row = await self._conn.query_first_as_dict(sql=sql)
+                return row if row else None
+            except pysqlx_core.PySQLXError as e:
+                raise pysqlx_get_error(err=e)
+
+        return _query_first_as_dict()
 
     def execute(self, sql: LiteralString):
         self._check_conn_and_sql(sql=sql)
