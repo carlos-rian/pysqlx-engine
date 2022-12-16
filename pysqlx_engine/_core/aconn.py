@@ -1,5 +1,5 @@
 import pysqlx_core
-from typing_extensions import Literal
+from typing import Optional
 
 from .errors import AlreadyConnectedError, NotConnectedError
 from .helper import (
@@ -8,11 +8,9 @@ from .helper import (
     not_connected_error_message,
     sql_type_error_message,
 )
-from .parser import BaseRow, Model, Parser
+from .._core.parser import BaseRow, Model, ParserIn  # import necessary using _core to not subscribe default parser
+from .const import ISOLATION_LEVEL, LiteralString
 from .until import pysqlx_get_error
-
-LiteralString = str
-ISOLATION_LEVEL = Literal["ReadUncommitted", "ReadCommitted", "RepeatableRead", "Snapshot", "Serializable"]
 
 
 class PySQLXEngine:
@@ -31,7 +29,7 @@ class PySQLXEngine:
 
         self.uri: str = uri
         self.connected: bool = False
-        self._conn: pysqlx_core.Connection = None
+        self._conn: Optional[pysqlx_core.Connection] = None
 
         self._provider = "sqlite"
 
@@ -82,7 +80,7 @@ class PySQLXEngine:
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
-    async def query(self, sql: LiteralString, as_dict: bool = False, model: Model = None):
+    async def query(self, sql: LiteralString, as_dict: bool = False, model: Optional[Model] = None):
         self._check_conn_and_sql(sql=sql)
 
         try:
@@ -93,11 +91,11 @@ class PySQLXEngine:
                 raise TypeError(model_parameter_error_message())
 
             result = await self._conn.query(sql=sql)
-            return Parser(result=result, model=model).parse()
+            return ParserIn(result=result, model=model).parse()
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
-    async def query_first(self, sql: LiteralString, as_dict: bool = False, model: Model = None):
+    async def query_first(self, sql: LiteralString, as_dict: bool = False, model: Optional[Model] = None):
         self._check_conn_and_sql(sql=sql)
         try:
             if as_dict is True:
@@ -108,7 +106,7 @@ class PySQLXEngine:
                 raise TypeError(model_parameter_error_message())
 
             result = await self._conn.query(sql=sql)
-            return Parser(result=result, model=model).parse_first()
+            return ParserIn(result=result, model=model).parse_first()
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
@@ -142,7 +140,7 @@ class PySQLXEngine:
         else:
             await self.raw_cmd(sql="ROLLBACK;")
 
-    async def start_transaction(self, isolation_level: ISOLATION_LEVEL = None):
+    async def start_transaction(self, isolation_level: Optional[ISOLATION_LEVEL] = None):
         self._check_connection()
         if isolation_level is not None:
             self._check_isolation_level(isolation_level=isolation_level)
