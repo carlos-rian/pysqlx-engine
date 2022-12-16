@@ -126,11 +126,13 @@ async def test_sample_query_first_with_empty_table_as_dict(db):
 async def test_complex_query_pgsql():
     from datetime import date, datetime, time
     from decimal import Decimal
-    from typing import List
     from uuid import UUID
 
     conn: PySQLXEngine = await adb_pgsql()
     assert conn.connected is True
+
+    await conn.execute(sql="DROP TABLE IF EXISTS pysqlx_table;")
+    await conn.execute(sql="DROP TYPE IF EXISTS colors;")
 
     with open("tests/unittest/sql/postgresql/create.sql", "r") as f:
         type_, table, *_ = f.read().split(";")
@@ -167,17 +169,17 @@ async def test_complex_query_pgsql():
     assert isinstance(row.type_xml, str)
     assert isinstance(row.type_inet, str)
     assert isinstance(row.type_bytes, bytes)
-    assert isinstance(row.type_array_text, List)
+    assert isinstance(row.type_array_text, tuple)
     assert isinstance(row.type_array_text[0], str)
-    assert isinstance(row.type_array_integer, List)
+    assert isinstance(row.type_array_integer, tuple)
     assert isinstance(row.type_array_integer[0], int)
-    assert isinstance(row.type_array_date, list)
+    assert isinstance(row.type_array_date, tuple)
     assert isinstance(row.type_array_date[0], date)
-    assert isinstance(row.type_array_uuid, list)
+    assert isinstance(row.type_array_uuid, tuple)
     assert isinstance(row.type_array_uuid[0], UUID)
 
-    await conn.execute(sql="DROP TABLE pysqlx_table")
-    await conn.execute(sql="DROP TYPE colors CASCADE")
+    await conn.execute(sql="DROP TABLE IF EXISTS  pysqlx_table")
+    await conn.execute(sql="DROP TYPE IF EXISTS colors CASCADE")
 
     await conn.close()
     assert conn.connected is False
