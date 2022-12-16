@@ -12,10 +12,14 @@ This module contains the errors that can be raised by the PySQLXEngine.
 """
 
 from os import getenv
+from typing import Any
 
 from pysqlx_core import PySQLXError as _PySQLXError
 
+from .const import PROVIDER
+
 from .helper import fe_json
+import const
 
 
 class PySQLXError(Exception):
@@ -109,7 +113,7 @@ class AlreadyConnectedError(Exception):
         if getenv("PYSQLX_ERROR_JSON_FMT", "0") != "0":
             msg = fe_json(
                 {
-                    "code": "0",
+                    "code": const.CODE_AlreadyConnectedError,
                     "message": "Already connected to the database",
                     "error": "AlreadyConnectedError",
                 }
@@ -117,7 +121,7 @@ class AlreadyConnectedError(Exception):
 
             super().__init__(msg)
         else:
-            msg = f"AlreadyConnectedError(code=0, message='Already connected to the database')"
+            msg = f"AlreadyConnectedError(code='{const.CODE_AlreadyConnectedError}', message='Already connected to the database')"
             super().__init__(msg)
 
 
@@ -131,13 +135,64 @@ class PoolMaxConnectionsError(Exception):
         if getenv("PYSQLX_ERROR_JSON_FMT", "0") != "0":
             msg = fe_json(
                 {
-                    "code": "0",
-                    "message": "Maximum number of connections reached",
+                    "code": const.CODE_PoolMaxConnectionsError,
+                    "message": "maximum number of connections reached",
                     "error": "PoolMaxConnectionsError",
                 }
             )
 
             super().__init__(msg)
         else:
-            msg = f"PoolMaxConnectionsError(code=0, message='Maximum number of connections reached')"
+            msg = f"PoolMaxConnectionsError(code='{const.CODE_PoolMaxConnectionsError}', message='maximum number of connections reached')"
+            super().__init__(msg)
+
+
+class ParameterInvalidProviderError(Exception):
+    """
+    Raised when the user tries to pass an invalid type to a provider.
+    """
+
+    def __init__(self, field: str, provider: PROVIDER, typ: Any) -> None:
+        self.field = field
+        self.provider = provider
+        self.type = typ
+
+        if getenv("PYSQLX_ERROR_JSON_FMT", "0") != "0":
+            msg = fe_json(
+                {
+                    "code": const.CODE_ParameterInvalidProviderError,
+                    "message": f"the pysqlx-engine for provider '{self.provider}' does not support converting, the type '{self.type}' is not supported.",
+                    "error": "ParameterInvalidError",
+                }
+            )
+            super().__init__(msg)
+        else:
+            msg = f"ParameterInvalidError(code='{const.CODE_ParameterInvalidProviderError}', message='the pysqlx-engine for provider '{self.provider}' does not support converting.')"
+            super().__init__(msg)
+
+
+class ParameterInvalidValueError(Exception):
+    """
+    Raised when the user tries to pass an invalid parameter to the sql.
+    """
+
+    def __init__(self, field: str, provider: PROVIDER, typ_from: Any, typ_to: Any, details: str) -> None:
+        self.field = field
+        self.provider = provider
+        self.type_from = typ_from
+        self.type_to = typ_to
+        self.details = details
+
+        if getenv("PYSQLX_ERROR_JSON_FMT", "0") != "0":
+            msg = fe_json(
+                {
+                    "code": const.CODE_ParameterInvalidValueError,
+                    "message": f"the pysqlx-engine for provider '{self.provider}', error converting value '{self.typ_from}' to type '{self.typ_to}'.",
+                    "error": "ParameterInvalidError",
+                    "details": details,
+                }
+            )
+            super().__init__(msg)
+        else:
+            msg = f"ParameterInvalidError(code='{const.CODE_ParameterInvalidValueError}', message='the pysqlx-engine for provider '{self.provider}', error converting value '{self.typ_from}' to type '{self.typ_to}'."
             super().__init__(msg)

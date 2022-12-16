@@ -1,26 +1,7 @@
-from datetime import date, datetime, time
-from decimal import Decimal
 from typing import Any, Dict, List, TypeVar, Union
-from uuid import UUID
-
 from pydantic import BaseModel, create_model, parse_obj_as
-from pydantic.types import Json
 from pysqlx_core import PySQLXResult
-
-TYPES = {
-    "bool": bool,
-    "str": str,
-    "int": int,
-    "list": list,
-    "json": Json,
-    "uuid": UUID,
-    "time": time,
-    "date": date,
-    "datetime": datetime,
-    "float": float,
-    "bytes": bytes,
-    "decimal": Decimal,
-}
+from .const import TYPES_OUT
 
 Model = TypeVar("Model", bound="BaseRow")
 
@@ -58,7 +39,7 @@ class BaseRow(BaseModel):
         return self._baserow_columns
 
 
-class Parser:
+class ParserIn:
     __slots__ = ("result", "model")
 
     def __init__(self, result: PySQLXResult, model: Model = None):
@@ -71,10 +52,10 @@ class Parser:
         for key, value in self.result.get_types().items():
             if value.startswith("list_"):
                 _, v = value.split("_")
-                type_ = TYPES.get(v, Any)
+                type_ = TYPES_OUT.get(v, Any)
                 fields[key] = (List[type_], None)
             else:
-                type_ = TYPES.get(value, Any)
+                type_ = TYPES_OUT.get(value, Any)
                 fields[key] = (type_, None)
             columns[key] = type_
 
@@ -93,3 +74,12 @@ class Parser:
             return None
         model = self.model or self.create_model()
         return parse_obj_as(model, self.result.get_first())
+
+
+class ParserOut:
+    def __init__(self, sql: str, param: dict = None) -> None:
+        self.sql: str = sql
+        self.param: dict = param
+
+    def get_sql_params(self) -> dict:
+        data = {}
