@@ -110,10 +110,10 @@ class PySQLXEngine:
 
         ---
         ### Extra documentation:
-        * [SQL Server documentation]: (https://learn.microsoft.com/en-us/sql/t-sql/language-elements/transaction-isolation-levels)
-        * [Postgres documentation]: (https://www.postgresql.org/docs/current/sql-set-transaction.html)
-        * [MySQL documentation]: (https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html)
-        * [SQLite documentation]: (https://www.sqlite.org/isolation.html)
+            * [MSSQL](https://learn.microsoft.com/en-us/sql/t-sql/language-elements/transaction-isolation-levels)
+            * [Postgres](https://www.postgresql.org/docs/current/sql-set-transaction.html)
+            * [MySQL](https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html)
+            * [SQLite](https://www.sqlite.org/isolation.html)
         """
         ...
     def __enter__(self) -> "PySQLXEngine":
@@ -382,7 +382,13 @@ class PySQLXEngine:
 
         The Sqlite does not support the isolation level.
 
-        * Arguments: `isolation_level(str)`:  isolation level to be set (ReadUncommitted, ReadCommitted, RepeatableRead, Snapshot, Serializable)
+        * Arguments: `isolation_level(str)`: isolation level to be set (
+            ReadUncommitted,
+            ReadCommitted,
+            RepeatableRead,
+            Snapshot,
+            Serializable
+        )
 
         * Returns: `None`
 
@@ -398,10 +404,10 @@ class PySQLXEngine:
         ```
         ---
         ### Isolation Level Help
-            * [SQL Server documentation]: (https://learn.microsoft.com/en-us/sql/t-sql/language-elements/transaction-isolation-levels)
-            * [Postgres documentation]: (https://www.postgresql.org/docs/current/sql-set-transaction.html)
-            * [MySQL documentation]: (https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html)
-            * [SQLite documentation]: (https://www.sqlite.org/isolation.html)
+            * [MSSQL](https://learn.microsoft.com/en-us/sql/t-sql/language-elements/transaction-isolation-levels)
+            * [Postgres](https://www.postgresql.org/docs/current/sql-set-transaction.html)
+            * [MySQL](https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html)
+            * [SQLite](https://www.sqlite.org/isolation.html)
         """
         ...
     def begin(self) -> "None":
@@ -501,7 +507,13 @@ class PySQLXEngine:
 
         The Sqlite does not support the isolation level.
 
-        * Arguments: `isolation_level(str)`: by default is None. Isolation level to be set (ReadUncommitted, ReadCommitted, RepeatableRead, Snapshot, Serializable)
+        * Arguments: `isolation_level(str)`: by default is None. Isolation level to be set (
+            ReadUncommitted,
+            ReadCommitted,
+            RepeatableRead,
+            Snapshot,
+            Serializable
+        )
 
         * Returns: `None`
 
@@ -522,9 +534,9 @@ class PySQLXEngine:
         ```
         ---
         ### Isolation Level Help
-            * [SQL Server documentation]: (https://learn.microsoft.com/en-us/sql/t-sql/language-elements/transaction-isolation-levels)
-            * [Postgres documentation]: (https://www.postgresql.org/docs/current/sql-set-transaction.html)
-            * [MySQL documentation]: (https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html)
-            * [SQLite documentation]: (https://www.sqlite.org/isolation.html)
+            * [MSSQL](https://learn.microsoft.com/en-us/sql/t-sql/language-elements/transaction-isolation-levels)
+            * [Postgres](https://www.postgresql.org/docs/current/sql-set-transaction.html)
+            * [MySQL](https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html)
+            * [SQLite](https://www.sqlite.org/isolation.html)
         """
         ...
