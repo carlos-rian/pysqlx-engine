@@ -1,6 +1,8 @@
 from typing import Any, Dict, List, TypeVar, Union, Sequence
 from pydantic import BaseModel, create_model, parse_obj_as
 from pysqlx_core import PySQLXResult
+
+from .until import build_sql
 from .const import TYPES_OUT
 
 Model = TypeVar("Model", bound="BaseRow")
@@ -76,10 +78,11 @@ class ParserIn:
         return parse_obj_as(model, self.result.get_first())
 
 
-class ParserOut:
-    def __init__(self, sql: str, param: dict = None) -> None:
-        self.sql: str = sql
-        self.param: dict = param
+class ParserSQL:
+    def __init__(self, provider: str, sql: str, parameters: dict = None) -> None:
+        self._sql: str = sql
+        self.provider: str = provider
+        self.parameters: dict = parameters
 
-    def get_sql_params(self) -> dict:
-        data = {}
+    def sql(self) -> str:
+        return build_sql(provider=self.provider, sql=self._sql, parameters=self.parameters)
