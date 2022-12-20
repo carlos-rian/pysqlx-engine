@@ -1,8 +1,6 @@
 import os
-from io import StringIO
-
+from pysqlx_engine._core.const import CONFIG
 import pytest
-from dotenv import load_dotenv
 
 from pysqlx_engine import PySQLXEngine
 from pysqlx_engine._core.until import force_sync, pysqlx_get_error
@@ -172,14 +170,36 @@ def test_force_sync():
 @pytest.mark.asyncio
 @pytest.mark.parametrize("db", [adb_pgsql])
 async def test_py_sqlx_error_json_fmt_no_colorize(db):
-    env = StringIO(
-        """
-        DATABASE_URI_POSTGRESQL="postgresql://postgres:Build!Test321@localhost:4442/engine"
-        PYSQLX_ERROR_COLORIZE=0
-        PYSQLX_ERROR_JSON_FMT=1
-        """
-    )
-    load_dotenv(stream=env, override=True)
+
+    CONFIG.PYSQLX_MSG_COLORIZE = False
+    CONFIG.PYSQLX_ERROR_JSON_FMT = True
+
+    class GenericError(Exception):
+        def code(self):
+            return "code"
+
+        def message(self):
+            return "message"
+
+        def error(self):
+            return "error"
+
+    error = PySQLXError(err=GenericError())
+    assert isinstance(error, PySQLXError)
+    assert error.code == "code"
+    assert error.message == "message"
+    assert error.error() == "error"
+
+    with pytest.raises(PySQLXError):
+        raise error
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("db", [adb_pgsql])
+async def test_py_sqlx_error_json_fmt_with_colorize(db):
+
+    CONFIG.PYSQLX_MSG_COLORIZE = True
+    CONFIG.PYSQLX_ERROR_JSON_FMT = True
 
     class GenericError(Exception):
         def code(self):

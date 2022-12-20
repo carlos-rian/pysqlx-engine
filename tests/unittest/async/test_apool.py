@@ -1,6 +1,5 @@
 import asyncio, pytest
-from io import StringIO
-from dotenv import load_dotenv
+from pysqlx_engine._core.const import CONFIG
 import os
 from pysqlx_engine import PySQLXEnginePool, PySQLXEngine
 from pysqlx_engine.errors import PoolMaxConnectionsError
@@ -37,16 +36,10 @@ async def test_apool(environment: str):
 
 @pytest.mark.asyncio
 async def test_apool_error():
-    env = StringIO(
-        """
-        DATABASE_URI_POSTGRESQL="postgresql://postgres:Build!Test321@localhost:4442/engine"
-        PYSQLX_ERROR_COLORIZE=1
-        PYSQLX_ERROR_JSON_FMT=1
-        """
-    )
-    load_dotenv(stream=env, override=True)
+    CONFIG.PYSQLX_MSG_COLORIZE = True
+    CONFIG.PYSQLX_ERROR_JSON_FMT = True
 
-    uri = os.environ["DATABASE_URI_POSTGRESQL"]
+    uri = "postgresql://postgres:Build!Test321@localhost:4442/engine"
     pool = PySQLXEnginePool(uri=uri, max_connections=3)
 
     await pool.new_connection()
@@ -59,16 +52,10 @@ async def test_apool_error():
 
 @pytest.mark.asyncio
 async def test_apool_error_no_color_logs():
-    env = StringIO(
-        """
-        DATABASE_URI_POSTGRESQL="postgresql://postgres:Build!Test321@localhost:4442/engine"
-        PYSQLX_ERROR_COLORIZE=0
-        PYSQLX_ERROR_JSON_FMT=0
-        """
-    )
-    load_dotenv(stream=env, override=True)
+    CONFIG.PYSQLX_MSG_COLORIZE = False
+    CONFIG.PYSQLX_ERROR_JSON_FMT = False
 
-    uri = os.environ["DATABASE_URI_POSTGRESQL"]
+    uri = "postgresql://postgres:Build!Test321@localhost:4442/engine"
     pool = PySQLXEnginePool(uri=uri, max_connections=3)
 
     await pool.new_connection()

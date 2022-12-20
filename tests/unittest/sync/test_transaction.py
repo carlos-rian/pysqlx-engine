@@ -5,6 +5,7 @@ import pytest
 from dotenv import load_dotenv
 
 from pysqlx_engine import PySQLXEngineSync
+from pysqlx_engine._core.const import CONFIG
 from pysqlx_engine.errors import IsoLevelError, QueryError, StartTransactionError
 from tests.common import db_mssql, db_mysql, db_pgsql, db_sqlite
 
@@ -248,14 +249,8 @@ def test_set_isolation_level_pgsql(db):
 
 @pytest.mark.parametrize("db", [db_pgsql])
 def test_set_isolation_level_pgsql_with_colored_log(db):
-    env = StringIO(
-        """
-        DATABASE_URI_POSTGRESQL="postgresql://postgres:Build!Test321@localhost:4442/engine"
-        PYSQLX_ERROR_COLORIZE=1
-        PYSQLX_ERROR_JSON_FMT=1
-        """
-    )
-    load_dotenv(stream=env, override=True)
+    CONFIG.PYSQLX_MSG_COLORIZE = True
+    CONFIG.PYSQLX_ERROR_JSON_FMT = True
 
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
@@ -267,14 +262,8 @@ def test_set_isolation_level_pgsql_with_colored_log(db):
 
 @pytest.mark.parametrize("db", [db_sqlite, db_pgsql, db_mssql, db_mysql])
 def test_start_transaction_with_invalid_isolation_level_with_colored_log(db):
-    env = StringIO(
-        """
-        DATABASE_URI_POSTGRESQL="postgresql://postgres:Build!Test321@localhost:4442/engine"
-        PYSQLX_ERROR_COLORIZE=1
-        PYSQLX_ERROR_JSON_FMT=1
-        """
-    )
-    load_dotenv(stream=env, override=True)
+    CONFIG.PYSQLX_MSG_COLORIZE = True
+    CONFIG.PYSQLX_ERROR_JSON_FMT = True
 
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
