@@ -99,7 +99,7 @@ def try_tuple(provider: PROVIDER, values: Tuple[Any], field: str = "") -> str:
                 provider=provider,
                 typ_from="tuple",
                 typ_to="sql array",
-                details="the tuple must be of the same type, eg: [1, 2, 3]. list is represented as a array in sql, sql does not support heterogeneous tuple.",
+                details="the tuple must be of the same type, eg: (1, 2, 3). tuple is represented as a array in sql, sql does not support heterogeneous tuple.",
             )
         if len(values) > 0:
             method = get_method(typ=types.pop())
@@ -131,6 +131,7 @@ def get_method(typ: Type) -> Callable:
     return METHODS.get(typ, try_str)
 
 
+@lru_cache(maxsize=None)
 def convert(
     provider: PROVIDER,
     value: Union[

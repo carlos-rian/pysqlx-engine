@@ -1,32 +1,46 @@
+from functools import lru_cache
 import json
-from os import getenv
 
 from pygments import highlight
 from pygments.formatters import TerminalFormatter
 from pygments.lexers import JsonLexer, PythonLexer
-
-
-def _colorizer_py_code_message(message: str):
-    return highlight(message, PythonLexer(), TerminalFormatter())
+from pygments.lexers.sql import SqlLexer
+from .const import CONFIG
 
 
 def _colorizer_json_message(dumps: str):
     return highlight(dumps, JsonLexer(), TerminalFormatter())
 
 
+def fe_json(data: dict) -> str:
+    """create a error message format for python code"""
+    dumps = json.dumps(data, indent=2)
+    if CONFIG.PYSQLX_MSG_COLORIZE:
+        return "\n" + _colorizer_json_message(dumps)
+    return "\n" + dumps
+
+
+def _colorizer_py_code_message(message: str):
+    return highlight(message, PythonLexer(), TerminalFormatter())
+
+
 def fe_py(message: str) -> str:
     """create a error message format for python code"""
-    if getenv("PYSQLX_ERROR_COLORIZE", "0") != "0":
+    if CONFIG.PYSQLX_MSG_COLORIZE:
         return _colorizer_py_code_message(message)
     return message
 
 
-def fe_json(data: dict) -> str:
+@lru_cache(maxsize=None)
+def _colorizer_sql_message(sql: str):
+    return highlight(sql, SqlLexer(), TerminalFormatter())
+
+
+def fe_sql(sql: str) -> str:
     """create a error message format for python code"""
-    dumps = json.dumps(data, indent=2)
-    if getenv("PYSQLX_ERROR_COLORIZE", "0") != "0":
-        return "\n" + _colorizer_json_message(dumps)
-    return "\n" + dumps
+    if CONFIG.PYSQLX_MSG_COLORIZE:
+        return _colorizer_sql_message(sql)
+    return sql
 
 
 def isolation_error_message():
@@ -120,6 +134,67 @@ def sql_type_error_message():
             # or
             sql = "SELECT 1 AS id, 'Rian' AS name"
             db.query(sql=sql) # <- Variable string
+
+            ''')}
+    """
+
+
+def parameters_type_error_message():
+    return f"""
+        the parameters must be a valid dict.
+
+        you can not use a type other than dict[str, any].
+
+        * dict key must be a valid string.
+        * dict value can be a types: bool, str, int, list, dict, tuple, UUID, time, date, datetime, float, bytes, Decimal
+
+        Python types vs SQL types:
+            bool     -> bool/bit
+            str      -> varchar/text/nvarchar
+            int      -> int/integer/smallint/bigint/tinyint
+            list     -> json/jsonb   
+            dict     -> json/jsonb
+            tuple    -> array
+            UUID     -> uuid
+            time     -> time
+            date     -> date
+            datetime -> timestamp/timestamptz/datetime/datetime2
+            float    -> float/real/numeric
+            bytes    -> bytea/binary/varbinary
+            Decimal  -> decimal/numeric
+
+
+        example of use:
+            {fe_py('''
+            
+            # ===== async
+            db = PySQLXEngine(uri="postgresql://user:pass@host:port/db?schema=sample")
+            await db.connect()
+
+            # Literal string with parameters
+            await db.query(sql="SELECT :id AS id, :name AS name", parameters={"id": 1, "name": "Rian"})
+            
+            # or
+
+            # Variable string with parameters
+            sql = "SELECT :id AS id, :name AS name"
+            parameters = {"id": 1, "name": "Rian"}
+            await db.query(sql=sql, parameters=parameters) 
+
+
+            # ===== sync
+            db = PySQLXEngineSync(uri="postgresql://user:pass@host:port/db?schema=sample")
+            db.connect()
+
+            # Literal string with parameters
+            db.query(sql="SELECT :id AS id, :name AS name", parameters={"id": 1, "name": "Rian"})
+            
+            # or
+            
+            # Variable string with parameters
+            sql = "SELECT :id AS id, :name AS name"
+            parameters = {"id": 1, "name": "Rian"}
+            db.query(sql=sql, parameters=parameters) 
 
             ''')}
     """
