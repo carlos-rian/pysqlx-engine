@@ -54,7 +54,8 @@ class PySQLXEnginePool:
         """
         ## Description
         Create a new connection from the pool.
-        this method tries to get a connection from the pool, if the pool is full to this instance, it will raise `PoolMaxConnectionsError`.
+        this method tries to get a connection from the pool, if the pool is full to this instance,
+        it will raise `PoolMaxConnectionsError`.
 
         If max_connections is None, the pool is "unlimited," stopped only by the database server's connection limit.
 
