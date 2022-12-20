@@ -2,15 +2,15 @@ import pysqlx_core
 from typing import Optional
 
 from .errors import AlreadyConnectedError, NotConnectedError
-from .helper import (
-    isolation_error_message,
-    model_parameter_error_message,
-    not_connected_error_message,
-    sql_type_error_message,
-)
-from .._core.parser import BaseRow, Model, ParserIn  # import necessary using _core to not subscribe default parser
+from .helper import model_parameter_error_message, not_connected_error_message
+from .._core.parser import (
+    BaseRow,
+    Model,
+    ParserIn,
+    ParserSQL,
+)  # import necessary using _core to not subscribe default parser
 from .const import ISOLATION_LEVEL, LiteralString
-from .until import force_sync, pysqlx_get_error
+from .until import check_isolation_level, check_sql_and_parameters, pysqlx_get_error, force_sync
 
 
 class PySQLXEngine:
@@ -44,11 +44,11 @@ class PySQLXEngine:
             self.connected = False
 
     def is_healthy(self):
-        self._check_connection()
+        self._pre_validate()
         return self._conn.is_healthy()
 
     def requires_isolation_first(self):
-        self._check_connection()
+        self._pre_validate()
         return self._conn.requires_isolation_first()
 
     def __enter__(self):
@@ -78,7 +78,7 @@ class PySQLXEngine:
             self.connected = False
 
     def raw_cmd(self, sql: LiteralString):
-        self._check_conn_and_sql(sql=sql)
+        self._pre_validate(sql=sql)
 
         @force_sync
         async def _raw_cmd():
@@ -89,8 +89,8 @@ class PySQLXEngine:
 
         return _raw_cmd()
 
-    def query(self, sql: LiteralString, model: Optional[Model] = None):
-        self._check_conn_and_sql(sql=sql)
+    def query(self, sql: LiteralString, model: Optional[Model] = None, parameters: Optional[dict] = None):
+        self._pre_validate(sql=sql, parameters=parameters)
 
         @force_sync
         async def _query():
@@ -105,8 +105,8 @@ class PySQLXEngine:
 
         return _query()
 
-    def query_as_dict(self, sql: LiteralString):
-        self._check_conn_and_sql(sql=sql)
+    def query_as_dict(self, sql: LiteralString, parameters: Optional[dict] = None):
+        self._pre_validate(sql=sql, parameters=parameters)
 
         @force_sync
         async def _query_as_dict():
@@ -117,8 +117,8 @@ class PySQLXEngine:
 
         return _query_as_dict()
 
-    def query_first(self, sql: LiteralString, model: Optional[Model] = None):
-        self._check_conn_and_sql(sql=sql)
+    def query_first(self, sql: LiteralString, model: Optional[Model] = None, parameters: Optional[dict] = None):
+        self._pre_validate(sql=sql, parameters=parameters)
 
         @force_sync
         async def _query_first():
@@ -133,8 +133,8 @@ class PySQLXEngine:
 
         return _query_first()
 
-    def query_first_as_dict(self, sql: LiteralString):
-        self._check_conn_and_sql(sql=sql)
+    def query_first_as_dict(self, sql: LiteralString, parameters: Optional[dict] = None):
+        self._pre_validate(sql=sql, parameters=parameters)
 
         @force_sync
         async def _query_first_as_dict():
@@ -146,8 +146,8 @@ class PySQLXEngine:
 
         return _query_first_as_dict()
 
-    def execute(self, sql: LiteralString):
-        self._check_conn_and_sql(sql=sql)
+    def execute(self, sql: LiteralString, parameters: Optional[dict] = None):
+        self._pre_validate(sql=sql, parameters=parameters)
 
         @force_sync
         async def _execute():
@@ -159,8 +159,7 @@ class PySQLXEngine:
         return _execute()
 
     def set_isolation_level(self, isolation_level: ISOLATION_LEVEL):
-        self._check_connection()
-        self._check_isolation_level(isolation_level=isolation_level)
+        self._pre_validate(isolation_level=isolation_level)
 
         @force_sync
         async def _set_isolation_level():
@@ -175,25 +174,24 @@ class PySQLXEngine:
         self.start_transaction()
 
     def commit(self):
+        self._pre_validate()
         if self._provider == "sqlserver":
             self.raw_cmd(sql="COMMIT TRANSACTION;")
         else:
             self.raw_cmd(sql="COMMIT;")
 
     def rollback(self):
+        self._pre_validate()
         if self._provider == "sqlserver":
             self.raw_cmd(sql="ROLLBACK TRANSACTION;")
         else:
             self.raw_cmd(sql="ROLLBACK;")
 
     def start_transaction(self, isolation_level: Optional[ISOLATION_LEVEL] = None):
-        self._check_connection()
+        self._pre_validate(isolation_level=isolation_level)
 
         @force_sync
         async def _start_transaction():
-            if isolation_level is not None:
-                self._check_isolation_level(isolation_level=isolation_level)
-
             try:
                 await self._conn.start_transaction(isolation_level=isolation_level)
             except pysqlx_core.PySQLXError as e:
@@ -201,17 +199,17 @@ class PySQLXEngine:
 
         return _start_transaction()
 
-    def _check_isolation_level(self, isolation_level: ISOLATION_LEVEL):
-        levels = ["ReadUncommitted", "ReadCommitted", "RepeatableRead", "Snapshot", "Serializable"]
-        if isinstance(isolation_level, str) and any([isolation_level == level for level in levels]):
-            return isolation_level
-        raise ValueError(isolation_error_message())
-
-    def _check_connection(self):
+    def _pre_validate(
+        self,
+        sql: LiteralString = None,
+        parameters: Optional[dict] = None,
+        isolation_level: Optional[ISOLATION_LEVEL] = None,
+    ):
         if not self.connected:
             raise NotConnectedError(not_connected_error_message())
 
-    def _check_conn_and_sql(self, sql: LiteralString):
-        self._check_connection()
-        if not isinstance(sql, str):
-            raise TypeError(sql_type_error_message())
+        if sql is not None:
+            check_sql_and_parameters(sql=sql, parameters=parameters)
+
+        if isolation_level is not None:
+            check_isolation_level(isolation_level=isolation_level)

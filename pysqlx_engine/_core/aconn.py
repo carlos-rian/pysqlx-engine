@@ -2,15 +2,15 @@ import pysqlx_core
 from typing import Optional
 
 from .errors import AlreadyConnectedError, NotConnectedError
-from .helper import (
-    isolation_error_message,
-    model_parameter_error_message,
-    not_connected_error_message,
-    sql_type_error_message,
-)
-from .._core.parser import BaseRow, Model, ParserIn  # import necessary using _core to not subscribe default parser
+from .helper import model_parameter_error_message, not_connected_error_message
+from .._core.parser import (
+    BaseRow,
+    Model,
+    ParserIn,
+    ParserSQL,
+)  # import necessary using _core to not subscribe default parser
 from .const import ISOLATION_LEVEL, LiteralString
-from .until import pysqlx_get_error
+from .until import check_isolation_level, check_sql_and_parameters, pysqlx_get_error
 
 
 class PySQLXEngine:
@@ -44,11 +44,11 @@ class PySQLXEngine:
             self.connected = False
 
     def is_healthy(self):
-        self._check_connection()
+        self._pre_validate()
         return self._conn.is_healthy()
 
     def requires_isolation_first(self):
-        self._check_connection()
+        self._pre_validate()
         return self._conn.requires_isolation_first()
 
     async def __aenter__(self):
@@ -74,16 +74,14 @@ class PySQLXEngine:
             self.connected = False
 
     async def raw_cmd(self, sql: LiteralString):
-        self._check_conn_and_sql(sql=sql)
-
+        self._pre_validate(sql=sql)
         try:
             return await self._conn.raw_cmd(sql=sql)
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
-    async def query(self, sql: LiteralString, model: Optional[Model] = None):
-        self._check_conn_and_sql(sql=sql)
-
+    async def query(self, sql: LiteralString, model: Optional[Model] = None, parameters: Optional[dict] = None):
+        self._pre_validate(sql=sql, parameters=parameters)
         try:
             if model is not None and not issubclass(model, BaseRow):
                 raise TypeError(model_parameter_error_message())
@@ -93,47 +91,45 @@ class PySQLXEngine:
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
-    async def query_as_dict(self, sql: LiteralString):
-        self._check_conn_and_sql(sql=sql)
-
+    async def query_as_dict(self, sql: LiteralString, parameters: Optional[dict] = None):
+        self._pre_validate(sql=sql, parameters=parameters)
         try:
-            return await self._conn.query_as_list(sql=sql)
+            parse = ParserSQL(provider=self._provider, sql=sql, parameters=parameters)
+            return await self._conn.query_as_list(sql=parse.sql())
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
-    async def query_first(self, sql: LiteralString, model: Optional[Model] = None):
-        self._check_conn_and_sql(sql=sql)
-
+    async def query_first(self, sql: LiteralString, model: Optional[Model] = None, parameters: Optional[dict] = None):
+        self._pre_validate(sql=sql, parameters=parameters)
         try:
             if model is not None and not issubclass(model, BaseRow):
                 raise TypeError(model_parameter_error_message())
 
-            result = await self._conn.query(sql=sql)
+            parse = ParserSQL(provider=self._provider, sql=sql, parameters=parameters)
+            result = await self._conn.query(sql=parse.sql())
             return ParserIn(result=result, model=model).parse_first()
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
-    async def query_first_as_dict(self, sql: LiteralString):
-        self._check_conn_and_sql(sql=sql)
-
+    async def query_first_as_dict(self, sql: LiteralString, parameters: Optional[dict] = None):
+        self._pre_validate(sql=sql, parameters=parameters)
         try:
-            row = await self._conn.query_first_as_dict(sql=sql)
+            parse = ParserSQL(provider=self._provider, sql=sql, parameters=parameters)
+            row = await self._conn.query_first_as_dict(sql=parse.sql())
             return row if row else None
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
-    async def execute(self, sql: LiteralString):
-        self._check_conn_and_sql(sql=sql)
-
+    async def execute(self, sql: LiteralString, parameters: Optional[dict] = None):
+        self._pre_validate(sql=sql, parameters=parameters)
         try:
-            return await self._conn.execute(sql=sql)
+            parse = ParserSQL(provider=self._provider, sql=sql, parameters=parameters)
+            return await self._conn.execute(sql=parse.sql())
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
     async def set_isolation_level(self, isolation_level: ISOLATION_LEVEL):
-        self._check_connection()
-        self._check_isolation_level(isolation_level=isolation_level)
-
+        self._pre_validate(isolation_level=isolation_level)
         try:
             await self._conn.set_isolation_level(isolation_level=isolation_level)
         except pysqlx_core.PySQLXError as e:
@@ -143,39 +139,37 @@ class PySQLXEngine:
         await self.start_transaction()
 
     async def commit(self):
+        self._pre_validate()
         if self._provider == "sqlserver":
             await self.raw_cmd(sql="COMMIT TRANSACTION;")
         else:
             await self.raw_cmd(sql="COMMIT;")
 
     async def rollback(self):
+        self._pre_validate()
         if self._provider == "sqlserver":
             await self.raw_cmd(sql="ROLLBACK TRANSACTION;")
         else:
             await self.raw_cmd(sql="ROLLBACK;")
 
     async def start_transaction(self, isolation_level: Optional[ISOLATION_LEVEL] = None):
-        self._check_connection()
-
-        if isolation_level is not None:
-            self._check_isolation_level(isolation_level=isolation_level)
-
+        self._pre_validate(isolation_level=isolation_level)
         try:
             await self._conn.start_transaction(isolation_level=isolation_level)
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
-    def _check_isolation_level(self, isolation_level: ISOLATION_LEVEL):
-        levels = ["ReadUncommitted", "ReadCommitted", "RepeatableRead", "Snapshot", "Serializable"]
-        if isinstance(isolation_level, str) and any([isolation_level == level for level in levels]):
-            return isolation_level
-        raise ValueError(isolation_error_message())
-
-    def _check_connection(self):
+    def _pre_validate(
+        self,
+        sql: LiteralString = None,
+        parameters: Optional[dict] = None,
+        isolation_level: Optional[ISOLATION_LEVEL] = None,
+    ):
         if not self.connected:
             raise NotConnectedError(not_connected_error_message())
 
-    def _check_conn_and_sql(self, sql: LiteralString):
-        self._check_connection()
-        if not isinstance(sql, str):
-            raise TypeError(sql_type_error_message())
+        if sql is not None:
+            check_sql_and_parameters(sql=sql, parameters=parameters)
+
+        if isolation_level is not None:
+            check_isolation_level(isolation_level=isolation_level)
