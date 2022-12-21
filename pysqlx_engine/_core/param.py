@@ -1,6 +1,6 @@
 from datetime import date, datetime, time
 from decimal import Decimal
-from json import dumps
+from json import dumps, loads, JSONEncoder
 from typing import Union, Dict, List, Any, Tuple, Type, Callable
 from uuid import UUID
 from functools import lru_cache
@@ -18,12 +18,12 @@ def try_bool(provider: PROVIDER, value: bool, _f: str = "") -> str:
 
 @lru_cache(maxsize=None)
 def try_str(_p: PROVIDER, value: str, _f: str = "") -> str:
-    return f"'{str(value)}'"
+    return f"'{value}'"
 
 
 @lru_cache(maxsize=None)
 def try_int(_p: PROVIDER, value: int, _f: str = "") -> int:
-    return value
+    return f"{value}"
 
 
 @lru_cache(maxsize=None)
@@ -32,7 +32,7 @@ def try_json(provider: PROVIDER, value: Union[Dict[str, Any], List[Dict[str, Any
         return f"'{dumps(value, ensure_ascii=False, default=str)}'"
     except Exception as err:
         raise ParameterInvalidValueError(
-            field=field, provider=provider, typ_from=type(value), typ_to="str json", details=str(err)
+            field=field, provider=provider, typ_from="dict|list", typ_to="json", details=str(err)
         )
 
 
