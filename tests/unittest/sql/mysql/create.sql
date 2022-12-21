@@ -1,0 +1,23 @@
+create table pysqlx_table (
+    type_int int null,
+    type_smallint smallint null,
+    type_bigint bigint null,
+    type_serial bigint unsigned auto_increment,
+    type_numeric decimal(10, 4) null,
+    type_float float null,
+    type_double double null,
+    type_decimal decimal null,
+    type_char char null,
+    type_varchar varchar(100) null,
+    type_nvarchar varchar(100) charset utf8mb3 null,
+    type_text text null,
+    type_boolean bit null,
+    type_date date null,
+    type_time time null,
+    type_timestamp timestamp null,
+    type_datetime datetime null,
+    type_enum enum ('blue', 'red', 'gray', 'black') null,
+    type_json json null,
+    type_bytes blob null,
+    constraint type_serial unique (type_serial)
+);
