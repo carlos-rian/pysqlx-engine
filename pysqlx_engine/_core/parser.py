@@ -2,10 +2,21 @@ from typing import Any, Dict, List, TypeVar, Union, Sequence
 from pydantic import BaseModel, create_model, parse_obj_as
 from pysqlx_core import PySQLXResult
 
+from datetime import time, date, datetime
+from decimal import Decimal
+from typing import Any, Dict, List, TypeVar, Union
+from uuid import UUID
+
 from .until import build_sql
 from .const import TYPES_OUT
 
 Model = TypeVar("Model", bound="BaseRow")
+DictParam = Dict[
+    str,
+    Union[
+        bool, str, int, Dict[str, Any], List[Dict[str, Any]], UUID, time, date, datetime, float, bytes, Decimal, None
+    ],
+]
 
 
 class BaseRow(BaseModel):
@@ -27,7 +38,6 @@ class BaseRow(BaseModel):
     def get_columns(self) -> Dict[str, Any]:
         """
         Return the columns of the row.
-
 
         Returns:
             Dict[str, Any]: The columns of the row.
