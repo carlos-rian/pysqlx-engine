@@ -1,6 +1,5 @@
 import functools
 import asyncio
-import os
 
 from pysqlx_core import PySQLXError as _PySQLXError
 
@@ -66,7 +65,7 @@ def check_sql_and_parameters(sql: str, parameters: dict):
         if (
             not isinstance(parameters, dict)
             or not all([isinstance(key, str) for key in parameters.keys()])
-            or not all([isinstance(value, _types) for value in parameters.values()])
+            or not all([isinstance(value, _types) or value is None for value in parameters.values()])
         ):
             raise TypeError(parameters_type_error_message())
 
