@@ -149,19 +149,20 @@ def parameters_type_error_message():
         * dict value can be a types: bool, str, int, list, dict, tuple, UUID, time, date, datetime, float, bytes, Decimal
 
         Python types vs SQL types:
-            bool     -> bool/bit
-            str      -> varchar/text/nvarchar
-            int      -> int/integer/smallint/bigint/tinyint
-            list     -> json/jsonb   
-            dict     -> json/jsonb
-            tuple    -> array
-            UUID     -> uuid
-            time     -> time
-            date     -> date
-            datetime -> timestamp/timestamptz/datetime/datetime2
+            bool     -> bool/bit/boolean/tinyint/etc
+            str      -> varchar/text/nvarchar/char/etc
+            int      -> int/integer/smallint/bigint/tinyint/etc
+            list     -> json/jsonb/nvarchar/varchar/string/etc
+            dict     -> json/jsonb/nvarchar/varchar/string/etc
+            tuple    -> array(Postgres Native)
+            UUID     -> uuid/varchar/text/nvarchar/etc
+            time     -> time/nvarchar/varchar/string/etc
+            date     -> date/nvarchar/varchar/string/etc
+            datetime -> timestamp/timestamptz/datetime/datetime2/nvarchar/varchar/string/etc
             float    -> float/real/numeric
             bytes    -> bytea/binary/varbinary
             Decimal  -> decimal/numeric
+            None     -> null
 
 
         example of use:
