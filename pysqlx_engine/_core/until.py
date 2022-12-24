@@ -1,5 +1,6 @@
 import functools
 import asyncio
+from typing_extensions import ParamSpec
 
 from pysqlx_core import PySQLXError as _PySQLXError
 
@@ -23,15 +24,20 @@ from functools import lru_cache
 from decimal import Decimal
 from uuid import UUID
 
+from typing import Callable, TypeVar
 
-def force_sync(fn):
+P = ParamSpec("P")
+T = TypeVar("T")
+
+
+def force_sync(fn: Callable[P, T]) -> Callable[P, T]:
     """
     turn an async function to sync function
     """
 
     @functools.wraps(fn)
-    def wrapper(*args, **kwargs):
-        res = fn(*args, **kwargs)
+    def wrapper(*args: P.args, **kwds: P.kwargs) -> T:
+        res = fn(*args, **kwds)
         if asyncio.iscoroutine(res):
             return asyncio.get_event_loop().run_until_complete(res)
         return res
@@ -84,8 +90,13 @@ def build_sql(provider: str, sql: str, parameters: dict = None) -> str:
         for key, value in parameters.items():
             load_parameter[key] = convert(provider=provider, value=value, field=key)
 
-        for key, value in load_parameter.items():
-            new_sql = new_sql.replace(f":{key}", f"{value}")
+        # case have 2 param ex: :id and :id_user => :id_user must be first replaced.
+        # because :id_user is in :id
+        param_as_list_of_tuples = [(key, value) for key, value in load_parameter.items()]
+        param_as_list_of_tuples.sort(key=lambda x: x[0], reverse=True)
+
+        for key, value in param_as_list_of_tuples:
+            new_sql = new_sql.replace(f":{key}", value)
 
         if CONFIG.PYSQLX_SQL_LOG:
             print(fe_sql(sql=new_sql), flush=True)
