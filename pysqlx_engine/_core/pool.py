@@ -1,9 +1,9 @@
 from typing import Optional
 from .errors import PoolMaxConnectionsError
-from .conn import PySQLXEngine as PySQLXEngineSync
+from .conn import PySQLXEngineSync
 
 
-class PySQLXEnginePool:
+class PySQLXEnginePoolSync:
     __slots__ = ("uri", "max_connections", "_pool_len")
 
     def __init__(self, uri: str, max_connections: Optional[int] = None):
