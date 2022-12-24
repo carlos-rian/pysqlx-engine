@@ -80,7 +80,7 @@ class PySQLXEngine:
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
-    async def query(self, sql: LiteralString, model: Optional[Model] = None, parameters: Optional[dict] = None):
+    async def query(self, sql: LiteralString, model: Model = None, parameters: Optional[dict] = None):
         self._pre_validate(sql=sql, parameters=parameters)
         try:
             if model is not None and not issubclass(model, BaseRow):
@@ -99,7 +99,7 @@ class PySQLXEngine:
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
-    async def query_first(self, sql: LiteralString, model: Optional[Model] = None, parameters: Optional[dict] = None):
+    async def query_first(self, sql: LiteralString, model: Model = None, parameters: Optional[dict] = None):
         self._pre_validate(sql=sql, parameters=parameters)
         try:
             if model is not None and not issubclass(model, BaseRow):
