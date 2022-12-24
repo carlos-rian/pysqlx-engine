@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Optional, Type, Union, overload
 from .._core.parser import BaseRow, Model  # import necessary using _core to not subscribe default parser
 from .const import ISOLATION_LEVEL, LiteralString
 
-class PySQLXEngine:
+class PySQLXEngineSync:
     """
     ### Description
     PySQLXEngineSync is an engine to run pure sql, but you have flexibility to use how you want.
@@ -116,7 +116,7 @@ class PySQLXEngine:
             * [SQLite](https://www.sqlite.org/isolation.html)
         """
         ...
-    def __enter__(self) -> "PySQLXEngine":
+    def __enter__(self) -> "PySQLXEngineSync":
         """
         ## Description
         Open a connection to the database. using `with`
@@ -264,7 +264,7 @@ class PySQLXEngine:
         ...
     # fisrt
     @overload
-    def query_first(self, sql: LiteralString) -> Optional[Type["Model"]]:
+    def query_first(self, sql: LiteralString) -> Union[Type["Model"], None]:
         """
         ## Description
         Returns the first row of the query result with BaseRow or Dict(case as_dict=True) or None case result is empty.

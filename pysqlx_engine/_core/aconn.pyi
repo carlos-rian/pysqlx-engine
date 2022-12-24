@@ -1,7 +1,7 @@
 from types import TracebackType
 from typing import Any, Dict, List, Optional, Type, Union, overload
 
-from .._core.parser import BaseRow, Model  # import necessary using _core to not subscribe default parser
+from .._core.parser import BaseRow, Model, DictParam  # import necessary using _core to not subscribe default parser
 from .const import ISOLATION_LEVEL, LiteralString
 
 class PySQLXEngine:
@@ -192,16 +192,16 @@ class PySQLXEngine:
         ...
     # all
     @overload
-    async def query(self, sql: LiteralString) -> Union[List[Type["Model"]], List]:
+    async def query(self, sql: LiteralString, parameters: Optional[DictParam] = None) -> Union[List[BaseRow], List]:
         """
         ## Description
         Returns all rows of the query result with List of `BaseRow` or empty List.
 
-        #### BaseRow
+        #### Return Type BaseRow
             Is a class that represents a row of the result of a query.
             Is a class created from `Pydantic`, then you have all the benefits of `Pydantic`.
 
-        #### Model
+        #### Return Type Model
             Is a class that represents a row of the result of a query.
             This class is created by the user, it is a class that inherits from `BaseRow`.
 
@@ -212,9 +212,53 @@ class PySQLXEngine:
 
                 `model(BaseRow)`: (Default is None) if not None, returns a list of your model
 
+                `parameters(dict)`: (Default is None) parameters to be passed to the query, if the query has parameters.
+                parameters must be a dictionary with the name of the parameter and the value.
+
             * Returns: `List[Type["Model"]]`: list of `BaseRow` or empty list
 
             * Raises: `QueryError`, `TypeError`
+
+        #### Parameters Helper
+        ##### Parameters(dict):
+
+            * dict `key` must be a valid string.
+            * dict `value` can be a types: (
+                `bool`,
+                `bytes`,
+                `date`,
+                `datetime`,
+                `Decimal`,
+                `dict`,
+                `float`,
+                `int`,
+                `list`,
+                `str`,
+                `time`,
+                `tuple`,
+                `UUID`
+            )
+
+        ##### Python types vs SQL types:
+        ```
+            * bool     -> bool|bit|boolean|tinyint|etc
+            * bytes    -> bytea|binary|varbinary
+            * date     -> date|nvarchar|varchar|string|etc
+            * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
+            * Decimal  -> decimal|numeric
+            * dict     -> json|jsonb|nvarchar|varchar|string|etc
+            * float    -> float|real|numeric
+            * int      -> int|integer|smallint|bigint|tinyint|etc
+            * list     -> json|jsonb|nvarchar|varchar|string|etc
+            * str      -> varchar|text|nvarchar|char|etc
+            * time     -> time|nvarchar|varchar|string|etc
+            * tuple    -> array(Postgres Native) or string for others
+            * UUID     -> uuid|varchar|text|nvarchar|etc
+        ```
+
+        #### SQL vs Parameters syntax
+            * SQL: `SELECT * FROM table WHERE id = :id`
+            * Parameters: `{"id": 1}`
 
         ---
         ### Example
@@ -230,24 +274,69 @@ class PySQLXEngine:
         """
         ...
     @overload
-    async def query(self, sql: LiteralString, model: Type["Model"] = None) -> Union[List[Type["Model"]], List]: ...
+    async def query(
+        self, sql: LiteralString, parameters: Optional[DictParam] = None, model: Optional[Type["Model"]] = None
+    ) -> Union[List[Type["Model"]], List]: ...
     # dict
-    async def query_as_dict(self, sql: LiteralString) -> Union[List[Dict[str, Any]], List]:
+    async def query_as_dict(
+        self, sql: LiteralString, parameters: Optional[DictParam] = None
+    ) -> Union[List[Dict[str, Any]], List]:
         """
         ## Description
         Returns all rows of the query result with List of Dict or empty List.
-
-        #### Dict
-            Is a dict that represents a row of the result of a query.
 
         #### Helper
             * Arguments:
 
                 `sql(str)`: sql query to be executed
 
+                `parameters(dict)`: (Default is None) parameters to be passed to the query, if the query has parameters.
+                parameters must be a dictionary with the name of the parameter and the value.
+
             * Returns: `List[Dict]`: List of Dict or empty List
 
             * Raises: `QueryError`, `TypeError`
+
+        #### Parameters Helper
+        ##### Parameters(dict):
+
+            * dict `key` must be a valid string.
+            * dict `value` can be a types: (
+                `bool`,
+                `bytes`,
+                `date`,
+                `datetime`,
+                `Decimal`,
+                `dict`,
+                `float`,
+                `int`,
+                `list`,
+                `str`,
+                `time`,
+                `tuple`,
+                `UUID`
+            )
+
+        ##### Python types vs SQL types:
+        ```
+            * bool     -> bool|bit|boolean|tinyint|etc
+            * bytes    -> bytea|binary|varbinary
+            * date     -> date|nvarchar|varchar|string|etc
+            * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
+            * Decimal  -> decimal|numeric
+            * dict     -> json|jsonb|nvarchar|varchar|string|etc
+            * float    -> float|real|numeric
+            * int      -> int|integer|smallint|bigint|tinyint|etc
+            * list     -> json|jsonb|nvarchar|varchar|string|etc
+            * str      -> varchar|text|nvarchar|char|etc
+            * time     -> time|nvarchar|varchar|string|etc
+            * tuple    -> array(Postgres Native) or string for others
+            * UUID     -> uuid|varchar|text|nvarchar|etc
+        ```
+
+        #### SQL vs Parameters syntax
+            * SQL: `SELECT * FROM table WHERE id = :id`
+            * Parameters: `{"id": 1}`
 
         ---
         ### Example
@@ -265,21 +354,18 @@ class PySQLXEngine:
         ...
     # fisrt
     @overload
-    async def query_first(self, sql: LiteralString) -> Optional[Type["Model"]]:
+    async def query_first(self, sql: str, parameters: DictParam = None) -> BaseRow:
         """
         ## Description
-        Returns the first row of the query result with BaseRow or Dict(case as_dict=True) or None case result is empty.
+        Returns the first row of the query result how BaseRow or None case result is empty.
 
-        #### BaseRow
+        #### Return Type BaseRow
             Is a class that represents a row of the result of a query.
             Is a class created from `Pydantic`, then you have all the benefits of `Pydantic`.
 
-        #### Model
+        #### Return Type Model
             Is a class that represents a row of the result of a query.
             This class is created by the user, it is a class that inherits from `BaseRow`.
-
-        #### Dict
-            Is a dict that represents a row of the result of a query.
 
         #### Helper
 
@@ -287,13 +373,57 @@ class PySQLXEngine:
 
                 `sql(str)`:  sql to be executed
 
-                `as_dict(bool)`: (Default is False) if True, returns a dict, if False, returns a BaseRow
-
                 `model(BaseRow)`: (Default is None) if not None, returns a row of your model
 
-            * Returns: `Union[BaseRow, Dict, None]`: a `BaseRow` or Dict or None
+                `parameters(dict)`: (Default is None) parameters to be passed to the query, if the query has parameters.
+                parameters must be a dictionary with the name of the parameter and the value.
+
+            * Returns: `Union[BaseRow, None]`: a `BaseRow` or None
 
             * Raises: `QueryError`, `TypeError`
+
+        #### Parameters Helper
+        ##### Parameters(dict):
+
+            * dict `key` must be a valid string.
+            * dict `value` can be a types: (
+                `bool`,
+                `bytes`,
+                `date`,
+                `datetime`,
+                `Decimal`,
+                `dict`,
+                `float`,
+                `int`,
+                `list`,
+                `str`,
+                `time`,
+                `tuple`,
+                `UUID`,
+                `None`
+            )
+
+        ##### Python types vs SQL types:
+        ```
+            * bool     -> bool|bit|boolean|tinyint|etc
+            * bytes    -> bytea|binary|varbinary
+            * date     -> date|nvarchar|varchar|string|etc
+            * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
+            * Decimal  -> decimal|numeric
+            * dict     -> json|jsonb|nvarchar|varchar|string|etc
+            * float    -> float|real|numeric
+            * int      -> int|integer|smallint|bigint|tinyint|etc
+            * list     -> json|jsonb|nvarchar|varchar|string|etc
+            * str      -> varchar|text|nvarchar|char|etc
+            * time     -> time|nvarchar|varchar|string|etc
+            * tuple    -> array(Postgres Native) or string for others
+            * UUID     -> uuid|varchar|text|nvarchar|etc
+            * None     -> null
+        ```
+
+        #### SQL with Parameters syntax
+            * SQL: `SELECT * FROM table WHERE id = :id`
+            * Parameters: `{"id": 1}`
 
         ---
         ### Example
@@ -313,9 +443,13 @@ class PySQLXEngine:
         """
         ...
     @overload
-    async def query_first(self, sql: LiteralString, model: Type["Model"] = None) -> Optional[Type["Model"]]: ...
+    async def query_first(
+        self, sql: str, parameters: DictParam = None, model: Type["Model"] = None
+    ) -> Type["Model"]: ...
     # dict
-    async def query_first_as_dict(self, sql: LiteralString) -> Optional[Dict[str, Any]]:
+    async def query_first_as_dict(
+        self, sql: LiteralString, parameters: Optional[DictParam] = None
+    ) -> Optional[Dict[str, Any]]:
         """
         ## Description
         Returns the first row of the query result with Dict or None case result is empty.
@@ -329,9 +463,53 @@ class PySQLXEngine:
 
                 `sql(str)`: sql to be executed
 
+                `parameters(dict)`: (Default is None) parameters to be passed to the query, if the query has parameters.
+                parameters must be a dictionary with the name of the parameter and the value.
+
             * Returns: `Optional[Dict[str, Any]]`: a Dict or None
 
             * Raises: `QueryError`, `TypeError`
+
+        #### Parameters Helper
+        ##### Parameters(dict):
+
+            * dict `key` must be a valid string.
+            * dict `value` can be a types: (
+                `bool`,
+                `bytes`,
+                `date`,
+                `datetime`,
+                `Decimal`,
+                `dict`,
+                `float`,
+                `int`,
+                `list`,
+                `str`,
+                `time`,
+                `tuple`,
+                `UUID`
+            )
+
+        ##### Python types vs SQL types:
+        ```
+            * bool     -> bool|bit|boolean|tinyint|etc
+            * bytes    -> bytea|binary|varbinary
+            * date     -> date|nvarchar|varchar|string|etc
+            * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
+            * Decimal  -> decimal|numeric
+            * dict     -> json|jsonb|nvarchar|varchar|string|etc
+            * float    -> float|real|numeric
+            * int      -> int|integer|smallint|bigint|tinyint|etc
+            * list     -> json|jsonb|nvarchar|varchar|string|etc
+            * str      -> varchar|text|nvarchar|char|etc
+            * time     -> time|nvarchar|varchar|string|etc
+            * tuple    -> array(Postgres Native) or string for others
+            * UUID     -> uuid|varchar|text|nvarchar|etc
+        ```
+
+        #### SQL vs Parameters syntax
+            * SQL: `SELECT * FROM table WHERE id = :id`
+            * Parameters: `{"id": 1}`
 
         ---
         ### Example
@@ -347,16 +525,64 @@ class PySQLXEngine:
         """
         ...
     # --
-    async def execute(self, sql: LiteralString) -> "int":
+    async def execute(self, sql: LiteralString, parameters: Optional[DictParam] = None) -> "int":
         """
         ## Description
         Executes a query/sql and returns the number of rows affected.
 
-        * Arguments: `sql(str)`:  sql to be executed
+        #### Helper
 
-        * Returns: `int`: number of rows affected
+            * Arguments:
 
-        * Raises: `ExecuteError`
+                `sql(str)`:  sql to be executed
+
+                `parameters(dict)`: (Default is None) parameters to be passed to the query, if the query has parameters.
+                parameters must be a dictionary with the name of the parameter and the value.
+
+            * Returns: `int`: number of rows affected
+
+            * Raises: `ExecuteError`
+
+        #### Parameters Helper
+        ##### Parameters(dict):
+
+            * dict `key` must be a valid string.
+            * dict `value` can be a types: (
+                `bool`,
+                `bytes`,
+                `date`,
+                `datetime`,
+                `Decimal`,
+                `dict`,
+                `float`,
+                `int`,
+                `list`,
+                `str`,
+                `time`,
+                `tuple`,
+                `UUID`
+            )
+
+        ##### Python types vs SQL types:
+        ```
+            * bool     -> bool|bit|boolean|tinyint|etc
+            * bytes    -> bytea|binary|varbinary
+            * date     -> date|nvarchar|varchar|string|etc
+            * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
+            * Decimal  -> decimal|numeric
+            * dict     -> json|jsonb|nvarchar|varchar|string|etc
+            * float    -> float|real|numeric
+            * int      -> int|integer|smallint|bigint|tinyint|etc
+            * list     -> json|jsonb|nvarchar|varchar|string|etc
+            * str      -> varchar|text|nvarchar|char|etc
+            * time     -> time|nvarchar|varchar|string|etc
+            * tuple    -> array(Postgres Native) or string for others
+            * UUID     -> uuid|varchar|text|nvarchar|etc
+        ```
+
+        #### SQL vs Parameters syntax
+            * SQL: `SELECT * FROM table WHERE id = :id`
+            * Parameters: `{"id": 1}`
 
         ---
         ### Example
