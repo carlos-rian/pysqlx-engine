@@ -22,11 +22,10 @@ def try_str(_p: PROVIDER, value: str, _f: str = "") -> str:
 
 
 @lru_cache(maxsize=None)
-def try_int(_p: PROVIDER, value: int, _f: str = "") -> int:
+def try_int(_p: PROVIDER, value: int, _f: str = "") -> str:
     return f"{value}"
 
 
-@lru_cache(maxsize=None)
 def try_json(provider: PROVIDER, value: Union[Dict[str, Any], List[Dict[str, Any]]], field: str = "") -> str:
     try:
         return f"'{dumps(value, ensure_ascii=False, default=str)}'"
@@ -57,8 +56,8 @@ def try_datetime(_p: PROVIDER, value: datetime, _f: str = "") -> str:
 
 
 @lru_cache(maxsize=None)
-def try_float(_p: PROVIDER, value: float, _f: str = "") -> float:
-    return value
+def try_float(_p: PROVIDER, value: float, _f: str = "") -> str:
+    return f"{value}"
 
 
 @lru_cache(maxsize=None)
@@ -131,14 +130,13 @@ def get_method(typ: Type) -> Callable:
     return METHODS.get(typ, try_str)
 
 
-@lru_cache(maxsize=None)
 def convert(
     provider: PROVIDER,
     value: Union[
-        bool, str, int, Dict[str, Any], List[Dict[str, Any]], UUID, time, date, datetime, float, bytes, Decimal
+        bool, str, int, Dict[str, Any], List[Dict[str, Any]], UUID, time, date, datetime, float, bytes, Decimal, None
     ],
     field: str = "",
-) -> Union[int, float, str]:
+) -> str:
     if value is None:
         return "NULL"
 
