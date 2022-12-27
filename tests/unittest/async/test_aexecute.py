@@ -1,7 +1,6 @@
 import pytest
 
 from pysqlx_engine import PySQLXEngine
-from decimal import Decimal
 from pysqlx_engine.errors import ExecuteError
 from tests.common import adb_mssql, adb_mysql, adb_pgsql, adb_sqlite
 

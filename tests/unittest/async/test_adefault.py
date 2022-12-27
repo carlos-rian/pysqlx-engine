@@ -168,8 +168,7 @@ def test_force_sync():
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("db", [adb_pgsql])
-async def test_py_sqlx_error_json_fmt_no_colorize(db):
+async def test_py_sqlx_error_json_fmt_no_colorize():
 
     CONFIG.PYSQLX_MSG_COLORIZE = False
     CONFIG.PYSQLX_ERROR_JSON_FMT = True
@@ -195,8 +194,7 @@ async def test_py_sqlx_error_json_fmt_no_colorize(db):
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("db", [adb_pgsql])
-async def test_py_sqlx_error_json_fmt_with_colorize(db):
+async def test_py_sqlx_error_json_fmt_with_colorize():
 
     CONFIG.PYSQLX_MSG_COLORIZE = True
     CONFIG.PYSQLX_ERROR_JSON_FMT = True

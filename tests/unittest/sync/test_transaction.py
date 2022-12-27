@@ -1,8 +1,4 @@
-from io import StringIO
-from os import environ
-
 import pytest
-from dotenv import load_dotenv
 
 from pysqlx_engine import PySQLXEngineSync
 from pysqlx_engine._core.const import CONFIG

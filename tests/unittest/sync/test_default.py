@@ -3,7 +3,7 @@ import os
 import pytest
 
 from pysqlx_engine import PySQLXEngineSync
-from pysqlx_engine._core.errors import ParameterInvalidProviderError, ParameterInvalidValueError
+from pysqlx_engine._core.errors import ParameterInvalidValueError
 from pysqlx_engine._core.until import force_sync, pysqlx_get_error
 from pysqlx_engine.errors import (
     AlreadyConnectedError,
