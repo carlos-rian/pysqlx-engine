@@ -56,21 +56,17 @@ class PySQLXEngineSync(_PySQLXEngine):
     async def set_isolation_level(self, isolation_level: ISOLATION_LEVEL):
         await (super()).set_isolation_level(isolation_level=isolation_level)
 
-    def begin(self):
-        self.start_transaction()
+    @force_sync
+    async def begin(self):
+        await (super()).begin()
 
-    def commit(self):
-        self._pre_validate()
-        if self._provider == "sqlserver":
-            self.raw_cmd(sql="COMMIT TRANSACTION;")
-        else:
-            self.raw_cmd(sql="COMMIT;")
+    @force_sync
+    async def commit(self):
+        await (super()).commit()
 
-    def rollback(self):
-        if self._provider == "sqlserver":
-            self.raw_cmd(sql="ROLLBACK TRANSACTION;")
-        else:
-            self.raw_cmd(sql="ROLLBACK;")
+    @force_sync
+    async def rollback(self):
+        await (super()).rollback()
 
     @force_sync
     async def start_transaction(self, isolation_level: Optional[ISOLATION_LEVEL] = None):
