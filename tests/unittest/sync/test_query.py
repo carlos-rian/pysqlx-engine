@@ -1,10 +1,12 @@
-from datetime import datetime
+from datetime import datetime, date
+import uuid
 
 import pytest
 from pydantic import BaseModel
 
 from pysqlx_engine import BaseRow, PySQLXEngineSync
-from pysqlx_engine._core.errors import QueryError
+from pysqlx_engine._core.const import CONFIG
+from pysqlx_engine._core.errors import ParameterInvalidProviderError, ParameterInvalidValueError, QueryError
 from tests.common import db_mssql, db_mysql, db_pgsql, db_sqlite
 
 
@@ -494,8 +496,7 @@ def test_query_with_my_model_get_columns(db):
     assert columns["name"] == str
 
 
-@pytest.mark.parametrize("db", [db_pgsql])
-def test_invalid_sql_type(db):
+def test_invalid_sql_type_db_pgsql(db: PySQLXEngineSync = db_pgsql):
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
@@ -510,6 +511,322 @@ def test_invalid_sql_type(db):
 
     with pytest.raises(TypeError):
         conn.execute(sql=[])
+
+    conn.close()
+    assert conn.connected is False
+
+
+# new tests
+def test_sample_query_first_with_param_db_pgsql(db: PySQLXEngineSync = db_pgsql):
+    from datetime import datetime, date
+
+    CONFIG.PYSQLX_SQL_LOG = True
+
+    conn: PySQLXEngineSync = db()
+    assert conn.connected is True
+
+    sql = f"""
+        SELECT 
+        :id                             AS id, 
+        :name                           AS name, 
+        :age                            AS age,
+        CAST(:bytes AS bytea)           AS bytes,
+        CAST(:uuid AS UUID)             AS uid,
+        CAST(:is_active AS BOOL)        AS is_active, 
+        CAST(:created_at AS TIMESTAMP)  AS created_at, 
+        CAST(:updated_at AS TIMESTAMP)  AS updated_at, 
+        CAST(:date AS DATE)             AS date;
+    """
+    parameters = {
+        "id": 1,
+        "name": "John Doe",
+        "age": 30,
+        "bytes": b"1234567890",
+        "uuid": uuid.uuid4(),
+        "is_active": True,
+        "created_at": datetime.fromisoformat("2021-01-01 00:00:00"),
+        "updated_at": datetime.fromisoformat("2021-01-01 00:00:00"),
+        "date": date.fromisoformat("2021-01-01"),
+    }
+
+    resp = conn.query_first(sql=sql, parameters=parameters)
+
+    assert resp.id == 1
+    assert resp.name == "John Doe"
+    assert resp.age == 30
+    assert resp.bytes == b"1234567890"
+    assert isinstance(resp.uid, uuid.UUID)
+    assert resp.is_active is True
+    assert isinstance(resp.created_at, datetime)
+    assert isinstance(resp.updated_at, datetime)
+    assert isinstance(resp.date, (date, datetime))
+
+
+def test_sample_query_first_with_param_db_mssql(db: PySQLXEngineSync = db_mssql):
+
+    CONFIG.PYSQLX_SQL_LOG = True
+
+    conn: PySQLXEngineSync = db()
+    assert conn.connected is True
+
+    sql = f"""
+        SELECT 
+        :id                             AS id, 
+        :name                           AS name, 
+        :age                            AS age,
+        :bytes                          AS bytes,
+        CAST(:uuid AS UNIQUEIDENTIFIER) AS uid,
+        CAST(:is_active AS BIT)         AS is_active, 
+        CAST(:created_at AS DATETIME)   AS created_at, 
+        CAST(:updated_at AS DATETIME)   AS updated_at, 
+        CAST(:date AS DATE)             AS date;
+    """
+    parameters = {
+        "id": 1,
+        "name": "John Doe",
+        "age": 30,
+        "bytes": b"1234567890",
+        "uuid": uuid.uuid4(),
+        "is_active": True,
+        "created_at": datetime.fromisoformat("2021-01-01 00:00:00"),
+        "updated_at": datetime.fromisoformat("2021-01-01 00:00:00"),
+        "date": date.fromisoformat("2021-01-01"),
+    }
+
+    resp = conn.query_first(sql=sql, parameters=parameters)
+
+    assert resp.id == 1
+    assert resp.name == "John Doe"
+    assert resp.age == 30
+    assert resp.bytes == b"1234567890"
+    assert isinstance(resp.uid, uuid.UUID)
+    assert resp.is_active is True
+    assert isinstance(resp.created_at, datetime)
+    assert isinstance(resp.updated_at, datetime)
+    assert isinstance(resp.date, (date, datetime))
+
+
+def test_sample_query_first_with_param_db_mysql(db: PySQLXEngineSync = db_mysql):
+    from datetime import datetime, date
+
+    CONFIG.PYSQLX_SQL_LOG = True
+
+    conn: PySQLXEngineSync = db()
+    assert conn.connected is True
+
+    sql = f"""
+        SELECT 
+        :id                           AS id, 
+        :name                         AS name, 
+        :age                          AS age, 
+        :null_value                   AS null_value,
+        CAST(:created_at              AS DATETIME) AS created_at, 
+        CAST(:updated_at              AS DATETIME) AS updated_at, 
+        CAST(:date AS DATE)           AS date;
+    """
+    parameters = {
+        "id": 1,
+        "name": "John Doe",
+        "age": 30,
+        "null_value": None,
+        "created_at": datetime.fromisoformat("2021-01-01 00:00:00"),
+        "updated_at": datetime.fromisoformat("2021-01-01 00:00:00"),
+        "date": date.fromisoformat("2021-01-01"),
+    }
+
+    resp = conn.query_first(sql=sql, parameters=parameters)
+
+    assert resp.id == 1
+    assert resp.name == "John Doe"
+    assert resp.age == 30
+    assert isinstance(resp.created_at, datetime)
+    assert isinstance(resp.updated_at, datetime)
+    assert isinstance(resp.date, (date, datetime))
+
+
+def test_sample_query_first_with_param_db_sqlite(db: PySQLXEngineSync = db_sqlite):
+
+    CONFIG.PYSQLX_SQL_LOG = True
+
+    conn: PySQLXEngineSync = db()
+    assert conn.connected is True
+
+    sql = f"""
+        SELECT 
+        :id                     AS id, 
+        :name                   AS name, 
+        :age                    AS age, 
+        :null_value             AS null_value,
+        CAST(:bytes AS BLOB)    AS bytes,
+        :created_at             AS created_at, 
+        :updated_at             AS updated_at, 
+        :date                   AS date;
+    """
+    parameters = {
+        "id": 1,
+        "name": "John Doe",
+        "age": 30,
+        "null_value": None,
+        "bytes": b"1234567890",
+        "created_at": datetime.fromisoformat("2021-01-01 00:00:00"),
+        "updated_at": datetime.fromisoformat("2021-01-01 00:00:00"),
+        "date": date.fromisoformat("2021-01-01"),
+    }
+
+    resp = conn.query_first(sql=sql, parameters=parameters)
+
+    assert resp.id == 1
+    assert resp.name == "John Doe"
+    assert resp.age == 30
+    assert resp.bytes == b"1234567890"
+    assert resp.created_at == "2021-01-01 00:00:00"
+    assert resp.updated_at == "2021-01-01 00:00:00"
+    assert resp.date == "2021-01-01"
+
+
+def test_invalid_param_type_db_pgsql(db: PySQLXEngineSync = db_pgsql):
+    conn: PySQLXEngineSync = db()
+    assert conn.connected is True
+
+    CONFIG.PYSQLX_MSG_COLORIZE = True
+    CONFIG.PYSQLX_SQL_LOG = True
+
+    sql = f"SELECT :id AS id"
+
+    class MyType:
+        i = 1
+
+    with pytest.raises(TypeError):
+        conn.query_first(sql=sql, parameters={"id": MyType()})
+
+    conn.close()
+    assert conn.connected is False
+
+
+def test_invalid_param_array_with_heterogeneous_types_db_pgsql(db: PySQLXEngineSync = db_pgsql):
+    conn: PySQLXEngineSync = db()
+    assert conn.connected is True
+
+    CONFIG.PYSQLX_ERROR_JSON_FMT = False
+    CONFIG.PYSQLX_MSG_COLORIZE = False
+    CONFIG.PYSQLX_SQL_LOG = False
+
+    sql = f"SELECT :tuple AS tuple"
+    parameters = {"tuple": (1, 2, 3.1)}
+
+    with pytest.raises(ParameterInvalidValueError):
+        conn.query_first(sql=sql, parameters=parameters)
+
+    CONFIG.PYSQLX_ERROR_JSON_FMT = True
+    CONFIG.PYSQLX_MSG_COLORIZE = True
+    CONFIG.PYSQLX_SQL_LOG = True
+
+    with pytest.raises(ParameterInvalidValueError):
+        conn.query_first(sql=sql, parameters=parameters)
+
+    conn.close()
+    assert conn.connected is False
+
+
+def test_invalid_param_array_with_same_types_but_not_supported_db_pgsql(db: PySQLXEngineSync = db_pgsql):
+    conn: PySQLXEngineSync = db()
+    assert conn.connected is True
+
+    CONFIG.PYSQLX_ERROR_JSON_FMT = False
+    CONFIG.PYSQLX_MSG_COLORIZE = False
+    CONFIG.PYSQLX_SQL_LOG = False
+
+    class MyType:
+        i = 1
+
+    sql = f"SELECT :tuple AS tuple"
+    parameters = {"tuple": (MyType(), MyType(), MyType())}
+
+    with pytest.raises(ParameterInvalidProviderError):
+        conn.query_first(sql=sql, parameters=parameters)
+
+    CONFIG.PYSQLX_ERROR_JSON_FMT = True
+    CONFIG.PYSQLX_MSG_COLORIZE = True
+    CONFIG.PYSQLX_SQL_LOG = True
+
+    with pytest.raises(ParameterInvalidProviderError):
+        conn.query_first(sql=sql, parameters=parameters)
+
+    conn.close()
+    assert conn.connected is False
+
+
+def test_valid_param_with_empty_array_db_pgsql(db: PySQLXEngineSync = db_pgsql):
+    conn: PySQLXEngineSync = db()
+    assert conn.connected is True
+
+    sql = f"SELECT cast(:tuple as int[]) AS tuple"
+    parameters = {"tuple": tuple()}
+
+    resp = conn.query_first(sql=sql, parameters=parameters)
+    assert resp.tuple == ()
+
+    conn.close()
+    assert conn.connected is False
+
+
+def test_valid_param_with_int_array_db_pgsql(db: PySQLXEngineSync = db_pgsql):
+    conn: PySQLXEngineSync = db()
+    assert conn.connected is True
+
+    sql = f"SELECT cast(:tuple as int[]) AS tuple"
+    parameters = {"tuple": (1, 2, 3, 4, 5)}
+
+    resp = conn.query_first(sql=sql, parameters=parameters)
+    assert resp.tuple == (1, 2, 3, 4, 5)
+
+    conn.close()
+    assert conn.connected is False
+
+
+def test_valid_param_with_float_array_db_pgsql(db: PySQLXEngineSync = db_pgsql):
+    conn: PySQLXEngineSync = db()
+    assert conn.connected is True
+
+    sql = f"SELECT cast(:tuple as float[]) AS tuple"
+    parameters = {"tuple": (1.3, 2.4, 3.5, 4.1, 5.2)}
+
+    resp = conn.query_first(sql=sql, parameters=parameters)
+    assert isinstance(resp.tuple, tuple)
+    assert resp.tuple == (1.3, 2.4, 3.5, 4.1, 5.2)
+
+    conn.close()
+    assert conn.connected is False
+
+
+@pytest.mark.parametrize("db", [db_sqlite, db_mssql, db_mysql])
+def test_invalid_provider_to_array_param(db: PySQLXEngineSync):
+    conn: PySQLXEngineSync = db()
+    assert conn.connected is True
+
+    CONFIG.PYSQLX_MSG_COLORIZE = True
+    CONFIG.PYSQLX_SQL_LOG = True
+
+    sql = f"SELECT :tuple AS tuple"
+    parameters = {"tuple": (1, 2, 3)}
+
+    with pytest.raises(ParameterInvalidProviderError):
+        conn.query_first(sql=sql, parameters=parameters)
+
+    conn.close()
+    assert conn.connected is False
+
+
+def test_sample_param_type_db_pgsql_show_sql_colored(db: PySQLXEngineSync = db_pgsql):
+    conn: PySQLXEngineSync = db()
+    assert conn.connected is True
+
+    CONFIG.PYSQLX_MSG_COLORIZE = True
+    CONFIG.PYSQLX_SQL_LOG = True
+
+    sql = f"SELECT :id AS id"
+
+    conn.query_first(sql=sql, parameters={"id": 1})
 
     conn.close()
     assert conn.connected is False
