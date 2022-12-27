@@ -3,10 +3,10 @@ from decimal import Decimal
 from os import getenv
 from uuid import UUID
 from pydantic.types import Json
-from typing_extensions import Literal, LiteralString as ls
 from pydantic import BaseConfig
+from typing_extensions import Literal
 
-LiteralString = ls
+LiteralString = str
 
 TYPES_OUT = {
     "bool": bool,
@@ -41,6 +41,18 @@ CODE_ParameterInvalidValueError = "PYSQLX004"
 class _Config(BaseConfig):
     PYSQLX_SQL_LOG: bool = getenv("PYSQLX_SQL_LOG", "0") != "0"
     PYSQLX_MSG_COLORIZE: bool = getenv("PYSQLX_MSG_COLORIZE", "0") != "0"
+    if PYSQLX_MSG_COLORIZE:
+        try:
+            from pygments import highlight
+        except ImportError:
+            raise ImportError(
+                """
+                You must install the pygments package to use colorized messages.
+                To install it, run:
+                    pip install pygments
+                """
+            )
+
     PYSQLX_ERROR_JSON_FMT: bool = getenv("PYSQLX_ERROR_JSON_FMT", "0") != "0"
 
 
