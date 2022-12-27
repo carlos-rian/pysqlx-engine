@@ -1,11 +1,12 @@
 from functools import lru_cache
 import json
 
+from .const import CONFIG
+
 from pygments import highlight
 from pygments.formatters import TerminalFormatter
 from pygments.lexers import JsonLexer, PythonLexer
 from pygments.lexers.sql import SqlLexer
-from .const import CONFIG
 
 
 def _colorizer_json_message(dumps: str):
