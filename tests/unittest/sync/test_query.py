@@ -518,8 +518,6 @@ def test_invalid_sql_type_db_pgsql(db: PySQLXEngineSync = db_pgsql):
 
 # new tests
 def test_sample_query_first_with_param_db_pgsql(db: PySQLXEngineSync = db_pgsql):
-    from datetime import datetime, date
-
     CONFIG.PYSQLX_SQL_LOG = True
 
     conn: PySQLXEngineSync = db()
@@ -560,6 +558,9 @@ def test_sample_query_first_with_param_db_pgsql(db: PySQLXEngineSync = db_pgsql)
     assert isinstance(resp.created_at, datetime)
     assert isinstance(resp.updated_at, datetime)
     assert isinstance(resp.date, (date, datetime))
+
+    conn.close()
+    assert conn.connected is False
 
 
 def test_sample_query_first_with_param_db_mssql(db: PySQLXEngineSync = db_mssql):
@@ -605,10 +606,11 @@ def test_sample_query_first_with_param_db_mssql(db: PySQLXEngineSync = db_mssql)
     assert isinstance(resp.updated_at, datetime)
     assert isinstance(resp.date, (date, datetime))
 
+    conn.close()
+    assert conn.connected is False
+
 
 def test_sample_query_first_with_param_db_mysql(db: PySQLXEngineSync = db_mysql):
-    from datetime import datetime, date
-
     CONFIG.PYSQLX_SQL_LOG = True
 
     conn: PySQLXEngineSync = db()
@@ -642,6 +644,9 @@ def test_sample_query_first_with_param_db_mysql(db: PySQLXEngineSync = db_mysql)
     assert isinstance(resp.created_at, datetime)
     assert isinstance(resp.updated_at, datetime)
     assert isinstance(resp.date, (date, datetime))
+
+    conn.close()
+    assert conn.connected is False
 
 
 def test_sample_query_first_with_param_db_sqlite(db: PySQLXEngineSync = db_sqlite):
@@ -682,6 +687,9 @@ def test_sample_query_first_with_param_db_sqlite(db: PySQLXEngineSync = db_sqlit
     assert resp.created_at == "2021-01-01 00:00:00"
     assert resp.updated_at == "2021-01-01 00:00:00"
     assert resp.date == "2021-01-01"
+
+    conn.close()
+    assert conn.connected is False
 
 
 def test_invalid_param_type_db_pgsql(db: PySQLXEngineSync = db_pgsql):
