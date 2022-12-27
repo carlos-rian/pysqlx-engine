@@ -38,8 +38,16 @@ def force_sync(fn: Callable[P, T]) -> Callable[P, T]:
     @functools.wraps(fn)
     def wrapper(*args: P.args, **kwds: P.kwargs) -> T:
         res = fn(*args, **kwds)
-        if asyncio.iscoroutine(res):
-            return asyncio.get_event_loop().run_until_complete(res)
+        loop = asyncio.get_event_loop()
+
+        # if loop is already running, we don't need to run it again
+        if loop.is_running():
+            return res
+        # if the result is a coroutine, we need to run it in the loop synchronously
+        elif asyncio.iscoroutine(res):
+            return loop.run_until_complete(res)
+
+        # case the result is not a coroutine, we just return it
         return res
 
     return wrapper
