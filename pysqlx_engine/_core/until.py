@@ -23,8 +23,12 @@ from datetime import date, datetime, time
 from functools import lru_cache
 from decimal import Decimal
 from uuid import UUID
+import logging
 
 from typing import Callable, TypeVar
+
+logger = logging.getLogger(__name__)
+
 
 P = ParamSpec("P")
 T = TypeVar("T")
@@ -104,9 +108,10 @@ def build_sql(provider: str, sql: str, parameters: dict = None) -> str:
         param_as_list_of_tuples.sort(key=lambda x: x[0], reverse=True)
 
         for key, value in param_as_list_of_tuples:
-            new_sql = new_sql.replace(f":{key}", value)
+            new_sql = new_sql.replace(f":{key}", str(value))
 
         if CONFIG.PYSQLX_SQL_LOG:
-            print(fe_sql(sql=new_sql), flush=True)
+            logger.setLevel(logging.INFO)
+            logger.info(fe_sql(sql=new_sql))
 
     return new_sql
