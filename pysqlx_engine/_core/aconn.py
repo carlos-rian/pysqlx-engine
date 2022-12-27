@@ -9,7 +9,7 @@ from .._core.parser import (
     ParserIn,
     ParserSQL,
 )  # import necessary using _core to not subscribe default parser
-from .const import ISOLATION_LEVEL, LiteralString
+from .const import ISOLATION_LEVEL
 from .until import check_isolation_level, check_sql_and_parameters, pysqlx_get_error
 
 
@@ -73,14 +73,14 @@ class PySQLXEngine:
             self._conn = None
             self.connected = False
 
-    async def raw_cmd(self, sql: LiteralString):
+    async def raw_cmd(self, sql: str):
         self._pre_validate(sql=sql)
         try:
             return await self._conn.raw_cmd(sql=sql)
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
-    async def query(self, sql: LiteralString, model: Model = None, parameters: Optional[dict] = None):
+    async def query(self, sql: str, parameters: Optional[dict] = None, model: Optional[Model] = None):
         self._pre_validate(sql=sql, parameters=parameters)
         try:
             if model is not None and not issubclass(model, BaseRow):
@@ -91,7 +91,7 @@ class PySQLXEngine:
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
-    async def query_as_dict(self, sql: LiteralString, parameters: Optional[dict] = None):
+    async def query_as_dict(self, sql: str, parameters: Optional[dict] = None):
         self._pre_validate(sql=sql, parameters=parameters)
         try:
             parse = ParserSQL(provider=self._provider, sql=sql, parameters=parameters)
@@ -99,7 +99,7 @@ class PySQLXEngine:
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
-    async def query_first(self, sql: LiteralString, model: Model = None, parameters: Optional[dict] = None):
+    async def query_first(self, sql: str, parameters: Optional[dict] = None, model: Optional[Model] = None):
         self._pre_validate(sql=sql, parameters=parameters)
         try:
             if model is not None and not issubclass(model, BaseRow):
@@ -111,7 +111,7 @@ class PySQLXEngine:
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
-    async def query_first_as_dict(self, sql: LiteralString, parameters: Optional[dict] = None):
+    async def query_first_as_dict(self, sql: str, parameters: Optional[dict] = None):
         self._pre_validate(sql=sql, parameters=parameters)
         try:
             parse = ParserSQL(provider=self._provider, sql=sql, parameters=parameters)
@@ -120,7 +120,7 @@ class PySQLXEngine:
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
-    async def execute(self, sql: LiteralString, parameters: Optional[dict] = None):
+    async def execute(self, sql: str, parameters: Optional[dict] = None):
         self._pre_validate(sql=sql, parameters=parameters)
         try:
             parse = ParserSQL(provider=self._provider, sql=sql, parameters=parameters)
@@ -161,7 +161,7 @@ class PySQLXEngine:
 
     def _pre_validate(
         self,
-        sql: LiteralString = None,
+        sql: str = None,
         parameters: Optional[dict] = None,
         isolation_level: Optional[ISOLATION_LEVEL] = None,
     ):

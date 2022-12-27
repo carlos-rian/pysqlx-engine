@@ -1,7 +1,7 @@
 from typing import Optional
 
 from .._core.parser import Model  # import necessary using _core to not subscribe default parser
-from .const import ISOLATION_LEVEL, LiteralString
+from .const import ISOLATION_LEVEL
 from .until import force_sync
 from .aconn import PySQLXEngine as _PySQLXEngine
 
@@ -29,27 +29,27 @@ class PySQLXEngineSync(_PySQLXEngine):
         await (super()).close()
 
     @force_sync
-    async def raw_cmd(self, sql: LiteralString):
+    async def raw_cmd(self, sql: str):
         return await (super()).raw_cmd(sql=sql)
 
     @force_sync
-    async def query(self, sql: LiteralString, model: Model = None, parameters: Optional[dict] = None):
+    async def query(self, sql: str, parameters: Optional[dict] = None, model: Optional[Model] = None):
         return await (super()).query(sql=sql, parameters=parameters, model=model)
 
     @force_sync
-    async def query_as_dict(self, sql: LiteralString, parameters: Optional[dict] = None):
+    async def query_as_dict(self, sql: str, parameters: Optional[dict] = None):
         return await (super()).query_as_dict(sql=sql, parameters=parameters)
 
     @force_sync
-    async def query_first(self, sql: LiteralString, model: Model = None, parameters: Optional[dict] = None):
+    async def query_first(self, sql: str, parameters: Optional[dict] = None, model: Optional[Model] = None):
         return await (super()).query_first(sql=sql, parameters=parameters, model=model)
 
     @force_sync
-    async def query_first_as_dict(self, sql: LiteralString, parameters: Optional[dict] = None):
+    async def query_first_as_dict(self, sql: str, parameters: Optional[dict] = None):
         return await (super()).query_first_as_dict(sql=sql, parameters=parameters)
 
     @force_sync
-    async def execute(self, sql: LiteralString, parameters: Optional[dict] = None):
+    async def execute(self, sql: str, parameters: Optional[dict] = None):
         return await (super()).execute(sql=sql, parameters=parameters)
 
     @force_sync
