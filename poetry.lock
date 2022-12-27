@@ -200,7 +200,7 @@ email = ["email-validator (>=1.0.3)"]
 name = "pygments"
 version = "2.13.0"
 description = "Pygments is a syntax highlighting package written in Python."
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6"
 
@@ -349,7 +349,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "flake8 (<5)", "pytest-co
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "e0eb7ac3fd8e236b632d15788b3728425c0df6caac7f4b11c04c8daf4f516677"
+content-hash = "b1a7058cae54909e6273c3d54b7647b733c4e51046b6e41cc7839dc341784374"
 
 [metadata.files]
 attrs = []
