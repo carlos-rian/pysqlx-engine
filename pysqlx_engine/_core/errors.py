@@ -168,23 +168,19 @@ class ParameterInvalidProviderError(Exception):
         self.provider = provider
         self.type = typ
 
+        message = f"the provider '{self.provider}' does not support the type '{self.type}'."
+
         if CONFIG.PYSQLX_ERROR_JSON_FMT:
             msg = fe_json(
                 {
                     "code": CODE_ParameterInvalidProviderError,
-                    "message": (
-                        f"the pysqlx-engine for provider '{self.provider}' does not support converting, "
-                        f"the type '{self.type}' is not supported."
-                    ),
+                    "message": message,
                     "error": "ParameterInvalidError",
                 }
             )
             super().__init__(msg)
         else:
-            msg = (
-                f"ParameterInvalidError(code='{CODE_ParameterInvalidProviderError}', "
-                f"message='the pysqlx-engine for provider '{self.provider}' does not support converting.')"
-            )
+            msg = f"ParameterInvalidError(code='{CODE_ParameterInvalidProviderError}', " f"message='{message}')"
             super().__init__(msg)
 
 
@@ -193,21 +189,24 @@ class ParameterInvalidValueError(Exception):
     Raised when the user tries to pass an invalid parameter to the sql.
     """
 
-    def __init__(self, field: str, provider: PROVIDER, typ_from: Any, typ_to: Any, details: str) -> None:
+    def __init__(self, field: str, provider: PROVIDER, typ_from: Any, typ_to: Any, details: str = None) -> None:
         self.field = field
         self.provider = provider
-        self.type_from = typ_from
-        self.type_to = typ_to
+        self.typ_from = typ_from
+        self.typ_to = typ_to
         self.details = details
+
+        message = (
+            f"pysqlx-engine for the provider: {self.provider} had an error converting the type "
+            f"'{self.typ_from}' to type '{self.typ_to}'. types supported: "
+            "(bool, bytes, date, datetime, Decimal, dict, float, int, list, str, time, tuple, UUID, None)."
+        )
 
         if CONFIG.PYSQLX_ERROR_JSON_FMT:
             msg = fe_json(
                 {
                     "code": CODE_ParameterInvalidValueError,
-                    "message": (
-                        f"the pysqlx-engine for provider '{self.provider}', "
-                        f"error converting value '{self.typ_from}' to type '{self.typ_to}'."
-                    ),
+                    "message": message,
                     "error": "ParameterInvalidError",
                     "details": details,
                 }
@@ -215,7 +214,7 @@ class ParameterInvalidValueError(Exception):
             super().__init__(msg)
         else:
             msg = (
-                f"ParameterInvalidError(code='{CODE_ParameterInvalidValueError}', message='the pysqlx-engine for "
-                f"provider '{self.provider}', error converting value '{self.typ_from}' to type '{self.typ_to}'."
+                f"ParameterInvalidError(code='{CODE_ParameterInvalidValueError}', "
+                f"message='{message}', details='{details}')"
             )
             super().__init__(msg)
