@@ -11,11 +11,16 @@ from .until import build_sql
 from .const import TYPES_OUT
 
 MyModel = TypeVar("MyModel", bound="BaseRow")
+
+JsonParam = Union[
+    Dict[str, Union[bool, str, int, UUID, time, date, datetime, float, bytes, Decimal, None]],
+    List[Dict[str, Union[bool, str, int, UUID, time, date, datetime, float, bytes, Decimal, None]]],
+    Dict,
+    List,
+]
 DictParam = Dict[
     str,
-    Union[
-        bool, str, int, Dict[str, Any], List[Dict[str, Any]], UUID, time, date, datetime, float, bytes, Decimal, None
-    ],
+    Union[bool, str, int, JsonParam, UUID, time, date, datetime, float, bytes, Decimal, None],
 ]
 
 
