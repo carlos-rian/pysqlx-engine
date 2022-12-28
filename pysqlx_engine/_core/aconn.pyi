@@ -40,7 +40,7 @@ class PySQLXEngine:
     ##### MySQL
     ```python
     uri = "mysql://user:pass@host:port/db?schema=sample"
-    conn = PySQLXEngine( uri=uri)
+    conn = PySQLXEngine(uri=uri)
     await conn.connect()
     ```
     ---
@@ -153,6 +153,7 @@ class PySQLXEngine:
             * Raises: ``ConnectError``
 
         ---
+
         ### Example
         ```python
             uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -241,7 +242,7 @@ class PySQLXEngine:
 
                 ``List[BaseRow] | List[MyModel] | List``: BaseRow list, MyModel list or empty list.
 
-            * Raises: QueryError | TypeError | ParameterInvalidProviderError | ParameterInvalidValueError | ParameterInvalidJsonValueError
+            * Raises: ``QueryError``|``TypeError`` | ``ParameterInvalidProviderError``|``ParameterInvalidValueError``|``ParameterInvalidJsonValueError``
 
         ---
 
@@ -294,6 +295,7 @@ class PySQLXEngine:
         ```
 
         ---
+
         ### Example
         ```python
             uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -338,7 +340,7 @@ class PySQLXEngine:
 
                 ``List[Dict[str, Any]] | List``: dict list or empty list.
 
-            * Raises: QueryError | TypeError | ParameterInvalidProviderError | ParameterInvalidValueError | ParameterInvalidJsonValueError
+            * Raises: ``QueryError``|``TypeError`` | ``ParameterInvalidProviderError``|``ParameterInvalidValueError``|``ParameterInvalidJsonValueError``
 
         ---
 
@@ -391,6 +393,7 @@ class PySQLXEngine:
         ```
 
         ---
+
         ### Example
         ```python
             uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -416,6 +419,8 @@ class PySQLXEngine:
         ## Description
         Returns first row from query result as ``BaseRow``, ``MyModel`` or ``None``.
 
+        ---
+
         ### Helper
             * Arguments:
 
@@ -429,7 +434,7 @@ class PySQLXEngine:
 
                 ``BaseRow | MyModel | None``: BaseRow, MyModel or None if no rows are found.
 
-            * Raises: QueryError | TypeError | ParameterInvalidProviderError | ParameterInvalidValueError | ParameterInvalidJsonValueError
+            * Raises: ``QueryError``|``TypeError`` | ``ParameterInvalidProviderError``|``ParameterInvalidValueError``|``ParameterInvalidJsonValueError``
 
         ---
 
@@ -482,17 +487,18 @@ class PySQLXEngine:
         ```
 
         ---
+
         ### Example
         ```python
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             db = PySQLXEngine(uri=uri)
             await db.connect()
 
-            result = await db.query("SELECT 1 as id, 'rian' as name")
+            result = await db.query_first("SELECT 1 as id, 'rian' as name")
             print(result)
             # output -> BaseRow(id=1, name='rian')
 
-            result = await db.query(sql="SELECT 1 as :id, 'rian' as name", parameters={"id": 1})
+            result = await db.query_first(sql="SELECT 1 as :id, 'rian' as name", parameters={"id": 1})
             print(result)
             # output -> BaseRow(id=1, name='rian')
 
@@ -509,7 +515,9 @@ class PySQLXEngine:
     async def query_first_as_dict(self, sql: str, parameters: Optional[DictParam] = None) -> Optional[Dict[str, Any]]:
         """
         ## Description
-        Returns all rows from query result as ``dict`` or ``None``.
+        Returns first row from query result as ``dict`` or ``None``.
+
+        ---
 
         ### Helper
             * Arguments:
@@ -522,7 +530,7 @@ class PySQLXEngine:
 
                 ``Dict[str, Any] | None``: dict or None.
 
-            * Raises: QueryError | TypeError | ParameterInvalidProviderError | ParameterInvalidValueError | ParameterInvalidJsonValueError
+            * Raises: ``QueryError``|``TypeError`` | ``ParameterInvalidProviderError``|``ParameterInvalidValueError``|``ParameterInvalidJsonValueError``
 
         ---
 
@@ -575,6 +583,7 @@ class PySQLXEngine:
         ```
 
         ---
+
         ### Example
         ```python
             uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -599,17 +608,19 @@ class PySQLXEngine:
         ## Description
         Executes a query/sql and returns the number of rows affected.
 
+        ---
+
         ### Helper
 
             * Arguments:
 
-                `sql(str)`:  sql to be executed.
+                ``sql(str)``:  sql to be executed.
 
-                `parameters(dict)`: (Default is None) parameters must be a dictionary with the name of the parameter and the value.
+                ``parameters(dict)``: (Default is None) parameters must be a dictionary with the name of the parameter and the value.
 
-            * Returns: `int`: number of rows affected.
+            * Returns: ``int``: number of rows affected.
 
-            * Raises: `ExecuteError`
+            * Raises: ``ExecuteError``|``TypeError`` | ``ParameterInvalidProviderError``|``ParameterInvalidValueError``|``ParameterInvalidJsonValueError``
 
         ### Parameters Helper
 
@@ -660,6 +671,7 @@ class PySQLXEngine:
         ```
 
         ---
+
         ### Example
         ```python
             uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -684,27 +696,33 @@ class PySQLXEngine:
 
         The Sqlite does not support the isolation level.
 
-        * Arguments: `isolation_level(str)`: isolation level to be set (
-            ReadUncommitted,
-            ReadCommitted,
-            RepeatableRead,
-            Snapshot,
-            Serializable
-        )
+        ---
 
-        * Returns: `None`
+        ### Helper
 
-        * Raises: `IsolationLevelError`, `ValueError`
+            * Arguments: ``isolation_level(str)``: isolation level to be set (
+                ReadUncommitted,
+                ReadCommitted,
+                RepeatableRead,
+                Snapshot,
+                Serializable
+            )
+
+            * Returns: ``None``
+
+            * Raises: ``IsolationLevelError``, ``ValueError``
 
         ---
+
         ### Example
         ```python
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             conn = PySQLXEngine(uri=uri)
             await conn.connect()
-            await conn.set_isolation_level(isolation_level="READ_COMMITTED")
+            await conn.set_isolation_level(isolation_level="ReadUncommitted")
         ```
         ---
+
         ### Isolation Level Help
             * [MSSQL](https://learn.microsoft.com/en-us/sql/t-sql/language-elements/transaction-isolation-levels)
             * [Postgres](https://www.postgresql.org/docs/current/sql-set-transaction.html)
@@ -715,17 +733,22 @@ class PySQLXEngine:
     async def begin(self) -> "None":
         """
         ## Description
-        Starts a transaction using `BEGIN`.
+        Starts a transaction using ``BEGIN``.
 
-        begin() is equivalent to start_transaction() without setting the isolation level.
-
-        * Arguments: `None`
-
-        * Returns: `None`
-
-        * Raises: `RawCmdError`
+        ``begin()`` is equivalent to `start_transaction()` without setting the isolation level.
 
         ---
+
+        ### Helper
+
+            * Arguments: ``None``
+
+            * Returns: ``None``
+
+            * Raises: ``RawCmdError``
+
+        ---
+
         ### Example
         ```python
             uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -746,13 +769,18 @@ class PySQLXEngine:
 
         The PySQLXEngine by default uses the `begin()` and `commit()` in all transactions.
 
-        * Arguments: `None`
+        ---
 
-        * Returns: `None`
+        ### Helper
 
-        * Raises: `RawCmdError`
+            * Arguments: ``None`
+
+            * Returns: ``None``
+
+            * Raises: ``RawCmdError``
 
         ---
+
         ### Example
         ```python
             uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -774,19 +802,24 @@ class PySQLXEngine:
         Rollback is used to cancel the transaction, when you uses the rollback,
         the transaction is canceled and the changes are not saved.
 
-        The `begin()` method must be called before calling `rollback()`.
+        The ``begin()`` method must be called before calling ``rollback()``.
 
-        If the database not need set the isolation level, maybe you can not use `begin()` and `rollback()`.
+        If the database not need set the isolation level, maybe you can not use ``begin()`` and ``rollback()``.
 
-        The PySQLXEngine by default try uses the `begin()` and `commit()` in all transactions.
-
-        * Arguments: `None`
-
-        * Returns: `None`
-
-        * Raises: `RawCmdError`
+        The PySQLXEngine by default try uses the ``begin()`` and ``commit()`` in all transactions.
 
         ---
+
+        ### Helper
+
+            * Arguments: ``None``
+
+            * Returns: ``None``
+
+            * Raises: ``RawCmdError``
+
+        ---
+
         ### Example
         ```python
             uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -803,25 +836,30 @@ class PySQLXEngine:
     async def start_transaction(self, isolation_level: Union[ISOLATION_LEVEL, None] = None) -> "None":
         """
         ## Description
-        Starts a transaction with BEGIN. by default, does not set the isolation level.
+        Starts a transaction with ``BEGIN/BEGIN TRANSACTION``. by default, does not set the isolation level.
 
-        The `Snapshot` isolation level is supported by MS SQL Server.
+        The ``Snapshot`` isolation level is supported by MS SQL Server.
 
         The Sqlite does not support the isolation level.
 
-        * Arguments: `isolation_level(str)`: by default is None. Isolation level to be set (
-            ReadUncommitted,
-            ReadCommitted,
-            RepeatableRead,
-            Snapshot,
-            Serializable
-        )
+        ---
 
-        * Returns: `None`
+        ### Helper
 
-        * Raises: (`IsolationLevelError`, `StartTransactionError` `ValueError`)
+            * Arguments: ``isolation_level(str)``: by default is None. Isolation level to be set (
+                ReadUncommitted,
+                ReadCommitted,
+                RepeatableRead,
+                Snapshot,
+                Serializable
+            )
+
+            * Returns: `None`
+
+            * Raises: (`IsolationLevelError`, `StartTransactionError` `ValueError`)
 
         ---
+
         ### Example
         ```python
             uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -834,7 +872,9 @@ class PySQLXEngine:
             # without isolation level
             await conn.start_transaction()
         ```
+
         ---
+
         ### Isolation Level Help
             * [MSSQL](https://learn.microsoft.com/en-us/sql/t-sql/language-elements/transaction-isolation-levels)
             * [Postgres](https://www.postgresql.org/docs/current/sql-set-transaction.html)
