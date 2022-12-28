@@ -5,7 +5,7 @@ from .errors import AlreadyConnectedError, NotConnectedError
 from .helper import model_parameter_error_message, not_connected_error_message
 from .._core.parser import (
     BaseRow,
-    Model,
+    MyModel,
     ParserIn,
     ParserSQL,
 )  # import necessary using _core to not subscribe default parser
@@ -80,13 +80,14 @@ class PySQLXEngine:
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
-    async def query(self, sql: str, parameters: Optional[dict] = None, model: Optional[Model] = None):
+    async def query(self, sql: str, parameters: Optional[dict] = None, model: Optional[MyModel] = None):
         self._pre_validate(sql=sql, parameters=parameters)
         try:
             if model is not None and not issubclass(model, BaseRow):
                 raise TypeError(model_parameter_error_message())
 
-            result = await self._conn.query(sql=sql)
+            parse = ParserSQL(provider=self._provider, sql=sql, parameters=parameters)
+            result = await self._conn.query(sql=parse.sql())
             return ParserIn(result=result, model=model).parse()
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
@@ -99,7 +100,7 @@ class PySQLXEngine:
         except pysqlx_core.PySQLXError as e:
             raise pysqlx_get_error(err=e)
 
-    async def query_first(self, sql: str, parameters: Optional[dict] = None, model: Optional[Model] = None):
+    async def query_first(self, sql: str, parameters: Optional[dict] = None, model: Optional[MyModel] = None):
         self._pre_validate(sql=sql, parameters=parameters)
         try:
             if model is not None and not issubclass(model, BaseRow):

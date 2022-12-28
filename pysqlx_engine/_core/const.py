@@ -6,7 +6,6 @@ from pydantic.types import Json
 from pydantic import BaseConfig
 from typing_extensions import Literal
 
-LiteralString = str
 
 TYPES_OUT = {
     "bool": bool,
@@ -36,6 +35,7 @@ CODE_AlreadyConnectedError = "PYSQLX001"
 CODE_PoolMaxConnectionsError = "PYSQLX002"
 CODE_ParameterInvalidProviderError = "PYSQLX003"
 CODE_ParameterInvalidValueError = "PYSQLX004"
+CODE_ParameterInvalidJsonValueError = "PYSQLX005"
 
 
 class _Config(BaseConfig):

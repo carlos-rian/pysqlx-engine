@@ -18,6 +18,7 @@ from pysqlx_core import PySQLXError as _PySQLXError
 from .const import (
     PROVIDER,
     CODE_AlreadyConnectedError,
+    CODE_ParameterInvalidJsonValueError,
     CODE_PoolMaxConnectionsError,
     CODE_ParameterInvalidProviderError,
     CODE_ParameterInvalidValueError,
@@ -216,5 +217,38 @@ class ParameterInvalidValueError(Exception):
             msg = (
                 f"ParameterInvalidError(code='{CODE_ParameterInvalidValueError}', "
                 f"message='{message}', details='{details}')"
+            )
+            super().__init__(msg)
+
+
+class ParameterInvalidJsonValueError(Exception):
+    """
+    Raised when the user tries to pass an invalid value parameter to convert json.
+    """
+
+    def __init__(self, typ_from: str, typ_to: str, details: str = None) -> None:
+        self.typ_from = typ_from
+        self.typ_to = typ_to
+        self.details = details
+
+        message = (
+            f"error to convert the type '{self.typ_from}' to json value. types supported: "
+            "(bool, bytes, date, datetime, Decimal, dict, float, int, list, str, time, tuple, UUID, None)."
+        )
+
+        if CONFIG.PYSQLX_ERROR_JSON_FMT:
+            msg = fe_json(
+                {
+                    "code": CODE_ParameterInvalidJsonValueError,
+                    "message": message,
+                    "error": "ParameterInvalidError",
+                    "details": details,
+                }
+            )
+            super().__init__(msg)
+        else:
+            msg = (
+                f"ParameterInvalidError(code='{CODE_ParameterInvalidJsonValueError}', "
+                f"message='{message}', details='{self.details}')"
             )
             super().__init__(msg)

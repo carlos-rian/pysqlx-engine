@@ -10,7 +10,7 @@ from uuid import UUID
 from .until import build_sql
 from .const import TYPES_OUT
 
-Model = TypeVar("Model", bound="BaseRow")
+MyModel = TypeVar("MyModel", bound="BaseRow")
 DictParam = Dict[
     str,
     Union[
@@ -54,9 +54,9 @@ class BaseRow(BaseModel):
 class ParserIn:
     __slots__ = ("result", "model")
 
-    def __init__(self, result: PySQLXResult, model: Model = None):
+    def __init__(self, result: PySQLXResult, model: MyModel = None):
         self.result: PySQLXResult = result
-        self.model: Model = model
+        self.model: MyModel = model
 
     def create_model(self) -> BaseRow:
         fields = {}

@@ -3,7 +3,8 @@ import os
 import pytest
 
 from pysqlx_engine import PySQLXEngineSync
-from pysqlx_engine._core.errors import ParameterInvalidValueError
+from pysqlx_engine._core.const import CONFIG
+from pysqlx_engine._core.errors import ParameterInvalidJsonValueError, ParameterInvalidValueError
 from pysqlx_engine._core.until import force_sync, pysqlx_get_error
 from pysqlx_engine.errors import (
     AlreadyConnectedError,
@@ -145,15 +146,26 @@ def test_invalid_convert_type_error_invalid_value():
 
 
 def test_invalid_convert_type_to_json_pgsql():
+    CONFIG.PYSQLX_ERROR_JSON_FMT = False
+    CONFIG.PYSQLX_MSG_COLORIZE = False
+    CONFIG.PYSQLX_SQL_LOG = False
+
     class MyType:
         i = 1
 
-    with pytest.raises(ParameterInvalidValueError):
-        param.try_json(provider="postgresql", value=MyType(), field="invalid_type")
+    with pytest.raises(ParameterInvalidJsonValueError):
+        param.try_json("postgresql", MyType(), "invalid_type")
+
+    CONFIG.PYSQLX_ERROR_JSON_FMT = True
+    CONFIG.PYSQLX_MSG_COLORIZE = True
+    CONFIG.PYSQLX_SQL_LOG = True
+
+    with pytest.raises(ParameterInvalidJsonValueError):
+        param.try_json("postgresql", MyType(), "invalid_type")
 
 
 def test_valid_json_convert_type_mysql():
-    value = param.try_json(provider="mysql", value=data, field="json")
+    value = param.try_json("mysql", data, "json")
 
     assert isinstance(value, str)
     assert value == (

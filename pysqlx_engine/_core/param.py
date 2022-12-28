@@ -6,7 +6,7 @@ from uuid import UUID
 from functools import lru_cache
 
 from .const import PROVIDER
-from .errors import ParameterInvalidProviderError, ParameterInvalidValueError
+from .errors import ParameterInvalidJsonValueError, ParameterInvalidProviderError, ParameterInvalidValueError
 
 
 @lru_cache(maxsize=None)
@@ -26,13 +26,8 @@ def try_int(_p: PROVIDER, value: int, _f: str = "") -> int:
     return value
 
 
-def try_json(provider: PROVIDER, value: Union[Dict[str, Any], List[Dict[str, Any]]], field: str = "") -> str:
-    try:
-        return f"'{json.dumps(value, ensure_ascii=False, cls=PySQLXJsonEnconder)}'"
-    except Exception as err:
-        raise ParameterInvalidValueError(
-            field=field, provider=provider, typ_from="dict|list", typ_to="json", details=str(err)
-        )
+def try_json(_p: PROVIDER, value: Union[Dict[str, Any], List[Dict[str, Any]]], _f: str = "") -> str:
+    return f"'{json.dumps(value, ensure_ascii=False, cls=PySQLXJsonEnconder)}'"
 
 
 @lru_cache(maxsize=None)
@@ -119,7 +114,14 @@ class PySQLXJsonEnconder(json.JSONEncoder):
         elif isinstance(obj, (UUID, time, date, datetime, Decimal)):
             return str(obj)
 
-        return super().default(obj)
+        try:
+            return super().default(obj)
+        except TypeError as err:
+            raise ParameterInvalidJsonValueError(
+                typ_from=type(obj),
+                typ_to="json",
+                details=str(err),
+            )
 
 
 def get_method(typ: Type) -> Callable:

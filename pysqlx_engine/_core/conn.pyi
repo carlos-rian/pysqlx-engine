@@ -1,8 +1,8 @@
 from types import TracebackType
 from typing import Any, Dict, List, Optional, Type, Union, overload
 
-from .._core.parser import BaseRow, Model  # import necessary using _core to not subscribe default parser
-from .const import ISOLATION_LEVEL, LiteralString
+from .._core.parser import BaseRow, MyModel  # import necessary using _core to not subscribe default parser
+from .const import ISOLATION_LEVEL
 
 class PySQLXEngineSync:
     """
@@ -172,7 +172,7 @@ class PySQLXEngineSync:
         ```
         """
         ...
-    def raw_cmd(self, sql: LiteralString) -> "None":
+    def raw_cmd(self, sql: str) -> "None":
         """
         ## Description
         Run a command in the database, for queries that can't be run using prepared statements.
@@ -191,7 +191,7 @@ class PySQLXEngineSync:
         ...
     # all
     @overload
-    def query(self, sql: LiteralString) -> Union[List[Type["Model"]], List]:
+    def query(self, sql: str) -> Union[List[Type["MyModel"]], List]:
         """
         ## Description
         Returns all rows of the query result with List of `BaseRow` or empty List.
@@ -229,9 +229,9 @@ class PySQLXEngineSync:
         """
         ...
     @overload
-    def query(self, sql: LiteralString, model: Type["Model"] = None) -> Union[List[Type["Model"]], List]: ...
+    def query(self, sql: str, model: Type["MyModel"] = None) -> Union[List[Type["MyModel"]], List]: ...
     # dict
-    def query_as_dict(self, sql: LiteralString) -> Union[List[Dict[str, Any]], List]:
+    def query_as_dict(self, sql: str) -> Union[List[Dict[str, Any]], List]:
         """
         ## Description
         Returns all rows of the query result with List of Dict or empty List.
@@ -264,7 +264,7 @@ class PySQLXEngineSync:
         ...
     # fisrt
     @overload
-    def query_first(self, sql: LiteralString) -> Union[Type["Model"], None]:
+    def query_first(self, sql: str) -> Union[Type["MyModel"], None]:
         """
         ## Description
         Returns the first row of the query result with BaseRow or Dict(case as_dict=True) or None case result is empty.
@@ -312,9 +312,9 @@ class PySQLXEngineSync:
         """
         ...
     @overload
-    def query_first(self, sql: LiteralString, model: Type["Model"] = None) -> Optional[Type["Model"]]: ...
+    def query_first(self, sql: str, model: Type["MyModel"] = None) -> Optional[Type["MyModel"]]: ...
     # dict
-    def query_first_as_dict(self, sql: LiteralString) -> Optional[Type["Model"]]:
+    def query_first_as_dict(self, sql: str) -> Optional[Type["MyModel"]]:
         """
         ## Description
         Returns the first row of the query result with Dict or None case result is empty.
@@ -346,7 +346,7 @@ class PySQLXEngineSync:
         """
         ...
     # --
-    def execute(self, sql: LiteralString) -> "int":
+    def execute(self, sql: str) -> "int":
         """
         ## Description
         Executes a query/sql and returns the number of rows affected.
