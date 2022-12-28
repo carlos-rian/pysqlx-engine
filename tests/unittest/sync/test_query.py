@@ -1,4 +1,5 @@
-from datetime import datetime, date
+from datetime import datetime, date, time
+from decimal import Decimal
 import uuid
 
 import pytest
@@ -835,6 +836,350 @@ def test_sample_param_type_db_pgsql_show_sql_colored(db: PySQLXEngineSync = db_p
     sql = f"SELECT :id AS id"
 
     conn.query_first(sql=sql, parameters={"id": 1})
+
+    conn.close()
+    assert conn.connected is False
+
+
+def test_with_complex_param_query_db_pgsql(db: PySQLXEngineSync = db_pgsql):
+    conn: PySQLXEngineSync = db()
+    assert conn.connected is True
+
+    parameters = {
+        "type_int": 1,
+        "type_smallint": 2,
+        "type_bigint": 3,
+        "type_numeric": 14.8389,
+        "type_float": 13343400,
+        "type_double": 1.6655444,
+        "type_decimal": Decimal("19984"),
+        "type_char": "r",
+        "type_varchar": "hfhfjjieurjnnd",
+        "type_nvarchar": "$~k;dldëjdjd",
+        "type_text": "hefbvrnjnvorvnojqnour3nbrububutbu9eruinrvouinbrfaoiunbsfobnfsokbf",
+        "type_boolean": True,
+        "type_date": date.fromisoformat("2022-01-01"),
+        "type_time": time.fromisoformat("12:10:11"),
+        "type_timestamp": datetime.fromisoformat("2022-12-20 08:59:55"),
+        "type_json": ["name", "age"],
+        "type_bytes": "super bytes".encode("utf-8"),
+        "type_int_array": (1, 2, 3, 4, 5),
+        "type_float_array": (1.3, 2.4, 3.5, 4.1, 5.2),
+    }
+
+    sql = f"""
+        SELECT
+            :type_int AS type_int,
+            :type_smallint AS type_smallint,
+            :type_bigint AS type_bigint,
+            
+            CAST(:type_float AS FLOAT) AS type_float,
+            CAST(:type_double AS FLOAT) AS type_double,
+            CAST(:type_decimal AS DECIMAL) AS type_decimal,
+            CAST(:type_numeric AS DECIMAL) AS type_numeric,
+
+            :type_char AS type_char,
+            :type_varchar AS type_varchar,
+            :type_nvarchar AS type_nvarchar,
+            :type_text AS type_text,
+
+            :type_boolean AS type_boolean,
+            CAST(:type_date AS DATE) AS type_date,
+            CAST(:type_time AS TIME) AS type_time,
+            CAST(:type_timestamp AS TIMESTAMP) AS type_timestamp,
+            CAST(:type_json AS JSON) AS type_json,
+            CAST(:type_bytes AS bytea) AS type_bytes,
+            CAST(:type_int_array AS int[]) AS type_int_array,
+            CAST(:type_float_array AS float[]) AS type_float_array
+
+    """
+
+    resp = conn.query(sql=sql, parameters=parameters)
+
+    assert isinstance(resp[0].type_int, int)
+    assert isinstance(resp[0].type_smallint, int)
+    assert isinstance(resp[0].type_bigint, int)
+
+    assert isinstance(resp[0].type_float, float)
+    assert isinstance(resp[0].type_double, float)
+
+    assert isinstance(resp[0].type_decimal, Decimal)
+    assert isinstance(resp[0].type_numeric, Decimal)
+
+    assert isinstance(resp[0].type_char, str)
+    assert isinstance(resp[0].type_varchar, str)
+    assert isinstance(resp[0].type_nvarchar, str)
+    assert isinstance(resp[0].type_text, str)
+
+    assert isinstance(resp[0].type_boolean, bool)
+
+    assert isinstance(resp[0].type_date, date)
+    assert isinstance(resp[0].type_time, time)
+    assert isinstance(resp[0].type_timestamp, datetime)
+
+    assert isinstance(resp[0].type_json, list)
+    assert isinstance(resp[0].type_bytes, bytes)
+
+    assert isinstance(resp[0].type_int_array, tuple)
+    assert isinstance(resp[0].type_float_array, tuple)
+
+    conn.close()
+    assert conn.connected is False
+
+
+def test_with_complex_param_query_first_db_pgsql(db: PySQLXEngineSync = db_pgsql):
+    conn: PySQLXEngineSync = db()
+    assert conn.connected is True
+
+    parameters = {
+        "type_int": 1,
+        "type_smallint": 2,
+        "type_bigint": 3,
+        "type_numeric": 14.8389,
+        "type_float": 13343400,
+        "type_double": 1.6655444,
+        "type_decimal": Decimal("19984"),
+        "type_char": "r",
+        "type_varchar": "hfhfjjieurjnnd",
+        "type_nvarchar": "$~k;dldëjdjd",
+        "type_text": "hefbvrnjnvorvnojqnour3nbrububutbu9eruinrvouinbrfaoiunbsfobnfsokbf",
+        "type_boolean": True,
+        "type_date": date.fromisoformat("2022-01-01"),
+        "type_time": time.fromisoformat("12:10:11"),
+        "type_timestamp": datetime.fromisoformat("2022-12-20 08:59:55"),
+        "type_json": ["name", "age"],
+        "type_bytes": "super bytes".encode("utf-8"),
+        "type_int_array": (1, 2, 3, 4, 5),
+        "type_float_array": (1.3, 2.4, 3.5, 4.1, 5.2),
+    }
+
+    sql = f"""
+        SELECT
+            :type_int AS type_int,
+            :type_smallint AS type_smallint,
+            :type_bigint AS type_bigint,
+            
+            CAST(:type_float AS FLOAT) AS type_float,
+            CAST(:type_double AS FLOAT) AS type_double,
+            CAST(:type_decimal AS DECIMAL) AS type_decimal,
+            CAST(:type_numeric AS DECIMAL) AS type_numeric,
+
+            :type_char AS type_char,
+            :type_varchar AS type_varchar,
+            :type_nvarchar AS type_nvarchar,
+            :type_text AS type_text,
+
+            :type_boolean AS type_boolean,
+            CAST(:type_date AS DATE) AS type_date,
+            CAST(:type_time AS TIME) AS type_time,
+            CAST(:type_timestamp AS TIMESTAMP) AS type_timestamp,
+            CAST(:type_json AS JSON) AS type_json,
+            CAST(:type_bytes AS bytea) AS type_bytes,
+            CAST(:type_int_array AS int[]) AS type_int_array,
+            CAST(:type_float_array AS float[]) AS type_float_array
+
+    """
+
+    resp = conn.query_first(sql=sql, parameters=parameters)
+
+    assert isinstance(resp.type_int, int)
+    assert isinstance(resp.type_smallint, int)
+    assert isinstance(resp.type_bigint, int)
+
+    assert isinstance(resp.type_float, float)
+    assert isinstance(resp.type_double, float)
+
+    assert isinstance(resp.type_decimal, Decimal)
+    assert isinstance(resp.type_numeric, Decimal)
+
+    assert isinstance(resp.type_char, str)
+    assert isinstance(resp.type_varchar, str)
+    assert isinstance(resp.type_nvarchar, str)
+    assert isinstance(resp.type_text, str)
+
+    assert isinstance(resp.type_boolean, bool)
+
+    assert isinstance(resp.type_date, date)
+    assert isinstance(resp.type_time, time)
+    assert isinstance(resp.type_timestamp, datetime)
+
+    assert isinstance(resp.type_json, list)
+    assert isinstance(resp.type_bytes, bytes)
+
+    assert isinstance(resp.type_int_array, tuple)
+    assert isinstance(resp.type_float_array, tuple)
+
+    conn.close()
+    assert conn.connected is False
+
+
+def test_with_complex_param_query_as_dict_db_pgsql(db: PySQLXEngineSync = db_pgsql):
+    conn: PySQLXEngineSync = db()
+    assert conn.connected is True
+
+    parameters = {
+        "type_int": 1,
+        "type_smallint": 2,
+        "type_bigint": 3,
+        "type_numeric": 14.8389,
+        "type_float": 13343400,
+        "type_double": 1.6655444,
+        "type_decimal": Decimal("19984"),
+        "type_char": "r",
+        "type_varchar": "hfhfjjieurjnnd",
+        "type_nvarchar": "$~k;dldëjdjd",
+        "type_text": "hefbvrnjnvorvnojqnour3nbrububutbu9eruinrvouinbrfaoiunbsfobnfsokbf",
+        "type_boolean": True,
+        "type_date": date.fromisoformat("2022-01-01"),
+        "type_time": time.fromisoformat("12:10:11"),
+        "type_timestamp": datetime.fromisoformat("2022-12-20 08:59:55"),
+        "type_json": ["name", "age"],
+        "type_bytes": "super bytes".encode("utf-8"),
+        "type_int_array": (1, 2, 3, 4, 5),
+        "type_float_array": (1.3, 2.4, 3.5, 4.1, 5.2),
+    }
+
+    sql = f"""
+        SELECT
+            :type_int AS type_int,
+            :type_smallint AS type_smallint,
+            :type_bigint AS type_bigint,
+            
+            CAST(:type_float AS FLOAT) AS type_float,
+            CAST(:type_double AS FLOAT) AS type_double,
+            CAST(:type_decimal AS DECIMAL) AS type_decimal,
+            CAST(:type_numeric AS DECIMAL) AS type_numeric,
+
+            :type_char AS type_char,
+            :type_varchar AS type_varchar,
+            :type_nvarchar AS type_nvarchar,
+            :type_text AS type_text,
+
+            :type_boolean AS type_boolean,
+            CAST(:type_date AS DATE) AS type_date,
+            CAST(:type_time AS TIME) AS type_time,
+            CAST(:type_timestamp AS TIMESTAMP) AS type_timestamp,
+            CAST(:type_json AS JSON) AS type_json,
+            CAST(:type_bytes AS bytea) AS type_bytes,
+            CAST(:type_int_array AS int[]) AS type_int_array,
+            CAST(:type_float_array AS float[]) AS type_float_array
+
+    """
+
+    resp = conn.query_as_dict(sql=sql, parameters=parameters)
+
+    assert isinstance(resp[0].get("type_int"), int)
+    assert isinstance(resp[0].get("type_smallint"), int)
+    assert isinstance(resp[0].get("type_bigint"), int)
+
+    assert isinstance(resp[0].get("type_float"), float)
+    assert isinstance(resp[0].get("type_double"), float)
+
+    assert isinstance(resp[0].get("type_decimal"), str)
+    assert isinstance(resp[0].get("type_numeric"), str)
+
+    assert isinstance(resp[0].get("type_char"), str)
+    assert isinstance(resp[0].get("type_varchar"), str)
+    assert isinstance(resp[0].get("type_nvarchar"), str)
+    assert isinstance(resp[0].get("type_text"), str)
+
+    assert isinstance(resp[0].get("type_boolean"), bool)
+
+    assert isinstance(resp[0].get("type_date"), str)
+    assert isinstance(resp[0].get("type_time"), str)
+    assert isinstance(resp[0].get("type_timestamp"), str)
+
+    assert isinstance(resp[0].get("type_json"), str)
+    assert isinstance(resp[0].get("type_bytes"), bytes)
+
+    assert isinstance(resp[0].get("type_int_array"), tuple)
+    assert isinstance(resp[0].get("type_float_array"), tuple)
+
+    conn.close()
+    assert conn.connected is False
+
+
+def test_with_complex_param_query_first_as_dict_db_pgsql(db: PySQLXEngineSync = db_pgsql):
+    conn: PySQLXEngineSync = db()
+    assert conn.connected is True
+
+    parameters = {
+        "type_int": 1,
+        "type_smallint": 2,
+        "type_bigint": 3,
+        "type_numeric": 14.8389,
+        "type_float": 13343400,
+        "type_double": 1.6655444,
+        "type_decimal": Decimal("19984"),
+        "type_char": "r",
+        "type_varchar": "hfhfjjieurjnnd",
+        "type_nvarchar": "$~k;dldëjdjd",
+        "type_text": "hefbvrnjnvorvnojqnour3nbrububutbu9eruinrvouinbrfaoiunbsfobnfsokbf",
+        "type_boolean": True,
+        "type_date": date.fromisoformat("2022-01-01"),
+        "type_time": time.fromisoformat("12:10:11"),
+        "type_timestamp": datetime.fromisoformat("2022-12-20 08:59:55"),
+        "type_json": ["name", "age"],
+        "type_bytes": "super bytes".encode("utf-8"),
+        "type_int_array": (1, 2, 3, 4, 5),
+        "type_float_array": (1.3, 2.4, 3.5, 4.1, 5.2),
+    }
+
+    sql = f"""
+        SELECT
+            :type_int AS type_int,
+            :type_smallint AS type_smallint,
+            :type_bigint AS type_bigint,
+            
+            CAST(:type_float AS FLOAT) AS type_float,
+            CAST(:type_double AS FLOAT) AS type_double,
+            CAST(:type_decimal AS DECIMAL) AS type_decimal,
+            CAST(:type_numeric AS DECIMAL) AS type_numeric,
+
+            :type_char AS type_char,
+            :type_varchar AS type_varchar,
+            :type_nvarchar AS type_nvarchar,
+            :type_text AS type_text,
+
+            :type_boolean AS type_boolean,
+            CAST(:type_date AS DATE) AS type_date,
+            CAST(:type_time AS TIME) AS type_time,
+            CAST(:type_timestamp AS TIMESTAMP) AS type_timestamp,
+            CAST(:type_json AS JSON) AS type_json,
+            CAST(:type_bytes AS bytea) AS type_bytes,
+            CAST(:type_int_array AS int[]) AS type_int_array,
+            CAST(:type_float_array AS float[]) AS type_float_array
+
+    """
+
+    resp = conn.query_first_as_dict(sql=sql, parameters=parameters)
+
+    assert isinstance(resp.get("type_int"), int)
+    assert isinstance(resp.get("type_smallint"), int)
+    assert isinstance(resp.get("type_bigint"), int)
+
+    assert isinstance(resp.get("type_float"), float)
+    assert isinstance(resp.get("type_double"), float)
+
+    assert isinstance(resp.get("type_decimal"), str)
+    assert isinstance(resp.get("type_numeric"), str)
+
+    assert isinstance(resp.get("type_char"), str)
+    assert isinstance(resp.get("type_varchar"), str)
+    assert isinstance(resp.get("type_nvarchar"), str)
+    assert isinstance(resp.get("type_text"), str)
+
+    assert isinstance(resp.get("type_boolean"), bool)
+
+    assert isinstance(resp.get("type_date"), str)
+    assert isinstance(resp.get("type_time"), str)
+    assert isinstance(resp.get("type_timestamp"), str)
+
+    assert isinstance(resp.get("type_json"), str)
+    assert isinstance(resp.get("type_bytes"), bytes)
+
+    assert isinstance(resp.get("type_int_array"), tuple)
+    assert isinstance(resp.get("type_float_array"), tuple)
 
     conn.close()
     assert conn.connected is False
