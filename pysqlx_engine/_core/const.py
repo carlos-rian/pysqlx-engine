@@ -39,6 +39,7 @@ CODE_ParameterInvalidJsonValueError = "PYSQLX005"
 
 
 class _Config(BaseConfig):
+
     PYSQLX_SQL_LOG: bool = getenv("PYSQLX_SQL_LOG", "0") != "0"
     PYSQLX_MSG_COLORIZE: bool = getenv("PYSQLX_MSG_COLORIZE", "0") != "0"
     PYSQLX_ERROR_JSON_FMT: bool = getenv("PYSQLX_ERROR_JSON_FMT", "0") != "0"

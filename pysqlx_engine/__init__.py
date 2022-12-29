@@ -1,5 +1,7 @@
-from ._core.aconn import PySQLXEngine
-from ._core.apool import PySQLXEnginePool
-from ._core.pool import PySQLXEnginePoolSync
-from ._core.conn import PySQLXEngineSync
-from ._core.parser import BaseRow
+from ._core.aconn import PySQLXEngine as PySQLXEngine
+from ._core.apool import PySQLXEnginePool as PySQLXEnginePool
+from ._core.pool import PySQLXEnginePoolSync as PySQLXEnginePoolSync
+from ._core.conn import PySQLXEngineSync as PySQLXEngineSync
+from ._core.parser import BaseRow as BaseRow
+
+from ._core.const import CONFIG as LOG_CONFIG
