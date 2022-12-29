@@ -37,6 +37,7 @@ The PySQLXEngine is a minimalist **Async and Sync** SQL engine. Currently this l
 The PySQLXEngine was created and thought to be minimalistic, but very efficient. The core is write in Rust, making communication between database and Python more efficient.
 
 
+
 Database Support:
 
 * `SQLite`
