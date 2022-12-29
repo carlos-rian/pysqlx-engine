@@ -72,15 +72,36 @@ Or you can set the value of the variables in the code.
 
 ### Example:
 ```python
+    # config the pysqlx_engine log
     from pysqlx_engine import LOG_CONFIG
 
     LOG_CONFIG.PYSQLX_SQL_LOG = True
     LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
     LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
 
+    # set the log debug level 
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
+
+    # connect to the database
     from pysqlx_engine import PySQLXEngine
 
-    db = PySQLXEngine(uri="postgresql://postgres:Build!Test321@localhost:4442/engine")
+    db = PySQLXEngine(uri="postgresql://user:pass@host:port/db?schema=sample")
+    db.connect()
+
+    # run the query and see the log
+    db.query("SELECT * FROM table")
+    # output -> INFO:root:SELECT * FROM table
+
+    # run the invalid query and see the error in JSON format
+    db.query("SELECT * FROM invalid_table")
+
+    # output -> 
+    {
+        "code": "P0193",
+        "message": "relation 'invalid_table' does not exist",
+        "error": "QueryError",
+    }
 ```
 
 """
