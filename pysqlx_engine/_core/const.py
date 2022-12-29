@@ -39,6 +39,30 @@ CODE_ParameterInvalidJsonValueError = "PYSQLX005"
 
 
 class _Config(BaseConfig):
+    """
+    CONFIG class for PySQLXEngine.
+
+    You can set the following environment variables: ``PYSQLX_SQL_LOG``, ``PYSQLX_MSG_COLORIZE``, ``PYSQLX_ERROR_JSON_FMT``
+
+    * ``PYSQLX_SQL_LOG``: bool = False
+        If True, the SQL statements will be printed in the console.
+    * ``PYSQLX_MSG_COLORIZE``: bool = False
+        If True, the messages will be printed in color.
+    * ``PYSQLX_ERROR_JSON_FMT``: bool = False
+        If True, the error messages will be printed in JSON format.
+
+    Or you can set the value of the variables in the code.
+
+    Example:
+    ```python
+        from pysqlx_engine import LOG_CONFIG
+
+        LOG_CONFIG.PYSQLX_SQL_LOG = True
+        LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
+        LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
+    ```
+
+    """
 
     PYSQLX_SQL_LOG: bool = getenv("PYSQLX_SQL_LOG", "0") != "0"
     PYSQLX_MSG_COLORIZE: bool = getenv("PYSQLX_MSG_COLORIZE", "0") != "0"
