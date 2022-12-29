@@ -27,8 +27,6 @@ import logging
 
 from typing import Callable, TypeVar
 
-logger = logging.getLogger(__name__)
-
 
 P = ParamSpec("P")
 T = TypeVar("T")
@@ -110,8 +108,7 @@ def build_sql(provider: str, sql: str, parameters: dict = None) -> str:
         for key, value in param_as_list_of_tuples:
             new_sql = new_sql.replace(f":{key}", str(value))
 
-        if LOG_CONFIG.PYSQLX_SQL_LOG:
-            logger.setLevel(logging.DEBUG)
-            logger.info(fe_sql(sql=new_sql))
+    if LOG_CONFIG.PYSQLX_SQL_LOG:
+        logging.info(fe_sql(sql=new_sql))
 
     return new_sql
