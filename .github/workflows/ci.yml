@@ -13,7 +13,7 @@ jobs:
       max-parallel: 4
       matrix:
         os: [ubuntu-latest]
-        python-version: ["3.7", "3.8", "3.9", "3.10"]
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
       fail-fast: false
 
     steps:
@@ -59,7 +59,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          flags: ${{ matrix.os }}_${{ matrix.python-version }}
+          flags: ${{ matrix.os }}_${{ matrix.python-version }}_date '+%Y-%m-%d %H:%M'
 
   build:
     #if: github.ref == 'refs/heads/main'
