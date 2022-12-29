@@ -74,10 +74,17 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
 
-      - name: check package version
+      - name: release - check package version
+        if: github.ref != 'refs/heads/main'
         run: |
           pip install --upgrade httpx toml
-          python .github/check_version.py
+          python .github/release.py
+
+      - name: prod - check package version
+        if: github.ref == 'refs/heads/main'
+        run: |
+          pip install --upgrade httpx toml
+          python .github/prod.py
 
       - name: build and publish to pypi
         uses: JRubics/poetry-publish@v1.13
