@@ -51,6 +51,9 @@ class BaseRow(BaseModel):
             columns[key] = type(value)
         return columns
 
+    def __str__(self) -> str:
+        return super().__repr__()
+
 
 class ParserIn:
     __slots__ = ("result", "model")
