@@ -2,7 +2,7 @@
 name = "pysqlx-engine"
 
 version = "0.2.0"
-description = "Python Async and Sync SQL Engine"
+description = "Async and Sync SQL Engine for Python, with support for MySQL, PostgreSQL, SQLite and MSSQL Server."
 authors = ["Carlos Rian <crian.rian@gmail.com>"]
 license = "MIT"
 readme = "readme.md"
