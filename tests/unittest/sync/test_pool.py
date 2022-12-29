@@ -34,7 +34,7 @@ def test_pool(environment: str):
 
 
 def test_pool_error():
-    LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
+    LOG_CONFIG.PYSQLX_USE_COLOR = True
     LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
 
     uri = "postgresql://postgres:Build!Test321@localhost:4442/engine"
@@ -49,7 +49,7 @@ def test_pool_error():
 
 
 def test_pool_error_no_color_logs():
-    LOG_CONFIG.PYSQLX_MSG_COLORIZE = False
+    LOG_CONFIG.PYSQLX_USE_COLOR = False
     LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = False
 
     uri = "postgresql://postgres:Build!Test321@localhost:4442/engine"

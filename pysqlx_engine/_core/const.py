@@ -40,7 +40,7 @@ CODE_ParameterInvalidJsonValueError = "PYSQLX005"
 
 class LogConfig(BaseConfig):
     PYSQLX_SQL_LOG: bool = getenv("PYSQLX_SQL_LOG", "0") != "0"
-    PYSQLX_MSG_COLORIZE: bool = getenv("PYSQLX_MSG_COLORIZE", "0") != "0"
+    PYSQLX_USE_COLOR: bool = getenv("PYSQLX_USE_COLOR", "0") != "0"
     PYSQLX_ERROR_JSON_FMT: bool = getenv("PYSQLX_ERROR_JSON_FMT", "0") != "0"
 
 
@@ -52,7 +52,7 @@ CONFIG constant for PySQLXEngine, is used to configure the log and exception mes
 
 You can set the following ``environment variables``: 
     - ``PYSQLX_SQL_LOG``
-    - ``PYSQLX_MSG_COLORIZE``
+    - ``PYSQLX_USE_COLOR``
     - ``PYSQLX_ERROR_JSON_FMT``
 
 ---
@@ -61,7 +61,7 @@ You can set the following ``environment variables``:
 
     * ``PYSQLX_SQL_LOG``: bool = False
         If True, the SQL statements will be printed in the console.
-    * ``PYSQLX_MSG_COLORIZE``: bool = False
+    * ``PYSQLX_USE_COLOR``: bool = False
         If True, the messages will be printed in color.
     * ``PYSQLX_ERROR_JSON_FMT``: bool = False
         If True, the error messages will be printed in JSON format.
@@ -76,7 +76,7 @@ Or you can set the value of the variables in the code.
     from pysqlx_engine import LOG_CONFIG
 
     LOG_CONFIG.PYSQLX_SQL_LOG = True
-    LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
+    LOG_CONFIG.PYSQLX_USE_COLOR = True
     LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
 
     # set the log info level when the PYSQLX_SQL_LOG is True

@@ -147,7 +147,7 @@ def test_invalid_convert_type_error_invalid_value():
 
 def test_invalid_convert_type_to_json_pgsql():
     LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = False
-    LOG_CONFIG.PYSQLX_MSG_COLORIZE = False
+    LOG_CONFIG.PYSQLX_USE_COLOR = False
     LOG_CONFIG.PYSQLX_SQL_LOG = False
 
     class MyType:
@@ -157,7 +157,7 @@ def test_invalid_convert_type_to_json_pgsql():
         param.try_json("postgresql", MyType(), "invalid_type")
 
     LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
-    LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
+    LOG_CONFIG.PYSQLX_USE_COLOR = True
     LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     with pytest.raises(ParameterInvalidJsonValueError):

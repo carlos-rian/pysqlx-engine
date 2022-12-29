@@ -253,7 +253,7 @@ async def test_set_isolation_level_pgsql(db):
 @pytest.mark.asyncio
 @pytest.mark.parametrize("db", [adb_pgsql])
 async def test_set_isolation_level_pgsql_with_colored_log(db):
-    LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
+    LOG_CONFIG.PYSQLX_USE_COLOR = True
     LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
 
     conn: PySQLXEngine = await db()
@@ -267,7 +267,7 @@ async def test_set_isolation_level_pgsql_with_colored_log(db):
 @pytest.mark.asyncio
 @pytest.mark.parametrize("db", [adb_sqlite, adb_pgsql, adb_mssql, adb_mysql])
 async def test_start_transaction_with_invalid_isolation_level_with_colored_log(db):
-    LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
+    LOG_CONFIG.PYSQLX_USE_COLOR = True
     LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
 
     conn: PySQLXEngine = await db()

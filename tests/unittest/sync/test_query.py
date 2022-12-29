@@ -697,7 +697,7 @@ def test_invalid_param_type_db_pgsql(db: PySQLXEngineSync = db_pgsql):
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
-    LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
+    LOG_CONFIG.PYSQLX_USE_COLOR = True
     LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     sql = f"SELECT :id AS id"
@@ -717,7 +717,7 @@ def test_invalid_param_array_with_heterogeneous_types_db_pgsql(db: PySQLXEngineS
     assert conn.connected is True
 
     LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = False
-    LOG_CONFIG.PYSQLX_MSG_COLORIZE = False
+    LOG_CONFIG.PYSQLX_USE_COLOR = False
     LOG_CONFIG.PYSQLX_SQL_LOG = False
 
     sql = f"SELECT :tuple AS tuple"
@@ -727,7 +727,7 @@ def test_invalid_param_array_with_heterogeneous_types_db_pgsql(db: PySQLXEngineS
         conn.query_first(sql=sql, parameters=parameters)
 
     LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
-    LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
+    LOG_CONFIG.PYSQLX_USE_COLOR = True
     LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     with pytest.raises(ParameterInvalidValueError):
@@ -742,7 +742,7 @@ def test_invalid_param_array_with_same_types_but_not_supported_db_pgsql(db: PySQ
     assert conn.connected is True
 
     LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = False
-    LOG_CONFIG.PYSQLX_MSG_COLORIZE = False
+    LOG_CONFIG.PYSQLX_USE_COLOR = False
     LOG_CONFIG.PYSQLX_SQL_LOG = False
 
     class MyType:
@@ -755,7 +755,7 @@ def test_invalid_param_array_with_same_types_but_not_supported_db_pgsql(db: PySQ
         conn.query_first(sql=sql, parameters=parameters)
 
     LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
-    LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
+    LOG_CONFIG.PYSQLX_USE_COLOR = True
     LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     with pytest.raises(ParameterInvalidProviderError):
@@ -813,7 +813,7 @@ def test_invalid_provider_to_array_param(db: PySQLXEngineSync):
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
-    LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
+    LOG_CONFIG.PYSQLX_USE_COLOR = True
     LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     sql = f"SELECT :tuple AS tuple"
@@ -830,7 +830,7 @@ def test_sample_param_type_db_pgsql_show_sql_colored(db: PySQLXEngineSync = db_p
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
-    LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
+    LOG_CONFIG.PYSQLX_USE_COLOR = True
     LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     sql = f"SELECT :id AS id"
