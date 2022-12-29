@@ -1,5 +1,5 @@
 import os
-from pysqlx_engine._core.const import CONFIG
+from pysqlx_engine._core.const import LOG_CONFIG
 import pytest
 
 from pysqlx_engine import PySQLXEngine
@@ -170,8 +170,8 @@ def test_force_sync():
 @pytest.mark.asyncio
 async def test_py_sqlx_error_json_fmt_no_colorize():
 
-    CONFIG.PYSQLX_MSG_COLORIZE = False
-    CONFIG.PYSQLX_ERROR_JSON_FMT = True
+    LOG_CONFIG.PYSQLX_MSG_COLORIZE = False
+    LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
 
     class GenericError(Exception):
         def code(self):
@@ -196,8 +196,8 @@ async def test_py_sqlx_error_json_fmt_no_colorize():
 @pytest.mark.asyncio
 async def test_py_sqlx_error_json_fmt_with_colorize():
 
-    CONFIG.PYSQLX_MSG_COLORIZE = True
-    CONFIG.PYSQLX_ERROR_JSON_FMT = True
+    LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
+    LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
 
     class GenericError(Exception):
         def code(self):

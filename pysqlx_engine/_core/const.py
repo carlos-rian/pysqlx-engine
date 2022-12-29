@@ -38,11 +38,26 @@ CODE_ParameterInvalidValueError = "PYSQLX004"
 CODE_ParameterInvalidJsonValueError = "PYSQLX005"
 
 
-class _Config(BaseConfig):
-    """
-    CONFIG class for PySQLXEngine.
+class LogConfig(BaseConfig):
+    PYSQLX_SQL_LOG: bool = getenv("PYSQLX_SQL_LOG", "0") != "0"
+    PYSQLX_MSG_COLORIZE: bool = getenv("PYSQLX_MSG_COLORIZE", "0") != "0"
+    PYSQLX_ERROR_JSON_FMT: bool = getenv("PYSQLX_ERROR_JSON_FMT", "0") != "0"
 
-    You can set the following environment variables: ``PYSQLX_SQL_LOG``, ``PYSQLX_MSG_COLORIZE``, ``PYSQLX_ERROR_JSON_FMT``
+
+LOG_CONFIG = LogConfig()
+"""
+## Description
+
+CONFIG constant for PySQLXEngine, is used to configure the log and exception messages.
+
+You can set the following ``environment variables``: 
+    - ``PYSQLX_SQL_LOG``
+    - ``PYSQLX_MSG_COLORIZE``
+    - ``PYSQLX_ERROR_JSON_FMT``
+
+---
+
+### Helper
 
     * ``PYSQLX_SQL_LOG``: bool = False
         If True, the SQL statements will be printed in the console.
@@ -51,22 +66,21 @@ class _Config(BaseConfig):
     * ``PYSQLX_ERROR_JSON_FMT``: bool = False
         If True, the error messages will be printed in JSON format.
 
-    Or you can set the value of the variables in the code.
+Or you can set the value of the variables in the code.
 
-    Example:
-    ```python
-        from pysqlx_engine import LOG_CONFIG
+---
 
-        LOG_CONFIG.PYSQLX_SQL_LOG = True
-        LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
-        LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
-    ```
+### Example:
+```python
+    from pysqlx_engine import LOG_CONFIG
 
-    """
+    LOG_CONFIG.PYSQLX_SQL_LOG = True
+    LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
+    LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
 
-    PYSQLX_SQL_LOG: bool = getenv("PYSQLX_SQL_LOG", "0") != "0"
-    PYSQLX_MSG_COLORIZE: bool = getenv("PYSQLX_MSG_COLORIZE", "0") != "0"
-    PYSQLX_ERROR_JSON_FMT: bool = getenv("PYSQLX_ERROR_JSON_FMT", "0") != "0"
+    from pysqlx_engine import PySQLXEngine
 
+    db = PySQLXEngine(uri="postgresql://postgres:Build!Test321@localhost:4442/engine")
+```
 
-CONFIG = _Config()
+"""

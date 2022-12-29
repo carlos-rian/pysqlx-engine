@@ -3,7 +3,7 @@ from io import StringIO
 from dotenv import load_dotenv
 import os
 from pysqlx_engine import PySQLXEnginePoolSync, PySQLXEngineSync
-from pysqlx_engine._core.const import CONFIG
+from pysqlx_engine._core.const import LOG_CONFIG
 from pysqlx_engine.errors import PoolMaxConnectionsError
 
 
@@ -34,8 +34,8 @@ def test_pool(environment: str):
 
 
 def test_pool_error():
-    CONFIG.PYSQLX_MSG_COLORIZE = True
-    CONFIG.PYSQLX_ERROR_JSON_FMT = True
+    LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
+    LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
 
     uri = "postgresql://postgres:Build!Test321@localhost:4442/engine"
     pool = PySQLXEnginePoolSync(uri=uri, max_connections=3)
@@ -49,8 +49,8 @@ def test_pool_error():
 
 
 def test_pool_error_no_color_logs():
-    CONFIG.PYSQLX_MSG_COLORIZE = False
-    CONFIG.PYSQLX_ERROR_JSON_FMT = False
+    LOG_CONFIG.PYSQLX_MSG_COLORIZE = False
+    LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = False
 
     uri = "postgresql://postgres:Build!Test321@localhost:4442/engine"
     pool = PySQLXEnginePoolSync(uri=uri, max_connections=3)

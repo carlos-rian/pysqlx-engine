@@ -33,29 +33,29 @@ class PySQLXEngineSync:
     ##### PostgreSQL
     ```python
     uri = "postgresql://user:pass@host:port/db?schema=sample"
-    conn = PySQLXEngineSync(uri=uri)
-    conn.connect()
+    db = PySQLXEngineSync(uri=uri)
+    db.connect()
     ```
     ---
     ##### MySQL
     ```python
     uri = "mysql://user:pass@host:port/db?schema=sample"
-    conn = PySQLXEngineSync(uri=uri)
-    conn.connect()
+    db = PySQLXEngineSync(uri=uri)
+    db.connect()
     ```
     ---
     ##### Microsoft SQL Server
     ```python
     uri = "sqlserver://host:port;initial catalog=sample;user=sa;password=pass;"
-    conn = PySQLXEngineSync(uri=uri)
-    conn.connect()
+    db = PySQLXEngineSync(uri=uri)
+    db.connect()
     ```
     ---
     ##### SQLite
     ```python
     uri = "sqlite:./dev.db"
-    conn = PySQLXEngineSync(uri=uri)
-    conn.connect()
+    db = PySQLXEngineSync(uri=uri)
+    db.connect()
     ```
     """
 
@@ -673,10 +673,10 @@ class PySQLXEngineSync:
         ### Example
         ```python
             uri = "postgresql://user:pass@host:port/db?schema=sample"
-            conn = PySQLXEngineSync(uri=uri)
-            conn.connect()
+            db = PySQLXEngineSync(uri=uri)
+            db.connect()
 
-            result = conn.execute("INSERT INTO users (name) VALUES ('rian')")
+            result = db.execute("INSERT INTO users (name) VALUES ('rian')")
             print(f"rows_affected = {result}")
             # output -> rows_affected = 1
         ```
@@ -715,9 +715,9 @@ class PySQLXEngineSync:
         ### Example
         ```python
             uri = "postgresql://user:pass@host:port/db?schema=sample"
-            conn = PySQLXEngineSync(uri=uri)
-            conn.connect()
-            conn.set_isolation_level(isolation_level="ReadUncommitted")
+            db = PySQLXEngineSync(uri=uri)
+            db.connect()
+            db.set_isolation_level(isolation_level="ReadUncommitted")
         ```
         ---
 
@@ -750,9 +750,9 @@ class PySQLXEngineSync:
         ### Example
         ```python
             uri = "postgresql://user:pass@host:port/db?schema=sample"
-            conn = PySQLXEngineSync(uri=uri)
-            conn.connect()
-            conn.begin()
+            db = PySQLXEngineSync(uri=uri)
+            db.connect()
+            db.begin()
         ```
         """
         ...
@@ -782,13 +782,13 @@ class PySQLXEngineSync:
         ### Example
         ```python
             uri = "postgresql://user:pass@host:port/db?schema=sample"
-            conn = PySQLXEngineSync(uri=uri)
-            conn.connect()
+            db = PySQLXEngineSync(uri=uri)
+            db.connect()
 
-            conn.begin()
-            conn.execute("CREATE TABLE users (id serial PRIMARY KEY, name varchar(255))")
-            conn.execute("INSERT INTO users (name) VALUES ('rian')")
-            conn.commit()
+            db.begin()
+            db.execute("CREATE TABLE users (id serial PRIMARY KEY, name varchar(255))")
+            db.execute("INSERT INTO users (name) VALUES ('rian')")
+            db.commit()
         ```
         """
         ...
@@ -821,13 +821,13 @@ class PySQLXEngineSync:
         ### Example
         ```python
             uri = "postgresql://user:pass@host:port/db?schema=sample"
-            conn = PySQLXEngineSync(uri=uri)
-            conn.connect()
+            db = PySQLXEngineSync(uri=uri)
+            db.connect()
 
-            conn.begin()
-            conn.execute("CREATE TABLE users (id serial PRIMARY KEY, name varchar(255))")
-            conn.execute("INSERT INTO users (name) VALUES ('rian')")
-            conn.rollback()
+            db.begin()
+            db.execute("CREATE TABLE users (id serial PRIMARY KEY, name varchar(255))")
+            db.execute("INSERT INTO users (name) VALUES ('rian')")
+            db.rollback()
         ```
         """
         ...
@@ -861,14 +861,14 @@ class PySQLXEngineSync:
         ### Example
         ```python
             uri = "postgresql://user:pass@host:port/db?schema=sample"
-            conn = PySQLXEngineSync(uri=uri)
-            conn.connect()
+            db = PySQLXEngineSync(uri=uri)
+            db.connect()
 
             # with isolation level
-            conn.start_transaction(isolation_level="ReadCommitted")
+            db.start_transaction(isolation_level="ReadCommitted")
 
             # without isolation level
-            conn.start_transaction()
+            db.start_transaction()
         ```
 
         ---

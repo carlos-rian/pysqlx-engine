@@ -33,29 +33,29 @@ class PySQLXEngine:
     ##### PostgreSQL
     ```python
     uri = "postgresql://user:pass@host:port/db?schema=sample"
-    conn = PySQLXEngine(uri=uri)
-    await conn.connect()
+    db = PySQLXEngine(uri=uri)
+    await db.connect()
     ```
     ---
     ##### MySQL
     ```python
     uri = "mysql://user:pass@host:port/db?schema=sample"
-    conn = PySQLXEngine(uri=uri)
-    await conn.connect()
+    db = PySQLXEngine(uri=uri)
+    await db.connect()
     ```
     ---
     ##### Microsoft SQL Server
     ```python
     uri = "sqlserver://host:port;initial catalog=sample;user=sa;password=pass;"
-    conn = PySQLXEngine(uri=uri)
-    await conn.connect()
+    db = PySQLXEngine(uri=uri)
+    await db.connect()
     ```
     ---
     ##### SQLite
     ```python
     uri = "sqlite:./dev.db"
-    conn = PySQLXEngine(uri=uri)
-    await conn.connect()
+    db = PySQLXEngine(uri=uri)
+    await db.connect()
     ```
     """
 
@@ -675,10 +675,10 @@ class PySQLXEngine:
         ### Example
         ```python
             uri = "postgresql://user:pass@host:port/db?schema=sample"
-            conn = PySQLXEngine(uri=uri)
-            await conn.connect()
+            db = PySQLXEngine(uri=uri)
+            await db.connect()
 
-            result = await conn.execute("INSERT INTO users (name) VALUES ('rian')")
+            result = await db.execute("INSERT INTO users (name) VALUES ('rian')")
             print(f"rows_affected = {result}")
             # output -> rows_affected = 1
         ```
@@ -717,9 +717,9 @@ class PySQLXEngine:
         ### Example
         ```python
             uri = "postgresql://user:pass@host:port/db?schema=sample"
-            conn = PySQLXEngine(uri=uri)
-            await conn.connect()
-            await conn.set_isolation_level(isolation_level="ReadUncommitted")
+            db = PySQLXEngine(uri=uri)
+            await db.connect()
+            await db.set_isolation_level(isolation_level="ReadUncommitted")
         ```
         ---
 
@@ -752,9 +752,9 @@ class PySQLXEngine:
         ### Example
         ```python
             uri = "postgresql://user:pass@host:port/db?schema=sample"
-            conn = PySQLXEngine(uri=uri)
-            await conn.connect()
-            await conn.begin()
+            db = PySQLXEngine(uri=uri)
+            await db.connect()
+            await db.begin()
         ```
         """
         ...
@@ -784,13 +784,13 @@ class PySQLXEngine:
         ### Example
         ```python
             uri = "postgresql://user:pass@host:port/db?schema=sample"
-            conn = PySQLXEngine(uri=uri)
-            await conn.connect()
+            db = PySQLXEngine(uri=uri)
+            await db.connect()
 
-            await conn.begin()
-            await conn.execute("CREATE TABLE users (id serial PRIMARY KEY, name varchar(255))")
-            await conn.execute("INSERT INTO users (name) VALUES ('rian')")
-            await conn.commit()
+            await db.begin()
+            await db.execute("CREATE TABLE users (id serial PRIMARY KEY, name varchar(255))")
+            await db.execute("INSERT INTO users (name) VALUES ('rian')")
+            await db.commit()
         ```
         """
         ...
@@ -823,13 +823,13 @@ class PySQLXEngine:
         ### Example
         ```python
             uri = "postgresql://user:pass@host:port/db?schema=sample"
-            conn = PySQLXEngine(uri=uri)
-            await conn.connect()
+            db = PySQLXEngine(uri=uri)
+            await db.connect()
 
-            await conn.begin()
-            await conn.execute("CREATE TABLE users (id serial PRIMARY KEY, name varchar(255))")
-            await conn.execute("INSERT INTO users (name) VALUES ('rian')")
-            await conn.rollback()
+            await db.begin()
+            await db.execute("CREATE TABLE users (id serial PRIMARY KEY, name varchar(255))")
+            await db.execute("INSERT INTO users (name) VALUES ('rian')")
+            await db.rollback()
         ```
         """
         ...
@@ -863,14 +863,14 @@ class PySQLXEngine:
         ### Example
         ```python
             uri = "postgresql://user:pass@host:port/db?schema=sample"
-            conn = PySQLXEngine(uri=uri)
-            await conn.connect()
+            db = PySQLXEngine(uri=uri)
+            await db.connect()
 
             # with isolation level
-            await conn.start_transaction(isolation_level="ReadCommitted")
+            await db.start_transaction(isolation_level="ReadCommitted")
 
             # without isolation level
-            await conn.start_transaction()
+            await db.start_transaction()
         ```
 
         ---

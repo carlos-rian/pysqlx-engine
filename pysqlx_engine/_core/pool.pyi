@@ -15,21 +15,21 @@ class PySQLXEnginePoolSync:
         pool = PySQLXEnginePoolSync("postgresql://user:pass@host:port/db?schema=sample", max_connections=3)
 
         def main():
-            conn1 = pool.new_connection()
-            conn2 = pool.new_connection()
-            conn3 = pool.new_connection()
+            db1 = pool.new_connection()
+            db2 = pool.new_connection()
+            db3 = pool.new_connection()
 
             # multiple queries can be run in parallel using threads or processes
             results = [
-                    conn1.fetch("SELECT 1 AS one"),
-                    conn2.fetch("SELECT 2 AS two"),
-                    conn3.fetch("SELECT 3 AS three")
+                    db1.fetch("SELECT 1 AS one"),
+                    db2.fetch("SELECT 2 AS two"),
+                    db3.fetch("SELECT 3 AS three")
                 ]
             print(results)
             # [[BaseRow(one=1)], [BaseRow(two=2)], [BaseRow(three=3)]]
 
             # try creating a connection when the pool is full
-            conn4 = pool.new_connection() # raises PoolMaxConnectionsError
+            db4 = pool.new_connection() # raises PoolMaxConnectionsError
 
         main()
     ```
@@ -69,9 +69,9 @@ class PySQLXEnginePoolSync:
         pool = PySQLXEnginePoolSync("postgresql://user:pass@host:port/db?schema=sample", max_connections=3)
 
         def main():
-            conn1 = pool.new_connection() # return a new PySQLXEngineSync instance
-            conn2 = pool.new_connection() # return a new PySQLXEngineSync instance
-            conn3 = pool.new_connection() # return a new PySQLXEngineSync instance
+            db1 = pool.new_connection() # return a new PySQLXEngineSync instance
+            db2 = pool.new_connection() # return a new PySQLXEngineSync instance
+            db3 = pool.new_connection() # return a new PySQLXEngineSync instance
         ```
         """
         ...

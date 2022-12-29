@@ -1,5 +1,5 @@
 import asyncio, pytest
-from pysqlx_engine._core.const import CONFIG
+from pysqlx_engine._core.const import LOG_CONFIG
 import os
 from pysqlx_engine import PySQLXEnginePool, PySQLXEngine
 from pysqlx_engine.errors import PoolMaxConnectionsError
@@ -36,8 +36,8 @@ async def test_apool(environment: str):
 
 @pytest.mark.asyncio
 async def test_apool_error():
-    CONFIG.PYSQLX_MSG_COLORIZE = True
-    CONFIG.PYSQLX_ERROR_JSON_FMT = True
+    LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
+    LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
 
     uri = "postgresql://postgres:Build!Test321@localhost:4442/engine"
     pool = PySQLXEnginePool(uri=uri, max_connections=3)
@@ -52,8 +52,8 @@ async def test_apool_error():
 
 @pytest.mark.asyncio
 async def test_apool_error_no_color_logs():
-    CONFIG.PYSQLX_MSG_COLORIZE = False
-    CONFIG.PYSQLX_ERROR_JSON_FMT = False
+    LOG_CONFIG.PYSQLX_MSG_COLORIZE = False
+    LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = False
 
     uri = "postgresql://postgres:Build!Test321@localhost:4442/engine"
     pool = PySQLXEnginePool(uri=uri, max_connections=3)

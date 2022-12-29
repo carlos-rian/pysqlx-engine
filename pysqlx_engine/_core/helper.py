@@ -1,7 +1,7 @@
 from functools import lru_cache
 import json
 
-from .const import CONFIG
+from .const import LOG_CONFIG
 
 from pygments import highlight
 from pygments.formatters import TerminalFormatter
@@ -16,7 +16,7 @@ def _colorizer_json_message(dumps: str):
 def fe_json(data: dict) -> str:
     """create a error message format for python code"""
     dumps = json.dumps(data, indent=2)
-    if CONFIG.PYSQLX_MSG_COLORIZE:
+    if LOG_CONFIG.PYSQLX_MSG_COLORIZE:
         return "\n" + _colorizer_json_message(dumps)
     return "\n" + dumps
 
@@ -27,7 +27,7 @@ def _colorizer_py_code_message(message: str):
 
 def fe_py(message: str) -> str:
     """create a error message format for python code"""
-    if CONFIG.PYSQLX_MSG_COLORIZE:
+    if LOG_CONFIG.PYSQLX_MSG_COLORIZE:
         return _colorizer_py_code_message(message)
     return message
 
@@ -39,7 +39,7 @@ def _colorizer_sql_message(sql: str):
 
 def fe_sql(sql: str) -> str:
     """create a error message format for python code"""
-    if CONFIG.PYSQLX_MSG_COLORIZE:
+    if LOG_CONFIG.PYSQLX_MSG_COLORIZE:
         return _colorizer_sql_message(sql)
     return sql
 

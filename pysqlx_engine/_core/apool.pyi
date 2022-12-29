@@ -15,15 +15,15 @@ class PySQLXEnginePool:
         pool = PySQLXEnginePool("postgresql://user:pass@host:port/db?schema=sample", max_connections=3)
 
         async def main():
-            conn1 = await pool.new_connection()
-            conn2 = await pool.new_connection()
-            conn3 = await pool.new_connection()
+            db1 = await pool.new_connection()
+            db2 = await pool.new_connection()
+            db3 = await pool.new_connection()
 
             # multiple queries can be run in parallel
             coro = [
-                    await conn1.fetch("SELECT 1 AS one"),
-                    await conn2.fetch("SELECT 2 AS two"),
-                    await conn3.fetch("SELECT 3 AS three")
+                    await db1.query(sql="SELECT 1 AS one"),
+                    await db2.query(sql="SELECT 2 AS two"),
+                    await db3.query(sql="SELECT 3 AS three")
                 ]
             # wait for all queries to finish
             results = await asyncio.gather(*coro)
@@ -31,7 +31,7 @@ class PySQLXEnginePool:
             # [[BaseRow(one=1)], [BaseRow(two=2)], [BaseRow(three=3)]]
 
             # try creating a connection when the pool is full
-            conn4 = await pool.new_connection() # raises PoolMaxConnectionsError
+            db4 = await pool.new_connection() # raises PoolMaxConnectionsError
 
         asyncio.run(main())
     ```
@@ -72,9 +72,9 @@ class PySQLXEnginePool:
         pool = PySQLXEnginePool("postgresql://user:pass@host:port/db?schema=sample", max_connections=3)
 
         async def main():
-            conn1 = await pool.new_connection() # return a new PySQLXEngine instance
-            conn2 = await pool.new_connection() # return a new PySQLXEngine instance
-            conn3 = await pool.new_connection() # return a new PySQLXEngine instance
+            db1 = await pool.new_connection() # return a new PySQLXEngine instance
+            db2 = await pool.new_connection() # return a new PySQLXEngine instance
+            db3 = await pool.new_connection() # return a new PySQLXEngine instance
         ```
         """
         ...

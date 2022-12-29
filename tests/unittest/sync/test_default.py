@@ -3,7 +3,7 @@ import os
 import pytest
 
 from pysqlx_engine import PySQLXEngineSync
-from pysqlx_engine._core.const import CONFIG
+from pysqlx_engine._core.const import LOG_CONFIG
 from pysqlx_engine._core.errors import ParameterInvalidJsonValueError, ParameterInvalidValueError
 from pysqlx_engine._core.until import force_sync, pysqlx_get_error
 from pysqlx_engine.errors import (
@@ -146,9 +146,9 @@ def test_invalid_convert_type_error_invalid_value():
 
 
 def test_invalid_convert_type_to_json_pgsql():
-    CONFIG.PYSQLX_ERROR_JSON_FMT = False
-    CONFIG.PYSQLX_MSG_COLORIZE = False
-    CONFIG.PYSQLX_SQL_LOG = False
+    LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = False
+    LOG_CONFIG.PYSQLX_MSG_COLORIZE = False
+    LOG_CONFIG.PYSQLX_SQL_LOG = False
 
     class MyType:
         i = 1
@@ -156,9 +156,9 @@ def test_invalid_convert_type_to_json_pgsql():
     with pytest.raises(ParameterInvalidJsonValueError):
         param.try_json("postgresql", MyType(), "invalid_type")
 
-    CONFIG.PYSQLX_ERROR_JSON_FMT = True
-    CONFIG.PYSQLX_MSG_COLORIZE = True
-    CONFIG.PYSQLX_SQL_LOG = True
+    LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
+    LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
+    LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     with pytest.raises(ParameterInvalidJsonValueError):
         param.try_json("postgresql", MyType(), "invalid_type")

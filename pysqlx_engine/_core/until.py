@@ -6,7 +6,7 @@ from pysqlx_core import PySQLXError as _PySQLXError
 
 from .param import convert
 
-from .const import ISOLATION_LEVEL, CONFIG
+from .const import ISOLATION_LEVEL, LOG_CONFIG
 from .errors import (
     ConnectError,
     ExecuteError,
@@ -110,7 +110,7 @@ def build_sql(provider: str, sql: str, parameters: dict = None) -> str:
         for key, value in param_as_list_of_tuples:
             new_sql = new_sql.replace(f":{key}", str(value))
 
-        if CONFIG.PYSQLX_SQL_LOG:
+        if LOG_CONFIG.PYSQLX_SQL_LOG:
             logger.setLevel(logging.INFO)
             logger.info(fe_sql(sql=new_sql))
 

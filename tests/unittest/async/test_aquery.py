@@ -8,7 +8,7 @@ import pytest
 from pydantic import BaseModel
 
 from pysqlx_engine import BaseRow, PySQLXEngine
-from pysqlx_engine._core.const import CONFIG
+from pysqlx_engine._core.const import LOG_CONFIG
 from pysqlx_engine._core.errors import ParameterInvalidProviderError, ParameterInvalidValueError, QueryError
 from tests.common import adb_mssql, adb_mysql, adb_pgsql, adb_sqlite
 
@@ -547,7 +547,7 @@ async def test_py_sqlx_error_invalid_query_type(db):
 # new tests
 @pytest.mark.asyncio
 async def test_sample_query_first_with_param_db_pgsql(db: PySQLXEngine = adb_pgsql):
-    CONFIG.PYSQLX_SQL_LOG = True
+    LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     conn: PySQLXEngine = await db()
     assert conn.connected is True
@@ -595,7 +595,7 @@ async def test_sample_query_first_with_param_db_pgsql(db: PySQLXEngine = adb_pgs
 @pytest.mark.asyncio
 async def test_sample_query_first_with_param_db_mssql(db: PySQLXEngine = adb_mssql):
 
-    CONFIG.PYSQLX_SQL_LOG = True
+    LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     conn: PySQLXEngine = await db()
     assert conn.connected is True
@@ -642,7 +642,7 @@ async def test_sample_query_first_with_param_db_mssql(db: PySQLXEngine = adb_mss
 
 @pytest.mark.asyncio
 async def test_sample_query_first_with_param_db_mysql(db: PySQLXEngine = adb_mysql):
-    CONFIG.PYSQLX_SQL_LOG = True
+    LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     conn: PySQLXEngine = await db()
     assert conn.connected is True
@@ -683,7 +683,7 @@ async def test_sample_query_first_with_param_db_mysql(db: PySQLXEngine = adb_mys
 @pytest.mark.asyncio
 async def test_sample_query_first_with_param_db_sqlite(db: PySQLXEngine = adb_sqlite):
 
-    CONFIG.PYSQLX_SQL_LOG = True
+    LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     conn: PySQLXEngine = await db()
     assert conn.connected is True
@@ -729,8 +729,8 @@ async def test_invalid_param_type_db_pgsql(db: PySQLXEngine = adb_pgsql):
     conn: PySQLXEngine = await db()
     assert conn.connected is True
 
-    CONFIG.PYSQLX_MSG_COLORIZE = True
-    CONFIG.PYSQLX_SQL_LOG = True
+    LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
+    LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     sql = f"SELECT :id AS id"
 
@@ -749,9 +749,9 @@ async def test_invalid_param_array_with_heterogeneous_types_db_pgsql(db: PySQLXE
     conn: PySQLXEngine = await db()
     assert conn.connected is True
 
-    CONFIG.PYSQLX_ERROR_JSON_FMT = False
-    CONFIG.PYSQLX_MSG_COLORIZE = False
-    CONFIG.PYSQLX_SQL_LOG = False
+    LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = False
+    LOG_CONFIG.PYSQLX_MSG_COLORIZE = False
+    LOG_CONFIG.PYSQLX_SQL_LOG = False
 
     sql = f"SELECT :tuple AS tuple"
     parameters = {"tuple": (1, 2, 3.1)}
@@ -759,9 +759,9 @@ async def test_invalid_param_array_with_heterogeneous_types_db_pgsql(db: PySQLXE
     with pytest.raises(ParameterInvalidValueError):
         await conn.query_first(sql=sql, parameters=parameters)
 
-    CONFIG.PYSQLX_ERROR_JSON_FMT = True
-    CONFIG.PYSQLX_MSG_COLORIZE = True
-    CONFIG.PYSQLX_SQL_LOG = True
+    LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
+    LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
+    LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     with pytest.raises(ParameterInvalidValueError):
         await conn.query_first(sql=sql, parameters=parameters)
@@ -775,9 +775,9 @@ async def test_invalid_param_array_with_same_types_but_not_supported_db_pgsql(db
     conn: PySQLXEngine = await db()
     assert conn.connected is True
 
-    CONFIG.PYSQLX_ERROR_JSON_FMT = False
-    CONFIG.PYSQLX_MSG_COLORIZE = False
-    CONFIG.PYSQLX_SQL_LOG = False
+    LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = False
+    LOG_CONFIG.PYSQLX_MSG_COLORIZE = False
+    LOG_CONFIG.PYSQLX_SQL_LOG = False
 
     class MyType:
         i = 1
@@ -788,9 +788,9 @@ async def test_invalid_param_array_with_same_types_but_not_supported_db_pgsql(db
     with pytest.raises(ParameterInvalidProviderError):
         await conn.query_first(sql=sql, parameters=parameters)
 
-    CONFIG.PYSQLX_ERROR_JSON_FMT = True
-    CONFIG.PYSQLX_MSG_COLORIZE = True
-    CONFIG.PYSQLX_SQL_LOG = True
+    LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
+    LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
+    LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     with pytest.raises(ParameterInvalidProviderError):
         await conn.query_first(sql=sql, parameters=parameters)
@@ -851,8 +851,8 @@ async def test_invalid_provider_to_array_param(db: PySQLXEngine):
     conn: PySQLXEngine = await db()
     assert conn.connected is True
 
-    CONFIG.PYSQLX_MSG_COLORIZE = True
-    CONFIG.PYSQLX_SQL_LOG = True
+    LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
+    LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     sql = f"SELECT :tuple AS tuple"
     parameters = {"tuple": (1, 2, 3)}
@@ -869,8 +869,8 @@ async def test_sample_param_type_db_pgsql_show_sql_colored(db: PySQLXEngine = ad
     conn: PySQLXEngine = await db()
     assert conn.connected is True
 
-    CONFIG.PYSQLX_MSG_COLORIZE = True
-    CONFIG.PYSQLX_SQL_LOG = True
+    LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
+    LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     sql = f"SELECT :id AS id"
 

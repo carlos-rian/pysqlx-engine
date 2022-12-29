@@ -22,7 +22,7 @@ from .const import (
     CODE_PoolMaxConnectionsError,
     CODE_ParameterInvalidProviderError,
     CODE_ParameterInvalidValueError,
-    CONFIG,
+    LOG_CONFIG,
 )
 
 from .helper import fe_json
@@ -36,7 +36,7 @@ class PySQLXError(Exception):
         self.message: str = err.message()
         self._type: str = err.error()
 
-        if CONFIG.PYSQLX_ERROR_JSON_FMT:
+        if LOG_CONFIG.PYSQLX_ERROR_JSON_FMT:
             msg = fe_json(
                 {
                     "code": self.code,
@@ -116,7 +116,7 @@ class AlreadyConnectedError(Exception):
     """
 
     def __init__(self, *args: object) -> None:
-        if CONFIG.PYSQLX_ERROR_JSON_FMT:
+        if LOG_CONFIG.PYSQLX_ERROR_JSON_FMT:
             msg = fe_json(
                 {
                     "code": CODE_AlreadyConnectedError,
@@ -141,7 +141,7 @@ class PoolMaxConnectionsError(Exception):
     """
 
     def __init__(self, *args: object) -> None:
-        if CONFIG.PYSQLX_ERROR_JSON_FMT:
+        if LOG_CONFIG.PYSQLX_ERROR_JSON_FMT:
             msg = fe_json(
                 {
                     "code": CODE_PoolMaxConnectionsError,
@@ -171,7 +171,7 @@ class ParameterInvalidProviderError(Exception):
 
         message = f"the provider '{self.provider}' does not support the type '{self.type}'."
 
-        if CONFIG.PYSQLX_ERROR_JSON_FMT:
+        if LOG_CONFIG.PYSQLX_ERROR_JSON_FMT:
             msg = fe_json(
                 {
                     "code": CODE_ParameterInvalidProviderError,
@@ -203,7 +203,7 @@ class ParameterInvalidValueError(Exception):
             "(bool, bytes, date, datetime, Decimal, dict, float, int, list, str, time, tuple, UUID, None)."
         )
 
-        if CONFIG.PYSQLX_ERROR_JSON_FMT:
+        if LOG_CONFIG.PYSQLX_ERROR_JSON_FMT:
             msg = fe_json(
                 {
                     "code": CODE_ParameterInvalidValueError,
@@ -236,7 +236,7 @@ class ParameterInvalidJsonValueError(Exception):
             "(bool, bytes, date, datetime, Decimal, dict, float, int, list, str, time, tuple, UUID, None)."
         )
 
-        if CONFIG.PYSQLX_ERROR_JSON_FMT:
+        if LOG_CONFIG.PYSQLX_ERROR_JSON_FMT:
             msg = fe_json(
                 {
                     "code": CODE_ParameterInvalidJsonValueError,

@@ -6,7 +6,7 @@ import pytest
 from pydantic import BaseModel
 
 from pysqlx_engine import BaseRow, PySQLXEngineSync
-from pysqlx_engine._core.const import CONFIG
+from pysqlx_engine._core.const import LOG_CONFIG
 from pysqlx_engine._core.errors import ParameterInvalidProviderError, ParameterInvalidValueError, QueryError
 from tests.common import db_mssql, db_mysql, db_pgsql, db_sqlite
 
@@ -519,7 +519,7 @@ def test_invalid_sql_type_db_pgsql(db: PySQLXEngineSync = db_pgsql):
 
 # new tests
 def test_sample_query_first_with_param_db_pgsql(db: PySQLXEngineSync = db_pgsql):
-    CONFIG.PYSQLX_SQL_LOG = True
+    LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
@@ -566,7 +566,7 @@ def test_sample_query_first_with_param_db_pgsql(db: PySQLXEngineSync = db_pgsql)
 
 def test_sample_query_first_with_param_db_mssql(db: PySQLXEngineSync = db_mssql):
 
-    CONFIG.PYSQLX_SQL_LOG = True
+    LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
@@ -612,7 +612,7 @@ def test_sample_query_first_with_param_db_mssql(db: PySQLXEngineSync = db_mssql)
 
 
 def test_sample_query_first_with_param_db_mysql(db: PySQLXEngineSync = db_mysql):
-    CONFIG.PYSQLX_SQL_LOG = True
+    LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
@@ -652,7 +652,7 @@ def test_sample_query_first_with_param_db_mysql(db: PySQLXEngineSync = db_mysql)
 
 def test_sample_query_first_with_param_db_sqlite(db: PySQLXEngineSync = db_sqlite):
 
-    CONFIG.PYSQLX_SQL_LOG = True
+    LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
@@ -697,8 +697,8 @@ def test_invalid_param_type_db_pgsql(db: PySQLXEngineSync = db_pgsql):
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
-    CONFIG.PYSQLX_MSG_COLORIZE = True
-    CONFIG.PYSQLX_SQL_LOG = True
+    LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
+    LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     sql = f"SELECT :id AS id"
 
@@ -716,9 +716,9 @@ def test_invalid_param_array_with_heterogeneous_types_db_pgsql(db: PySQLXEngineS
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
-    CONFIG.PYSQLX_ERROR_JSON_FMT = False
-    CONFIG.PYSQLX_MSG_COLORIZE = False
-    CONFIG.PYSQLX_SQL_LOG = False
+    LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = False
+    LOG_CONFIG.PYSQLX_MSG_COLORIZE = False
+    LOG_CONFIG.PYSQLX_SQL_LOG = False
 
     sql = f"SELECT :tuple AS tuple"
     parameters = {"tuple": (1, 2, 3.1)}
@@ -726,9 +726,9 @@ def test_invalid_param_array_with_heterogeneous_types_db_pgsql(db: PySQLXEngineS
     with pytest.raises(ParameterInvalidValueError):
         conn.query_first(sql=sql, parameters=parameters)
 
-    CONFIG.PYSQLX_ERROR_JSON_FMT = True
-    CONFIG.PYSQLX_MSG_COLORIZE = True
-    CONFIG.PYSQLX_SQL_LOG = True
+    LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
+    LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
+    LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     with pytest.raises(ParameterInvalidValueError):
         conn.query_first(sql=sql, parameters=parameters)
@@ -741,9 +741,9 @@ def test_invalid_param_array_with_same_types_but_not_supported_db_pgsql(db: PySQ
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
-    CONFIG.PYSQLX_ERROR_JSON_FMT = False
-    CONFIG.PYSQLX_MSG_COLORIZE = False
-    CONFIG.PYSQLX_SQL_LOG = False
+    LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = False
+    LOG_CONFIG.PYSQLX_MSG_COLORIZE = False
+    LOG_CONFIG.PYSQLX_SQL_LOG = False
 
     class MyType:
         i = 1
@@ -754,9 +754,9 @@ def test_invalid_param_array_with_same_types_but_not_supported_db_pgsql(db: PySQ
     with pytest.raises(ParameterInvalidProviderError):
         conn.query_first(sql=sql, parameters=parameters)
 
-    CONFIG.PYSQLX_ERROR_JSON_FMT = True
-    CONFIG.PYSQLX_MSG_COLORIZE = True
-    CONFIG.PYSQLX_SQL_LOG = True
+    LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
+    LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
+    LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     with pytest.raises(ParameterInvalidProviderError):
         conn.query_first(sql=sql, parameters=parameters)
@@ -813,8 +813,8 @@ def test_invalid_provider_to_array_param(db: PySQLXEngineSync):
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
-    CONFIG.PYSQLX_MSG_COLORIZE = True
-    CONFIG.PYSQLX_SQL_LOG = True
+    LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
+    LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     sql = f"SELECT :tuple AS tuple"
     parameters = {"tuple": (1, 2, 3)}
@@ -830,8 +830,8 @@ def test_sample_param_type_db_pgsql_show_sql_colored(db: PySQLXEngineSync = db_p
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
-    CONFIG.PYSQLX_MSG_COLORIZE = True
-    CONFIG.PYSQLX_SQL_LOG = True
+    LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
+    LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     sql = f"SELECT :id AS id"
 
