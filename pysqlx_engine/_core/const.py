@@ -79,9 +79,9 @@ Or you can set the value of the variables in the code.
     LOG_CONFIG.PYSQLX_MSG_COLORIZE = True
     LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
 
-    # set the log debug level 
+    # set the log info level when the PYSQLX_SQL_LOG is True
     import logging
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
 
     # connect to the database
     from pysqlx_engine import PySQLXEngine
@@ -95,12 +95,14 @@ Or you can set the value of the variables in the code.
 
     # run the invalid query and see the error in JSON format
     db.query("SELECT * FROM invalid_table")
-
-    # output -> 
+    # output ->  INFO:root:SELECT * FROM invalid_table
+    
+    # raise the error
+    pysqlx_engine._core.errors.QueryError: 
     {
-        "code": "P0193",
-        "message": "relation 'invalid_table' does not exist",
-        "error": "QueryError",
+       "code": "42P01",
+       "message": "relation 'invalid_table' does not exist",
+       "error": "QueryError"
     }
 ```
 
