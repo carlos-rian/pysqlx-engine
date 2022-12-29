@@ -23,11 +23,12 @@ file_version = toml.loads(text)["tool"]["poetry"]["version"]
 version: str = get_version()
 print("Package version:", version)
 
-MAJOR, MINOR, PATCH = version.replace("b", "").split(".")
+# MAJOR, MINOR, PATCH = version.replace("b", "").split(".")
+MAJOR, MINOR, PATCH = "0.2.0b".split(".")
 
-PATCH = int(PATCH) + 1
+# PATCH = int(PATCH) + 1
 
-new_version: str = ".".join([MAJOR, MINOR, str(PATCH) + "b"])
+new_version: str = ".".join([MAJOR, MINOR, str(PATCH)])
 
 print("Package new version:", new_version)
 

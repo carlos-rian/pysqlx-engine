@@ -10,7 +10,7 @@ jobs:
   test:
     runs-on: ${{ matrix.os }}
     strategy:
-      max-parallel: 4
+      max-parallel: 5
       matrix:
         os: [ubuntu-latest]
         python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
@@ -55,11 +55,16 @@ jobs:
       - name: run unittest
         run: poetry run pytest --ignore=tests/benchmark --cov=pysqlx_engine --cov=tests --cov-report=term-missing:skip-covered --cov-report=xml tests ${@}
 
+      - name: get current date
+        id: date
+        run: |
+          echo "{date}={$(date +'%Y.%m.%d_%Hh_%Mm')}" >> $GITHUB_STATE
+
       - name: upload coverage
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          flags: ${{ matrix.os }}_${{ matrix.python-version }}_date '+%Y-%m-%d %H:%M'
+          flags: ${{ matrix.os }}_${{ matrix.python-version }}_${{ env.date }}
 
   build:
     #if: github.ref == 'refs/heads/main'
