@@ -4,7 +4,7 @@
   <a href="/"><img src="./img/logo-text3.png" alt="PySQLXEngine Logo"></a>
 </p>
 <p align="center">
-    <em>PySQLXEngine, a minimalist SQL engine, ready for production</em>
+    <em>PySQLXEngine, a minimalist SQL Engine, ready for production</em>
 </p>
 
 <p align="center">
@@ -30,13 +30,13 @@
 
 ---
 
-PySQLXEngine supports the option of sending **raw sql** to your database.
+PySQLXEngine supports the option of sending **Raw SQL** to your database.
 
-The PySQLXEngine is a minimalist [SQL engine](https://github.com/carlos-rian/pysqlx-engine). Currently this lib have supports [**async**](https://docs.python.org/3/library/asyncio.html) and [**sync**](https://deepsource.io/glossary/synchronous-programming/) programming.
+The PySQLXEngine is a minimalist [SQL Engine](https://github.com/carlos-rian/pysqlx-engine).
 
-The PySQLXEngine was created and thought to be minimalistic, but very efficient. The core is write in [**Rust**](https://www.rust-lang.org), making communication between database and [**Python**](https://python-poetry.org) more efficient.
+The PySQLXEngine was created and thought to be minimalistic, but very efficient. The core is write in [**Rust**](https://www.rust-lang.org), making communication between Databases and [**Python**](https://python-poetry.org) more efficient.
 
-All SQL executed using PySQLXEngine is atomic; only one instruction is executed at a time. Only the first one will be completed if you send an Insert and a select. This is one of the ways to handle SQL ingestion. As of version **0.2.0**, PySQLXEngine supports transactions, where you can control [`COMMIT`](https://www.geeksforgeeks.org/difference-between-commit-and-rollback-in-sql), [ `ROLLBACK` ](https://www.geeksforgeeks.org/difference-between-commit-and-rollback-in-sql), [IsolationLevel](https://levelup.gitconnected.com/understanding-isolation-levels-in-a-database-transaction-af78aea3f44), etc. as you wish.
+All SQL executed using PySQLXEngine is atomic; only one instruction is executed at a time. Only the first one will be completed if you send an Insert and a select. This is one of the ways to handle SQL ingestion. As of version **0.2.0**, PySQLXEngine supports transactions, where you can control [`BEGIN`](https://learn.microsoft.com/en-us/sql/t-sql/language-elements/begin-end-transact-sql?view=sql-server-ver16), [`COMMIT`](https://www.geeksforgeeks.org/difference-between-commit-and-rollback-in-sql), [ `ROLLBACK` ](https://www.geeksforgeeks.org/difference-between-commit-and-rollback-in-sql), [`ISOLATION LEVEL`](https://levelup.gitconnected.com/understanding-isolation-levels-in-a-database-transaction-af78aea3f44), etc. as you wish.
 
 !!! Note
     Minimalism is not the lack of something, but having exactly what you need.
@@ -91,8 +91,7 @@ OS Support:
 
 === "Async"
     ```python
-    import asyncio
-    from pypysqlx_engine  import PySQLXEngine
+    from pysqlx_engine  import PySQLXEngine
 
     async def main():
         db = PySQLXEngine(uri="sqlite:./db.db")
@@ -106,12 +105,13 @@ OS Support:
 
         print(rows)
 
+    import asyncio
     asyncio.run(main())
     ```
 === "Sync"
     ```python
     
-    from pypysqlx_engine  import PySQLXEngineSync
+    from pysqlx_engine  import PySQLXEngineSync
 
     def main():
         db = PySQLXEngineSync(uri="sqlite:./db.db")
@@ -135,9 +135,7 @@ OS Support:
 ```console
 $ python3 main.py
 
-[
-BaseRow(id=1, name='Rian', age=28), 
-BaseRow(id=2, name='Carlos', age=29)
-]
+[BaseRow(id=1, name='Rian', age=28),  BaseRow(id=2, name='Carlos', age=29)]
+
 ```
 </div>

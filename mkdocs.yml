@@ -2,25 +2,25 @@ site_name: PySQLXEngine
 
 site_description: Python Async SQL Engines
 
-site_url: 'https://github.com/carlos-rian/pysqlx-engine'
+site_url: "https://github.com/carlos-rian/pysqlx-engine"
 
 theme:
   name: material
   font:
     code: Roboto Mono
   palette:
-  - scheme: default
-    primary: black
-    accent: indigo
-    toggle:
-      icon: material/toggle-switch-off-outline
-      name: Switch to dark mode
-  - scheme: slate
-    primary: black
-    accent: indigo
-    toggle:
-      icon: material/toggle-switch
-      name: Switch to light mode
+    - scheme: default
+      primary: black
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - scheme: slate
+      primary: black
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
   features:
     - search.suggest
     - search.highlight
@@ -35,9 +35,9 @@ theme:
   favicon: img/favicon/favicon.ico
   language: en
 
-repo_name: 'carlos-rian/pysqlx-engine'
+repo_name: "carlos-rian/pysqlx-engine"
 
-repo_url: 'https://github.com/carlos-rian/pysqlx-engine'
+repo_url: "https://github.com/carlos-rian/pysqlx-engine"
 
 plugins:
   - search
@@ -46,10 +46,13 @@ plugins:
 
 nav:
   - Home: index.md
+  - Tutorial: pysqlx_engine.md
+
   - tutorial.md
   - Advanced Guide:
-    - dml_with_output.md
-  - support.md
+      - dml_with_output.md
+
+  - databases_and_versions.md
   - return_types.md
   - core_engine.md
 
@@ -70,9 +73,9 @@ markdown_extensions:
 
   - pymdownx.superfences:
       custom_fences:
-      - name: mermaid
-        class: mermaid
-        format: !!python/name:pymdownx.superfences.fence_div_format ''
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_div_format
   - pymdownx.tabbed:
       alternate_style: true
 

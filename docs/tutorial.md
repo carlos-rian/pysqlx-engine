@@ -91,7 +91,7 @@ Create file [`main.py`](./python/connect.py)
 from pysqlx_engine  import PySQLXEngine
 
 uri = "sqlite:./db.db"
-db =PySQLXEngine(uri=uri)
+db = PySQLXEngine(uri=uri)
 ```
 
 After you create an instance ofPySQLXEngine; This instance is [`Lazy`](https://www.oreilly.com/library/view/python-cookbook/0596001673/ch08s12.html), after calling the [`db.connect()`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbconnect) method, the connection to the database will be made.
@@ -118,7 +118,7 @@ After you create an instance ofPySQLXEngine; This instance is [`Lazy`](https://w
 from pysqlx_engine  import PySQLXEngine
 
 uri = "sqlite:./db.db"
-db =PySQLXEngine(uri=uri)
+db = PySQLXEngine(uri=uri)
 
 async def main():
     await db.connect()
@@ -137,7 +137,7 @@ import asyncio
 from pysqlx_engine  import PySQLXEngine
 
 uri = "sqlite:./db.db"
-db =PySQLXEngine(uri=uri)
+db = PySQLXEngine(uri=uri)
 
 async def main():
     print("connecting...")
@@ -190,7 +190,7 @@ import asyncio
 from pysqlx_engine  import PySQLXEngine
 
 uri = "sqlite:./db.db"
-db =PySQLXEngine(uri=uri)
+db = PySQLXEngine(uri=uri)
 
 async def create_table(db:PySQLXEngine):
     stmt = """CREATE TABLE IF NOT EXISTS user (
