@@ -1,4 +1,4 @@
-# PySQLXEngine - learning
+# Introduction
 
 The PySQLXEngine is a library that allows you to connect to a database and execute queries in a simple way.
 
@@ -21,6 +21,10 @@ Asynchronous programming is a broad subject, but our tutorial is intended to be 
 when you need a performance in the sense of doing concurrency "*at the same time*", use async. 
 You can use the sync form something need to do things that don't need concurrency.
 
+### Create the file
+
+Create a file called `main.py` and add the code below.
+
 
 === "Async"
     ```python hl_lines="3 5 7-8"
@@ -29,6 +33,7 @@ You can use the sync form something need to do things that don't need concurrenc
     async def main(): # need to be async, because of await
         db = PySQLXEngine(uri="sqlite:./db.db")
         await db.connect() # need to await
+        print("Connected: ", db.connected)
     ```
 
 === "Sync"
@@ -38,4 +43,40 @@ You can use the sync form something need to do things that don't need concurrenc
     def main(): # don't need to be async
         db = PySQLXEngineSync(uri="sqlite:./db.db")
         db.connect() # don't need to await
+        print("Connected: ", db.connected)
     ```
+
+### Calling the functions
+
+To call the coroutine functions, you need to use the ``asyncio`` library, this library is part of the standard library of Python.
+
+So, you need to add the below lines at the end of your code!
+
+
+=== "Async"
+    ```python hl_lines="3-4"
+    ...# your code
+
+    import asyncio # need to import 
+    asyncio.run(main()) # call the function
+    ```
+
+=== "Sync"
+    ```python hl_lines="3-4"
+    ...# your code
+
+    # don't need to import asyncio
+    main() # call the function
+    ```
+
+### Running the code
+
+<div class="termy">
+
+```console
+$ python3 main.py
+
+Connected:  True
+
+```
+</div>

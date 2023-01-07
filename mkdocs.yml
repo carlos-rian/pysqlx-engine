@@ -48,7 +48,10 @@ nav:
   - Home: index.md
   - Tutorial: pysqlx_engine.md
 
-  - tutorial.md
+  - User Guide:
+      - user_guide/intro.md
+      - user_guide/next_steps.md
+
   - Advanced Guide:
       - dml_with_output.md
 
