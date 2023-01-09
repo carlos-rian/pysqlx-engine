@@ -1,4 +1,4 @@
-# DML with output
+# **DML with return**
 
 Although PySQLXEngine has a method for DML [`execute`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbexecute) which returns the number of rows affected.
 
@@ -10,7 +10,7 @@ Although sql statements are atomic, one execution at a time, most modern databas
 
 So since we need something to be returned, we can use the [`query`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbquery) or [`query_first`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbquery) methods.
 
-## Examples
+## **Examples**
 
 In this examples we use the `user` table, which has the structure below. 
 Change the types to your database types. In this [`SQLite`](https://www.sqlite.org/index.html) is used.
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS user (
 
     You can use [`SELECT LAST_INSERT_ID();`](https://www.w3schools.com/sql/func_mysql_last_insert_id.asp) after **inserting the row**, but it is not guaranteed to be the correct ID, given that in a concurrent DB, many inserts at the same time, and the [`LAST_INSERT_ID()`](https://www.w3schools.com/sql/func_mysql_last_insert_id.asp) function takes only the last one. *If possible, start using [MariaDB](https://mariadb.org/); in addition to being more reliable, it is also an up-to-date open source.*
 
-### PostgreSQL, SQLite and MariaDB
+### **PostgreSQL, SQLite and MariaDB**
 
 * Create [`main.py`](./python/dml_with_output.py) file with:
 
@@ -49,7 +49,7 @@ $ python3 main.py
 ```
 </div>
 
-### Microsoft SQL Server 
+### **Microsoft SQL Server** 
 
 * Create [`main.py`](./python/dml_with_output_sql_server.py) file with:
 

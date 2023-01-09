@@ -46,14 +46,16 @@ plugins:
 
 nav:
   - Home: index.md
-  - Tutorial: pysqlx_engine.md
 
   - User Guide:
-      - user_guide/intro.md
-      - user_guide/next_steps.md
+      - Introduction: user_guide/intro.md
+      - Examples: user_guide/examples.md
+      - Queries: user_guide/queries.md
+      - Documentation for Methods: user_guide/extras.md
 
   - Advanced Guide:
-      - dml_with_output.md
+      - DML with return: advanced_guide/dml_with_return.md
+      - Simple pool with concurrent connections: advanced_guide/simple_pool_conn.md
 
   - databases_and_versions.md
   - return_types.md
@@ -82,7 +84,7 @@ markdown_extensions:
   - pymdownx.tabbed:
       alternate_style: true
 
-copyright: Copyright &copy; 2022 - 2022 Carlos Rian
+copyright: Copyright &copy; 2022 - 2023 Carlos Rian
 
 extra_css:
   - css/termynal.css
