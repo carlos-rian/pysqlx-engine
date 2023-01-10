@@ -32,6 +32,8 @@ class PySQLXEngine:
 
     ##### PostgreSQL
     ```python
+    from pysqlx_engine import PySQLXEngine
+
     uri = "postgresql://user:pass@host:port/db?schema=sample"
     db = PySQLXEngine(uri=uri)
     await db.connect()
@@ -39,6 +41,8 @@ class PySQLXEngine:
     ---
     ##### MySQL
     ```python
+    from pysqlx_engine import PySQLXEngine
+
     uri = "mysql://user:pass@host:port/db?schema=sample"
     db = PySQLXEngine(uri=uri)
     await db.connect()
@@ -46,6 +50,8 @@ class PySQLXEngine:
     ---
     ##### Microsoft SQL Server
     ```python
+    from pysqlx_engine import PySQLXEngine
+
     uri = "sqlserver://host:port;initial catalog=sample;user=sa;password=pass;"
     db = PySQLXEngine(uri=uri)
     await db.connect()
@@ -53,6 +59,8 @@ class PySQLXEngine:
     ---
     ##### SQLite
     ```python
+    from pysqlx_engine import PySQLXEngine
+
     uri = "sqlite:./dev.db"
     db = PySQLXEngine(uri=uri)
     await db.connect()
@@ -156,6 +164,8 @@ class PySQLXEngine:
 
         ### Example
         ```python
+            from pysqlx_engine import PySQLXEngine
+
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             db = PySQLXEngineSync(uri=uri)
             await db.connect()
@@ -186,6 +196,8 @@ class PySQLXEngine:
 
         ### Example
         ```python
+            from pysqlx_engine import PySQLXEngine
+
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             db = PySQLXEngine(uri=uri)
             await db.connect()
@@ -196,13 +208,16 @@ class PySQLXEngine:
     async def raw_cmd(self, sql: str) -> "None":
         """
         ## Description
+
         Run a command in the database, for queries that can't be run using prepared statements(queries/execute).
 
         ---
 
         ### Helper
 
-            * Arguments: ``sql(str)``: sql to be executed.
+            * Arguments:
+
+                ``sql(str)``: sql to be executed.
 
             * Returns: ``None``
 
@@ -212,6 +227,8 @@ class PySQLXEngine:
 
         ### Example
         ```python
+            from pysqlx_engine import PySQLXEngine
+
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             db = PySQLXEngine(uri=uri)
             await db.connect()
@@ -226,6 +243,7 @@ class PySQLXEngine:
     async def query(self, sql: str, parameters: Optional[DictParam] = None) -> Union[List[BaseRow], List]:
         """
         ## Description
+
         Returns all rows from query result as``BaseRow list``, ``MyModel list`` or ``empty list``.
 
         ---
@@ -275,22 +293,25 @@ class PySQLXEngine:
                 ``tuple``,
                 ``UUID``,
                 ``None``
-            ).
+            )
 
         #### Python types vs SQL types:
+
+            [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
+
         ```
             * bool     -> bool|bit|boolean|tinyint|etc
-            * bytes    -> bytea|binary|varbinary
+            * bytes    -> bytea|binary|varbinary|etc
             * date     -> date|nvarchar|varchar|string|etc
             * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
-            * Decimal  -> decimal|numeric
+            * Decimal  -> decimal|numeric|etc
             * dict     -> json|jsonb|nvarchar|varchar|string|etc
-            * float    -> float|real|numeric
+            * float    -> float|real|numeric|etc
             * int      -> int|integer|smallint|bigint|tinyint|etc
             * list     -> json|jsonb|nvarchar|varchar|string|etc
             * str      -> varchar|text|nvarchar|char|etc
             * time     -> time|nvarchar|varchar|string|etc
-            * tuple    -> array(Postgres Native)
+            * tuple    -> array(Postgres Native), another database: error.
             * UUID     -> uuid|varchar|text|nvarchar|etc
             * None     -> null
         ```
@@ -299,6 +320,8 @@ class PySQLXEngine:
 
         ### Example
         ```python
+            from pysqlx_engine import PySQLXEngine
+
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             db = PySQLXEngine(uri=uri)
             await db.connect()
@@ -326,6 +349,7 @@ class PySQLXEngine:
     ) -> Union[List[Dict[str, Any]], List]:
         """
         ## Description
+
         Returns all rows from query result as ``dict list`` or ``empty list``.
 
         ---
@@ -333,7 +357,7 @@ class PySQLXEngine:
         ### Helper
             * Arguments:
 
-                ``sql(str)`` sql query to be executed
+                ``sql(str)``: sql query to be executed
 
                 ``parameters(dict)``: (default is None) parameters must be a dictionary with the name of the parameter and the value.
 
@@ -376,19 +400,22 @@ class PySQLXEngine:
             )
 
         #### Python types vs SQL types:
+
+            [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
+
         ```
             * bool     -> bool|bit|boolean|tinyint|etc
-            * bytes    -> bytea|binary|varbinary
+            * bytes    -> bytea|binary|varbinary|etc
             * date     -> date|nvarchar|varchar|string|etc
             * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
-            * Decimal  -> decimal|numeric
+            * Decimal  -> decimal|numeric|etc
             * dict     -> json|jsonb|nvarchar|varchar|string|etc
-            * float    -> float|real|numeric
+            * float    -> float|real|numeric|etc
             * int      -> int|integer|smallint|bigint|tinyint|etc
             * list     -> json|jsonb|nvarchar|varchar|string|etc
             * str      -> varchar|text|nvarchar|char|etc
             * time     -> time|nvarchar|varchar|string|etc
-            * tuple    -> array(Postgres Native)
+            * tuple    -> array(Postgres Native), another database: error.
             * UUID     -> uuid|varchar|text|nvarchar|etc
             * None     -> null
         ```
@@ -397,6 +424,8 @@ class PySQLXEngine:
 
         ### Example
         ```python
+            from pysqlx_engine import PySQLXEngine
+
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             db = PySQLXEngine(uri=uri)
             await db.connect()
@@ -418,6 +447,7 @@ class PySQLXEngine:
     async def query_first(self, sql: str, parameters: DictParam = None) -> Union[BaseRow, None]:
         """
         ## Description
+
         Returns first row from query result as ``BaseRow``, ``MyModel`` or ``None``.
 
         ---
@@ -470,19 +500,22 @@ class PySQLXEngine:
             )
 
         #### Python types vs SQL types:
+
+            [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
+
         ```
             * bool     -> bool|bit|boolean|tinyint|etc
-            * bytes    -> bytea|binary|varbinary
+            * bytes    -> bytea|binary|varbinary|etc
             * date     -> date|nvarchar|varchar|string|etc
             * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
-            * Decimal  -> decimal|numeric
+            * Decimal  -> decimal|numeric|etc
             * dict     -> json|jsonb|nvarchar|varchar|string|etc
-            * float    -> float|real|numeric
+            * float    -> float|real|numeric|etc
             * int      -> int|integer|smallint|bigint|tinyint|etc
             * list     -> json|jsonb|nvarchar|varchar|string|etc
             * str      -> varchar|text|nvarchar|char|etc
             * time     -> time|nvarchar|varchar|string|etc
-            * tuple    -> array(Postgres Native)
+            * tuple    -> array(Postgres Native), another database: error.
             * UUID     -> uuid|varchar|text|nvarchar|etc
             * None     -> null
         ```
@@ -491,6 +524,8 @@ class PySQLXEngine:
 
         ### Example
         ```python
+            from pysqlx_engine import PySQLXEngine
+
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             db = PySQLXEngine(uri=uri)
             await db.connect()
@@ -516,6 +551,7 @@ class PySQLXEngine:
     async def query_first_as_dict(self, sql: str, parameters: Optional[DictParam] = None) -> Optional[Dict[str, Any]]:
         """
         ## Description
+
         Returns first row from query result as ``dict`` or ``None``.
 
         ---
@@ -523,7 +559,7 @@ class PySQLXEngine:
         ### Helper
             * Arguments:
 
-                ``sql(str)`` sql query to be executed.
+                ``sql(str)``: sql query to be executed.
 
                 ``parameters(dict)``: (default is None) parameters must be a dictionary with the name of the parameter and the value.
 
@@ -566,19 +602,22 @@ class PySQLXEngine:
             )
 
         #### Python types vs SQL types:
+
+            [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
+
         ```
             * bool     -> bool|bit|boolean|tinyint|etc
-            * bytes    -> bytea|binary|varbinary
+            * bytes    -> bytea|binary|varbinary|etc
             * date     -> date|nvarchar|varchar|string|etc
             * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
-            * Decimal  -> decimal|numeric
+            * Decimal  -> decimal|numeric|etc
             * dict     -> json|jsonb|nvarchar|varchar|string|etc
-            * float    -> float|real|numeric
+            * float    -> float|real|numeric|etc
             * int      -> int|integer|smallint|bigint|tinyint|etc
             * list     -> json|jsonb|nvarchar|varchar|string|etc
             * str      -> varchar|text|nvarchar|char|etc
             * time     -> time|nvarchar|varchar|string|etc
-            * tuple    -> array(Postgres Native)
+            * tuple    -> array(Postgres Native), another database: error.
             * UUID     -> uuid|varchar|text|nvarchar|etc
             * None     -> null
         ```
@@ -587,6 +626,8 @@ class PySQLXEngine:
 
         ### Example
         ```python
+            from pysqlx_engine import PySQLXEngine
+
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             db = PySQLXEngine(uri=uri)
             await db.connect()
@@ -607,6 +648,7 @@ class PySQLXEngine:
     async def execute(self, sql: str, parameters: Optional[DictParam] = None) -> "int":
         """
         ## Description
+
         Executes a query/sql and returns the number of rows affected.
 
         ---
@@ -654,19 +696,22 @@ class PySQLXEngine:
             )
 
         #### Python types vs SQL types:
+
+            [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
+
         ```
             * bool     -> bool|bit|boolean|tinyint|etc
-            * bytes    -> bytea|binary|varbinary
+            * bytes    -> bytea|binary|varbinary|etc
             * date     -> date|nvarchar|varchar|string|etc
             * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
-            * Decimal  -> decimal|numeric
+            * Decimal  -> decimal|numeric|etc
             * dict     -> json|jsonb|nvarchar|varchar|string|etc
-            * float    -> float|real|numeric
+            * float    -> float|real|numeric|etc
             * int      -> int|integer|smallint|bigint|tinyint|etc
             * list     -> json|jsonb|nvarchar|varchar|string|etc
             * str      -> varchar|text|nvarchar|char|etc
             * time     -> time|nvarchar|varchar|string|etc
-            * tuple    -> array(Postgres Native)
+            * tuple    -> array(Postgres Native), another database: error.
             * UUID     -> uuid|varchar|text|nvarchar|etc
             * None     -> null
         ```
@@ -675,6 +720,8 @@ class PySQLXEngine:
 
         ### Example
         ```python
+            from pysqlx_engine import PySQLXEngine
+
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             db = PySQLXEngine(uri=uri)
             await db.connect()
@@ -717,6 +764,8 @@ class PySQLXEngine:
 
         ### Example
         ```python
+            from pysqlx_engine import PySQLXEngine
+
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             db = PySQLXEngine(uri=uri)
             await db.connect()
@@ -752,6 +801,8 @@ class PySQLXEngine:
 
         ### Example
         ```python
+            from pysqlx_engine import PySQLXEngine
+
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             db = PySQLXEngine(uri=uri)
             await db.connect()
@@ -784,6 +835,8 @@ class PySQLXEngine:
 
         ### Example
         ```python
+            from pysqlx_engine import PySQLXEngine
+
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             db = PySQLXEngine(uri=uri)
             await db.connect()
@@ -823,6 +876,8 @@ class PySQLXEngine:
 
         ### Example
         ```python
+            from pysqlx_engine import PySQLXEngine
+
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             db = PySQLXEngine(uri=uri)
             await db.connect()
@@ -863,6 +918,8 @@ class PySQLXEngine:
 
         ### Example
         ```python
+            from pysqlx_engine import PySQLXEngine
+
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             db = PySQLXEngine(uri=uri)
             await db.connect()
