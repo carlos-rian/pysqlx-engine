@@ -10,13 +10,6 @@ theme:
     code: Roboto Mono
 
   palette:
-    #- media: "(prefers-color-scheme)"
-    #  primary: black
-    #  accent: orange
-    #  toggle:
-    #    icon: material/toggle-switch-off-outline
-    #    name: Switch to dark mode
-
     - scheme: default
       primary: black
       accent: orange
