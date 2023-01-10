@@ -39,16 +39,16 @@ class PySQLXEnginePoolSync:
     max_connections: int
 
     def __init__(self, uri: str, max_connections: Optional[int] = None): ...
-    async def __aenter__(self) -> "PySQLXEngineSync":
+    def __enter__(self) -> "PySQLXEngineSync":
         """
         ## Description
         Create a pool instance. using `with`
         """
         ...
-    async def __aexit__(
+    def __exit__(
         self, exc_type: Optional[Type[BaseException]], exc: Optional[BaseException], exc_tb: Optional[TracebackType]
     ): ...
-    async def new_connection(self) -> PySQLXEngineSync:
+    def new_connection(self) -> PySQLXEngineSync:
         """
         ## Description
         Create a new connection from the pool.
