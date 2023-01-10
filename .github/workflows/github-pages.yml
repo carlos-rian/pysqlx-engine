@@ -3,15 +3,15 @@ name: Publish Github Pages
 on:
   push:
     branches:
-      - main
+      - docs
     paths:
-      - '**.md'
-      - '**.css'
-      - '**.js'
-      - '**.png'
-      - 'docs/*'
-      - 'mkdocs.yml'
-      - 'github-pages.yml'
+      - "**.md"
+      - "**.css"
+      - "**.js"
+      - "**.png"
+      - "docs/*"
+      - "mkdocs.yml"
+      - "github-pages.yml"
 
 jobs:
   deploy:
@@ -24,9 +24,9 @@ jobs:
 
       - name: Install Poetry
         run: pip install poetry --user
-      
+
       - name: Export Poetry Requirements
         run: poetry export --dev -f requirements.txt --output requirements-dev.txt  --without-hashes
-      
-      - run: pip install -r requirements-dev.txt 
+
+      - run: pip install -r requirements-dev.txt
       - run: mkdocs gh-deploy --force
