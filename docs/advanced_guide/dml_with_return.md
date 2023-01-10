@@ -1,14 +1,15 @@
 # **DML with return**
 
-Although PySQLXEngine has a method for DML [`execute`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbexecute) which returns the number of rows affected.
+Although PySQLXEngine has a method for DML `execute` which returns the number of rows affected.
 
-It is possible to use the [`query`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbquery) and [`query_first`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbquery) methods to get an output.
+It is possible to use the `query*` methods to get an output/returning from the database.
 
-[`execute`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbexecute) always returns the number of rows affected. Maybe this is not useful, because if you make an `insert` and want the `id` as a return, the [`execute`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbexecute) will limit you.
+`execute` always returns the number of rows affected. 
+Maybe this is not useful, because if you make an `insert` and want the `id` as a return, the `execute` will limit you.
 
 Although sql statements are atomic, one execution at a time, most modern databases bring sensational features like [**`RETUNING`**](https://www.postgresql.org/docs/current/dml-returning.html) or [**`OUTPUT`**](https://docs.microsoft.com/en-us/sql/t-sql/queries/output-clause-transact-sql) in the case of [*SQL Server*](https://www.microsoft.com/sql-server) that can return a value after the insert .
 
-So since we need something to be returned, we can use the [`query`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbquery) or [`query_first`](https://carlos-rian.github.io/pysqlx-engine/tutorial/#dbquery) methods.
+So since we need something to be returned, we can use the `query*` methods.
 
 ## **Examples**
 
@@ -32,13 +33,76 @@ CREATE TABLE IF NOT EXISTS user (
 
 ### **PostgreSQL, SQLite and MariaDB**
 
-* Create [`main.py`](./python/dml_with_output.py) file with:
+Create a ``main.py`` file and add the code examples below.
 
-```Python hl_lines="24 27"
-{!./python/dml_with_output.py!}
-```
+=== "**Async**"
 
-* Run it
+    ```Python hl_lines="21 24"
+    from pysqlx_engine import PySQLXEngine
+
+    uri = "sqlite:./db.db"
+    db = PySQLXEngine(uri=uri)
+
+    async def main():
+        await db.connect()
+
+        sql = """sql
+            INSERT INTO user (
+                first_name, 
+                last_name, 
+                created_at, 
+                updated_at) 
+            VALUES (
+                'bob', 
+                'test', 
+                '2022-05-30 05:47:51', 
+                '2022-05-30 05:47:51'
+            )
+            RETURNING id;
+        """
+
+        row = await db.query(sql)
+        print(row)
+
+    import asyncio
+    asyncio.run(main())
+    ```
+
+=== "**Sync**"
+
+    ```Python hl_lines="21 24"
+    from pysqlx_engine import PySQLXEngineSync
+
+    uri = "sqlite:./db.db"
+    db = PySQLXEngineSync(uri=uri)
+
+    def main():
+        db.connect()
+
+        sql = """sql
+            INSERT INTO user (
+                first_name, 
+                last_name, 
+                created_at, 
+                updated_at) 
+            VALUES (
+                'bob', 
+                'test', 
+                '2022-05-30 05:47:51', 
+                '2022-05-30 05:47:51'
+            )
+            RETURNING id;
+        """
+
+        row = db.query(sql)
+        print(row)
+
+    # run the code
+    main()
+    ```
+
+
+Running the code using the terminal
 
 <div class="termy">
 
@@ -51,13 +115,77 @@ $ python3 main.py
 
 ### **Microsoft SQL Server** 
 
-* Create [`main.py`](./python/dml_with_output_sql_server.py) file with:
+Create a ``main.py`` file and add the code examples below.
 
-```Python hl_lines="18 27"
-{!./python/dml_with_output_sql_server.py!}
-```
+=== "**Async**"
 
-* Run it
+    ```Python hl_lines="18 27"
+    from pysqlx_engine import PySQLXEngine
+
+    uri = "sqlite:./db.db"
+    db = PySQLXEngine(uri=uri)
+
+    async def main():
+        await db.connect()
+
+        sql = """sql
+            INSERT INTO user (
+                first_name, 
+                last_name, 
+                created_at, 
+                updated_at)
+            OUTPUT Inserted.id
+            VALUES (
+                'bob', 
+                'test', 
+                '2022-05-30 05:47:51', 
+                '2022-05-30 05:47:51'
+            );
+        """
+
+        row = await db.query(sql)
+        print(row)
+
+
+    import asyncio
+    asyncio.run(main())
+    ```
+
+=== "**Sync**"
+
+    ```Python hl_lines="18 27"
+    from pysqlx_engine import PySQLXEngineSync
+
+    uri = "sqlite:./db.db"
+    db = PySQLXEngineSync(uri=uri)
+
+    def main():
+        db.connect()
+
+        sql = """sql
+            INSERT INTO user (
+                first_name, 
+                last_name, 
+                created_at, 
+                updated_at)
+            OUTPUT Inserted.id
+            VALUES (
+                'bob', 
+                'test', 
+                '2022-05-30 05:47:51', 
+                '2022-05-30 05:47:51'
+            );
+        """
+
+        row = db.query(sql)
+        print(row)
+
+
+    # run the code
+    main()
+    ```
+
+Running the code using the terminal
 
 <div class="termy">
 

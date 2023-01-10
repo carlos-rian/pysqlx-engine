@@ -1,16 +1,51 @@
-# **Introduction**
+# Introduction
 
 The PySQLXEngine is a library that allows you to connect to a database and execute queries in a simple way.
 
 So you can use it to create, read, update and delete data in your database.
 
 Since the beginning PySQLXEngine was created and thinking to be a totally `async` engine. 
-Although Python has supported asynchronous programming since version 3.6 using **`async/await`**.
+Although Python has supported asynchronous programming since version `3.5*` using **`async/await`**.
 We currently don't have good `async` libraries to handle **SQL Server** asynchronously, for example.
 
 Despite being designed to be `async`, **PySQLXEngine** has **sync** support as well. The classes ``PySQLXEngine`` and ``PySQLXEngineSync`` are made available.
 
 Both `async` and `sync` classes have precisely the same methods.
+
+
+**Providers/Drivers**
+
+* [`sqlite`](https://www.sqlite.org/index.html)
+* [`postgresql`](https://www.postgresql.org/)
+* [`mysql`](https://www.mysql.com/)
+* [`sqlserver`](https://www.microsoft.com/sql-server)
+
+
+**URIs**
+
+[sqlite](https://www.sqlite.org/index.html)
+
+```Python 
+uri = "sqlite:./dev.db"
+```
+
+[postgresql](https://www.postgresql.org/)
+
+```Python 
+uri = "postgresql://user:pass@host:port/db?schema=sample"
+```
+
+[mysql](https://www.mysql.com/)
+
+```Python 
+uri = "mysql://user:pass@host:port/db?schema=sample"
+```
+
+[sqlserver](https://www.microsoft.com/sql-server)
+
+```Python 
+uri = "sqlserver://host:port;initial catalog=sample;user=sa;password=pass;"
+```
 
 ---
 

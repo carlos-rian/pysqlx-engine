@@ -1,4 +1,4 @@
-# **More documentation**
+# More documentation
 
 The PySQLXEngine has more some methods to you can use the database more easily. See the documentation below:
 

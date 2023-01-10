@@ -61,7 +61,9 @@ OS Support:
 
 
 === "PIP"
+
     <small>[Pip](https://pypi.org)</small>
+
     <div class="termy">
 
     ```console
@@ -73,7 +75,9 @@ OS Support:
     </div>
 
 === "Poetry"
+
     <small>[Poetry](https://python-poetry.org)</small>
+    
     <div class="termy">
 
     ```console
@@ -87,7 +91,7 @@ OS Support:
 
 ## Running
 
-* Create `main.py` file.
+Create a ``main.py`` file and add the code examples below.
 
 === "Async"
     ```python
@@ -125,10 +129,11 @@ OS Support:
 
         print(rows)
 
+    # run the code
     main()
     ```
 
-* Run it
+Running the code using the terminal
 
 <div class="termy">
 

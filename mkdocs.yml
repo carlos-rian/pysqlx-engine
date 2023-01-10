@@ -8,27 +8,36 @@ theme:
   name: material
   font:
     code: Roboto Mono
+
   palette:
-    - scheme: default
+    - cheme: default
       primary: black
-      accent: indigo
+      accent: orange
       toggle:
         icon: material/toggle-switch-off-outline
         name: Switch to dark mode
+
     - scheme: slate
       primary: black
-      accent: indigo
+      accent: orange
       toggle:
         icon: material/toggle-switch
         name: Switch to light mode
+
   features:
     - search.suggest
     - search.highlight
     - search.share
     - search.suggest
-    - navigation.expand
+
+    - navigation.indexes
     - navigation.top
-    - header.autohide
+    - navigation.instant
+    - navigation.tracking
+    #- header.autohide
+
+    - navigation.tabs
+    #- navigation.tabs.sticky
   icon:
     repo: fontawesome/brands/github-alt
   logo: img/favicon/icon.png
@@ -44,24 +53,36 @@ plugins:
   - mkdocs-video:
       mark: "custom-marker"
 
+  - glightbox
+
 nav:
   - Home: index.md
 
   - User Guide:
-      - Introduction: user_guide/intro.md
+      - user_guide/index.md
+      - Database Connectors:
+          - PostgreSQL: user_guide/uri_postgresql.md
+          - MySQL: user_guide/uri_mysql.md
+          - SQLite: user_guide/uri_sqlite.md
+          - Microsoft SQL Server:
+              - user_guide/sqlserver/index.md
+              - Microsoft SQL Server Windows (Local): user_guide/uri_sqlserver_windows.md
+              - Microsoft SQL Server on Docker: user_guide/uri_sqlserver_docker.md
+
       - Examples: user_guide/examples.md
       - Queries: user_guide/queries.md
       - Documentation for Methods: user_guide/extras.md
 
   - Advanced Guide:
       - DML with return: advanced_guide/dml_with_return.md
-      - Simple pool with concurrent connections: advanced_guide/simple_pool_conn.md
+      - Simple Pool With Concurrent Connections: advanced_guide/simple_pool_conn.md
 
-  - databases_and_versions.md
-  - return_types.md
-  - core_engine.md
+  - Supported Databases: databases_and_versions.md
+  - Type Mappings: type_mappings.md
+  - Core: core_engine.md
 
 markdown_extensions:
+  - tables
   - toc:
       permalink: true
   - markdown.extensions.codehilite:

@@ -1,4 +1,4 @@
-# **Next steps**
+# Next steps
 
 This section provides some next steps for you to continue learning about PySQLXEngine.
 

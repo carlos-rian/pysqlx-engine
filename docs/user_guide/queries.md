@@ -1,4 +1,4 @@
-# **Queries**
+# Queries
 
 The PySQLXEngine has four methods to execute queries:
 
