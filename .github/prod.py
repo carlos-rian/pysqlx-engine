@@ -21,7 +21,7 @@ file_version = toml.loads(text)["tool"]["poetry"]["version"]
 current_version: str = get_version()
 print("Package version:", current_version)
 
-if int(file_version.replace(".")) > (current_version.replace(".")):
+if file_version.replace(".", "") > current_version.replace(".", ""):
     MAJOR, MINOR, PATCH = file_version.split(".")
 
 else:
