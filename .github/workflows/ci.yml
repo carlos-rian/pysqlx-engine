@@ -55,16 +55,11 @@ jobs:
       - name: run unittest
         run: poetry run pytest --ignore=tests/benchmark --cov=pysqlx_engine --cov=tests --cov-report=term-missing:skip-covered --cov-report=xml tests ${@}
 
-      - name: get current date
-        id: date
-        run: |
-          echo "{date}={$(date +'%Y.%m.%d_%Hh_%Mm')}" >> $GITHUB_STATE
-
       - name: upload coverage
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          flags: ${{ matrix.os }}_${{ matrix.python-version }}_${{ env.date }}
+          flags: ${{ matrix.os }}_${{ matrix.python-version }}
 
   build:
     #if: github.ref == 'refs/heads/main'
