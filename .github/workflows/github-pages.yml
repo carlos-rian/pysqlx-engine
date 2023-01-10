@@ -4,14 +4,6 @@ on:
   push:
     branches:
       - docs
-    paths:
-      - "**.md"
-      - "**.css"
-      - "**.js"
-      - "**.png"
-      - "docs/*"
-      - "mkdocs.yml"
-      - "github-pages.yml"
 
 jobs:
   deploy:
