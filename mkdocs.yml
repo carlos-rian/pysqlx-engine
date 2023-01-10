@@ -39,7 +39,7 @@ theme:
     - navigation.tabs
     #- navigation.tabs.sticky
   icon:
-    repo: fontawesome/brands/github-alt
+    repo: fontawesome/brands/github
   logo: img/favicon/icon.png
   favicon: img/favicon/favicon.ico
   language: en
