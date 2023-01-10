@@ -32,7 +32,11 @@
 
 PySQLXEngine supports the option of sending **raw sql** to your database.
 
-The PySQLXEngine is a minimalist **Async** SQL engine. Currently this lib only supports *async and sync programming*.
+The PySQLXEngine is a minimalist **Async and Sync** SQL engine. Currently this lib only supports *async and sync programming*.
+
+The PySQLXEngine was created and thought to be minimalistic, but very efficient. The core is write in Rust, making communication between database and Python more efficient.
+
+
 
 Database Support:
 
@@ -63,6 +67,7 @@ $ poetry add pysqlx-engine
 ```
 
 
+
 ## Async Example
 
 * Create `main.py` file.
@@ -70,17 +75,35 @@ $ poetry add pysqlx-engine
 ```python
 import asyncio
 
-from sqlx_engine import SQLXEngine
+from pysqlx_engine import PySQLXEngine
 
-uri = "file:./db.db"
-db = SQLXEngine(provider="sqlite", uri=uri)
+uri = "sqlite:./db.db"
+db = PySQLXEngine(uri=uri)
 
 async def main():
     await db.connect()
-    rows = await db.query(query="select 1 as number")
+    rows = await db.query(sql="select 1 as number")
     print(rows)
 
 asyncio.run(main())
+```
+
+## Sync Example
+
+* Create `main.py` file.
+
+```python
+from pysqlx_engine import PySQLXEngineSync
+
+uri = "sqlite:./db.db"
+db = PySQLXEngineSync(uri=uri)
+
+def main():
+    db.connect()
+    rows = db.query(sql="select 1 as number")
+    print(rows)
+
+main()
 ```
 
 * Run it
@@ -93,9 +116,3 @@ $ python3 main.py
 [BaseRow(number=1)]
 ```
 </div>
-
-
-### about version 1.0.0
-I'm writing a new version with native support between Rust and Python using the Pyo3 lib, making this lib smaller and extremely faster, in some tests it's even 80% faster than the current version! 
-
-*The version 1.0.0 may have some changes in the type core, but it will become very friendly, but there will be a break in compatibility between version 0.1.* and 1.0.0!*
