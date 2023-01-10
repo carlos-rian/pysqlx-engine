@@ -34,10 +34,10 @@ theme:
     - navigation.top
     - navigation.instant
     - navigation.tracking
-    #- header.autohide
+    - header.autohide
 
     - navigation.tabs
-    #- navigation.tabs.sticky
+    - navigation.footer
   icon:
     repo: fontawesome/brands/github
   logo: img/favicon/icon.png
