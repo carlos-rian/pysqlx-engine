@@ -166,10 +166,10 @@ class PySQLXEngineSync:
         """
         ## Description
 
-        Is good always close the connection, but!
+        It's a good idea to close the connection, but PySQLXEngine has the core in Rust, closing is automatic when your code leaves context.
         Even if you don't close the connection, don't worry,
         when the process ends automatically the connections will
-        be closed so the bank doesn't have an idle connection.
+        be closed so the database doesn't have an idle connection.
 
         ---
 
