@@ -13,23 +13,22 @@ def get_version():
             break
     json: dict = resp.json()
 
-    releases = json["releases"]
-    versions = sorted(releases.keys(), key=lambda x: int(x.replace(".", "").replace("b", "")), reverse=True)
-    versions = [v for v in versions if v.startswith("0.2.0") and "b" in v]
-    return versions[0]
+    return json["info"]["version"]
 
 
 file_version = toml.loads(text)["tool"]["poetry"]["version"]
 
-version: str = get_version()
-print("Package version:", version)
+current_version: str = get_version()
+print("Package version:", current_version)
 
-# MAJOR, MINOR, PATCH = version.replace("b", "").split(".")
-MAJOR, MINOR, PATCH = "0.2.0b".split(".")
+if int(file_version.replace(".")) > (current_version.replace(".")):
+    MAJOR, MINOR, PATCH = file_version.split(".")
 
-# PATCH = int(PATCH) + 1
+else:
+    MAJOR, MINOR, PATCH = current_version.split(".")
+    PATCH = str(int(PATCH) + 1)
 
-new_version: str = ".".join([MAJOR, MINOR, str(PATCH)])
+new_version: str = ".".join([MAJOR, MINOR, PATCH])
 
 print("Package new version:", new_version)
 
