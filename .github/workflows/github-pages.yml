@@ -1,4 +1,4 @@
-name: Publish Github Pages
+name: publish-github-pages
 
 on:
   push:
