@@ -166,7 +166,8 @@ class PySQLXEngine:
         """
         ## Description
 
-        It's a good idea to close the connection, but PySQLXEngine has the core in Rust, closing is automatic when your code leaves context.
+        It's a good idea to close the connection, but PySQLXEngine has the core in Rust; closing is automatic when your code leaves a context.
+
         Even if you don't close the connection, don't worry,
         when the process ends automatically the connections will
         be closed so the database doesn't have an idle connection.
