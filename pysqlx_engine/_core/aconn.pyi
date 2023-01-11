@@ -143,12 +143,9 @@ class PySQLXEngine:
         """
         ## Description
 
-        Every connection instance is lazy, only after the ``.connect()`` is the
-        database checked and a connection is created with it.
+        Each connection instance is lazy; only after ``.connect()`` is the database checked and the connection established.
 
-        ``.connect()`` establishes a connection to the database.
-
-        when you use ``async with`` the connection is automatically opened and closed.
+        When you use ``async with`` the connection is automatically opened and closed.
 
         ---
 
@@ -176,11 +173,11 @@ class PySQLXEngine:
         """
         ## Description
 
-        It's a good idea to close the connection, but PySQLXEngine has the core in Rust; closing is automatic when your code leaves a context.
+        It's a good idea to close the connection, but PySQLXEngine has the core in Rust;
+        closing is automatic when your code leaves the context.
 
-        Even if you don't close the connection, don't worry,
-        when the process ends automatically the connections will
-        be closed so the database doesn't have an idle connection.
+        Even if you don't close the connection, don't worry; when the process ends automatically,
+        the connections will be closed, so the database doesn't have an idle connection.
 
         ---
 
