@@ -75,12 +75,12 @@ SELECT * FROM table WHERE id = :id
 | Python   | Databases                                                              |
 |----------|------------------------------------------------------------------------|
 | bool     | bool/bit/boolean/tinyint/etc.                                          |
-| bytes    | bytea/binary/varbinary/blob.                                           |
+| bytes    | bytea/binary/varbinary/blob/etc.                                       |
 | date     | date/nvarchar/varchar/string/etc.                                      |
 | datetime | timestamp/timestamptz/datetime/datetime2/nvarchar/varchar/string/etc.  |
-| Decimal  | decimal/numeric.                                                       |
+| Decimal  | decimal/numeric/etc.                                                   |
 | dict     | json/jsonb/nvarchar/varchar/string/etc.                                |
-| float    | float/real/numeric.                                                    |
+| float    | float/real/numeric/etc.                                                |
 | int      | int/integer/smallint/bigint/tinyint/etc.                               |
 | list     | json/jsonb/nvarchar/varchar/string/etc.                                |
 | str      | varchar/text/nvarchar/char/etc.                                        |
@@ -96,8 +96,9 @@ SELECT * FROM table WHERE id = :id
 
 ## *connect*
 #### Description
-Every connection instance is lazy, only after the `.connect()` is the database checked and a connection is created with it.
-`.connect()` establishes a connection to the database.
+
+Each connection instance is lazy; only after ``.connect()`` is the database checked and the connection established.
+
 
 When you use `with/async with`  the connection is automatically opened and closed.
 
@@ -159,7 +160,11 @@ When you use `with/async with`  the connection is automatically opened and close
 ## *close*
 
 #### Description
-Is good always close the connection, but! Even if you don't close the connection, don't worry, when the process ends automatically the connections will be closed so the bank doesn't have an idle connection.
+It's a good idea to close the connection, but PySQLXEngine has the core in Rust;
+closing is automatic when your code leaves the context.
+
+Even if you don't close the connection, don't worry; when the process ends automatically,
+the connections will be closed, so the database doesn't have an idle connection.
 
 #### Helper
 * Arguments: ``None``
