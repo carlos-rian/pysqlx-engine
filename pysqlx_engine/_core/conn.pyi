@@ -103,6 +103,7 @@ class PySQLXEngineSync:
     def requires_isolation_first(self) -> "bool":
         """
         ## Description
+
         Returns `True` if the connection requires isolation first, `False` otherwise.
 
         This is used to determine if the connection should be isolated before executing a query.
@@ -133,6 +134,7 @@ class PySQLXEngineSync:
     def __enter__(self) -> "PySQLXEngineSync":
         """
         ## Description
+
         Open a connection to the database. using `with`.
         """
         ...
@@ -729,6 +731,7 @@ class PySQLXEngineSync:
     def set_isolation_level(self, isolation_level: ISOLATION_LEVEL) -> "None":
         """
         ## Description
+
         Sets the isolation level of the connection.
 
         The isolation level is set before the transaction is started.
@@ -777,6 +780,7 @@ class PySQLXEngineSync:
     def begin(self) -> "None":
         """
         ## Description
+
         Starts a transaction using ``BEGIN``.
 
         ``begin()`` is equivalent to `start_transaction()` without setting the isolation level.
@@ -807,6 +811,7 @@ class PySQLXEngineSync:
     def commit(self) -> "None":
         """
         ## Description
+
         Commits the current transaction.
 
         The `begin()` method must be called before calling `commit()`.
@@ -845,6 +850,7 @@ class PySQLXEngineSync:
     def rollback(self) -> "None":
         """
         ## Description
+
         Rollbacks the current transaction.
 
         Rollback is used to cancel the transaction, when you uses the rollback,
@@ -886,6 +892,7 @@ class PySQLXEngineSync:
     def start_transaction(self, isolation_level: Union[ISOLATION_LEVEL, None] = None) -> "None":
         """
         ## Description
+
         Starts a transaction with ``BEGIN/BEGIN TRANSACTION``. by default, does not set the isolation level.
 
         The ``Snapshot`` isolation level is supported by MS SQL Server.
