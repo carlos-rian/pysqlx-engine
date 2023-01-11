@@ -38,6 +38,9 @@ theme:
 
     - navigation.tabs
     - navigation.footer
+
+    - content.code.copy
+    - content.code.annotate
   icon:
     repo: fontawesome/brands/github
   logo: img/favicon/icon.png
@@ -96,6 +99,10 @@ markdown_extensions:
   - attr_list
   - extra
   - pymdownx.smartsymbols
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
 
   - pymdownx.superfences:
       custom_fences:

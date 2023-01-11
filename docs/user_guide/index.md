@@ -25,25 +25,25 @@ Both `async` and `sync` classes have precisely the same methods.
 
 [sqlite](https://www.sqlite.org/index.html)
 
-```Python 
+``` py
 uri = "sqlite:./dev.db"
 ```
 
 [postgresql](https://www.postgresql.org/)
 
-```Python 
+``` py
 uri = "postgresql://user:pass@host:port/db?schema=sample"
 ```
 
 [mysql](https://www.mysql.com/)
 
-```Python 
+``` py
 uri = "mysql://user:pass@host:port/db?schema=sample"
 ```
 
 [sqlserver](https://www.microsoft.com/sql-server)
 
-```Python 
+``` py
 uri = "sqlserver://host:port;initial catalog=sample;user=sa;password=pass;"
 ```
 
@@ -63,7 +63,7 @@ Create a file called `main.py` and add the code below.
 
 
 === "**Async**"
-    ```python hl_lines="3 5 7-8"
+    ``` py linenums="1" hl_lines="3 5 7-8"
     from pysqlx_engine import PySQLXEngine
 
     async def main(): # need to be async, because of await
@@ -73,7 +73,7 @@ Create a file called `main.py` and add the code below.
     ```
 
 === "**Sync**"
-    ```python hl_lines="3 5 7"
+    ``` py linenums="1" hl_lines="3 5 7"
     from pysqlx_engine import PySQLXEngineSync
 
     def main(): # don't need to be async
@@ -90,7 +90,7 @@ So, you need to add the below lines at the end of your code!
 
 
 === "Async"
-    ```python hl_lines="3-4"
+    ``` py linenums="1" hl_lines="3-4"
     ...# your code
 
     import asyncio # need to import 
@@ -98,7 +98,7 @@ So, you need to add the below lines at the end of your code!
     ```
 
 === "Sync"
-    ```python hl_lines="3-4"
+    ``` py linenums="1" hl_lines="3-4"
     ...# your code
 
     # don't need to import asyncio
@@ -107,7 +107,7 @@ So, you need to add the below lines at the end of your code!
 
 ### **Running the code**
 
-To run the code, you need to use the command below on the terminal.
+Running the code using the terminal
 
 <div class="termy">
 

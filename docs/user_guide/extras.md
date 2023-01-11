@@ -47,7 +47,7 @@ SELECT * FROM table WHERE id = :id
 
 * Parameters
 
-```python
+``` py linenums="1"
 {"id": 1}
 ```
 
@@ -107,7 +107,7 @@ When you use `with/async with`  the connection is automatically opened and close
 
     === "**Async**"
 
-        ```python hl_lines="6"
+        ``` py linenums="1" hl_lines="6"
         from pysqlx_engine  import PySQLXEngine
 
         uri = "sqlite:./db.db"
@@ -119,7 +119,7 @@ When you use `with/async with`  the connection is automatically opened and close
 
     === "**Sync**"
 
-        ```python hl_lines="6"
+        ``` py linenums="1" hl_lines="6"
         from pysqlx_engine  import PySQLXEngineSync
 
         uri = "sqlite:./db.db"
@@ -140,7 +140,7 @@ When you use `with/async with`  the connection is automatically opened and close
 
 === "**Async**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngine
     uri = "sqlite:./db.db"
     db = PySQLXEngine(uri=uri)
@@ -149,7 +149,7 @@ When you use `with/async with`  the connection is automatically opened and close
 
 === "**Sync**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngineSync
     uri = "sqlite:./db.db"
     db = PySQLXEngineSync(uri=uri)
@@ -177,7 +177,7 @@ the connections will be closed, so the database doesn't have an idle connection.
 
 === "**Async**"
 
-    ```python
+    ``` py linenums="1"
     uri = "postgresql://user:pass@host:port/db?schema=sample"
     db = PySQLXEngine(uri=uri)
     await db.connect()
@@ -186,7 +186,7 @@ the connections will be closed, so the database doesn't have an idle connection.
 
 === "**Sync**"
 
-    ```python
+    ``` py linenums="1"
     uri = "postgresql://user:pass@host:port/db?schema=sample"
     db = PySQLXEngineSync(uri=uri)
     db.connect()
@@ -258,7 +258,7 @@ Run a command in the database, for queries that can't be run using prepared stat
 
 === "**Async**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngine
 
     uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -271,7 +271,7 @@ Run a command in the database, for queries that can't be run using prepared stat
 
 === "**Sync**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngineSync
 
     uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -319,7 +319,7 @@ Returns all rows from query result as ``BaseRow list``, ``MyModel list`` or ``em
 
 === "**Async**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngine
 
     uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -340,7 +340,7 @@ Returns all rows from query result as ``BaseRow list``, ``MyModel list`` or ``em
 
 === "**Sync**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngineSync
 
     uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -393,7 +393,7 @@ Returns first row from query result as ``BaseRow``, ``MyModel`` or ``None``.
 
 === "**Async**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngine
 
     uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -413,7 +413,7 @@ Returns first row from query result as ``BaseRow``, ``MyModel`` or ``None``.
 
 === "**Sync**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngineSync
 
     uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -464,7 +464,7 @@ Returns all rows from query result as ``dict list`` or ``empty list``.
 
 === "**Async**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngine
 
     uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -484,7 +484,7 @@ Returns all rows from query result as ``dict list`` or ``empty list``.
 
 === "**Sync**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngineSync
 
     uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -536,7 +536,7 @@ Returns first row from query result as ``dict`` or ``None``.
 
 === "**Async**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngine
 
     uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -556,7 +556,7 @@ Returns first row from query result as ``dict`` or ``None``.
 
 === "**Sync**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngineSync
 
     uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -605,7 +605,7 @@ Executes a query/sql and returns the number of rows affected.
 
 === "**Async**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngine
     
     uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -619,7 +619,7 @@ Executes a query/sql and returns the number of rows affected.
 
 === "**Sync**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngineSync
     
     uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -668,7 +668,7 @@ The Sqlite does not support the isolation level.
 
 === "**Async**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngine
 
     uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -679,7 +679,7 @@ The Sqlite does not support the isolation level.
 
 === "**Sync**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngineSync
 
     uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -717,7 +717,7 @@ Starts a transaction using ``BEGIN``. ``begin()`` is equivalent to `start_transa
 
 === "**Async**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngine
 
     uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -727,7 +727,7 @@ Starts a transaction using ``BEGIN``. ``begin()`` is equivalent to `start_transa
     ```
 === "**Sync**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngineSync
 
     uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -763,7 +763,7 @@ The PySQLXEngine by default uses the `begin()` and `commit()` in all transaction
 
 === "**Async**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngine
 
     uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -778,7 +778,7 @@ The PySQLXEngine by default uses the `begin()` and `commit()` in all transaction
 
 === "**Sync**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngineSync
 
     uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -821,7 +821,7 @@ The PySQLXEngine by default try uses the ``begin()`` and ``commit()`` in all tra
 
 === "**Async**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngine
 
     uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -836,7 +836,7 @@ The PySQLXEngine by default try uses the ``begin()`` and ``commit()`` in all tra
 
 === "**Sync**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngineSync
 
     uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -887,7 +887,7 @@ The Sqlite does not support the isolation level.
 
 === "**Async**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngine
     uri = "postgresql://user:pass@host:port/db?schema=sample"
     db = PySQLXEngine(uri=uri)
@@ -902,7 +902,7 @@ The Sqlite does not support the isolation level.
 
 === "**Sync**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngineSync
 
     uri = "postgresql://user:pass@host:port/db?schema=sample"

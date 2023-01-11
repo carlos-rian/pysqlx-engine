@@ -32,7 +32,7 @@ To this example, we will use the ``sqlite`` database. Create a ``main.py`` file 
 
 === "**Async**"
 
-    ```python
+    ``` py linenums="1" linenums="1"
     from pysqlx_engine import PySQLXEngine
 
     async def main():
@@ -51,7 +51,7 @@ To this example, we will use the ``sqlite`` database. Create a ``main.py`` file 
 
 === "**Sync**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngineSync
 
     def main():
@@ -64,7 +64,7 @@ To this example, we will use the ``sqlite`` database. Create a ``main.py`` file 
 
         print("table created: ", resp == 0)
     
-    # run the code
+    # running the code
     main()
     ```
 
@@ -86,7 +86,7 @@ table created: True
 
 === "**Async**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngine
 
     async def main():
@@ -106,7 +106,7 @@ table created: True
 
 === "**Sync**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngineSync
 
     def main():
@@ -120,7 +120,7 @@ table created: True
     
         print("rows affected: ", resp)
     
-    # run the code
+    # running the code
     main()
     ```
 
@@ -142,7 +142,7 @@ rows affected: 1
 
 === "**Async**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngine
 
     async def main():
@@ -161,7 +161,7 @@ rows affected: 1
 
 === "**Sync**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngineSync
 
     def main():
@@ -174,7 +174,7 @@ rows affected: 1
     
         print("rows selected: ", resp)
     
-    # run the code
+    # running the code
     main()
     ```
 
@@ -198,7 +198,7 @@ rows selected: [BaseRow(id=1, name='John', age=20)]
 
 === "**Async**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngine
 
     async def main():
@@ -218,7 +218,7 @@ rows selected: [BaseRow(id=1, name='John', age=20)]
 
 === "**Sync**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngineSync
 
     def main():
@@ -232,7 +232,7 @@ rows selected: [BaseRow(id=1, name='John', age=20)]
 
         print("rows affected: ", resp)
     
-    # run the code
+    # running the code
     main()
     ```
 
@@ -256,7 +256,7 @@ rows affected: 1
 
 === "**Async**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngine
 
     async def main():
@@ -276,7 +276,7 @@ rows affected: 1
 
 === "**Sync**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngineSync
 
     def main():
@@ -290,7 +290,7 @@ rows affected: 1
 
         print("rows affected: ", resp)
     
-    # run the code
+    # running the code
     main()
     ```
 
@@ -315,7 +315,7 @@ rows affected: 1
 
 === "**Async**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngine
 
     async def main():
@@ -334,7 +334,7 @@ rows affected: 1
 
 === "**Sync**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngineSync
     
     def main():
@@ -347,7 +347,7 @@ rows affected: 1
 
         print("table dropped: ", resp == 0)
 
-    # run the code
+    # running the code
     main()
     ```
 
