@@ -108,7 +108,7 @@ When you use `with/async with`  the connection is automatically opened and close
     === "**Async**"
 
         ``` py linenums="1" hl_lines="6"
-        from pysqlx_engine  import PySQLXEngine
+        from pysqlx_engine import PySQLXEngine
 
         uri = "sqlite:./db.db"
 
@@ -120,7 +120,7 @@ When you use `with/async with`  the connection is automatically opened and close
     === "**Sync**"
 
         ``` py linenums="1" hl_lines="6"
-        from pysqlx_engine  import PySQLXEngineSync
+        from pysqlx_engine import PySQLXEngineSync
 
         uri = "sqlite:./db.db"
 

@@ -95,7 +95,7 @@ Create a ``main.py`` file and add the code examples below.
 
 === "Async"
     ``` py linenums="1"
-    from pysqlx_engine  import PySQLXEngine
+    from pysqlx_engine import PySQLXEngine
 
     async def main():
         db = PySQLXEngine(uri="sqlite:./db.db")
@@ -115,7 +115,7 @@ Create a ``main.py`` file and add the code examples below.
 === "Sync"
     ``` py linenums="1"
     
-    from pysqlx_engine  import PySQLXEngineSync
+    from pysqlx_engine import PySQLXEngineSync
 
     def main():
         db = PySQLXEngineSync(uri="sqlite:./db.db")
