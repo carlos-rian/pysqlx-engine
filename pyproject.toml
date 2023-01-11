@@ -39,14 +39,14 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.7"
-pydantic = "^1.10.2"
-pygments = "^2.13.0"
-pysqlx-core = "^0.1.29"
+pydantic = "^1.10.4"
+pysqlx-core = "^0.1.31"
 typing-extensions = "^4.3.0"
+Pygments = "^2.14.0"
 
 [tool.poetry.dev-dependencies]
-black = "^22.10.0"
-isort = "^5.10.1"
+black = "^22.12.0"
+isort = "^5.11.4"
 pytest = "^7.2.0"
 pytest-asyncio = "^0.20.1"
 pytest-cov = "^4.0.0"
