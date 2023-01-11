@@ -330,7 +330,9 @@ Returns all rows from query result as ``BaseRow list``, ``MyModel list`` or ``em
     print(result1)
     # output: [BaseRow(id=1, name='rian')]
 
-    result2 = await db.query(sql="SELECT 1 as :id, 'rian' as name", parameters={"id": 1})
+    sql = "SELECT :id as id, :name as name"
+    param = {"id": 1, "name": "rian"}
+    result2 = await db.query(sql=sql, parameters=param)
     print(result2)
     # output: [BaseRow(id=1, name='rian')]
 
@@ -351,7 +353,9 @@ Returns all rows from query result as ``BaseRow list``, ``MyModel list`` or ``em
     print(result1)
     # output: [BaseRow(id=1, name='rian')]
 
-    result2 = db.query(sql="SELECT 1 as :id, 'rian' as name", parameters={"id": 1})
+    sql = "SELECT :id as id, :name as name"
+    param = {"id": 1, "name": "rian"}
+    result2 = db.query(sql=sql, parameters=param)
     print(result2)
     # output: [BaseRow(id=1, name='rian')]
 
@@ -400,12 +404,14 @@ Returns first row from query result as ``BaseRow``, ``MyModel`` or ``None``.
     db = PySQLXEngine(uri=uri)
     await db.connect()
 
-    result = await db.query_first("SELECT 1 as id, 'rian' as name")
-    print(result)
+    result1 = await db.query_first("SELECT 1 as id, 'rian' as name")
+    print(result1)
     # output -> BaseRow(id=1, name='rian')
 
-    result = await db.query_first(sql="SELECT 1 as :id, 'rian' as name", parameters={"id": 1})
-    print(result)
+    sql = "SELECT :id as id, :name as name"
+    param = {"id": 1, "name": "rian"}
+    result2 = await db.query_first(sql=sql, parameters=param)
+    print(result2)
     # output -> BaseRow(id=1, name='rian')
 
     await db.close()
@@ -420,12 +426,14 @@ Returns first row from query result as ``BaseRow``, ``MyModel`` or ``None``.
     db = PySQLXEngineSync(uri=uri)
     db.connect()
 
-    result = db.query_first("SELECT 1 as id, 'rian' as name")
-    print(result)
+    result1 = db.query_first("SELECT 1 as id, 'rian' as name")
+    print(result1)
     # output -> BaseRow(id=1, name='rian')
 
-    result = db.query_first(sql="SELECT 1 as :id, 'rian' as name", parameters={"id": 1})
-    print(result)
+    sql = "SELECT :id as id, :name as name"
+    param = {"id": 1, "name": "rian"}
+    result2 = await db.query_first(sql=sql, parameters=param)
+    print(result2)
     # output -> BaseRow(id=1, name='rian')
 
     db.close()
@@ -475,7 +483,9 @@ Returns all rows from query result as ``dict list`` or ``empty list``.
     print(result1)
     # output -> [{'id': 1, 'name': 'rian'}]
 
-    result2 = await db.query_as_dict(sql="SELECT 1 as :id, 'rian' as name", parameters={"id": 1})
+    sql = "SELECT :id as id, :name as name"
+    param = {"id": 1, "name": "rian"}
+    result2 = await db.query_as_dict(sql=sql, parameters=param)
     print(result2)
     # output -> [{'id': 1, 'name': 'rian'}]
 
@@ -495,7 +505,9 @@ Returns all rows from query result as ``dict list`` or ``empty list``.
     print(result1)
     # output -> [{'id': 1, 'name': 'rian'}]
 
-    result2 = db.query_as_dict(sql="SELECT 1 as :id, 'rian' as name", parameters={"id": 1})
+    sql = "SELECT :id as id, :name as name"
+    param = {"id": 1, "name": "rian"}
+    result2 = db.query_as_dict(sql=sql, parameters=param)
     print(result2)
     # output -> [{'id': 1, 'name': 'rian'}]
 
@@ -543,12 +555,14 @@ Returns first row from query result as ``dict`` or ``None``.
     db = PySQLXEngine(uri=uri)
     await db.connect()
 
-    result = await db.query_first_as_dict(sql="SELECT 1 as id, 'rian' as name")
-    print(result)
+    result1 = await db.query_first_as_dict(sql="SELECT 1 as id, 'rian' as name")
+    print(result1)
     # output -> {'id': 1, 'name': 'rian'}
 
-    result = await db.query_first_as_dict(sql="SELECT 1 as :id, 'rian' as name", parameters={"id": 1})
-    print(result)
+    sql = "SELECT :id as id, :name as name"
+    param = {"id": 1, "name": "rian"}
+    result2 = await db.query_first_as_dict(sql=sql, parameters=param)
+    print(result2)
     # output -> {'id': 1, 'name': 'rian'}
 
     await db.close()
@@ -563,12 +577,14 @@ Returns first row from query result as ``dict`` or ``None``.
     db = PySQLXEngineSync(uri=uri)
     db.connect()
 
-    result = db.query_first_as_dict(sql="SELECT 1 as id, 'rian' as name")
-    print(result)
+    result1 = db.query_first_as_dict(sql="SELECT 1 as id, 'rian' as name")
+    print(result1)
     # output -> {'id': 1, 'name': 'rian'}
 
-    result = db.query_first_as_dict(sql="SELECT 1 as :id, 'rian' as name", parameters={"id": 1})
-    print(result)
+    sql = "SELECT :id as id, :name as name"
+    param = {"id": 1, "name": "rian"}
+    result2 = db.query_first_as_dict(sql=sql, parameters=param)
+    print(result2)
     # output -> {'id': 1, 'name': 'rian'}
 
     db.close()

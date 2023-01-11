@@ -41,6 +41,7 @@ theme:
 
     - content.code.copy
     - content.code.annotate
+
   icon:
     repo: fontawesome/brands/github
   logo: img/favicon/icon.png
@@ -80,8 +81,8 @@ nav:
       - DML with return: advanced_guide/dml_with_return.md
       - Simple Pool With Concurrent Connections: advanced_guide/simple_pool_conn.md
 
-  - Supported Databases: databases_and_versions.md
   - Type Mappings: type_mappings.md
+  - Supported Databases: databases_and_versions.md
   - Core: core_engine.md
 
 markdown_extensions:
@@ -103,7 +104,6 @@ markdown_extensions:
       anchor_linenums: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
-
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid

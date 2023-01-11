@@ -73,7 +73,10 @@ You can add various parameters to the connection URL if your database server use
 
 
 ```sh
-openssl pkcs12 -export -out client-identity.p12 -inkey client-key.pem -in client-cert.pem
+openssl pkcs12 -export \
+    -out client-identity.p12 \
+    -inkey client-key.pem \
+    -in client-cert.pem
 ```
 
 * `sslpassword=<PASSWORD>`: Password that was used to secure the PKCS12 file. The openssl command listed in the previous step will ask for a password while creating the PKCS12 file, you will need to provide that same exact password here.

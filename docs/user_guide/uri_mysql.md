@@ -58,7 +58,10 @@ You can add various parameters to the connection URL if your database server use
 * `sslidentity=<PATH>`: Path to the PKCS12 certificate database created from client cert and key. This is the SSL identity file in PKCS12 format which you will generate using the client key and client certificate. It combines these two files in a single file and secures them via a password (see next parameter). You can create this file using your client key and client certificate by using the following command (using `openssl`):
 
 ```sh
-openssl pkcs12 -export -out client-identity.p12 -inkey client-key.pem -in client-cert.pem
+openssl pkcs12 -export \
+    -out client-identity.p12 \
+    -inkey client-key.pem \
+    -in client-cert.pem
 ```
 
 * `sslpassword=<PASSWORD>`: Password that was used to secure the PKCS12 file. The openssl command listed in the previous step will ask for a password while creating the PKCS12 file, you will need to provide that same exact password here.
