@@ -11,7 +11,7 @@ Create a `main.py` file and add the code examples below.
 
 ## **Example**
 
-```python
+``` py
 
 import asyncio
 

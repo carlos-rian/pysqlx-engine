@@ -18,7 +18,7 @@ The ``.query_as_dict()`` and ``.query_first_as_dict()`` methods are useful when 
 
 === "**Async**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngine
 
     async def main():
@@ -40,7 +40,7 @@ The ``.query_as_dict()`` and ``.query_first_as_dict()`` methods are useful when 
 
 === "**Sync**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngineSync
 
     def main():
@@ -56,7 +56,7 @@ The ``.query_as_dict()`` and ``.query_first_as_dict()`` methods are useful when 
         print("returned:", resp1, "as a list of dicts")
         print("returned:", resp2, "as a dict")
     
-    # run the code
+    # running the code
     main()
 
     ```
@@ -85,7 +85,7 @@ The BaseRow is an inheritance from ``Pydantic BaseModel``.
 
 === "**Async**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngine
 
     async def main():
@@ -107,7 +107,7 @@ The BaseRow is an inheritance from ``Pydantic BaseModel``.
 
 === "**Sync**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngineSync
 
     def main():
@@ -123,7 +123,7 @@ The BaseRow is an inheritance from ``Pydantic BaseModel``.
         print("returned:", resp1, "as a list of BaseRow")
         print("returned:", resp2, "as a BaseRow")
     
-    # run the code
+    # running the code
     main()
     ```
 
@@ -158,7 +158,7 @@ Using the ``model`` argument, you can have an autocomplete feature in your IDE, 
 
 Create a ``models.py`` file and add the code examples below.
 
-```python
+``` py linenums="1"
 from pysqlx_engine import BaseRow
 
 class User(BaseRow):
@@ -171,7 +171,7 @@ Create a ``main.py`` file and add the code examples below.
 
 === "**Async**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngine
     from models import User
 
@@ -194,7 +194,7 @@ Create a ``main.py`` file and add the code examples below.
 
 === "**Sync**"
 
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine import PySQLXEngineSync
     from models import User
 
@@ -211,7 +211,7 @@ Create a ``main.py`` file and add the code examples below.
         print("returned:", resp1, "as a list of User")
         print("returned:", resp2, "as a User")
     
-    # run the code
+    # running the code
     main()
     ```
 

@@ -71,7 +71,7 @@ $ poetry add pysqlx-engine
 
 * Create `main.py` file.
 
-```python
+``` py linenums="1"
 import asyncio
 
 from pypysqlx_engine  import PySQLXEngine
@@ -91,7 +91,7 @@ asyncio.run(main())
 
 * Create `main.py` file.
 
-```python
+``` py linenums="1"
 from pypysqlx_engine  import PySQLXEngineSync
 
 uri = "sqlite:./db.db"

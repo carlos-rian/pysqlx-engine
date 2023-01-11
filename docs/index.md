@@ -94,7 +94,7 @@ OS Support:
 Create a ``main.py`` file and add the code examples below.
 
 === "Async"
-    ```python
+    ``` py linenums="1"
     from pysqlx_engine  import PySQLXEngine
 
     async def main():
@@ -113,7 +113,7 @@ Create a ``main.py`` file and add the code examples below.
     asyncio.run(main())
     ```
 === "Sync"
-    ```python
+    ``` py linenums="1"
     
     from pysqlx_engine  import PySQLXEngineSync
 
@@ -129,7 +129,7 @@ Create a ``main.py`` file and add the code examples below.
 
         print(rows)
 
-    # run the code
+    # running the code
     main()
     ```
 
