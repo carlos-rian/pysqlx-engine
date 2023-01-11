@@ -32,6 +32,8 @@ class PySQLXEngineSync:
 
     ##### PostgreSQL
     ```python
+    from pysqlx_engine import PySQLXEngineSync
+
     uri = "postgresql://user:pass@host:port/db?schema=sample"
     db = PySQLXEngineSync(uri=uri)
     db.connect()
@@ -39,6 +41,8 @@ class PySQLXEngineSync:
     ---
     ##### MySQL
     ```python
+    from pysqlx_engine import PySQLXEngineSync
+
     uri = "mysql://user:pass@host:port/db?schema=sample"
     db = PySQLXEngineSync(uri=uri)
     db.connect()
@@ -46,6 +50,8 @@ class PySQLXEngineSync:
     ---
     ##### Microsoft SQL Server
     ```python
+    from pysqlx_engine import PySQLXEngineSync
+
     uri = "sqlserver://host:port;initial catalog=sample;user=sa;password=pass;"
     db = PySQLXEngineSync(uri=uri)
     db.connect()
@@ -53,6 +59,8 @@ class PySQLXEngineSync:
     ---
     ##### SQLite
     ```python
+    from pysqlx_engine import PySQLXEngineSync
+
     uri = "sqlite:./dev.db"
     db = PySQLXEngineSync(uri=uri)
     db.connect()
@@ -95,6 +103,7 @@ class PySQLXEngineSync:
     def requires_isolation_first(self) -> "bool":
         """
         ## Description
+
         Returns `True` if the connection requires isolation first, `False` otherwise.
 
         This is used to determine if the connection should be isolated before executing a query.
@@ -125,6 +134,7 @@ class PySQLXEngineSync:
     def __enter__(self) -> "PySQLXEngineSync":
         """
         ## Description
+
         Open a connection to the database. using `with`.
         """
         ...
@@ -135,12 +145,9 @@ class PySQLXEngineSync:
         """
         ## Description
 
-        Every connection instance is lazy, only after the ``.connect()`` is the
-        database checked and a connection is created with it.
+        Each connection instance is lazy; only after ``.connect()`` is the database checked and the connection established.
 
-        ``.connect()`` establishes a connection to the database.
-
-        when you use ``with`` the connection is automatically opened and closed.
+        When you use ``async with`` the connection is automatically opened and closed.
 
         ---
 
@@ -156,6 +163,8 @@ class PySQLXEngineSync:
 
         ### Example
         ```python
+            from pysqlx_engine import PySQLXEngineSync
+
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             db = PySQLXEngineSync(uri=uri)
             db.connect()
@@ -166,10 +175,11 @@ class PySQLXEngineSync:
         """
         ## Description
 
-        Is good always close the connection, but!
-        Even if you don't close the connection, don't worry,
-        when the process ends automatically the connections will
-        be closed so the bank doesn't have an idle connection.
+        It's a good idea to close the connection, but PySQLXEngine has the core in Rust;
+        closing is automatic when your code leaves the context.
+
+        Even if you don't close the connection, don't worry; when the process ends automatically,
+        the connections will be closed, so the database doesn't have an idle connection.
 
         ---
 
@@ -185,6 +195,8 @@ class PySQLXEngineSync:
 
         ### Example
         ```python
+            from pysqlx_engine import PySQLXEngineSync
+
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             db = PySQLXEngineSync(uri=uri)
             db.connect()
@@ -201,7 +213,9 @@ class PySQLXEngineSync:
 
         ### Helper
 
-            * Arguments: ``sql(str)``: sql to be executed.
+            * Arguments:
+
+                ``sql(str)``: sql to be executed.
 
             * Returns: ``None``
 
@@ -211,6 +225,8 @@ class PySQLXEngineSync:
 
         ### Example
         ```python
+            from pysqlx_engine import PySQLXEngineSync
+
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             db = PySQLXEngineSync(uri=uri)
             db.connect()
@@ -225,6 +241,7 @@ class PySQLXEngineSync:
     def query(self, sql: str, parameters: Optional[DictParam] = None) -> Union[List[BaseRow], List]:
         """
         ## Description
+
         Returns all rows from query result as``BaseRow list``, ``MyModel list`` or ``empty list``.
 
         ---
@@ -274,22 +291,25 @@ class PySQLXEngineSync:
                 ``tuple``,
                 ``UUID``,
                 ``None``
-            ).
+            )
 
         #### Python types vs SQL types:
+
+            [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
+
         ```
             * bool     -> bool|bit|boolean|tinyint|etc
-            * bytes    -> bytea|binary|varbinary
+            * bytes    -> bytea|binary|varbinary|etc
             * date     -> date|nvarchar|varchar|string|etc
             * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
-            * Decimal  -> decimal|numeric
+            * Decimal  -> decimal|numeric|etc
             * dict     -> json|jsonb|nvarchar|varchar|string|etc
-            * float    -> float|real|numeric
+            * float    -> float|real|numeric|etc
             * int      -> int|integer|smallint|bigint|tinyint|etc
             * list     -> json|jsonb|nvarchar|varchar|string|etc
             * str      -> varchar|text|nvarchar|char|etc
             * time     -> time|nvarchar|varchar|string|etc
-            * tuple    -> array(Postgres Native)
+            * tuple    -> array(Postgres Native), another database: error.
             * UUID     -> uuid|varchar|text|nvarchar|etc
             * None     -> null
         ```
@@ -298,6 +318,8 @@ class PySQLXEngineSync:
 
         ### Example
         ```python
+            from pysqlx_engine import PySQLXEngineSync
+
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             db = PySQLXEngineSync(uri=uri)
             db.connect()
@@ -323,6 +345,7 @@ class PySQLXEngineSync:
     def query_as_dict(self, sql: str, parameters: Optional[DictParam] = None) -> Union[List[Dict[str, Any]], List]:
         """
         ## Description
+
         Returns all rows from query result as ``dict list`` or ``empty list``.
 
         ---
@@ -330,7 +353,7 @@ class PySQLXEngineSync:
         ### Helper
             * Arguments:
 
-                ``sql(str)`` sql query to be executed
+                ``sql(str)``: sql query to be executed
 
                 ``parameters(dict)``: (default is None) parameters must be a dictionary with the name of the parameter and the value.
 
@@ -373,19 +396,22 @@ class PySQLXEngineSync:
             )
 
         #### Python types vs SQL types:
+
+            [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
+
         ```
             * bool     -> bool|bit|boolean|tinyint|etc
-            * bytes    -> bytea|binary|varbinary
+            * bytes    -> bytea|binary|varbinary|etc
             * date     -> date|nvarchar|varchar|string|etc
             * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
-            * Decimal  -> decimal|numeric
+            * Decimal  -> decimal|numeric|etc
             * dict     -> json|jsonb|nvarchar|varchar|string|etc
-            * float    -> float|real|numeric
+            * float    -> float|real|numeric|etc
             * int      -> int|integer|smallint|bigint|tinyint|etc
             * list     -> json|jsonb|nvarchar|varchar|string|etc
             * str      -> varchar|text|nvarchar|char|etc
             * time     -> time|nvarchar|varchar|string|etc
-            * tuple    -> array(Postgres Native)
+            * tuple    -> array(Postgres Native), another database: error.
             * UUID     -> uuid|varchar|text|nvarchar|etc
             * None     -> null
         ```
@@ -394,6 +420,8 @@ class PySQLXEngineSync:
 
         ### Example
         ```python
+            from pysqlx_engine import PySQLXEngineSync
+
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             db = PySQLXEngineSync(uri=uri)
             db.connect()
@@ -415,6 +443,7 @@ class PySQLXEngineSync:
     def query_first(self, sql: str, parameters: DictParam = None) -> Union[BaseRow, None]:
         """
         ## Description
+
         Returns first row from query result as ``BaseRow``, ``MyModel`` or ``None``.
 
         ---
@@ -467,19 +496,22 @@ class PySQLXEngineSync:
             )
 
         #### Python types vs SQL types:
+
+            [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
+
         ```
             * bool     -> bool|bit|boolean|tinyint|etc
-            * bytes    -> bytea|binary|varbinary
+            * bytes    -> bytea|binary|varbinary|etc
             * date     -> date|nvarchar|varchar|string|etc
             * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
-            * Decimal  -> decimal|numeric
+            * Decimal  -> decimal|numeric|etc
             * dict     -> json|jsonb|nvarchar|varchar|string|etc
-            * float    -> float|real|numeric
+            * float    -> float|real|numeric|etc
             * int      -> int|integer|smallint|bigint|tinyint|etc
             * list     -> json|jsonb|nvarchar|varchar|string|etc
             * str      -> varchar|text|nvarchar|char|etc
             * time     -> time|nvarchar|varchar|string|etc
-            * tuple    -> array(Postgres Native)
+            * tuple    -> array(Postgres Native), another database: error.
             * UUID     -> uuid|varchar|text|nvarchar|etc
             * None     -> null
         ```
@@ -488,6 +520,8 @@ class PySQLXEngineSync:
 
         ### Example
         ```python
+            from pysqlx_engine import PySQLXEngineSync
+
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             db = PySQLXEngineSync(uri=uri)
             db.connect()
@@ -513,6 +547,7 @@ class PySQLXEngineSync:
     def query_first_as_dict(self, sql: str, parameters: Optional[DictParam] = None) -> Optional[Dict[str, Any]]:
         """
         ## Description
+
         Returns first row from query result as ``dict`` or ``None``.
 
         ---
@@ -520,7 +555,7 @@ class PySQLXEngineSync:
         ### Helper
             * Arguments:
 
-                ``sql(str)`` sql query to be executed.
+                ``sql(str)``: sql query to be executed.
 
                 ``parameters(dict)``: (default is None) parameters must be a dictionary with the name of the parameter and the value.
 
@@ -563,19 +598,22 @@ class PySQLXEngineSync:
             )
 
         #### Python types vs SQL types:
+
+            [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
+
         ```
             * bool     -> bool|bit|boolean|tinyint|etc
-            * bytes    -> bytea|binary|varbinary
+            * bytes    -> bytea|binary|varbinary|etc
             * date     -> date|nvarchar|varchar|string|etc
             * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
-            * Decimal  -> decimal|numeric
+            * Decimal  -> decimal|numeric|etc
             * dict     -> json|jsonb|nvarchar|varchar|string|etc
-            * float    -> float|real|numeric
+            * float    -> float|real|numeric|etc
             * int      -> int|integer|smallint|bigint|tinyint|etc
             * list     -> json|jsonb|nvarchar|varchar|string|etc
             * str      -> varchar|text|nvarchar|char|etc
             * time     -> time|nvarchar|varchar|string|etc
-            * tuple    -> array(Postgres Native)
+            * tuple    -> array(Postgres Native), another database: error.
             * UUID     -> uuid|varchar|text|nvarchar|etc
             * None     -> null
         ```
@@ -584,6 +622,8 @@ class PySQLXEngineSync:
 
         ### Example
         ```python
+            from pysqlx_engine import PySQLXEngineSync
+
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             db = PySQLXEngineSync(uri=uri)
             db.connect()
@@ -604,6 +644,7 @@ class PySQLXEngineSync:
     def execute(self, sql: str, parameters: Optional[DictParam] = None) -> "int":
         """
         ## Description
+
         Executes a query/sql and returns the number of rows affected.
 
         ---
@@ -651,19 +692,22 @@ class PySQLXEngineSync:
             )
 
         #### Python types vs SQL types:
+
+            [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
+
         ```
             * bool     -> bool|bit|boolean|tinyint|etc
-            * bytes    -> bytea|binary|varbinary
+            * bytes    -> bytea|binary|varbinary|etc
             * date     -> date|nvarchar|varchar|string|etc
             * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
-            * Decimal  -> decimal|numeric
+            * Decimal  -> decimal|numeric|etc
             * dict     -> json|jsonb|nvarchar|varchar|string|etc
-            * float    -> float|real|numeric
+            * float    -> float|real|numeric|etc
             * int      -> int|integer|smallint|bigint|tinyint|etc
             * list     -> json|jsonb|nvarchar|varchar|string|etc
             * str      -> varchar|text|nvarchar|char|etc
             * time     -> time|nvarchar|varchar|string|etc
-            * tuple    -> array(Postgres Native)
+            * tuple    -> array(Postgres Native), another database: error.
             * UUID     -> uuid|varchar|text|nvarchar|etc
             * None     -> null
         ```
@@ -672,6 +716,8 @@ class PySQLXEngineSync:
 
         ### Example
         ```python
+            from pysqlx_engine import PySQLXEngineSync
+
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             db = PySQLXEngineSync(uri=uri)
             db.connect()
@@ -685,6 +731,7 @@ class PySQLXEngineSync:
     def set_isolation_level(self, isolation_level: ISOLATION_LEVEL) -> "None":
         """
         ## Description
+
         Sets the isolation level of the connection.
 
         The isolation level is set before the transaction is started.
@@ -714,6 +761,8 @@ class PySQLXEngineSync:
 
         ### Example
         ```python
+            from pysqlx_engine import PySQLXEngineSync
+
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             db = PySQLXEngineSync(uri=uri)
             db.connect()
@@ -731,6 +780,7 @@ class PySQLXEngineSync:
     def begin(self) -> "None":
         """
         ## Description
+
         Starts a transaction using ``BEGIN``.
 
         ``begin()`` is equivalent to `start_transaction()` without setting the isolation level.
@@ -749,6 +799,8 @@ class PySQLXEngineSync:
 
         ### Example
         ```python
+            from pysqlx_engine import PySQLXEngineSync
+
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             db = PySQLXEngineSync(uri=uri)
             db.connect()
@@ -759,6 +811,7 @@ class PySQLXEngineSync:
     def commit(self) -> "None":
         """
         ## Description
+
         Commits the current transaction.
 
         The `begin()` method must be called before calling `commit()`.
@@ -781,6 +834,8 @@ class PySQLXEngineSync:
 
         ### Example
         ```python
+            from pysqlx_engine import PySQLXEngineSync
+
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             db = PySQLXEngineSync(uri=uri)
             db.connect()
@@ -795,6 +850,7 @@ class PySQLXEngineSync:
     def rollback(self) -> "None":
         """
         ## Description
+
         Rollbacks the current transaction.
 
         Rollback is used to cancel the transaction, when you uses the rollback,
@@ -820,6 +876,8 @@ class PySQLXEngineSync:
 
         ### Example
         ```python
+            from pysqlx_engine import PySQLXEngineSync
+
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             db = PySQLXEngineSync(uri=uri)
             db.connect()
@@ -834,6 +892,7 @@ class PySQLXEngineSync:
     def start_transaction(self, isolation_level: Union[ISOLATION_LEVEL, None] = None) -> "None":
         """
         ## Description
+
         Starts a transaction with ``BEGIN/BEGIN TRANSACTION``. by default, does not set the isolation level.
 
         The ``Snapshot`` isolation level is supported by MS SQL Server.
@@ -860,6 +919,8 @@ class PySQLXEngineSync:
 
         ### Example
         ```python
+            from pysqlx_engine import PySQLXEngineSync
+
             uri = "postgresql://user:pass@host:port/db?schema=sample"
             db = PySQLXEngineSync(uri=uri)
             db.connect()
