@@ -23,7 +23,7 @@ sqlserver://localhost:1433;initialCatalog=sample;integratedSecurity=true;trustSe
 The following example uses a specific Active Directory user to log in to Microsoft SQL Server:
     
 ```text
-sqlserver://localhost:1433;initialCatalog=sample;integratedSecurity=true;username=prisma;password=aBcD1234;trustServerCertificate=true;
+sqlserver://localhost:1433;initialCatalog=sample;integratedSecurity=true;username=pysqlx;password=aBcD1234;trustServerCertificate=true;
 ```
 
 #### **Using SQL Browser to connect to a named instance**
