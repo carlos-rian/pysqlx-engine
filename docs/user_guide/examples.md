@@ -40,7 +40,14 @@ To this example, we will use the ``sqlite`` database. Create a ``main.py`` file 
         db = PySQLXEngine(uri=uri)
         await db.connect()
 
-        sql = "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT, age INTEGER)"
+        sql = """
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY, 
+                name TEXT, 
+                age INTEGER
+            );
+        """
+
         resp = await db.execute(sql=sql)
 
         print("table created: ", resp == 0)
@@ -59,7 +66,14 @@ To this example, we will use the ``sqlite`` database. Create a ``main.py`` file 
         db = PySQLXEngineSync(uri=uri)
         db.connect()
 
-        sql = "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT, age INTEGER)"
+        sql = """
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY, 
+                name TEXT, 
+                age INTEGER
+            );
+        """
+
         resp = db.execute(sql=sql)
 
         print("table created: ", resp == 0)

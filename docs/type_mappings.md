@@ -16,11 +16,11 @@ When introspecting a PostgreSQL database, the database types are mapped to PySQL
 | numeric(p,s) / decimal(p,s)              | decimal     |✔️          |
 | real / float, float4                     | float       |✔️          |
 | double precision / float8                | float       |✔️          |
-| smallint / int2                          | Int         |✔️          |
-| integer / int, int4                      | Int         |✔️          |
-| smallserial / serial2                    | Int         |✔️          |
-| serial / serial4                         | Int         |✔️          |
-| bigserial / serial8                      | Int         |✔️          |
+| smallint / int2                          | int         |✔️          |
+| integer / int, int4                      | int         |✔️          |
+| smallserial / serial2                    | int         |✔️          |
+| serial / serial4                         | int         |✔️          |
+| bigserial / serial8                      | int         |✔️          |
 | character(n) / char(n)                   | str         |✔️          |
 | character   varying(n) / varchar(n)      | str         |✔️          |
 | money                                    | decimal     |✔️          |
@@ -38,7 +38,7 @@ When introspecting a PostgreSQL database, the database types are mapped to PySQL
 | bytea                                    | bytes       |✔️          |
 | xml                                      | str         |✔️          |
 | Array types                              | tuple       |✔️          |
-| citext                                   | str         |✔️ *        |
+| citext                                   | str         |✔️          |
 | interval                                 | Unsupported |Not  yet    |
 | cidr                                     | Unsupported |Not  yet    |
 | macaddr                                  | Unsupported |Not  yet    |

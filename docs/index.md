@@ -101,9 +101,17 @@ Create a ``main.py`` file and add the code examples below.
         db = PySQLXEngine(uri="sqlite:./db.db")
         await db.connect()
 
-        await db.execute(sql="CREATE TABLE IF NOT EXISTS users (id INT PRIMARY KEY, name TEXT, age INT)")
-        await db.execute(sql="INSERT INTO users (name, age) VALUES ('Rian', '28')")
-        await db.execute(sql="INSERT INTO users (name, age) VALUES ('Carlos', '29')")
+        await db.execute(sql="""
+            CREATE TABLE IF NOT EXISTS users (
+                id INT PRIMARY KEY, 
+                name TEXT, 
+                age INT
+            );"""
+        )
+
+        sql = "INSERT INTO users (name, age) VALUES (:n, :a);"
+        await db.execute(sql=sql_insert, parameters={"n": "Rian", "a": 28)")
+        await db.execute(sql=sql_insert, parameters={"n": "Mary", "a": 25)")
 
         rows = await db.query(sql="SELECT * FROM users")
 
@@ -112,6 +120,7 @@ Create a ``main.py`` file and add the code examples below.
     import asyncio
     asyncio.run(main())
     ```
+
 === "Sync"
     ``` py linenums="1"
     
