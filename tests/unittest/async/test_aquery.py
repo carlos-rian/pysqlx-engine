@@ -1226,3 +1226,58 @@ async def test_with_complex_param_query_first_as_dict_adb_pgsql(db: PySQLXEngine
 
     await conn.close()
     assert conn.connected is False
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("db", [adb_mssql, adb_pgsql])
+async def test_query_first_col_without_the_name(db: PySQLXEngine):
+    conn: PySQLXEngine = await db()
+    assert conn.connected is True
+
+    resp = await conn.query_first("SELECT 1, 2")
+    assert resp.col_0 == 1
+    assert resp.col_1 == 2
+
+    await conn.close()
+    assert conn.connected is False
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("db", [adb_mysql, adb_sqlite])
+async def test_query_first_col_is_number(db: PySQLXEngine):
+    conn: PySQLXEngine = await db()
+    assert conn.connected is True
+
+    resp = await conn.query_first("SELECT 1, 2")
+
+    assert resp.col_1 == 1
+    assert resp.col_2 == 2
+
+    assert isinstance(resp.col_1, int)
+    assert isinstance(resp.col_2, int)
+
+    resp = await conn.query_first("SELECT -11.43, -24432")
+
+    assert isinstance(resp.col_11_43, (Decimal, float))
+    assert isinstance(resp.col_24432, int)
+
+    await conn.close()
+    assert conn.connected is False
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("db", [adb_mysql, adb_sqlite, adb_mysql, adb_sqlite])
+async def test_query_first_col_with_same_name(db: PySQLXEngine):
+    conn: PySQLXEngine = await db()
+    assert conn.connected is True
+
+    resp = await conn.query_first("SELECT 1 as x, 2 as x")
+
+    assert resp.x == 1
+    assert resp.x_1 == 2
+
+    assert isinstance(resp.x, int)
+    assert isinstance(resp.x_1, int)
+
+    await conn.close()
+    assert conn.connected is False
