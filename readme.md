@@ -4,7 +4,7 @@
   <a href="/"><img src="https://carlos-rian.github.io/pysqlx-engine/img/logo-text3.png" alt="PySQLXEngine Logo"></a>
 </p>
 <p align="center">
-    <em>PySQLXEngine, a minimalist SQL engine</em>
+    <em>PySQLXEngine, a fast and minimalist SQL engine</em>
 </p>
 
 <p align="center">

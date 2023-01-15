@@ -4,7 +4,7 @@
   <a href="/"><img src="./img/logo-text3.png" alt="PySQLXEngine Logo"></a>
 </p>
 <p align="center">
-    <em>PySQLXEngine, a minimalist SQL Engine, ready for production</em>
+    <em>PySQLXEngine, a fast and minimalist SQL Engine </em>
 </p>
 
 <p align="center">
