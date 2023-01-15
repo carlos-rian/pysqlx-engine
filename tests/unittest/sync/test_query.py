@@ -1183,3 +1183,68 @@ def test_with_complex_param_query_first_as_dict_db_pgsql(db: PySQLXEngineSync = 
 
     conn.close()
     assert conn.connected is False
+
+
+@pytest.mark.parametrize("db", [db_mssql, db_pgsql])
+def test_query_first_col_without_the_name(db: PySQLXEngineSync):
+    conn: PySQLXEngineSync = db()
+    assert conn.connected is True
+
+    resp = conn.query_first("SELECT 1, 2")
+    assert resp.col_0 == 1
+    assert resp.col_1 == 2
+
+    conn.close()
+    assert conn.connected is False
+
+
+@pytest.mark.parametrize("db", [db_mysql, db_sqlite])
+def test_query_first_col_is_number(db: PySQLXEngineSync):
+    conn: PySQLXEngineSync = db()
+    assert conn.connected is True
+
+    resp = conn.query_first("SELECT 1, 2")
+
+    assert resp.col_1 == 1
+    assert resp.col_2 == 2
+
+    assert isinstance(resp.col_1, int)
+    assert isinstance(resp.col_2, int)
+
+    resp = conn.query_first("SELECT -11.43, -24432")
+
+    assert isinstance(resp.col_11_43, (Decimal, float))
+    assert isinstance(resp.col_24432, int)
+
+    conn.close()
+    assert conn.connected is False
+
+
+@pytest.mark.parametrize("db", [db_mysql, db_sqlite, db_mysql, db_sqlite])
+def test_query_first_col_with_same_name(db: PySQLXEngineSync):
+    conn: PySQLXEngineSync = db()
+    assert conn.connected is True
+
+    resp = conn.query_first("SELECT 1 as x, 2 as x")
+
+    assert resp.x == 1
+    assert resp.x_1 == 2
+
+    assert isinstance(resp.x, int)
+    assert isinstance(resp.x_1, int)
+
+    conn.close()
+    assert conn.connected is False
+
+
+@pytest.mark.parametrize("db", [db_mysql, db_sqlite, db_mysql, db_sqlite])
+def test_query_first_col_with_same_name_as_str(db: PySQLXEngineSync):
+    conn: PySQLXEngineSync = db()
+    assert conn.connected is True
+
+    resp = conn.query_first("SELECT 1 as x, 2 as x")
+
+    assert str(resp) == "BaseRow(x=1, x_1=2)" or str(resp) == "BaseRow(x_1=2, x=1)"
+
+    conn.close()
+    assert conn.connected is False
