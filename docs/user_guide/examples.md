@@ -32,7 +32,7 @@ To this example, we will use the ``sqlite`` database. Create a ``main.py`` file 
 
 === "**Async**"
 
-    ``` py linenums="1" linenums="1"
+    ``` py linenums="1" title="main.py"
     from pysqlx_engine import PySQLXEngine
 
     async def main():
@@ -58,7 +58,7 @@ To this example, we will use the ``sqlite`` database. Create a ``main.py`` file 
 
 === "**Sync**"
 
-    ``` py linenums="1"
+    ``` py linenums="1" title="main.py"
     from pysqlx_engine import PySQLXEngineSync
 
     def main():
@@ -100,7 +100,7 @@ table created: True
 
 === "**Async**"
 
-    ``` py linenums="1"
+    ``` py linenums="1" title="main.py"
     from pysqlx_engine import PySQLXEngine
 
     async def main():
@@ -120,7 +120,7 @@ table created: True
 
 === "**Sync**"
 
-    ``` py linenums="1"
+    ``` py linenums="1" title="main.py"
     from pysqlx_engine import PySQLXEngineSync
 
     def main():
@@ -156,7 +156,7 @@ rows affected: 1
 
 === "**Async**"
 
-    ``` py linenums="1"
+    ``` py linenums="1" title="main.py"
     from pysqlx_engine import PySQLXEngine
 
     async def main():
@@ -175,7 +175,7 @@ rows affected: 1
 
 === "**Sync**"
 
-    ``` py linenums="1"
+    ``` py linenums="1" title="main.py"
     from pysqlx_engine import PySQLXEngineSync
 
     def main():
@@ -212,7 +212,7 @@ rows selected: [BaseRow(id=1, name='John', age=20)]
 
 === "**Async**"
 
-    ``` py linenums="1"
+    ``` py linenums="1" title="main.py"
     from pysqlx_engine import PySQLXEngine
 
     async def main():
@@ -232,7 +232,7 @@ rows selected: [BaseRow(id=1, name='John', age=20)]
 
 === "**Sync**"
 
-    ``` py linenums="1"
+    ``` py linenums="1" title="main.py"
     from pysqlx_engine import PySQLXEngineSync
 
     def main():
@@ -270,7 +270,7 @@ rows affected: 1
 
 === "**Async**"
 
-    ``` py linenums="1"
+    ``` py linenums="1" title="main.py"
     from pysqlx_engine import PySQLXEngine
 
     async def main():
@@ -290,7 +290,7 @@ rows affected: 1
 
 === "**Sync**"
 
-    ``` py linenums="1"
+    ``` py linenums="1" title="main.py"
     from pysqlx_engine import PySQLXEngineSync
 
     def main():
@@ -329,7 +329,7 @@ rows affected: 1
 
 === "**Async**"
 
-    ``` py linenums="1"
+    ``` py linenums="1" title="main.py"
     from pysqlx_engine import PySQLXEngine
 
     async def main():
@@ -348,7 +348,7 @@ rows affected: 1
 
 === "**Sync**"
 
-    ``` py linenums="1"
+    ``` py linenums="1" title="main.py"
     from pysqlx_engine import PySQLXEngineSync
     
     def main():

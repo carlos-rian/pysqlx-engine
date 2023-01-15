@@ -63,7 +63,7 @@ Create a file called `main.py` and add the code below.
 
 
 === "**Async**"
-    ``` py linenums="1" hl_lines="3 5 7-8"
+    ``` py linenums="1" hl_lines="3 5 7-8" title="main.py"
     from pysqlx_engine import PySQLXEngine
 
     async def main(): # need to be async, because of await
@@ -73,7 +73,7 @@ Create a file called `main.py` and add the code below.
     ```
 
 === "**Sync**"
-    ``` py linenums="1" hl_lines="3 5 7"
+    ``` py linenums="1" hl_lines="3 5 7" title="main.py"
     from pysqlx_engine import PySQLXEngineSync
 
     def main(): # don't need to be async
@@ -90,7 +90,7 @@ So, you need to add the below lines at the end of your code!
 
 
 === "Async"
-    ``` py linenums="1" hl_lines="3-4"
+    ``` py linenums="7" hl_lines="3-4" title="main.py"
     ...# your code
 
     import asyncio # need to import 
@@ -98,7 +98,7 @@ So, you need to add the below lines at the end of your code!
     ```
 
 === "Sync"
-    ``` py linenums="1" hl_lines="3-4"
+    ``` py linenums="7" hl_lines="3-4" title="main.py"
     ...# your code
 
     # don't need to import asyncio

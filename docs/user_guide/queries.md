@@ -18,7 +18,7 @@ The ``.query_as_dict()`` and ``.query_first_as_dict()`` methods are useful when 
 
 === "**Async**"
 
-    ``` py linenums="1"
+    ``` py linenums="1" title="main.py"
     from pysqlx_engine import PySQLXEngine
 
     async def main():
@@ -40,7 +40,7 @@ The ``.query_as_dict()`` and ``.query_first_as_dict()`` methods are useful when 
 
 === "**Sync**"
 
-    ``` py linenums="1"
+    ``` py linenums="1" title="main.py"
     from pysqlx_engine import PySQLXEngineSync
 
     def main():
@@ -85,7 +85,7 @@ The BaseRow is an inheritance from ``Pydantic BaseModel``.
 
 === "**Async**"
 
-    ``` py linenums="1"
+    ``` py linenums="1" title="main.py"
     from pysqlx_engine import PySQLXEngine
 
     async def main():
@@ -107,7 +107,7 @@ The BaseRow is an inheritance from ``Pydantic BaseModel``.
 
 === "**Sync**"
 
-    ``` py linenums="1"
+    ``` py linenums="1" title="main.py"
     from pysqlx_engine import PySQLXEngineSync
 
     def main():
@@ -158,7 +158,7 @@ Using the ``model`` argument, you can have an autocomplete feature in your IDE, 
 
 Create a ``models.py`` file and add the code examples below.
 
-``` py linenums="1"
+``` py linenums="1" title="models.py"
 from pysqlx_engine import BaseRow
 
 class User(BaseRow):
@@ -171,7 +171,7 @@ Create a ``main.py`` file and add the code examples below.
 
 === "**Async**"
 
-    ``` py linenums="1"
+    ``` py linenums="1" title="main.py"
     from pysqlx_engine import PySQLXEngine
     from models import User
 
@@ -194,7 +194,7 @@ Create a ``main.py`` file and add the code examples below.
 
 === "**Sync**"
 
-    ``` py linenums="1"
+    ``` py linenums="1" title="main.py"
     from pysqlx_engine import PySQLXEngineSync
     from models import User
 

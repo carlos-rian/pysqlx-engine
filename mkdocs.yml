@@ -75,11 +75,13 @@ nav:
 
       - Examples: user_guide/examples.md
       - Queries: user_guide/queries.md
+      - Configs: user_guide/config.md
       - Documentation for Methods: user_guide/extras.md
 
   - Advanced Guide:
       - DML with return: advanced_guide/dml_with_return.md
       - Simple Pool With Concurrent Connections: advanced_guide/simple_pool_conn.md
+      - JSON Support: advanced_guide/json_support.md
 
   - Type Mappings: type_mappings.md
   - Supported Databases: databases_and_versions.md

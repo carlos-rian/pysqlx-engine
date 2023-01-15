@@ -62,7 +62,7 @@ OS Support:
 
 === "PIP"
 
-    <small>[Pip](https://pypi.org)</small>
+    <small>[**PIP**](https://pypi.org)</small>
 
     <div class="termy">
 
@@ -76,7 +76,7 @@ OS Support:
 
 === "Poetry"
 
-    <small>[Poetry](https://python-poetry.org)</small>
+    <small>[**Poetry**](https://python-poetry.org)</small>
     
     <div class="termy">
 
@@ -94,7 +94,7 @@ OS Support:
 Create a ``main.py`` file and add the code examples below.
 
 === "Async"
-    ``` py linenums="1"
+    ``` py linenums="1" title="main.py"
     from pysqlx_engine import PySQLXEngine
 
     async def main():
@@ -122,7 +122,7 @@ Create a ``main.py`` file and add the code examples below.
     ```
 
 === "Sync"
-    ``` py linenums="1"
+    ``` py linenums="1" title="main.py"
     
     from pysqlx_engine import PySQLXEngineSync
 

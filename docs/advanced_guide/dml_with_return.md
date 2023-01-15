@@ -37,7 +37,7 @@ Create a ``main.py`` file and add the code examples below.
 
 === "**Async**"
 
-    ``` py linenums="1" hl_lines="21 24"
+    ``` py linenums="1" hl_lines="21 24" title="main.py"
     from pysqlx_engine import PySQLXEngine
 
     uri = "sqlite:./db.db"
@@ -70,7 +70,7 @@ Create a ``main.py`` file and add the code examples below.
 
 === "**Sync**"
 
-    ``` py linenums="1" hl_lines="21 24"
+    ``` py linenums="1" hl_lines="21 24" title="main.py"
     from pysqlx_engine import PySQLXEngineSync
 
     uri = "sqlite:./db.db"
@@ -119,7 +119,7 @@ Create a ``main.py`` file and add the code examples below.
 
 === "**Async**"
 
-    ``` py linenums="1" hl_lines="18 27"
+    ``` py linenums="1" hl_lines="18 27" title="main.py"
     from pysqlx_engine import PySQLXEngine
 
     uri = "sqlite:./db.db"
@@ -153,7 +153,7 @@ Create a ``main.py`` file and add the code examples below.
 
 === "**Sync**"
 
-    ``` py linenums="1" hl_lines="18 27"
+    ``` py linenums="1" hl_lines="18 27" title="main.py"
     from pysqlx_engine import PySQLXEngineSync
 
     uri = "sqlite:./db.db"
