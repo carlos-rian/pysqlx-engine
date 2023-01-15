@@ -1281,3 +1281,17 @@ async def test_query_first_col_with_same_name(db: PySQLXEngine):
 
     await conn.close()
     assert conn.connected is False
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("db", [adb_mysql, adb_sqlite, adb_mysql, adb_sqlite])
+async def test_query_first_col_with_same_name_as_str(db: PySQLXEngine):
+    conn: PySQLXEngine = await db()
+    assert conn.connected is True
+
+    resp = await conn.query_first("SELECT 1 as x, 2 as x")
+
+    assert str(resp) == "BaseRow(x=1, x_1=2)" or str(resp) == "BaseRow(x_1=2, x=1)"
+
+    await conn.close()
+    assert conn.connected is False
