@@ -115,8 +115,8 @@ Create a ``main.py`` file and add the code examples below.
         )
 
         sql = "INSERT INTO users (name, age) VALUES (:n, :a);"
-        await db.execute(sql=sql_insert, parameters={"n": "Rian", "a": 28)")
-        await db.execute(sql=sql_insert, parameters={"n": "Mary", "a": 25)")
+        await db.execute(sql=sql, parameters={"n": "Rian", "a": 28})
+        await db.execute(sql=sql, parameters={"n": "Mary", "a": 25})
 
         rows = await db.query(sql="SELECT * FROM users")
 
@@ -128,22 +128,29 @@ Create a ``main.py`` file and add the code examples below.
 
 === "Sync"
     ``` py linenums="1" title="main.py"
-    
     from pysqlx_engine import PySQLXEngineSync
 
     def main():
         db = PySQLXEngineSync(uri="sqlite:./db.db")
         db.connect()
 
-        db.execute(sql="CREATE TABLE IF NOT EXISTS users (id INT PRIMARY KEY, name TEXT, age INT)")
-        db.execute(sql="INSERT INTO users (name, age) VALUES ('Rian', '28')")
-        db.execute(sql="INSERT INTO users (name, age) VALUES ('Carlos', '29')")
+        db.execute(sql="""
+            CREATE TABLE IF NOT EXISTS users (
+                id INT PRIMARY KEY, 
+                name TEXT, 
+                age INT
+            );"""
+        )
+
+        sql = "INSERT INTO users (name, age) VALUES (:n, :a);"
+        db.execute(sql=sql, parameters={"n": "Rian", "a": 28})
+        db.execute(sql=sql, parameters={"n": "Mary", "a": 25})
 
         rows = db.query(sql="SELECT * FROM users")
 
         print(rows)
 
-    # running the code
+    # runnig the code
     main()
     ```
 

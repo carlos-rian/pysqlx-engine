@@ -61,7 +61,7 @@ Create a ``main.py`` file and add the code examples below.
             RETURNING id;
         """
 
-        row = await db.query(sql)
+        row = await db.query(sql=sql)
         print(row)
 
     import asyncio
@@ -94,7 +94,7 @@ Create a ``main.py`` file and add the code examples below.
             RETURNING id;
         """
 
-        row = db.query(sql)
+        row = db.query(sql=sql)
         print(row)
 
     # running the code
@@ -143,9 +143,8 @@ Create a ``main.py`` file and add the code examples below.
             );
         """
 
-        row = await db.query(sql)
+        row = await db.query(sql=sql)
         print(row)
-
 
     import asyncio
     asyncio.run(main())
@@ -177,9 +176,8 @@ Create a ``main.py`` file and add the code examples below.
             );
         """
 
-        row = db.query(sql)
+        row = db.query(sql=sql)
         print(row)
-
 
     # running the code
     main()
