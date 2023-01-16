@@ -1,3 +1,4 @@
+import os
 import httpx
 import toml
 
@@ -36,3 +37,8 @@ new_text = text.replace(f'version = "{file_version}"', f'version = "{new_version
 
 with open("pyproject.toml", mode="w") as file:
     file.write(new_text)
+
+env_file = os.getenv("GITHUB_ENV")
+
+with open(env_file, mode="a") as file:
+    file.write(f"\nPY_SQLX_VERSION=v{new_version}")
