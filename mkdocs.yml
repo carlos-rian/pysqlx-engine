@@ -1,6 +1,6 @@
 site_name: PySQLXEngine
 
-site_description: Python Async SQL Engines
+site_description: PySQLXEngine a fast and minimalist SQL Engine
 
 site_url: "https://github.com/carlos-rian/pysqlx-engine"
 

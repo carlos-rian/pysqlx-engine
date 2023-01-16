@@ -1,5 +1,7 @@
 # PySQLXEngine
 
+<meta name="google-site-verification" content="1W0zowuG7iWeQbRWzu_KH4tWoHCouU9LiXln6BCHlwU" />
+
 <p align="center">
   <a href="/"><img src="./img/logo-text3.png" alt="PySQLXEngine Logo"></a>
 </p>
