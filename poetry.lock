@@ -297,7 +297,7 @@ plugins = ["importlib-metadata"]
 
 [[package]]
 name = "pysqlx-core"
-version = "0.1.37"
+version = "0.1.38"
 description = "A fast and async SQL database wrapper for Python, with support for MySQL, PostgreSQL, SQLite and MS SQL Server."
 category = "main"
 optional = false
@@ -308,7 +308,7 @@ typing_extensions = {version = "*", markers = "python_version < \"3.11.0\""}
 
 [[package]]
 name = "pytest"
-version = "7.2.0"
+version = "7.2.1"
 description = "pytest: simple powerful testing with Python"
 category = "dev"
 optional = false
@@ -467,7 +467,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "flake8 (<5)", "pytest-co
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "fbe70caba7866c48c81ca556854df23f47c5fba10b0b272668e520397b421621"
+content-hash = "b6e400b12c84fc5cf5ecc2677842c3acf6598233b22c65c5d28068b46be23873"
 
 [metadata.files]
 anyio = []
