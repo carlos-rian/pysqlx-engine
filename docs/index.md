@@ -108,7 +108,7 @@ Create a ``main.py`` file and add the code examples below.
 
         await db.execute(sql="""
             CREATE TABLE IF NOT EXISTS users (
-                id INT PRIMARY KEY, 
+                id INTEGER PRIMARY KEY, 
                 name TEXT, 
                 age INT
             );"""
@@ -136,7 +136,7 @@ Create a ``main.py`` file and add the code examples below.
 
         db.execute(sql="""
             CREATE TABLE IF NOT EXISTS users (
-                id INT PRIMARY KEY, 
+                id INTEGER PRIMARY KEY, 
                 name TEXT, 
                 age INT
             );"""
