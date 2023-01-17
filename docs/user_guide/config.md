@@ -101,6 +101,7 @@ Running the code using the terminal
 
 ```console
 $ python3 main.py
+
 ```
 
 </div>

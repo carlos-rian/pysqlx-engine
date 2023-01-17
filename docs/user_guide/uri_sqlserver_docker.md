@@ -10,54 +10,56 @@ To run a Microsoft SQL Server container image with Docker:
 
 2. Run the following command in your terminal to download the Microsoft SQL Server 2019 image:
 
-    <div class="termy">
+<div class="termy">
 
-    ```console
-    $ docker pull mcr.microsoft.com/mssql/server:2019-latest
+```console
+$ docker pull mcr.microsoft.com/mssql/server:2019-latest
 
-    ...
-    ```
-    </div>
+...
+```
+
+</div>
 
 
 3. Create an instance of the container image, replacing the value of SA_PASSWORD with a password of your choice:
 
-    <div class="termy">
+<div class="termy">
 
-    ```console
-    $ docker run --name sql_container -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=myPassword' -p 1433:1433 -d mcr.microsoft.com/mssql/server:2019-latest
+```console
+$ docker run --name sql_container -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=myPassword' -p 1433:1433 -d mcr.microsoft.com/mssql/server:2019-latest
 
-    ...
-    ```
-    </div>
+...
+```
+</div>
+
 
 4. [Follow Microsoft's instructions](https://learn.microsoft.com/en-us/sql/linux/quickstart-install-connect-docker?view=sql-server-ver15&pivots=cs1-cmd#connect-to-sql-server) to connect to SQL Server and use the `sqlcmd` tool, replacing the image name and password with your own.
 
 5. From the `sqlcmd` command prompt, create a new database:
 
-    <div class="termy">
+<div class="termy">
 
-    ```console
-    CREATE DATABASE quickstart
-    GO
+```console
+CREATE DATABASE quickstart
+GO
 
-    ...
+...
 
-    ```
-    </div>
+```
+</div>
 
 6. Run the following command to check that your database was created successfully:
 
-    <div class="termy">
+<div class="termy">
 
-    ```console
+```console
 
-    sp_databases
-    GO
+sp_databases
+GO
 
-    ...
-    ```
-    </div>
+...
+```
+</div>
 
 ### **Connection URL credentials**
 

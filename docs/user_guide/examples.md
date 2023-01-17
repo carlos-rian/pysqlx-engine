@@ -90,7 +90,6 @@ Running the code using the terminal
 $ python3 main.py
 
 table created: True
-
 ```
 </div>
 
