@@ -32,17 +32,19 @@ theme:
 
     - navigation.indexes
     - navigation.top
-    #- navigation.instant
+    - navigation.instant
     #- navigation.tracking
 
     - navigation.tabs
     - navigation.footer
-    #- navigation.path
+    - navigation.path
 
     - header.autohide
 
     - content.code.copy
     - content.code.annotate
+
+    - content.tabs.link
 
   icon:
     repo: fontawesome/brands/github
@@ -73,8 +75,8 @@ nav:
           - SQLite: user_guide/uri_sqlite.md
           - Microsoft SQL Server:
               - user_guide/sqlserver/index.md
-              - Microsoft SQL Server Windows (Local): user_guide/uri_sqlserver_windows.md
-              - Microsoft SQL Server on Docker: user_guide/uri_sqlserver_docker.md
+              - Microsoft SQL Server Windows (Local): user_guide/sqlserver/uri_sqlserver_windows.md
+              - Microsoft SQL Server on Docker: user_guide/sqlserver/uri_sqlserver_docker.md
 
       - Examples: user_guide/examples.md
       - Queries: user_guide/queries.md
@@ -92,28 +94,35 @@ nav:
   - Core: core_engine.md
 
 markdown_extensions:
-  - toc:
-      permalink: true
-  - markdown.extensions.codehilite:
-      guess_lang: false
-  - markdown_include.include:
-      base_path: docs
-  - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
   - admonition
   - attr_list
   - extra
   - pymdownx.smartsymbols
-  - pymdownx.highlight:
-      anchor_linenums: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
+
+  - toc:
+      permalink: true
+
+  - markdown.extensions.codehilite:
+      guess_lang: false
+
+  - markdown_include.include:
+      base_path: docs
+
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+
+  - pymdownx.highlight:
+      anchor_linenums: true
+
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_div_format
+
   - pymdownx.tabbed:
       alternate_style: true
 

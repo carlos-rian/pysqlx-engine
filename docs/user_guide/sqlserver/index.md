@@ -9,7 +9,7 @@ The connection URL used to connect to an Microsoft SQL Server database follows t
 The following example uses SQL authentication (username and password) with an enabled TLS encrypted connection:
 
 ```text
-sqlserver://HOST:PORT;database=DATABASE;user=USER;password=PASSWORD;encrypt=true
+sqlserver://HOST:PORT;database=DATABASE;user=USER;password=PASSWORD;encrypt=true;
 ```
 
 #### **Using [integrated security](https://learn.microsoft.com/en-us/previous-versions/dotnet/framework/data/adonet/sql/authentication-in-sql-server) (Windows only)**
