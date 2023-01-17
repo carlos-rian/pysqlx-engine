@@ -102,7 +102,7 @@ Each connection instance is lazy; only after ``.connect()`` is the database chec
 
 When you use `with/async with`  the connection is automatically opened and closed.
 
-!!! Note
+!!! Example
     [`PySQLXEngine`](https://pypi.org/project/pysqlx-engine/) also supports [`with/async with`](https://docs.python.org/pt-br/3/whatsnew/3.5.html?highlight=async%20with#whatsnew-pep-492), where the connection is automatically opened and closed.
 
     === "**Async**"
