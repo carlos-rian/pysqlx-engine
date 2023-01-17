@@ -12,7 +12,7 @@ To run a Microsoft SQL Server locally on a Windows machine:
 
 3. Use Windows Authentication to log in to Microsoft SQL Server Management Studio (expand the **Server Name** dropdown and click **<Browse for more...>** to find your database engine):
 
-<img src="./img/sqlserver_studio.png" alt="SQL Server Management Studio screen, show login.">
+<img src="../img/sqlserver_studio.png" alt="SQL Server Management Studio screen, show login.">
 
 
 ## **Enable TCP/IP**
