@@ -6,7 +6,7 @@
 
 PySQLXEngine is based on the [official PostgreSQL format](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING) for connection URLs, but does not support all arguments and includes additional arguments such as schema. Here's an overview of the components needed for a PostgreSQL connection URL:
 
-<img src="../img/postgresql_uri.png" alt="PostgreSQL uri example">
+![URI Example](./img/postgresql_uri.png){ width="100%" }
 
 ### **Base URL and path**
 
