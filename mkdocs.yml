@@ -32,8 +32,8 @@ theme:
 
     - navigation.indexes
     - navigation.top
-    - navigation.instant
-    - navigation.tracking
+    #- navigation.instant
+    #- navigation.tracking
 
     - navigation.tabs
     - navigation.footer
@@ -92,7 +92,6 @@ nav:
   - Core: core_engine.md
 
 markdown_extensions:
-  - tables
   - toc:
       permalink: true
   - markdown.extensions.codehilite:
@@ -123,11 +122,7 @@ copyright: Copyright &copy; 2022 - 2023 Carlos Rian
 extra_css:
   - css/termynal.css
   - css/custom.css
-  #- css/extras.css
 
 extra_javascript:
-  - https://unpkg.com/mermaid@8.4.6/dist/mermaid.min.js
-  - https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js
   - js/termynal.js
   - js/custom.js
-  #- js/table.js

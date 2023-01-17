@@ -147,7 +147,7 @@ async function showRandomAnnouncement(groupId, timeInterval) {
         children = shuffle(children)
         let index = 0
         const announceRandom = () => {
-            children.forEach((el, i) => {el.style.display = "none"});
+            children.forEach((el, i) => { el.style.display = "none" });
             children[index].style.display = "block"
             index = (index + 1) % children.length
         }
