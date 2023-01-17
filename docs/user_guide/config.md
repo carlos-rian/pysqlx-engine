@@ -5,7 +5,7 @@ PySQLXEngine has some settings that can help the developer identify problems and
 You can configure these settings using environment variables or `LOG_CONFIG` const to change logs and errors.
 
 ---
-## Keyword
+## **Keyword**
 
 * `PYSQLX_SQL_LOG`: default(`False`) If `True`, the SQL statements will be printed in the console. This log is available at the `INFO` level of the `logging`.
 * `PYSQLX_USE_COLOR`: default(`False`) If `True`, the messages will be printed in color.
@@ -13,7 +13,7 @@ You can configure these settings using environment variables or `LOG_CONFIG` con
 
 ---
 
-## Set environment variables
+## **Set environment variables**
 
 === "**Linux**"
 
@@ -31,7 +31,7 @@ You can configure these settings using environment variables or `LOG_CONFIG` con
     ```
 ---
 
-## Set LOG_CONFIG const
+## **Set LOG_CONFIG const**
 
 ``` py linenums="1"
 from pysqlx_engine import LOG_CONFIG
@@ -44,7 +44,7 @@ LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
 
 ---
 
-## Config the logger
+## **Config the logger**
 
 After setting the environment variables or `LOG_CONFIG` const, you can configure the logger as you wish.
 
