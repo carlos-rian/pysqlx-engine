@@ -13,35 +13,35 @@ Despite being designed to be `async`, **PySQLXEngine** has **sync** support as w
 Both `async` and `sync` classes have precisely the same methods.
 
 
-**Providers/Drivers**
+## **Providers/Drivers**
 
-* [`sqlite`](https://www.sqlite.org/index.html)
-* [`postgresql`](https://www.postgresql.org/)
-* [`mysql`](https://www.mysql.com/)
-* [`sqlserver`](https://www.microsoft.com/sql-server)
+* [**`sqlite`**](https://www.sqlite.org/index.html)
+* [**`postgresql`**](https://www.postgresql.org/)
+* [**`mysql`**](https://www.mysql.com/)
+* [**`sqlserver`**](https://www.microsoft.com/sql-server)
 
 
-**URIs**
+## **URIs**
 
-[sqlite](https://www.sqlite.org/index.html)
+* [**`sqlite`**](https://www.sqlite.org/index.html)
 
 ``` py
 uri = "sqlite:./dev.db"
 ```
 
-[postgresql](https://www.postgresql.org/)
+* [**`postgresql`**](https://www.postgresql.org/)
 
 ``` py
 uri = "postgresql://user:pass@host:port/db?schema=sample"
 ```
 
-[mysql](https://www.mysql.com/)
+* [**`mysql`**](https://www.mysql.com/)
 
 ``` py
 uri = "mysql://user:pass@host:port/db?schema=sample"
 ```
 
-[sqlserver](https://www.microsoft.com/sql-server)
+* [**`sqlserver`**](https://www.microsoft.com/sql-server)
 
 ``` py
 uri = "sqlserver://host:port;initial catalog=sample;user=sa;password=pass;"
