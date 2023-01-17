@@ -1,4 +1,4 @@
-7# Microsoft SQL Server Windows (Local)
+# Microsoft SQL Server Windows (Local)
 
 ---
 

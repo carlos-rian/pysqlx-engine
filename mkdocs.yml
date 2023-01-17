@@ -32,19 +32,19 @@ theme:
 
     - navigation.indexes
     - navigation.top
-    - navigation.instant
-    #- navigation.tracking
 
     - navigation.tabs
     - navigation.footer
-    - navigation.path
 
     - header.autohide
 
     - content.code.copy
     - content.code.annotate
 
-    - content.tabs.link
+    #- navigation.path
+    #- content.tabs.link
+    #- navigation.instant
+    #- navigation.tracking
 
   icon:
     repo: fontawesome/brands/github
