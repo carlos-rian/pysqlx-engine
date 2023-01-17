@@ -6,7 +6,7 @@ PySQLXEngine has some methods; among them, the ``query`` and ``execute`` methods
 
 ---
 
-The methods ``.query*`` is used to execute a query that returns data, and ``.execute`` is used to execute a query that does not return data but only the number of rows affected.
+The methods ``.query*`` is used to execute a query that returns data, and ``.execute`` is used to run a query that does not return data but only the number of rows affected.
 
 Both methods have the same parameters:
 
@@ -26,7 +26,7 @@ Both methods have the same parameters:
 
 ## **Example of use**
 
-To this example, we will use the ``sqlite`` database. Create a ``main.py`` file and add the code examples below.
+For this example, we will use the ``sqlite`` database. Create a ``main.py`` file and add the code examples below.
 
 ### **Create a table**
 

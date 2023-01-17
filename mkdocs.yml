@@ -75,6 +75,7 @@ nav:
 
       - Examples: user_guide/examples.md
       - Queries: user_guide/queries.md
+      - Parameters: user_guide/parameters.md
       - Configs: user_guide/config.md
       - Documentation for Methods: user_guide/extras.md
 
