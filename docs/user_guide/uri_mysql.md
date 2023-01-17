@@ -5,7 +5,7 @@
 
 Here's an overview of the components needed for a MySQL connection URL:
 
-<img src="../img/mysql_uri.png" alt="MySQL uri example">
+<img src="./img/mysql_uri.png" alt="MySQL uri example">
 
 ### **Base URL and path**
 

@@ -219,11 +219,11 @@ You can see the autocomple.
 
 *Visual Studio Code*
 
-<img src="../img/autocomplete_your_model_vscode.png" alt="VScode screen, show the autocomplete.">
+<img src="./img/autocomplete_your_model_vscode.png" alt="VScode screen, show the autocomplete.">
 
 *PyCharm*
 
-<img src="../img/autocomplete_your_model_pycharm.png" alt="PyCharm screen, show the autocomplete.">
+<img src="./img/autocomplete_your_model_pycharm.png" alt="PyCharm screen, show the autocomplete.">
 
 
 Running the code using the terminal
