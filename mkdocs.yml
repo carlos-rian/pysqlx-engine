@@ -34,10 +34,13 @@ theme:
     - navigation.top
     - navigation.instant
     - navigation.tracking
-    - header.autohide
 
     - navigation.tabs
     - navigation.footer
+    - navigation.path
+    - navigation.prune
+
+    - header.autohide
 
     - content.code.copy
     - content.code.annotate
@@ -58,6 +61,7 @@ plugins:
       mark: "custom-marker"
 
   - glightbox
+  - offline
 
 nav:
   - Home: index.md
