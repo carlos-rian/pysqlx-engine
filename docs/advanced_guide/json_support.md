@@ -6,7 +6,7 @@ PySQLX-Engine has support for converting various types to JSON dumps. This dump 
 Some databases have native support for JSON, but some don't. When you send a `parameter` of type `list` or `dict` to the database, 
 PySQLX-Engine will convert it into a JSON dump and send it to the database as a string.
 
-## JSON Encoding Types
+## **JSON Encoding Types**
 
 | Python Types | JSON Types                                 | IN                                               | OUT                                   |
 |--------------|--------------------------------------------|--------------------------------------------------|---------------------------------------|
@@ -24,7 +24,7 @@ PySQLX-Engine will convert it into a JSON dump and send it to the database as a 
 | *            | Try converting using standard `JSON Dumps` |                                                  |                                       |
 
 
-## Example
+## **Example**
 
 
 

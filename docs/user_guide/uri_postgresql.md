@@ -59,7 +59,7 @@ The following arguments can be used:
 | channel_binding  | No       | prefer               | Since 4.8.0: Specifies a value for the channel_binding configuration parameter                                    |
 | options          | No       |                      | Since 3.8.0: Specifies command line options to send to the server at connection start                             |
 
-#### Configuring an SSL connection
+#### **Configuring an SSL connection**
 You can add various parameters to the connection URL if your database server uses SSL. Here's an overview of the possible parameters:
 
 * `sslmode=(disable|prefer|require)`:
@@ -92,7 +92,7 @@ postgresql://USER:PASSWORD@HOST:PORT/DATABASE?sslidentity=client-identity.p12&ss
 ```
 
 
-#### Connecting via sockets
+#### **Connecting via sockets**
 To connect to your PostgreSQL database via sockets, you must add a host field as a query parameter to the connection URL (instead of setting it as the host part of the URI). The value of this parameter then must point to the directory that contains the socket, e.g.: `postgresql://USER:PASSWORD@localhost/database?host=/var/run/postgresql/`
 
 Note that localhost is required, the value itself is ignored and can be anything.

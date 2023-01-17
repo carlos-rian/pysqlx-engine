@@ -59,7 +59,7 @@ To run a Microsoft SQL Server container image with Docker:
     ```
     </div>
 
-### Connection URL credentials
+### **Connection URL credentials**
 
 Based on this example, your credentials are:
 

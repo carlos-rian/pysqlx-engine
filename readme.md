@@ -67,7 +67,7 @@ $ poetry add pysqlx-engine
 
 
 
-## Async Example
+## **Async Example**
 
 * Create `main.py` file.
 
@@ -87,7 +87,7 @@ async def main():
 asyncio.run(main())
 ```
 
-## Sync Example
+## **Sync Example**
 
 * Create `main.py` file.
 

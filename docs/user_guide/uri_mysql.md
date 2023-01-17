@@ -50,7 +50,7 @@ Sintax:
 | socket          | No       |                      | Points to a directory that contains a socket to be used for the connection                                        |
 | socket_timeout  | No       |                      | Number of seconds to wait until a single query terminates                                                         |
 
-#### Configuring an SSL connection
+#### **Configuring an SSL connection**
 You can add various parameters to the connection URL if your database server uses SSL. Here's an overview of the possible parameters:
 
 * `sslcert=<PATH>`: Path to the server certificate. This is the root certificate used by the database server to sign the client certificate. You need to provide this if the certificate doesn't exist in the trusted certificate store of your system. For Google Cloud this likely is server-ca.pem.
@@ -79,7 +79,7 @@ mysql://USER:PASSWORD@HOST:PORT/DATABASE?sslidentity=client-identity.p12&sslpass
 ```
 
 
-#### Connecting via sockets
+#### **Connecting via sockets**
 
 To connect to your MySQL database via sockets, you must add a socket field as a query parameter to the connection URL (instead of setting it as the host part of the URI). The value of this parameter then must point to the directory that contains the socket, e.g.: `mysql://USER:POST@localhost/database?socket=/var/run/mysql/`
 
