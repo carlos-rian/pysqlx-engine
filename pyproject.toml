@@ -40,8 +40,8 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.7"
 pydantic = "^1.10.4"
-pysqlx-core = "^0.1.38"
-typing-extensions = "^4.3.0"
+pysqlx-core = "^0.1.39"
+typing-extensions = "^4.4.0"
 Pygments = "^2.14.0"
 
 [tool.poetry.dev-dependencies]
