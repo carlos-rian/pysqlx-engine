@@ -12,6 +12,8 @@ on:
       - pysqlx_engine/*
       - tests/*
       - .github/*
+      - pyproject.toml
+      - poetry.lock
 
 jobs:
   test:
