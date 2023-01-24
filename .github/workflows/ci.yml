@@ -8,12 +8,18 @@ on:
       - fix/*
       - dependabot/*
       - deps/*
+
     paths:
       - pysqlx_engine/*
       - tests/*
       - .github/*
       - pyproject.toml
       - poetry.lock
+
+  pull_request:
+    branches:
+      - "main"
+      - "release/*"
 
 jobs:
   test:
