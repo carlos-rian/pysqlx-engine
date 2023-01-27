@@ -51,8 +51,10 @@ def try_date(_p: PROVIDER, value: date, _f: str = "") -> str:
 
 
 @lru_cache(maxsize=None)
-def try_datetime(_p: PROVIDER, value: datetime, _f: str = "") -> str:
-    return f"'{value.isoformat(timespec='milliseconds')}'"
+def try_datetime(provider: PROVIDER, value: datetime, _f: str = "") -> str:
+    if provider == "sqlserver":
+        f"'{value.isoformat(timespec='milliseconds')}'"
+    return f"'{value}'"
 
 
 @lru_cache(maxsize=None)
