@@ -1220,7 +1220,7 @@ def test_query_first_col_is_number(db: PySQLXEngineSync):
     assert conn.connected is False
 
 
-@pytest.mark.parametrize("db", [db_mysql, db_sqlite, db_mysql, db_sqlite])
+@pytest.mark.parametrize("db", [db_mysql, db_sqlite])
 def test_query_first_col_with_same_name(db: PySQLXEngineSync):
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
@@ -1237,7 +1237,7 @@ def test_query_first_col_with_same_name(db: PySQLXEngineSync):
     assert conn.connected is False
 
 
-@pytest.mark.parametrize("db", [db_mysql, db_sqlite, db_mysql, db_sqlite])
+@pytest.mark.parametrize("db", [db_mysql, db_sqlite])
 def test_query_first_col_with_same_name_as_str(db: PySQLXEngineSync):
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
@@ -1245,6 +1245,20 @@ def test_query_first_col_with_same_name_as_str(db: PySQLXEngineSync):
     resp = conn.query_first("SELECT 1 as x, 2 as x")
 
     assert str(resp) == "BaseRow(x=1, x_1=2)" or str(resp) == "BaseRow(x_1=2, x=1)"
+
+    conn.close()
+    assert conn.connected is False
+
+
+@pytest.mark.parametrize("db", [db_mssql])
+def test_query_first_json_param_to_sql_server(db: PySQLXEngineSync):
+    conn: PySQLXEngineSync = db()
+    assert conn.connected is True
+
+    param = {"a": 1, "b": "what's", "c": 3}
+    resp = conn.query_first(sql="SELECT :x as data", parameters={"x": param})
+
+    assert resp.data == '{"a": 1, "b": "what\'s", "c": 3}'
 
     conn.close()
     assert conn.connected is False
