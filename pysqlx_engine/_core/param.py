@@ -17,7 +17,9 @@ def try_bool(provider: PROVIDER, value: bool, _f: str = "") -> str:
 
 
 @lru_cache(maxsize=None)
-def try_str(_p: PROVIDER, value: str, _f: str = "") -> str:
+def try_str(provider: PROVIDER, value: str, _f: str = "") -> str:
+    if provider == "sqlserver":
+        value = value.replace("'", "''")
     return f"'{value}'"
 
 
@@ -26,8 +28,11 @@ def try_int(_p: PROVIDER, value: int, _f: str = "") -> int:
     return value
 
 
-def try_json(_p: PROVIDER, value: Union[Dict[str, Any], List[Dict[str, Any]]], _f: str = "") -> str:
-    return f"'{json.dumps(value, ensure_ascii=False, cls=PySQLXJsonEnconder)}'"
+def try_json(provider: PROVIDER, value: Union[Dict[str, Any], List[Dict[str, Any]]], _f: str = "") -> str:
+    data = json.dumps(value, ensure_ascii=False, cls=PySQLXJsonEnconder)
+    if provider == "sqlserver":
+        data = data.replace("'", "''")
+    return f"'{data}'"
 
 
 @lru_cache(maxsize=None)
@@ -47,7 +52,7 @@ def try_date(_p: PROVIDER, value: date, _f: str = "") -> str:
 
 @lru_cache(maxsize=None)
 def try_datetime(_p: PROVIDER, value: datetime, _f: str = "") -> str:
-    return f"'{value}'"
+    return f"'{value.isoformat(timespec='milliseconds')}'"
 
 
 @lru_cache(maxsize=None)
