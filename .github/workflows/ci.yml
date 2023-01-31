@@ -52,12 +52,14 @@ jobs:
       - name: install poetry
         uses: snok/install-poetry@v1
         with:
-          version: 1.1.12
+          version: latest
           virtualenvs-create: true
           virtualenvs-in-project: true
 
       - name: install python dependencies
-        run: poetry install --no-interaction
+        run: |
+          poetry self update
+          poetry install --no-interaction
         if: steps.cache-deps.outputs.cache-hit != 'true'
 
       - name: run unittest
