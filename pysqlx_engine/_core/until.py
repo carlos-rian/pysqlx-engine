@@ -109,6 +109,8 @@ def build_sql(provider: str, sql: str, parameters: dict = None) -> str:
             new_sql = new_sql.replace(f":{key}", str(value))
 
     if LOG_CONFIG.PYSQLX_SQL_LOG:
+        if isinstance(new_sql, str):
+            new_sql = new_sql.strip()
         logging.info(fe_sql(sql=new_sql))
 
     return new_sql

@@ -20,6 +20,8 @@ class PySQLXEngine:
     connected: bool
 
     def __init__(self, uri: str):
+        self.connected: bool = False
+
         _providers = ["postgresql", "mysql", "sqlserver", "sqlite"]
         if not uri or not any([uri.startswith(prov) for prov in [*_providers, "file"]]):
             raise ValueError(f"invalid uri: {uri}, check the usage uri, accepted providers: {', '.join(_providers)}")
@@ -28,7 +30,6 @@ class PySQLXEngine:
             uri = uri.replace("sqlite", "file", 1)
 
         self.uri: str = uri
-        self.connected: bool = False
         self._conn: Optional[pysqlx_core.Connection] = None
 
         self._provider = "sqlite"
