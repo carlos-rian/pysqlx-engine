@@ -1,5 +1,6 @@
 from datetime import date, datetime, time
 from decimal import Decimal
+from enum import Enum
 import json
 from typing import Union, Dict, List, Any, Tuple, Type, Callable
 from uuid import UUID
@@ -7,6 +8,23 @@ from functools import lru_cache
 
 from .const import PROVIDER
 from .errors import ParameterInvalidJsonValueError, ParameterInvalidProviderError, ParameterInvalidValueError
+
+value_type = Union[
+    bool,
+    str,
+    int,
+    Dict[str, Any],
+    List[Dict[str, Any]],
+    UUID,
+    time,
+    date,
+    datetime,
+    float,
+    bytes,
+    Decimal,
+    Enum,
+    None,
+]
 
 
 @lru_cache(maxsize=None)
@@ -83,6 +101,24 @@ def try_decimal(_p: PROVIDER, value: Decimal, _f: str = "") -> str:
 
 
 @lru_cache(maxsize=None)
+def try_enum(provider: PROVIDER, value: Enum, field: str = "") -> str:
+    new_value = value.value
+    func = get_method(typ=type(new_value))
+    if func is None:
+        raise ParameterInvalidValueError(
+            field=field,
+            provider=provider,
+            typ_from="enum",
+            typ_to="text",
+            details=(
+                "the enum value must be of the following types: "
+                "(bool, str, int, list, dict, tuple, UUID, time, date, datetime, float, bytes, Decimal)"
+            ),
+        )
+    return func(provider, new_value, field)
+
+
+@lru_cache(maxsize=None)
 def try_tuple(provider: PROVIDER, values: Tuple[Any], field: str = "") -> str:
     if not provider.startswith("postgresql"):
         raise ParameterInvalidProviderError(field=field, provider=provider, typ="array")
@@ -151,25 +187,21 @@ def get_method(typ: Type) -> Callable:
     return METHODS.get(typ)
 
 
-def convert(
-    provider: PROVIDER,
-    value: Union[
-        bool, str, int, Dict[str, Any], List[Dict[str, Any]], UUID, time, date, datetime, float, bytes, Decimal, None
-    ],
-    field: str = "",
-) -> Union[str, int, float]:
+def convert(provider: PROVIDER, value: value_type, field: str = "") -> Union[str, int, float]:
     if value is None:
         return "NULL"
 
-    typ_ = type(value)
+    if isinstance(value, Enum):
+        return try_enum(provider, value, field)
 
+    typ_ = type(value)
     method = get_method(typ=typ_)
     if method is None:
         raise ParameterInvalidValueError(
             field=field,
             provider=provider,
             typ_from=typ_,
-            typ_to="str|int|float",
+            typ_to="str|int|float|etc",
             details="invalid type, the value is not a allowed type.",
         )
 
