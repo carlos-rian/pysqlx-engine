@@ -283,6 +283,7 @@ class PySQLXEngineSync:
                 ``datetime``,
                 ``Decimal``,
                 ``dict``,
+                ``Enum``, # Enum must be a subclass of enum.Enum
                 ``float``,
                 ``int``,
                 ``list``,
@@ -311,6 +312,7 @@ class PySQLXEngineSync:
             * time     -> time|nvarchar|varchar|string|etc
             * tuple    -> array(Postgres Native), another database: error.
             * UUID     -> uuid|varchar|text|nvarchar|etc
+            * Enum     -> varchar|text|nvarchar|etc
             * None     -> null
         ```
 
@@ -385,6 +387,7 @@ class PySQLXEngineSync:
                 ``datetime``,
                 ``Decimal``,
                 ``dict``,
+                ``Enum``, # Enum must be a subclass of enum.Enum
                 ``float``,
                 ``int``,
                 ``list``,
@@ -413,6 +416,7 @@ class PySQLXEngineSync:
             * time     -> time|nvarchar|varchar|string|etc
             * tuple    -> array(Postgres Native), another database: error.
             * UUID     -> uuid|varchar|text|nvarchar|etc
+            * Enum     -> varchar|text|nvarchar|etc
             * None     -> null
         ```
 
@@ -485,6 +489,7 @@ class PySQLXEngineSync:
                 ``datetime``,
                 ``Decimal``,
                 ``dict``,
+                ``Enum``, # Enum must be a subclass of enum.Enum
                 ``float``,
                 ``int``,
                 ``list``,
@@ -513,6 +518,7 @@ class PySQLXEngineSync:
             * time     -> time|nvarchar|varchar|string|etc
             * tuple    -> array(Postgres Native), another database: error.
             * UUID     -> uuid|varchar|text|nvarchar|etc
+            * Enum     -> varchar|text|nvarchar|etc
             * None     -> null
         ```
 
@@ -587,6 +593,7 @@ class PySQLXEngineSync:
                 ``datetime``,
                 ``Decimal``,
                 ``dict``,
+                ``Enum``, # Enum must be a subclass of enum.Enum
                 ``float``,
                 ``int``,
                 ``list``,
@@ -615,6 +622,7 @@ class PySQLXEngineSync:
             * time     -> time|nvarchar|varchar|string|etc
             * tuple    -> array(Postgres Native), another database: error.
             * UUID     -> uuid|varchar|text|nvarchar|etc
+            * Enum     -> varchar|text|nvarchar|etc
             * None     -> null
         ```
 
@@ -681,6 +689,7 @@ class PySQLXEngineSync:
                 ``datetime``,
                 ``Decimal``,
                 ``dict``,
+                ``Enum``, # Enum must be a subclass of enum.Enum
                 ``float``,
                 ``int``,
                 ``list``,
@@ -709,6 +718,7 @@ class PySQLXEngineSync:
             * time     -> time|nvarchar|varchar|string|etc
             * tuple    -> array(Postgres Native), another database: error.
             * UUID     -> uuid|varchar|text|nvarchar|etc
+            * Enum     -> varchar|text|nvarchar|etc
             * None     -> null
         ```
 
