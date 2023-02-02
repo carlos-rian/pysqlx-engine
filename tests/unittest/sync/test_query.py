@@ -1,5 +1,6 @@
 from datetime import datetime, date, time
 from decimal import Decimal
+import enum
 import uuid
 
 import pytest
@@ -565,7 +566,6 @@ def test_sample_query_first_with_param_db_pgsql(db: PySQLXEngineSync = db_pgsql)
 
 
 def test_sample_query_first_with_param_db_mssql(db: PySQLXEngineSync = db_mssql):
-
     LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     conn: PySQLXEngineSync = db()
@@ -651,7 +651,6 @@ def test_sample_query_first_with_param_db_mysql(db: PySQLXEngineSync = db_mysql)
 
 
 def test_sample_query_first_with_param_db_sqlite(db: PySQLXEngineSync = db_sqlite):
-
     LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     conn: PySQLXEngineSync = db()
@@ -1259,6 +1258,56 @@ def test_query_first_json_param_to_sql_server(db: PySQLXEngineSync):
     resp = conn.query_first(sql="SELECT :x as data", parameters={"x": param})
 
     assert resp.data == '{"a": 1, "b": "what\'s", "c": 3}'
+
+    conn.close()
+    assert conn.connected is False
+
+
+@pytest.mark.parametrize("db", [db_mssql, db_mysql, db_sqlite, db_pgsql])
+def test_query_first_enum_param(db: PySQLXEngineSync):
+    class EnumType(enum.Enum):
+        ADGROUP = "ADGROUP"
+        CAMPAIGN = "CAMPAIGN"
+        KEYWORD = "KEYWORD"
+        TARGETAD = "TARGETAD"
+
+    conn: PySQLXEngineSync = db()
+    assert conn.connected is True
+
+    sql = "SELECT :adgroup AS adgroup, :campaign AS campaign, :keyword AS keyword, :targetad AS targetad"
+    param = {
+        "adgroup": EnumType.ADGROUP,
+        "campaign": EnumType.CAMPAIGN,
+        "keyword": EnumType.KEYWORD,
+        "targetad": EnumType.TARGETAD,
+    }
+    resp = conn.query_first(sql=sql, parameters=param)
+
+    assert resp.adgroup == "ADGROUP"
+    assert resp.campaign == "CAMPAIGN"
+    assert resp.keyword == "KEYWORD"
+    assert resp.targetad == "TARGETAD"
+
+    conn.close()
+    assert conn.connected is False
+
+
+@pytest.mark.parametrize("db", [db_mssql, db_mysql, db_sqlite, db_pgsql])
+def test_query_first_enum_param_invalid_value(db: PySQLXEngineSync):
+    class MyType:
+        i = 1
+
+    class EnumType(enum.Enum):
+        ADGROUP = MyType()
+
+    conn: PySQLXEngineSync = db()
+    assert conn.connected is True
+
+    sql = "SELECT :adgroup AS adgroup"
+    param = {"adgroup": EnumType.ADGROUP}
+
+    with pytest.raises(ParameterInvalidValueError):
+        conn.query_first(sql=sql, parameters=param)
 
     conn.close()
     assert conn.connected is False

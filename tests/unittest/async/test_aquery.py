@@ -11,6 +11,7 @@ from pysqlx_engine import BaseRow, PySQLXEngine
 from pysqlx_engine._core.const import LOG_CONFIG
 from pysqlx_engine._core.errors import ParameterInvalidProviderError, ParameterInvalidValueError, QueryError
 from tests.common import adb_mssql, adb_mysql, adb_pgsql, adb_sqlite
+import enum
 
 
 @pytest.mark.asyncio
@@ -594,7 +595,6 @@ async def test_sample_query_first_with_param_db_pgsql(db: PySQLXEngine = adb_pgs
 
 @pytest.mark.asyncio
 async def test_sample_query_first_with_param_db_mssql(db: PySQLXEngine = adb_mssql):
-
     LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     conn: PySQLXEngine = await db()
@@ -682,7 +682,6 @@ async def test_sample_query_first_with_param_db_mysql(db: PySQLXEngine = adb_mys
 
 @pytest.mark.asyncio
 async def test_sample_query_first_with_param_db_sqlite(db: PySQLXEngine = adb_sqlite):
-
     LOG_CONFIG.PYSQLX_SQL_LOG = True
 
     conn: PySQLXEngine = await db()
@@ -1307,6 +1306,58 @@ async def test_query_first_json_param_to_sql_server(db: PySQLXEngine):
     resp = await conn.query_first(sql="SELECT :x as data", parameters={"x": param})
 
     assert resp.data == '{"a": 1, "b": "what\'s", "c": 3}'
+
+    await conn.close()
+    assert conn.connected is False
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("db", [adb_mssql, adb_mysql, adb_sqlite, adb_pgsql])
+async def test_query_first_enum_param(db: PySQLXEngine):
+    class EnumType(enum.Enum):
+        ADGROUP = "ADGROUP"
+        CAMPAIGN = "CAMPAIGN"
+        KEYWORD = "KEYWORD"
+        TARGETAD = "TARGETAD"
+
+    conn: PySQLXEngine = await db()
+    assert conn.connected is True
+
+    sql = "SELECT :adgroup AS adgroup, :campaign AS campaign, :keyword AS keyword, :targetad AS targetad"
+    param = {
+        "adgroup": EnumType.ADGROUP,
+        "campaign": EnumType.CAMPAIGN,
+        "keyword": EnumType.KEYWORD,
+        "targetad": EnumType.TARGETAD,
+    }
+    resp = await conn.query_first(sql=sql, parameters=param)
+
+    assert resp.adgroup == "ADGROUP"
+    assert resp.campaign == "CAMPAIGN"
+    assert resp.keyword == "KEYWORD"
+    assert resp.targetad == "TARGETAD"
+
+    await conn.close()
+    assert conn.connected is False
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("db", [adb_mssql, adb_mysql, adb_sqlite, adb_pgsql])
+async def test_query_first_enum_param_invalid_value(db: PySQLXEngine):
+    class MyType:
+        i = 1
+
+    class EnumType(enum.Enum):
+        ADGROUP = MyType()
+
+    conn: PySQLXEngine = await db()
+    assert conn.connected is True
+
+    sql = "SELECT :adgroup AS adgroup"
+    param = {"adgroup": EnumType.ADGROUP}
+
+    with pytest.raises(ParameterInvalidValueError):
+        await conn.query_first(sql=sql, parameters=param)
 
     await conn.close()
     assert conn.connected is False
