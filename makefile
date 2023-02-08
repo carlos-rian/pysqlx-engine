@@ -4,6 +4,26 @@ tests-databases:
 	--build \
 	--detach 
 
+upt-deps:
+	poetry add \
+		pydantic@latest \
+		pysqlx-core@latest \
+		typing-extensions@latest \
+		Pygments@latest
+
+upt-dev-deps:
+	poetry add --dev \
+		isort \
+		black@latest \
+		pytest@latest \
+		pytest-asyncio@latest \
+		pytest-cov@latest \
+		pytest-dotenv@latest \
+		pytest-xdist@latest \
+		toml@latest \
+		httpx@latest 
+
+
 #--ignore=tests/benchmark 
 tests-coverage:
 	make tests-databases && \
