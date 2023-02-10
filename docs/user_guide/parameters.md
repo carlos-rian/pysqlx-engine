@@ -36,6 +36,7 @@ The PySQLXEngine supports many Python types with automatic conversion to SQL.
    - `time`
    - `tuple`
    - `UUID`
+   - `enum.Enum`
    - `None`
 
 These types are converted to the corresponding SQL type. This applies to parameters chained in a list or dict that are [converted to json](/pysqlx-engine/advanced_guide/json_support/).
