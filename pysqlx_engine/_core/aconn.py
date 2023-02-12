@@ -163,14 +163,14 @@ class PySQLXEngine:
 
     def _pre_validate(
         self,
-        sql: str = None,
+        sql: str = "",
         parameters: Optional[dict] = None,
         isolation_level: Optional[ISOLATION_LEVEL] = None,
     ):
         if not self.connected:
             raise NotConnectedError(not_connected_error_message())
 
-        if sql is not None:
+        if sql != "":
             check_sql_and_parameters(sql=sql, parameters=parameters)
 
         if isolation_level is not None:
