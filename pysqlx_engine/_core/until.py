@@ -97,21 +97,15 @@ def check_isolation_level(isolation_level: ISOLATION_LEVEL):
 def build_sql(provider: str, sql: str, parameters: dict = None) -> str:
     new_sql = sql
     if parameters is not None:
-        load_parameter = {}
-        for key, value in parameters.items():
-            load_parameter[key] = convert(provider=provider, value=value, field=key)
+        load_parameter = {key: convert(provider=provider, value=value, field=key) for key, value in parameters.items()}
 
-        # case have 2 param ex: :id and :id_user => :id_user must be first replaced.
-        # because :id_user is in :id
-        param_as_list_of_tuples = [(key, value) for key, value in load_parameter.items()]
-        param_as_list_of_tuples.sort(key=lambda x: x[0], reverse=True)
+        param_as_list_of_tuples = sorted(load_parameter.items(), key=lambda x: x[0], reverse=True)
 
         for key, value in param_as_list_of_tuples:
             new_sql = new_sql.replace(f":{key}", str(value))
 
     if LOG_CONFIG.PYSQLX_SQL_LOG:
-        if isinstance(new_sql, str):
-            new_sql = new_sql.strip()
+        new_sql = new_sql.strip()
         logging.info(fe_sql(sql=new_sql))
 
     return new_sql
