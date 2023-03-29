@@ -45,7 +45,7 @@ typing-extensions = "^4.5"
 Pygments = "^2.14.0"
 
 [tool.poetry.dev-dependencies]
-black = "^23.1.0"
+black = "^23.3.0"
 isort = [
     { version = "^5.11", python = "<3.8" },
     { version = "^5.12", python = ">=3.8" }
