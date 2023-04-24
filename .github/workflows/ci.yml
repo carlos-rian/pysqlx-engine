@@ -5,14 +5,14 @@ on:
     branches:
       - main
       - release/*
-      - fix/*
-      - dependabot/*
-      - deps/*
+      
 
   pull_request:
     branches:
       - "main"
       - "release/*"
+      - dependabot/*
+      - deps/*
 
 jobs:
   test:
