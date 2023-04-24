@@ -87,7 +87,13 @@ async def main():
     db = PySQLXEngine(uri="sqlite:./db.db")
     await db.connect()
 
-    await db.execute(sql="CREATE TABLE IF NOT EXISTS users (id INT PRIMARY KEY, name TEXT, age INT)")
+    await db.execute(sql="""
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY, 
+            name TEXT, 
+            age INT
+        )
+    """)
     await db.execute(sql="INSERT INTO users (name, age) VALUES ('Rian', '28')")
     await db.execute(sql="INSERT INTO users (name, age) VALUES ('Carlos', '29')")
 
@@ -110,7 +116,13 @@ def main():
     db = PySQLXEngineSync(uri="sqlite:./db.db")
     db.connect()
 
-    db.execute(sql="CREATE TABLE IF NOT EXISTS users (id INT PRIMARY KEY, name TEXT, age INT)")
+    db.execute(sql="""
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY, 
+            name TEXT, 
+            age INT
+        )
+    """)
     db.execute(sql="INSERT INTO users (name, age) VALUES ('Rian', '28')")
     db.execute(sql="INSERT INTO users (name, age) VALUES ('Carlos', '29')")
 
