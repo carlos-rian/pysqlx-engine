@@ -1249,7 +1249,7 @@ def test_query_first_col_with_same_name_as_str(db: PySQLXEngineSync):
     assert conn.connected is False
 
 
-@pytest.mark.parametrize("db", [db_mssql])
+@pytest.mark.parametrize("db", [db_mssql, db_pgsql, db_sqlite, db_mysql])
 def test_query_first_json_param_to_sql_server(db: PySQLXEngineSync):
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
