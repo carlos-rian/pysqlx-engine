@@ -13,6 +13,7 @@ on:
       - "release/*"
       - dependabot/*
       - deps/*
+      - bugfix/*
 
 jobs:
   test:

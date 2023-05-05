@@ -1297,7 +1297,7 @@ async def test_query_first_col_with_same_name_as_str(db: PySQLXEngine):
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("db", [adb_mssql])
+@pytest.mark.parametrize("db", [adb_mssql, adb_pgsql, adb_sqlite, adb_mysql])
 async def test_query_first_json_param_to_sql_server(db: PySQLXEngine):
     conn: PySQLXEngine = await db()
     assert conn.connected is True
