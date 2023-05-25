@@ -52,7 +52,7 @@ isort = [
 ]
 pytest = "^7.3"
 pytest-asyncio = "^0"
-pytest-cov = "^4.0.0"
+pytest-cov = "^4.1.0"
 pytest-dotenv = "^0"
 pytest-xdist = "^3"
 toml = "^0.10.2"
