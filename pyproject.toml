@@ -39,9 +39,9 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.7"
-pydantic = "^1.10"
+pydantic = ">=1.*,>=2.*"
 pysqlx-core = "^0.1"
-typing-extensions = "^4.5"
+typing-extensions = ">=4.5,<5"
 Pygments = "^2.15.1"
 
 [tool.poetry.dev-dependencies]
@@ -50,9 +50,9 @@ isort = [
     { version = "^5.11", python = "<3.8" },
     { version = "^5.12", python = ">=3.8" }
 ]
-pytest = "^7.3"
-pytest-asyncio = "^0"
-pytest-cov = "^4.0.0"
+pytest = ">=7.*"
+pytest-asyncio = ">=0.*"
+pytest-cov = ">=4.*"
 pytest-dotenv = "^0"
 pytest-xdist = "^3"
 toml = "^0.10.2"

@@ -50,7 +50,16 @@ jobs:
           docker ps -a && \
           sleep 20
 
-      - name: install poetry
+      - name: install poetry - python 3.7
+        if: matrix.python-version == '3.7'
+        uses: snok/install-poetry@v1
+        with:
+          version: '1.5.0'
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+        
+      - name: install poetry - python 3.8+
+        if: matrix.python-version != '3.7'
         uses: snok/install-poetry@v1
         with:
           version: latest
@@ -59,18 +68,32 @@ jobs:
 
       - name: install python dependencies
         run: |
-          poetry self update
           poetry install --no-interaction
         if: steps.cache-deps.outputs.cache-hit != 'true'
 
       - name: run unittest
-        run: poetry run pytest --ignore=tests/benchmark --cov=pysqlx_engine --cov=tests --cov-report=term-missing:skip-covered --cov-report=xml tests ${@}
+        run: |
+          pip install pydantic==1.10.2
+          pip freeze | grep pydantic
+          poetry run pytest --ignore=tests/benchmark --cov=pysqlx_engine --cov=tests --cov-report=term-missing:skip-covered --cov-report=xml tests ${@}
 
       - name: upload coverage
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          flags: ${{ matrix.os }}_${{ matrix.python-version }}
+          flags: ${{ matrix.os }}_${{ matrix.python-version }}_pydantic_v1
+      
+      - name: run unittest v2
+        run: |
+          pip install pydantic --upgrade
+          pip freeze | grep pydantic
+          poetry run pytest --ignore=tests/benchmark --cov=pysqlx_engine --cov=tests --cov-report=term-missing:skip-covered --cov-report=xml tests ${@}
+
+      - name: upload coverage v2
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: ${{ matrix.os }}_${{ matrix.python-version }}_pydantic_v2
 
   build:
     if: contains(github.ref, 'main') || contains(github.ref, 'release')

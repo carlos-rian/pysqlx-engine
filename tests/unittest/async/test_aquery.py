@@ -1,17 +1,20 @@
-from tests.unittest.sql.mysql.value import data
+import enum
+import uuid
 from datetime import date, datetime, time
 from decimal import Decimal
-
-import uuid
 
 import pytest
 from pydantic import BaseModel
 
 from pysqlx_engine import BaseRow, PySQLXEngine
 from pysqlx_engine._core.const import LOG_CONFIG
-from pysqlx_engine._core.errors import ParameterInvalidProviderError, ParameterInvalidValueError, QueryError
+from pysqlx_engine._core.errors import (
+    ParameterInvalidProviderError,
+    ParameterInvalidValueError,
+    QueryError,
+)
 from tests.common import adb_mssql, adb_mysql, adb_pgsql, adb_sqlite
-import enum
+from tests.unittest.sql.mysql.value import data
 
 
 @pytest.mark.asyncio

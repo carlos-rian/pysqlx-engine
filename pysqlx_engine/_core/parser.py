@@ -1,14 +1,18 @@
-from typing import Any, Dict, List, TypeVar, Union, Sequence
-from pydantic import BaseModel, create_model, parse_obj_as
-from pysqlx_core import PySQLXResult
-
-from datetime import time, date, datetime
+from datetime import date, datetime, time
 from decimal import Decimal
-from typing import Any, Dict, List, TypeVar, Union
+from typing import Any, Dict, List, Sequence, TypeVar, Union
 from uuid import UUID
 
-from .until import build_sql
+from pydantic import VERSION as PYDANTIC_VERSION
+from pysqlx_core import PySQLXResult
+
 from .const import TYPES_OUT
+from .until import build_sql
+
+if PYDANTIC_VERSION < "2.0.0":
+    from pydantic import BaseModel, create_model, parse_obj_as  # pragma: no cover
+else:
+    from pydantic.v1 import BaseModel, create_model, parse_obj_as  # pragma: no cover
 
 MyModel = TypeVar("MyModel", bound="BaseRow")
 

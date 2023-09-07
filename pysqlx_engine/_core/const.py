@@ -2,10 +2,16 @@ from datetime import date, datetime, time
 from decimal import Decimal
 from os import getenv
 from uuid import UUID
-from pydantic.types import Json
-from pydantic import BaseConfig
+
+from pydantic import VERSION as PYDANTIC_VERSION
 from typing_extensions import Literal
 
+if PYDANTIC_VERSION < "2.0.0":
+    from pydantic import BaseConfig  # pragma: no cover
+    from pydantic.types import Json  # pragma: no cover
+else:
+    from pydantic.v1 import BaseConfig  # pragma: no cover
+    from pydantic.v1.types import Json  # pragma: no cover
 
 TYPES_OUT = {
     "bool": bool,
