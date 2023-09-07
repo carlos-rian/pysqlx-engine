@@ -1,8 +1,8 @@
 tests-databases:
 	docker-compose \
-	--file tests/docker/docker-compose.yml up \
-	--build \
-	--detach 
+		--file tests/docker/docker-compose.yml up \
+		--build \
+		--detach 
 
 upt-deps:
 	poetry add \
@@ -26,7 +26,7 @@ upt-dev-deps:
 
 #--ignore=tests/benchmark 
 tests-coverage:
-	make tests-databases && \
+	make tests-databases && sleep 10 && \
 	poetry run pytest tests -v -x \
 		--doctest-modules \
 		--ignore=tests/benchmark \
