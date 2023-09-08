@@ -21,8 +21,7 @@
     <img src="https://img.shields.io/pypi/pyversions/pysqlx-engine.svg?color=%2334D058" alt="Supported Python versions">
 </a>
 <a href="https://pepy.tech/project/pysqlx-engine" target="_blank">
-    <img src="https://static.pepy.tech/personalized-badge/pysqlx-engine?period=total&units=international_system&left_color=grey&right_color=%2334D058&left_text=downloads" alt="Downloads">
-    [![Downloads](https://static.pepy.tech/badge/pysqlx-engine)](https://pepy.tech/project/pysqlx-engine)
+    <img src="https://static.pepy.tech/personalized-badge/pysqlx-engine?period=total&units=international_system&left_color=grey&right_color=green&left_text=downloads" alt="Downloads">
     
 </a>
 </p>
