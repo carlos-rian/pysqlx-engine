@@ -1,13 +1,18 @@
-from enum import Enum
-import functools
 import asyncio
+import functools
+import logging
+from datetime import date, datetime, time
+from decimal import Decimal
+from enum import Enum
+from functools import lru_cache
+from typing import Callable, List, TypeVar, Union
+from uuid import UUID
+
+from pydantic import BaseModel
+from pysqlx_core import PySQLXError as _PySQLXError
 from typing_extensions import ParamSpec
 
-from pysqlx_core import PySQLXError as _PySQLXError
-
-from .param import convert
-
-from .const import ISOLATION_LEVEL, LOG_CONFIG
+from .const import ISOLATION_LEVEL, LOG_CONFIG, PYDANTIC_IS_V1
 from .errors import (
     ConnectError,
     ExecuteError,
@@ -18,15 +23,18 @@ from .errors import (
     RawCmdError,
     StartTransactionError,
 )
-from .helper import fe_sql, isolation_error_message, parameters_type_error_message, sql_type_error_message
+from .helper import (
+    fe_sql,
+    isolation_error_message,
+    parameters_type_error_message,
+    sql_type_error_message,
+)
+from .param import convert
 
-from datetime import date, datetime, time
-from functools import lru_cache
-from decimal import Decimal
-from uuid import UUID
-import logging
-
-from typing import Callable, TypeVar
+if PYDANTIC_IS_V1:
+    from pydantic import parse_obj_as as _parse_obj_as  # pragma: no cover
+else:
+    from pydantic import TypeAdapter  # pragma: no cover
 
 
 P = ParamSpec("P")
@@ -109,3 +117,7 @@ def build_sql(provider: str, sql: str, parameters: dict = None) -> str:
         logging.info(fe_sql(sql=new_sql))
 
     return new_sql
+
+
+def parse_obj_as(type_: Union[BaseModel, List[BaseModel]], obj: Union[dict, list]) -> type:
+    return _parse_obj_as(type_=type_, obj=obj) if PYDANTIC_IS_V1 else TypeAdapter(type=type_).validate_python(obj)

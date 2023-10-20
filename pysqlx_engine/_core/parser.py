@@ -3,16 +3,11 @@ from decimal import Decimal
 from typing import Any, Dict, List, Sequence, TypeVar, Union
 from uuid import UUID
 
-from pydantic import VERSION as PYDANTIC_VERSION
+from pydantic import BaseModel, create_model
 from pysqlx_core import PySQLXResult
 
-from .const import TYPES_OUT
-from .until import build_sql
-
-if PYDANTIC_VERSION < "2.0.0":
-    from pydantic import BaseModel, create_model, parse_obj_as  # pragma: no cover
-else:
-    from pydantic.v1 import BaseModel, create_model, parse_obj_as  # pragma: no cover
+from .const import PYDANTIC_IS_V1, TYPES_OUT
+from .until import build_sql, parse_obj_as
 
 MyModel = TypeVar("MyModel", bound="BaseRow")
 
@@ -37,11 +32,6 @@ class BaseRow(BaseModel):
     BaseRow is a class created from `Pydantic`, then you have all the benefits of `Pydantic`.
     """
 
-    class Config:
-        orm_mode = True
-        ignore_extra = True
-        allow_population_by_field_name = True
-
     def get_columns(self) -> Dict[str, Any]:
         """
         Return the columns of the row.
@@ -49,7 +39,7 @@ class BaseRow(BaseModel):
         Returns:
             Dict[str, Any]: The columns of the row.
         """
-        values = self.dict()
+        values = self.dict() if PYDANTIC_IS_V1 else self.model_dump()
         columns = {}
         for key, value in values.items():
             columns[key] = type(value)
@@ -72,10 +62,10 @@ class ParserIn:
             if value.startswith("array_"):
                 _, v = value.split("_")
                 type_ = TYPES_OUT.get(v, Any)
-                fields[key] = (Sequence[type_], None)
+                fields[key] = (Union[Sequence[type_], None], None)
             else:
                 type_ = TYPES_OUT.get(value, Any)
-                fields[key] = (type_, None)
+                fields[key] = (Union[type_, None], None)
 
         model = create_model("BaseRow", **fields, __base__=BaseRow)
         return model
@@ -84,13 +74,13 @@ class ParserIn:
         if len(self.result) == 0:
             return []
         model = self.model or self.create_model()
-        return parse_obj_as(List[model], self.result.get_all())
+        return parse_obj_as(type_=List[model], obj=self.result.get_all())
 
     def parse_first(self) -> Union[BaseRow, None]:
         if len(self.result) == 0:
             return None
         model = self.model or self.create_model()
-        return parse_obj_as(model, self.result.get_first())
+        return parse_obj_as(type_=model, obj=self.result.get_first())
 
 
 class ParserSQL:

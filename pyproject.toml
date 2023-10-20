@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "pysqlx-engine"
 
-version = "0.2.0"
+version = "0.2.25"
 description = "Async and Sync SQL Engine for Python, with support for MySQL, PostgreSQL, SQLite and Microsoft SQL Server."
 authors = ["Carlos Rian <crian.rian@gmail.com>"]
 license = "MIT"
@@ -16,13 +16,23 @@ packages = [
 ]
 
 classifiers = [
+    "Framework :: AnyIO",
     "Framework :: AsyncIO",
+    "Framework :: FastAPI",
+    "Framework :: IPython",
+    "Framework :: Jupyter",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Intended Audience :: Information Technology",
     "Intended Audience :: System Administrators",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft",
+    "Operating System :: POSIX :: Linux",
     "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
