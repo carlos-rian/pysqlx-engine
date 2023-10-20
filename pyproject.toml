@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "pysqlx-engine"
 
-version = "0.2.0"
+version = "0.2.25"
 description = "Async and Sync SQL Engine for Python, with support for MySQL, PostgreSQL, SQLite and Microsoft SQL Server."
 authors = ["Carlos Rian <crian.rian@gmail.com>"]
 license = "MIT"
