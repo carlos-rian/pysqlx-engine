@@ -4,14 +4,12 @@ from os import getenv
 from uuid import UUID
 
 from pydantic import VERSION as PYDANTIC_VERSION
+from pydantic import BaseModel as BaseConfig
+from pydantic.types import Json
 from typing_extensions import Literal
 
-if PYDANTIC_VERSION < "2.0.0":
-    from pydantic import BaseConfig  # pragma: no cover
-    from pydantic.types import Json  # pragma: no cover
-else:
-    from pydantic.v1 import BaseConfig  # pragma: no cover
-    from pydantic.v1.types import Json  # pragma: no cover
+PYDANTIC_IS_V1 = PYDANTIC_VERSION < "2.0.0"
+
 
 TYPES_OUT = {
     "bool": bool,
