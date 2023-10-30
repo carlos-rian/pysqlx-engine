@@ -1,6 +1,13 @@
+from enum import Enum
+
 import pytest
 
 from pysqlx_engine import PySQLXEngine
+from pysqlx_engine._core.errors import (
+    ParameterInvalidProviderError,
+    ParameterInvalidValueError,
+)
+from pysqlx_engine._core.param import try_tuple_enum
 from pysqlx_engine.errors import ExecuteError
 from tests.common import adb_mssql, adb_mysql, adb_pgsql, adb_sqlite
 
@@ -73,9 +80,10 @@ async def test_execute_sql_with_complex_param(db: PySQLXEngine):
     conn: PySQLXEngine = await db()
     assert conn.connected is True
 
-    from tests.unittest.sql.mysql.value import data
     from datetime import date, datetime, time
     from decimal import Decimal
+
+    from tests.unittest.sql.mysql.value import data
 
     await conn.execute(sql="DROP TABLE IF EXISTS pysqlx_table;")
 
@@ -114,3 +122,42 @@ async def test_execute_sql_with_complex_param(db: PySQLXEngine):
     resp = await conn.execute(sql="DROP TABLE IF EXISTS pysqlx_table;")
     assert resp == 0
     await conn.close()
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("db", [adb_pgsql])
+async def test_execute_sql_with_array_enum(db):
+    conn: PySQLXEngine = await db()
+    assert conn.connected is True
+
+    await conn.execute(sql="DROP TABLE IF EXISTS t_pysqlx_table;")
+    await conn.execute(sql="DROP TYPE IF EXISTS t_colors;")
+    await conn.execute(sql="CREATE TYPE t_colors as enum ('blue', 'red', 'gray', 'black');")
+    await conn.execute(sql="CREATE TABLE t_pysqlx_table (type_array_enum t_colors[]);")
+
+    class EnumTest(Enum):
+        blue = "blue"
+        red = "red"
+        gray = "gray"
+        black = "black"
+
+    array = (EnumTest.blue, EnumTest.red, EnumTest.gray, EnumTest.black)
+    resp = await conn.execute(
+        sql="INSERT INTO t_pysqlx_table (type_array_enum) VALUES (:array)", parameters={"array": array}
+    )
+    assert resp == 1
+
+    resp = await conn.query_first(sql="SELECT * FROM t_pysqlx_table")
+
+    assert isinstance(resp.type_array_enum, tuple)
+    assert isinstance(resp.type_array_enum[0], str)
+    assert len(resp.type_array_enum) == 4
+
+    await conn.execute(sql="DROP TABLE IF EXISTS t_pysqlx_table;")
+    await conn.execute(sql="DROP TYPE IF EXISTS t_colors;")
+
+    with pytest.raises(ParameterInvalidProviderError):
+        try_tuple_enum("mysql", (), "")
+
+    with pytest.raises(ParameterInvalidValueError):
+        try_tuple_enum("postgresql", (EnumTest.black, 1), "")
