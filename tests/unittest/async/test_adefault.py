@@ -1,8 +1,9 @@
 import os
-from pysqlx_engine._core.const import LOG_CONFIG
+
 import pytest
 
 from pysqlx_engine import PySQLXEngine
+from pysqlx_engine._core.const import LOG_CONFIG
 from pysqlx_engine._core.until import force_sync, pysqlx_get_error
 from pysqlx_engine.errors import (
     AlreadyConnectedError,
@@ -169,7 +170,6 @@ def test_force_sync():
 
 @pytest.mark.asyncio
 async def test_py_sqlx_error_json_fmt_no_colorize():
-
     LOG_CONFIG.PYSQLX_USE_COLOR = False
     LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
 
@@ -195,7 +195,6 @@ async def test_py_sqlx_error_json_fmt_no_colorize():
 
 @pytest.mark.asyncio
 async def test_py_sqlx_error_json_fmt_with_colorize():
-
     LOG_CONFIG.PYSQLX_USE_COLOR = True
     LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
 

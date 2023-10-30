@@ -1,13 +1,17 @@
+import json
 from datetime import date, datetime, time
 from decimal import Decimal
 from enum import Enum
-import json
-from typing import Union, Dict, List, Any, Tuple, Type, Callable
-from uuid import UUID
 from functools import lru_cache
+from typing import Any, Callable, Dict, List, Tuple, Type, Union
+from uuid import UUID
 
 from .const import PROVIDER
-from .errors import ParameterInvalidJsonValueError, ParameterInvalidProviderError, ParameterInvalidValueError
+from .errors import (
+    ParameterInvalidJsonValueError,
+    ParameterInvalidProviderError,
+    ParameterInvalidValueError,
+)
 
 value_type = Union[
     bool,
@@ -115,6 +119,28 @@ def try_enum(provider: PROVIDER, value: Enum, field: str = "") -> str:
     return func(provider, new_value, field)
 
 
+def try_tuple_enum(provider: PROVIDER, values: List[Enum], field: str = "") -> str:
+    if not provider.startswith("postgresql"):
+        raise ParameterInvalidProviderError(field=field, provider=provider, typ="array")
+
+    types = set([type(v) for v in values])
+
+    if len(types) > 1:
+        raise ParameterInvalidValueError(
+            field=field,
+            provider=provider,
+            typ_from="list[enum]",
+            typ_to="array",
+            details=(
+                "the list[enum] must be of the same type, eg: [Enum1, Enum2, Enum3]. "
+                "list[enum] is represented as a array in sql, sql does not support heterogeneous array."
+            ),
+        )
+
+    data = ",".join([str(v.value) for v in values])
+    return "'{" + data + "}'"
+
+
 @lru_cache(maxsize=None)
 def try_tuple(provider: PROVIDER, values: Tuple[Any], field: str = "") -> str:
     if not provider.startswith("postgresql"):
@@ -188,8 +214,11 @@ def convert(provider: PROVIDER, value: value_type, field: str = "") -> Union[str
     if value is None:
         return "NULL"
 
-    if isinstance(value, Enum):
+    elif isinstance(value, Enum):
         return try_enum(provider, value, field)
+
+    elif isinstance(value, tuple) and len(value) > 0 and isinstance(value[0], Enum):
+        return try_tuple_enum(provider, value, field)
 
     typ_ = type(value)
     method = get_method(typ=typ_)
