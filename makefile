@@ -1,2 +1,2 @@
-server-docs:
+docs:
 	mkdocs serve
