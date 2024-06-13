@@ -4,7 +4,7 @@ import pytest
 
 from pysqlx_engine import PySQLXEngine
 from pysqlx_engine._core.const import LOG_CONFIG
-from pysqlx_engine._core.until import force_sync, pysqlx_get_error
+from pysqlx_engine._core.util import force_sync, pysqlx_get_error
 from pysqlx_engine.errors import (
     AlreadyConnectedError,
     ConnectError,

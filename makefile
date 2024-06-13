@@ -25,8 +25,18 @@ upt-dev-deps:
 
 
 #--ignore=tests/benchmark 
-tests-coverage:
+tests-coverage-with-database:
 	make tests-databases && sleep 10 && \
+	poetry run pytest tests -v -x \
+		--doctest-modules \
+		--ignore=tests/benchmark \
+		--cov=pysqlx_engine \
+		--cov=tests \
+		--durations=0 \
+		--cov-report=html:tests/results/html \
+		--junitxml=tests/results/xml/test-results.xml
+
+tests-coverage:
 	poetry run pytest tests -v -x \
 		--doctest-modules \
 		--ignore=tests/benchmark \

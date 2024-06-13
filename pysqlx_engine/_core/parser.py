@@ -6,8 +6,10 @@ from uuid import UUID
 from pydantic import BaseModel, create_model
 from pysqlx_core import PySQLXResult
 
+from pysqlx_engine._core.abc import AbstractDatabaseType
+
 from .const import PYDANTIC_IS_V1, TYPES_OUT
-from .until import build_sql, parse_obj_as
+from .util import build_sql, parse_obj_as
 
 MyModel = TypeVar("MyModel", bound="BaseRow")
 
@@ -19,7 +21,7 @@ JsonParam = Union[
 ]
 DictParam = Dict[
     str,
-    Union[bool, str, int, JsonParam, UUID, time, date, datetime, float, bytes, Decimal, None],
+    Union[bool, str, int, JsonParam, UUID, time, date, datetime, float, bytes, Decimal, None, AbstractDatabaseType],
 ]
 
 

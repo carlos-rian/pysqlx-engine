@@ -10,7 +10,7 @@ from .._core.parser import (
     ParserSQL,
 )  # import necessary using _core to not subscribe default parser
 from .const import ISOLATION_LEVEL
-from .until import check_isolation_level, check_sql_and_parameters, pysqlx_get_error
+from .util import check_isolation_level, check_sql_and_parameters, pysqlx_get_error
 
 
 class PySQLXEngine:
