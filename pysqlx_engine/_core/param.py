@@ -6,14 +6,12 @@ from functools import lru_cache
 from typing import Any, Callable, Dict, List, Tuple, Type, Union
 from uuid import UUID
 
-from .const import PROVIDER
-from .errors import (
-    ParameterInvalidJsonValueError,
-    ParameterInvalidProviderError,
-    ParameterInvalidValueError,
-)
+from pysqlx_engine._core.json_econder import PySQLXJsonEnconder
 
-value_type = Union[
+from .const import PROVIDER
+from .errors import ParameterInvalidProviderError, ParameterInvalidValueError
+
+SupportedValueType = Union[
     bool,
     str,
     int,
@@ -45,6 +43,12 @@ def try_str(provider: PROVIDER, value: str, _f: str = "") -> str:
 
 
 @lru_cache(maxsize=None)
+def try_nstr(provider: PROVIDER, value: str, _f: str = "") -> str:
+    value = value.replace("'", "''")
+    return f"'{value}'" if provider != "sqlserver" else f"N'{value}'"
+
+
+@lru_cache(maxsize=None)
 def try_int(_p: PROVIDER, value: int, _f: str = "") -> int:
     return value
 
@@ -52,6 +56,11 @@ def try_int(_p: PROVIDER, value: int, _f: str = "") -> int:
 def try_json(provider: PROVIDER, value: Union[Dict[str, Any], List[Dict[str, Any]]], _f: str = "") -> str:
     data = json.dumps(value, ensure_ascii=False, cls=PySQLXJsonEnconder).replace("'", "''")
     return f"'{data}'"
+
+
+def try_njson(provider: PROVIDER, value: Union[Dict[str, Any], List[Dict[str, Any]]], _f: str = "") -> str:
+    data = json.dumps(value, ensure_ascii=False, cls=PySQLXJsonEnconder).replace("'", "''")
+    return f"'{data}'" if provider != "sqlserver" else f"N'{data}'"
 
 
 @lru_cache(maxsize=None)
@@ -172,22 +181,10 @@ def try_tuple(provider: PROVIDER, values: Tuple[Any], field: str = "") -> str:
     return "'{}'"
 
 
-class PySQLXJsonEnconder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, bytes):
-            return obj.hex()
-
-        elif isinstance(obj, (UUID, time, date, datetime, Decimal)):
-            return str(obj)
-
-        try:
-            return super().default(obj)
-        except TypeError as err:
-            raise ParameterInvalidJsonValueError(
-                typ_from=type(obj),
-                typ_to="json",
-                details=str(err),
-            )
+@lru_cache(maxsize=None)
+def try_ntuple(provider: PROVIDER, values: Tuple[Any], field: str = "") -> str:
+    _v = try_tuple(provider, values, field)
+    return _v if provider != "sqlserver" else f"N{_v}"
 
 
 def get_method(typ: Type) -> Callable:
@@ -208,27 +205,3 @@ def get_method(typ: Type) -> Callable:
     }
 
     return METHODS.get(typ)
-
-
-def convert(provider: PROVIDER, value: value_type, field: str = "") -> Union[str, int, float]:
-    if value is None:
-        return "NULL"
-
-    elif isinstance(value, Enum):
-        return try_enum(provider, value, field)
-
-    elif isinstance(value, tuple) and len(value) > 0 and isinstance(value[0], Enum):
-        return try_tuple_enum(provider, value, field)
-
-    typ_ = type(value)
-    method = get_method(typ=typ_)
-    if method is None:
-        raise ParameterInvalidValueError(
-            field=field,
-            provider=provider,
-            typ_from=typ_,
-            typ_to="str|int|float|etc",
-            details="invalid type, the value is not a allowed type.",
-        )
-
-    return method(provider, value, field)
