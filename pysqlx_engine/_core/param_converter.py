@@ -12,7 +12,9 @@ def convert(provider: PROVIDER, value: SupportedValueType, field: str = "") -> U
         return "NULL"
 
     elif isinstance(value, AbstractDatabaseType):
-        return value.convert(provider=provider, field=field)
+        v = value.convert(provider=provider, field=field)
+        return "NULL" if v is None else v
+
 
     elif isinstance(value, Enum):
         return try_enum(provider, value, field)

@@ -540,7 +540,8 @@ def test_sample_query_first_with_param_db_pgsql(db: PySQLXEngineSync = db_pgsql)
         CAST(:created_at AS TIMESTAMP)  AS created_at, 
         CAST(:updated_at AS TIMESTAMP)  AS updated_at, 
         CAST(:date AS DATE)             AS date,
-        CAST(:tup AS INT[])             AS tup;
+        CAST(:tup AS INT[])             AS tup,
+        :tup_none                       AS tup_none;
     """
     parameters = {
         "id": 1,
@@ -553,6 +554,7 @@ def test_sample_query_first_with_param_db_pgsql(db: PySQLXEngineSync = db_pgsql)
         "updated_at": datetime.fromisoformat("2021-01-01 00:00:00"),
         "date": date.fromisoformat("2021-01-01"),
         "tup": types.TupleType((1, 2, 3)),
+        "tup_none": types.TupleType(None),
     }
 
     resp = conn.query_first(sql=sql, parameters=parameters)
@@ -567,6 +569,7 @@ def test_sample_query_first_with_param_db_pgsql(db: PySQLXEngineSync = db_pgsql)
     assert isinstance(resp.updated_at, datetime)
     assert isinstance(resp.date, (date, datetime))
     assert isinstance(resp.tup, tuple)
+    assert resp.tup_none is None
 
     conn.close()
     assert conn.connected is False

@@ -42,12 +42,12 @@ class BooleanType(AbstractDatabaseType):
 
     """
 
-    def __init__(self, value: bool):
-        assert isinstance(value, bool), "value must be a boolean."
+    def __init__(self, value: Union[bool, None]):
+        assert isinstance(value, (bool, type(None))), "value must be a boolean."
         self.value = value
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return param.try_bool(provider, self.value)
+        return self.value if self.value is None else param.try_bool(provider, self.value)
 
 
 class StringType(AbstractDatabaseType):
@@ -55,12 +55,12 @@ class StringType(AbstractDatabaseType):
     Database type: char|varchar|text|char|varchar|text|etc
     """
 
-    def __init__(self, value: str):
-        assert isinstance(value, str), "value must be a string."
+    def __init__(self, value: Union[str, None]):
+        assert isinstance(value, (str, type(None))), "value must be a string."
         self.value = value
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return param.try_str(provider, self.value)
+        return self.value if self.value is None else param.try_str(provider, self.value)
 
 
 class NStringType(StringType):
@@ -69,7 +69,7 @@ class NStringType(StringType):
     """
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return param.try_nstr(provider, self.value)
+        return self.value if self.value is None else param.try_nstr(provider, self.value)
 
 
 class IntegerType(AbstractDatabaseType):
@@ -77,12 +77,12 @@ class IntegerType(AbstractDatabaseType):
     Database type: int|integer|smallint|bigint|tinyint|etc
     """
 
-    def __init__(self, value: int):
-        assert isinstance(value, int), "value must be an integer."
+    def __init__(self, value: Union[int, None]):
+        assert isinstance(value, (int, type(None))), "value must be an integer."
         self.value = value
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return param.try_int(provider, self.value)
+        return self.value if self.value is None else param.try_int(provider, self.value)
 
 
 class JsonType(AbstractDatabaseType):
@@ -90,12 +90,12 @@ class JsonType(AbstractDatabaseType):
     Database type: json|jsonb|nvarchar|varchar|string|etc
     """
 
-    def __init__(self, value: Union[dict, list]):
-        assert isinstance(value, (dict, list)), "value must be a dictionary or list."
+    def __init__(self, value: Union[dict, list, None]):
+        assert isinstance(value, (dict, list, type(None))), "value must be a dictionary or list."
         self.value = value
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return param.try_json(provider, self.value)
+        return self.value if self.value is None else param.try_json(provider, self.value)
 
 
 class NJsonType(JsonType):
@@ -104,7 +104,7 @@ class NJsonType(JsonType):
     """
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return param.try_njson(provider, self.value)
+        return self.value if self.value is None else param.try_njson(provider, self.value)
 
 
 class UUIDType(AbstractDatabaseType):
@@ -112,12 +112,12 @@ class UUIDType(AbstractDatabaseType):
     Database type: uuid|varchar|text|nvarchar|etc
     """
 
-    def __init__(self, value: UUID):
-        assert isinstance(value, UUID), "value must be an UUID"
+    def __init__(self, value: Union[UUID, None]):
+        assert isinstance(value, (UUID, type(None))), "value must be an UUID"
         self.value = value
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return param.try_uuid(provider, self.value)
+        return self.value if self.value is None else param.try_uuid(provider, self.value)
 
 
 class TimeType(AbstractDatabaseType):
@@ -125,12 +125,12 @@ class TimeType(AbstractDatabaseType):
     Database type: time|varchar|string|etc
     """
 
-    def __init__(self, value: time):
-        assert isinstance(value, time), "value must be a datetime.time."
+    def __init__(self, value: Union[time, None]):
+        assert isinstance(value, (time, type(None))), "value must be a datetime.time."
         self.value = value
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return param.try_time(provider, self.value)
+        return self.value if self.value is None else param.try_time(provider, self.value)
 
 
 class DateType(AbstractDatabaseType):
@@ -138,12 +138,12 @@ class DateType(AbstractDatabaseType):
     Database type: date|varchar|string|etc
     """
 
-    def __init__(self, value: date):
-        assert isinstance(value, date), "value must be a datetime.date."
+    def __init__(self, value: Union[date, None]):
+        assert isinstance(value, (date, type(None))), "value must be a datetime.date."
         self.value = value
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return param.try_date(provider, self.value)
+        return self.value if self.value is None else param.try_date(provider, self.value)
 
 
 class DateTimeType(AbstractDatabaseType):
@@ -151,12 +151,12 @@ class DateTimeType(AbstractDatabaseType):
     Database type: datetime|timestamp|varchar|string|etc
     """
 
-    def __init__(self, value: datetime):
-        assert isinstance(value, datetime), "value must be a datetime.datetime."
+    def __init__(self, value: Union[datetime, None]):
+        assert isinstance(value, (datetime, type(None))), "value must be a datetime.datetime."
         self.value = value
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return param.try_datetime(provider, self.value)
+        return self.value if self.value is None else param.try_datetime(provider, self.value)
 
 
 class FloatType(AbstractDatabaseType):
@@ -164,25 +164,25 @@ class FloatType(AbstractDatabaseType):
     Database type: float|double|decimal|numeric|real|etc
     """
 
-    def __init__(self, value: float):
-        assert isinstance(value, float), "value must be a float."
+    def __init__(self, value: Union[float, None]):
+        assert isinstance(value, (float, type(None))), "value must be a float."
         self.value = value
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return param.try_float(provider, self.value)
-
+        return self.value if self.value is None else param.try_float(provider, self.value)
 
 class BytesType(AbstractDatabaseType):
     """Bytes type
     Database type: bytea|blob|varbinary|etc
     """
 
-    def __init__(self, value: bytes):
-        assert isinstance(value, bytes), "value must be a bytes."
+    def __init__(self, value: Union[bytes, None]):
+        assert isinstance(value, (bytes, type(None))), "value must be a bytes."
         self.value = value
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return param.try_bytes(provider, self.value)
+        return self.value if self.value is None else param.try_bytes(provider, self.value)
+
 
 
 class DecimalType(AbstractDatabaseType):
@@ -190,12 +190,12 @@ class DecimalType(AbstractDatabaseType):
     Database type: decimal|numeric|money|etc
     """
 
-    def __init__(self, value: Decimal):
-        assert isinstance(value, Decimal), "value must be a float."
+    def __init__(self, value: Union[Decimal, None]):
+        assert isinstance(value, (Decimal, type(None))), "value must be a float."
         self.value = value
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return param.try_decimal(provider, self.value)
+        return self.value if self.value is None else param.try_decimal(provider, self.value)
 
 
 class EnumType(AbstractDatabaseType):
@@ -203,12 +203,12 @@ class EnumType(AbstractDatabaseType):
     Database type: enum|varchar|text|nvarchar|etc
     """
 
-    def __init__(self, value: Enum):
-        assert isinstance(value, Enum), "value must be a enum.Enum."
+    def __init__(self, value: Union[Enum, None]):
+        assert isinstance(value, (Enum, type(None))), "value must be a enum.Enum."
         self.value = value
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return param.try_enum(provider, self.value, field)
+        return self.value if self.value is None else param.try_enum(provider, self.value, field)
 
 
 class TupleType(AbstractDatabaseType):
@@ -216,12 +216,12 @@ class TupleType(AbstractDatabaseType):
     Database type: array(Postgres Native), another database: error.
     """
 
-    def __init__(self, value: tuple):
-        assert isinstance(value, tuple), "value must be a tuple."
+    def __init__(self, value: Union[tuple, None]):
+        assert isinstance(value, (tuple, type(None))), "value must be a tuple."
         self.value = value
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return param.try_tuple(provider, self.value, field)
+        return self.value if self.value is None else param.try_tuple(provider, self.value, field)
 
 
 class NTupleType(TupleType):
@@ -230,18 +230,17 @@ class NTupleType(TupleType):
     """
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return param.try_ntuple(provider, self.value, field)
-
+        return self.value if self.value is None else param.try_ntuple(provider, self.value, field)
 
 class TupleEnumType(AbstractDatabaseType):
     """Tuple Enum type - Only for PostgreSQL
     Database type: array(Postgres Native), another database: error.
     """
 
-    def __init__(self, *value):
-        assert isinstance(value, tuple), "value must be a tuple."
-        assert all(isinstance(v, Enum) for v in value), "value must be a tuple of enum.Enum."
+    def __init__(self, value: Union[tuple, None]):
+        assert isinstance(value, (tuple, type(None))), "value must be a tuple."
         self.value = value
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return param.try_tuple_enum(provider, self.value, field)
+        return self.value if self.value is None else param.try_tuple_enum(provider, self.value, field)
+
