@@ -306,7 +306,7 @@ def test_class_types_postgresql():
 
     assert (
         param_converter.convert(
-            provider=provider, value=types.TupleEnumType(Enum2("black"), Enum2("white")), field="xpto"
+            provider=provider, value=types.TupleEnumType((Enum2("black"), Enum2("white"))), field="xpto"
         )
         == "'{black,white}'"
     )
