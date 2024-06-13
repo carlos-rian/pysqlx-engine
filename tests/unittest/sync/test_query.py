@@ -540,7 +540,7 @@ def test_sample_query_first_with_param_db_pgsql(db: PySQLXEngineSync = db_pgsql)
         CAST(:created_at AS TIMESTAMP)  AS created_at, 
         CAST(:updated_at AS TIMESTAMP)  AS updated_at, 
         CAST(:date AS DATE)             AS date,
-        CAST(:tup AS INT[])             AS tup
+        CAST(:tup AS INT[])             AS tup,
         :tup_none                       AS tup_none;
     """
     parameters = {
@@ -569,7 +569,7 @@ def test_sample_query_first_with_param_db_pgsql(db: PySQLXEngineSync = db_pgsql)
     assert isinstance(resp.updated_at, datetime)
     assert isinstance(resp.date, (date, datetime))
     assert isinstance(resp.tup, tuple)
-    assert isinstance(resp.tup_none, None)
+    assert resp.tup_none is None
 
     conn.close()
     assert conn.connected is False
