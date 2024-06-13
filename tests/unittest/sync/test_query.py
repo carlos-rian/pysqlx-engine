@@ -1,14 +1,18 @@
-from datetime import datetime, date, time
-from decimal import Decimal
 import enum
 import uuid
+from datetime import date, datetime, time
+from decimal import Decimal
 
 import pytest
 from pydantic import BaseModel
 
-from pysqlx_engine import BaseRow, PySQLXEngineSync
+from pysqlx_engine import BaseRow, PySQLXEngineSync, types
 from pysqlx_engine._core.const import LOG_CONFIG
-from pysqlx_engine._core.errors import ParameterInvalidProviderError, ParameterInvalidValueError, QueryError
+from pysqlx_engine._core.errors import (
+    ParameterInvalidProviderError,
+    ParameterInvalidValueError,
+    QueryError,
+)
 from tests.common import db_mssql, db_mysql, db_pgsql, db_sqlite
 
 
@@ -535,7 +539,8 @@ def test_sample_query_first_with_param_db_pgsql(db: PySQLXEngineSync = db_pgsql)
         CAST(:is_active AS BOOL)        AS is_active, 
         CAST(:created_at AS TIMESTAMP)  AS created_at, 
         CAST(:updated_at AS TIMESTAMP)  AS updated_at, 
-        CAST(:date AS DATE)             AS date;
+        CAST(:date AS DATE)             AS date,
+        CAST(:tup AS INT[])             AS tup;
     """
     parameters = {
         "id": 1,
@@ -547,6 +552,7 @@ def test_sample_query_first_with_param_db_pgsql(db: PySQLXEngineSync = db_pgsql)
         "created_at": datetime.fromisoformat("2021-01-01 00:00:00"),
         "updated_at": datetime.fromisoformat("2021-01-01 00:00:00"),
         "date": date.fromisoformat("2021-01-01"),
+        "tup": types.TupleType((1, 2, 3)),
     }
 
     resp = conn.query_first(sql=sql, parameters=parameters)
@@ -560,6 +566,7 @@ def test_sample_query_first_with_param_db_pgsql(db: PySQLXEngineSync = db_pgsql)
     assert isinstance(resp.created_at, datetime)
     assert isinstance(resp.updated_at, datetime)
     assert isinstance(resp.date, (date, datetime))
+    assert isinstance(resp.tup, tuple)
 
     conn.close()
     assert conn.connected is False
