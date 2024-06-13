@@ -541,7 +541,7 @@ def test_sample_query_first_with_param_db_pgsql(db: PySQLXEngineSync = db_pgsql)
         CAST(:updated_at AS TIMESTAMP)  AS updated_at, 
         CAST(:date AS DATE)             AS date,
         CAST(:tup AS INT[])             AS tup
-        CAST(:tup_none AS NULL)         AS tup_none;
+        :tup_none                       AS tup_none;
     """
     parameters = {
         "id": 1,
