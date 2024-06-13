@@ -12,6 +12,7 @@ from pydantic import BaseModel
 from pysqlx_core import PySQLXError as _PySQLXError
 from typing_extensions import ParamSpec
 
+from .abc import AbstractDatabaseType
 from .const import ISOLATION_LEVEL, LOG_CONFIG, PYDANTIC_IS_V1
 from .errors import (
     ConnectError,
@@ -29,7 +30,7 @@ from .helper import (
     parameters_type_error_message,
     sql_type_error_message,
 )
-from .param import convert
+from .param_converter import convert
 
 if PYDANTIC_IS_V1:
     from pydantic import parse_obj_as as _parse_obj_as  # pragma: no cover
@@ -86,7 +87,23 @@ def check_sql_and_parameters(sql: str, parameters: dict):
         raise TypeError(sql_type_error_message())
 
     if parameters is not None:
-        _types = (bool, str, int, list, dict, tuple, UUID, time, date, datetime, float, bytes, Decimal, Enum)
+        _types = (
+            bool,
+            str,
+            int,
+            list,
+            dict,
+            tuple,
+            UUID,
+            time,
+            date,
+            datetime,
+            float,
+            bytes,
+            Decimal,
+            Enum,
+            AbstractDatabaseType,
+        )
         if (
             not isinstance(parameters, dict)
             or not all([isinstance(key, str) for key in parameters.keys()])
