@@ -171,7 +171,6 @@ class FloatType(AbstractDatabaseType):
     def convert(self, provider: PROVIDER, field: str = "") -> T:
         return self.value if self.value is None else param.try_float(provider, self.value)
 
-
 class BytesType(AbstractDatabaseType):
     """Bytes type
     Database type: bytea|blob|varbinary|etc
@@ -183,6 +182,7 @@ class BytesType(AbstractDatabaseType):
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
         return self.value if self.value is None else param.try_bytes(provider, self.value)
+
 
 
 class DecimalType(AbstractDatabaseType):
@@ -232,7 +232,6 @@ class NTupleType(TupleType):
     def convert(self, provider: PROVIDER, field: str = "") -> T:
         return self.value if self.value is None else param.try_ntuple(provider, self.value, field)
 
-
 class TupleEnumType(AbstractDatabaseType):
     """Tuple Enum type - Only for PostgreSQL
     Database type: array(Postgres Native), another database: error.
@@ -244,3 +243,4 @@ class TupleEnumType(AbstractDatabaseType):
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
         return self.value if self.value is None else param.try_tuple_enum(provider, self.value, field)
+

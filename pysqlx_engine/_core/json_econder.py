@@ -3,6 +3,7 @@ from datetime import date, datetime, time
 from decimal import Decimal
 from uuid import UUID
 
+from .abc import AbstractDatabaseType
 from .errors import ParameterInvalidJsonValueError
 
 
