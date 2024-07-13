@@ -1,41 +1,48 @@
 import asyncio
 import logging
-from abc import ABC, abstractmethod
+import threading
+from abc import abstractmethod
 from collections import deque as Deque
 from random import random
 from time import monotonic
 from weakref import ref
 
-from pysqlx_engine import PySQLXEngine
+from pysqlx_engine import PySQLXEngine, 
 
 logger = logging.getLogger("pysqlx_engine")
 
 
 class ConnInfo:
-    _num_conn = 0
+    _num_conn: int = 0
 
     def __init__(self, conn: PySQLXEngine, timeout: float):
         self._num_conn = ConnInfo._num_conn = ConnInfo._num_conn + 1
         self.name = f"conn-{self._num_conn}"
         self.conn = conn
-        self.timeout = monotonic() + timeout
 
-        self.end = 0
-        self.start = monotonic()
+        self.expire_at = monotonic() + self._jitter(value=timeout, min_pc=-0.05, max_pc=0.0)
+        self.start_at = monotonic()
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__module__}.{self.__class__.__name__} {self.name!r} at 0x{id(self):x}>"
 
     def expires(self) -> bool:
-        return self.timeout < monotonic()
+        return self.expire_at < monotonic()
 
     def healthy(self) -> bool:
         return self.conn.is_healthy()
 
     async def close(self) -> None:
         await self.conn.close()
-        self.end = monotonic()
-        print(f"Removed: {self} from pool, the conn was open for {self.end - self.start} seconds")
+        self.expire_at = monotonic()
+        print(f"Removed: {self} from pool, the conn was open for {self.expire_at - self.start_at} seconds")
+
+    @classmethod
+    def _jitter(cls, value: float, min_pc: float, max_pc: float) -> float:
+        """
+        Add a random value to *value* between *min_pc* and *max_pc* percent.
+        """
+        return value * (1.0 + ((max_pc - min_pc) * random()) + min_pc)
 
 
 class BasePool:
@@ -90,9 +97,14 @@ class BaseMonitor:
         name = repr(pool.name) if pool else "<pool is gone>"
         return f"<{self.__class__.__name__} {name} at 0x{id(self):x}>"
 
-    def current_task_name() -> str:
-        t = asyncio.current_task()
-        return t.get_name() if t else "<no task>"
+    @abstractmethod
+    def current_t_name(self) -> str:
+        """Return the current thread or task name."""
+        ...
+
+    @abstractmethod
+    def _run(self) -> None:
+        pass
 
     def run(self) -> None:
         """Run the task.
@@ -106,5 +118,5 @@ class BaseMonitor:
             logger.debug("task run discarded: %s", self)
             return
 
-        logger.debug("task running in %s: %s", self.current_thread_name(), self)
+        logger.debug("task running in %s: %s", self.current_t_name, self)
         self._run(pool)
