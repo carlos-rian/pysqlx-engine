@@ -1,10 +1,10 @@
 import logging
-from abc import ABC, abstractmethod
+from abc import ABC, ABCMeta, abstractmethod
 from collections import deque as Deque
 from random import random
 from time import monotonic
 from typing import Union
-from weakref import ref
+from weakref import ReferenceType, ref
 
 from typing_extensions import TypeAlias
 
@@ -14,7 +14,7 @@ logger = logging.getLogger("pysqlx_engine")
 TPySQLXEngineConn: TypeAlias = Union[PySQLXEngine, PySQLXEngineSync]
 
 
-class ConnInfo(ABC):
+class ConnInfo(ABCMeta):
 	_num_conn: int = 0
 
 	def __init__(self, conn: TPySQLXEngineConn, keep_alive: float):
@@ -55,7 +55,7 @@ class ConnInfo(ABC):
 		return value * (1.0 + ((max_pc - min_pc) * random()) + min_pc)
 
 
-class BasePool(ABC):
+class BasePool(ABCMeta):
 	_num_pool = 0
 
 	def __init__(
@@ -65,6 +65,7 @@ class BasePool(ABC):
 		max_size: int = None,
 		conn_timeout: float = 30.0,
 		max_lifetime: float = 60 * 60,
+		check_interval: float = 5.0,
 	):
 		"""
 		:param uri: The connection URI.
@@ -72,6 +73,7 @@ class BasePool(ABC):
 		:param max_size: The maximum connections in the pool.
 		:param conn_timeout: The timeout in seconds to wait for a connection must be returned by the pool.
 		:param max_lifetime: The maximum lifetime of a connection in seconds.
+		:param check_interval: The interval in seconds to check for idle connections to be closed.
 		"""
 		# check if the uri is valid
 		PySQLXEngine(uri)
@@ -79,9 +81,11 @@ class BasePool(ABC):
 		self.uri = uri
 		self._conn_timeout = conn_timeout or 30.0
 		self._max_lifetime = max_lifetime or 60 * 60
+		self._check_interval = check_interval or 5.0
 
 		assert self._conn_timeout > 0, "conn_timeout must be greater than 0"
 		assert self._max_lifetime > 0, "max_lifetime must be greater than 0"
+		assert check_interval > 0, "check_interval must be greater than 0"
 
 		if self._max_lifetime < 60:
 			logger.warning("max_lifetime is less than 60 seconds, this is not recommended")
@@ -131,9 +135,9 @@ class BasePool(ABC):
 	def _get_conn(self) -> ConnInfo: ...
 
 
-class BaseMonitor(ABC):
+class BaseMonitor:
 	def __init__(self, pool: BasePool):
-		self.pool = ref(pool)
+		self.pool: ReferenceType[BasePool] = ref(pool)
 
 	def __repr__(self) -> str:
 		pool = self.pool()
