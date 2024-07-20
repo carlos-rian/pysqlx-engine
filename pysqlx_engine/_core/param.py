@@ -53,13 +53,21 @@ def try_int(_p: PROVIDER, value: int, _f: str = "") -> int:
     return value
 
 
-def try_json(provider: PROVIDER, value: Union[Dict[str, Any], List[Dict[str, Any]]], _f: str = "") -> str:
-    data = json.dumps(value, ensure_ascii=False, cls=PySQLXJsonEnconder).replace("'", "''")
+def try_json(
+    provider: PROVIDER, value: Union[Dict[str, Any], List[Dict[str, Any]]], _f: str = ""
+) -> str:
+    data = json.dumps(value, ensure_ascii=False, cls=PySQLXJsonEnconder).replace(
+        "'", "''"
+    )
     return f"'{data}'"
 
 
-def try_njson(provider: PROVIDER, value: Union[Dict[str, Any], List[Dict[str, Any]]], _f: str = "") -> str:
-    data = json.dumps(value, ensure_ascii=False, cls=PySQLXJsonEnconder).replace("'", "''")
+def try_njson(
+    provider: PROVIDER, value: Union[Dict[str, Any], List[Dict[str, Any]]], _f: str = ""
+) -> str:
+    data = json.dumps(value, ensure_ascii=False, cls=PySQLXJsonEnconder).replace(
+        "'", "''"
+    )
     return f"'{data}'" if provider != "sqlserver" else f"N'{data}'"
 
 
@@ -174,9 +182,15 @@ def try_tuple(provider: PROVIDER, values: Tuple[Any], field: str = "") -> str:
         method = get_method(typ=typ_)
 
         if method is None:
-            raise ParameterInvalidProviderError(field=field, provider=provider, typ=typ_)
+            raise ParameterInvalidProviderError(
+                field=field, provider=provider, typ=typ_
+            )
 
-        data = str([method(provider, value, field) for value in values]).replace("[", "{").replace("]", "}")
+        data = (
+            str([method(provider, value, field) for value in values])
+            .replace("[", "{")
+            .replace("]", "}")
+        )
         return f"'{data}'"
     return "'{}'"
 
@@ -190,10 +204,10 @@ def try_ntuple(provider: PROVIDER, values: Tuple[Any], field: str = "") -> str:
 def get_method(typ: Type) -> Callable:
     METHODS = {
         bool: try_bool,
-        str: try_str,
+        str: try_nstr,  # try_str, change to try_nstr
         int: try_int,
-        list: try_json,
-        dict: try_json,
+        list: try_njson,  # try_json, change to try_njson
+        dict: try_njson,  # try_json, change to try_njson
         tuple: try_tuple,
         UUID: try_uuid,
         time: try_time,
