@@ -13,6 +13,7 @@ from pysqlx_engine._core.const import PROVIDER
 from ._core import param
 
 __all__ = [
+    "AbstractDatabaseType",
     "BooleanType",
     "StringType",
     "NStringType",
@@ -47,7 +48,9 @@ class BooleanType(AbstractDatabaseType):
         self.value = value
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return self.value if self.value is None else param.try_bool(provider, self.value)
+        return (
+            self.value if self.value is None else param.try_bool(provider, self.value)
+        )
 
 
 class StringType(AbstractDatabaseType):
@@ -69,7 +72,9 @@ class NStringType(StringType):
     """
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return self.value if self.value is None else param.try_nstr(provider, self.value)
+        return (
+            self.value if self.value is None else param.try_nstr(provider, self.value)
+        )
 
 
 class IntegerType(AbstractDatabaseType):
@@ -91,11 +96,15 @@ class JsonType(AbstractDatabaseType):
     """
 
     def __init__(self, value: Union[dict, list, None]):
-        assert isinstance(value, (dict, list, type(None))), "value must be a dictionary or list."
+        assert isinstance(
+            value, (dict, list, type(None))
+        ), "value must be a dictionary or list."
         self.value = value
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return self.value if self.value is None else param.try_json(provider, self.value)
+        return (
+            self.value if self.value is None else param.try_json(provider, self.value)
+        )
 
 
 class NJsonType(JsonType):
@@ -104,7 +113,9 @@ class NJsonType(JsonType):
     """
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return self.value if self.value is None else param.try_njson(provider, self.value)
+        return (
+            self.value if self.value is None else param.try_njson(provider, self.value)
+        )
 
 
 class UUIDType(AbstractDatabaseType):
@@ -117,7 +128,9 @@ class UUIDType(AbstractDatabaseType):
         self.value = value
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return self.value if self.value is None else param.try_uuid(provider, self.value)
+        return (
+            self.value if self.value is None else param.try_uuid(provider, self.value)
+        )
 
 
 class TimeType(AbstractDatabaseType):
@@ -130,7 +143,9 @@ class TimeType(AbstractDatabaseType):
         self.value = value
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return self.value if self.value is None else param.try_time(provider, self.value)
+        return (
+            self.value if self.value is None else param.try_time(provider, self.value)
+        )
 
 
 class DateType(AbstractDatabaseType):
@@ -143,7 +158,9 @@ class DateType(AbstractDatabaseType):
         self.value = value
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return self.value if self.value is None else param.try_date(provider, self.value)
+        return (
+            self.value if self.value is None else param.try_date(provider, self.value)
+        )
 
 
 class DateTimeType(AbstractDatabaseType):
@@ -152,11 +169,17 @@ class DateTimeType(AbstractDatabaseType):
     """
 
     def __init__(self, value: Union[datetime, None]):
-        assert isinstance(value, (datetime, type(None))), "value must be a datetime.datetime."
+        assert isinstance(
+            value, (datetime, type(None))
+        ), "value must be a datetime.datetime."
         self.value = value
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return self.value if self.value is None else param.try_datetime(provider, self.value)
+        return (
+            self.value
+            if self.value is None
+            else param.try_datetime(provider, self.value)
+        )
 
 
 class FloatType(AbstractDatabaseType):
@@ -169,7 +192,10 @@ class FloatType(AbstractDatabaseType):
         self.value = value
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return self.value if self.value is None else param.try_float(provider, self.value)
+        return (
+            self.value if self.value is None else param.try_float(provider, self.value)
+        )
+
 
 class BytesType(AbstractDatabaseType):
     """Bytes type
@@ -181,8 +207,9 @@ class BytesType(AbstractDatabaseType):
         self.value = value
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return self.value if self.value is None else param.try_bytes(provider, self.value)
-
+        return (
+            self.value if self.value is None else param.try_bytes(provider, self.value)
+        )
 
 
 class DecimalType(AbstractDatabaseType):
@@ -195,7 +222,11 @@ class DecimalType(AbstractDatabaseType):
         self.value = value
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return self.value if self.value is None else param.try_decimal(provider, self.value)
+        return (
+            self.value
+            if self.value is None
+            else param.try_decimal(provider, self.value)
+        )
 
 
 class EnumType(AbstractDatabaseType):
@@ -208,7 +239,11 @@ class EnumType(AbstractDatabaseType):
         self.value = value
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return self.value if self.value is None else param.try_enum(provider, self.value, field)
+        return (
+            self.value
+            if self.value is None
+            else param.try_enum(provider, self.value, field)
+        )
 
 
 class TupleType(AbstractDatabaseType):
@@ -221,7 +256,11 @@ class TupleType(AbstractDatabaseType):
         self.value = value
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return self.value if self.value is None else param.try_tuple(provider, self.value, field)
+        return (
+            self.value
+            if self.value is None
+            else param.try_tuple(provider, self.value, field)
+        )
 
 
 class NTupleType(TupleType):
@@ -230,7 +269,12 @@ class NTupleType(TupleType):
     """
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return self.value if self.value is None else param.try_ntuple(provider, self.value, field)
+        return (
+            self.value
+            if self.value is None
+            else param.try_ntuple(provider, self.value, field)
+        )
+
 
 class TupleEnumType(AbstractDatabaseType):
     """Tuple Enum type - Only for PostgreSQL
@@ -242,5 +286,8 @@ class TupleEnumType(AbstractDatabaseType):
         self.value = value
 
     def convert(self, provider: PROVIDER, field: str = "") -> T:
-        return self.value if self.value is None else param.try_tuple_enum(provider, self.value, field)
-
+        return (
+            self.value
+            if self.value is None
+            else param.try_tuple_enum(provider, self.value, field)
+        )
