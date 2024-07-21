@@ -1,9 +1,11 @@
+import asyncio
 import logging
+import threading
 from abc import ABC, abstractmethod
 from collections import deque as Deque
 from random import random
 from time import monotonic
-from typing import Union
+from typing import List, Union
 from weakref import ReferenceType
 
 from typing_extensions import TypeAlias
@@ -14,6 +16,13 @@ from .errors import PoolClosed
 
 logger = logging.getLogger("pysqlx_engine")
 TPySQLXEngineConn: TypeAlias = Union[PySQLXEngine, PySQLXEngineSync]
+
+
+def get_task_name(task: Union[asyncio.Task, threading.Thread]) -> str:
+	if isinstance(task, asyncio.Task):
+		return task.get_name()
+
+	return task.name
 
 
 class BaseConnInfo(ABC):
@@ -72,6 +81,23 @@ class BaseConnInfo(ABC):
 		return value * (1.0 + ((max_pc - min_pc) * random()) + min_pc)
 
 
+class PySQLXEngineWorker:
+	_worker_num = 0
+
+	def __init__(self, task: Union[asyncio.Task, threading.Thread]):
+		self.task = task
+		self._worker_num = PySQLXEngineWorker._worker_num = PySQLXEngineWorker._worker_num + 1
+		self.name = f"worker-{self._worker_num}-{get_task_name(task)}"
+		logger.debug(f"Worker: {self.name} starting.")
+
+	def finish(self):
+		logger.debug(f"Worker: {self.name} finishing.")
+		if isinstance(self.task, asyncio.Task):
+			self.task.cancel()
+		else:
+			self.task.join()
+
+
 class BasePool(ABC):
 	_num_pool = 0
 
@@ -82,7 +108,7 @@ class BasePool(ABC):
 		max_size: int = None,
 		conn_timeout: float = 30.0,
 		keep_alive: float = 60 * 15,
-		check_interval: float = 5.0,
+		check_interval: float = 2.0,
 	):
 		"""
 		:param uri: The connection URI.
@@ -90,7 +116,7 @@ class BasePool(ABC):
 		:param max_size: The maximum connections in the pool.
 		:param conn_timeout: The timeout in seconds to wait for a connection must be returned by the pool.
 		:param max_lifetime: The maximum lifetime of a connection in seconds.
-		:param check_interval: The interval in seconds to check for idle connections to be closed.
+		:param check_interval: The interval in seconds to check for idle connections to be closed, recycled or created.
 		"""
 		# check if the uri is valid
 		PySQLXEngine(uri)
@@ -113,8 +139,13 @@ class BasePool(ABC):
 		self._size = 0
 		self._pool: Deque[BaseConnInfo] = Deque()
 		self._opened = False
+		self._opening = False
 
 		self._min_size, self._max_size = self._check_size(min_size, max_size)
+
+		self._lock: Union[asyncio.Lock, threading.RLock]
+
+		self._workers: List[PySQLXEngineWorker] = []
 
 	def __repr__(self) -> str:
 		return f"<{self.__class__.__module__}.{self.__class__.__name__} {self._name!r} at 0x{id(self):x}>"
@@ -136,7 +167,7 @@ class BasePool(ABC):
 		return min_size, max_size
 
 	def _check_closed(self) -> None:
-		if self.closed:
+		if self.closed is True and self._opening is False:
 			raise PoolClosed("Pool is closed")
 
 	@abstractmethod

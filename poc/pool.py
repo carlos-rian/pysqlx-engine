@@ -6,7 +6,7 @@ from weakref import ref
 
 from pysqlx_engine._core.aconn import PySQLXEngine
 
-from .base import BaseConnInfo, BaseMonitor, BasePool, logger
+from .base import BaseConnInfo, BaseMonitor, BasePool, PySQLXEngineWorker, logger
 from .errors import PoolAlreadyStarted, PoolTimeout
 
 
@@ -49,35 +49,49 @@ class PySQLXEnginePool(BasePool):
 		)
 		self._lock = asyncio.Lock()
 
+		task_worker = asyncio.create_task(self._start_workers())
+		self._workers.append(PySQLXEngineWorker(task_worker))
+
 	def __del__(self) -> None:
 		if getattr(self, "_pool", None):
 			asyncio.run(self.stop())
 
+		if getattr(self, "_workers", None):
+			for worker in self._workers:
+				worker.finish()
+
 	async def _new_conn(self) -> BaseConnInfo:
 		conn = PySQLXEngine(uri=self.uri)
 		await conn.connect()
-		self._size += 1
-		return ConnInfo(conn=conn, keep_alive=self._keep_alive)
+		conn_info = ConnInfo(conn=conn, keep_alive=self._keep_alive)
+		logger.debug(f"Connection: {conn_info} created.")
+		return conn_info
 
 	async def _del_conn(self, conn: BaseConnInfo) -> None:
+		logger.debug(f"Connection: {conn} closing.")
 		await conn.close()
 		self._size -= 1
 
 	async def _put_conn(self, conn: BaseConnInfo) -> None:
 		self._check_closed()
 		if not conn.reusable:
+			logger.debug(f"Connection: {conn} is not reusable, closing.")
 			await self._del_conn(conn)
+			logger.debug("Creating a new connection.")
 			conn = await self._new_conn()
 
 		self._pool.append(conn)
-		self._num_pool += 1
+		self._size += 1
 
 	async def _get_ready_conn(self) -> BaseConnInfo:
+		logger.debug("Getting a ready connection.")
 		if self._pool:
+			logger.debug("Getting for a ready connection.")
 			conn = self._pool.popleft()
 			return conn
 
 		if self._size < self._max_size:
+			logger.debug("Creating a new connection.")
 			conn = await self._new_conn()
 			return conn
 
@@ -98,21 +112,30 @@ class PySQLXEnginePool(BasePool):
 			await asyncio.sleep(0.1)
 
 	async def _start(self) -> None:
-		if self._num_pool > 0:
+		if self._size > 0:
 			raise PoolAlreadyStarted("Pool is already started")
 
+		self._opening = True
+		logger.debug("Starting the pool.")
 		async with self._lock:
 			for _ in range(self._min_size):
 				conn = await self._new_conn()
 				await self._put_conn(conn)
 			self._opened = True
 
+		logger.debug(f"Pool started with {self._min_size} connections.")
+		self._opening = False
+
 	async def _start_workers(self) -> None:
-		if self._opened and self._num_pool > 0:
+		if self._opened and self._size > 0:
 			return
 
-		asyncio.create_task(self._start())
-		asyncio.create_task(Monitor(pool=ref(self)).run())
+		logger.debug("Starting the pool workers.")
+		task_start = asyncio.create_task(self._start())
+		task_monitor = asyncio.create_task(Monitor(pool=ref(self)).run())
+
+		self._workers.append(PySQLXEngineWorker(task_start))
+		self._workers.append(PySQLXEngineWorker(task_monitor))
 
 	@asynccontextmanager
 	async def get_connection(self):
@@ -133,16 +156,15 @@ class PySQLXEnginePool(BasePool):
 class Monitor(BaseMonitor):
 	def __init__(self, pool: BasePool):
 		super().__init__(pool)
-		self._lock = asyncio.Lock()
 
 	def current_t_name(self) -> str:
 		return current_task_name()
 
 	async def run(self) -> None:
 		while True:
-			async with self._lock:
-				pool = self.pool()
-				if pool._opened:
+			pool = self.pool()
+			if pool._opened and pool._size > 0 and not pool._lock.locked():
+				async with pool._lock:
 					for _ in range(len(pool._pool)):
 						conn = pool._pool.popleft()
 						if conn.healthy is False:
@@ -164,8 +186,8 @@ class Monitor(BaseMonitor):
 							# reuse the connection
 							logger.debug(f"Connection: {conn} health, reusing.")
 							await pool._put_conn(conn=conn)
-				else:
-					logger.debug("Pool is closed, waiting for the next check.")
+			else:
+				logger.debug("Pool is closed, waiting for the next check.")
 
 			logger.debug(f"Sleeping for {pool._check_interval} seconds")
 			await asyncio.sleep(pool._check_interval)
