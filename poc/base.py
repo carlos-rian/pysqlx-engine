@@ -81,7 +81,7 @@ class Worker:
 	def __init__(self, task: Union[asyncio.Task, threading.Thread]):
 		self.task = task
 		self._worker_num = Worker._worker_num = Worker._worker_num + 1
-		self.name = f"worker-{self._worker_num}-{get_task_name(task)}"
+		self.name = f"Worker-{self._worker_num}-{get_task_name(task)}"
 		logger.debug(f"Worker: {self.name} starting.")
 
 		self.running = True
