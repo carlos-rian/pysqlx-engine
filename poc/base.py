@@ -4,7 +4,7 @@ from collections import deque as Deque
 from random import random
 from time import monotonic
 from typing import Union
-from weakref import ReferenceType, ref
+from weakref import ReferenceType
 
 from typing_extensions import TypeAlias
 
@@ -158,7 +158,7 @@ class BasePool(ABC):
 	def _start(self) -> None: ...
 
 	@abstractmethod
-	def start(self) -> None: ...
+	def _start_workers(self) -> None: ...
 
 	@abstractmethod
 	def get_connection(self) -> TPySQLXEngineConn: ...
@@ -168,8 +168,8 @@ class BasePool(ABC):
 
 
 class BaseMonitor:
-	def __init__(self, pool: BasePool):
-		self.pool: ReferenceType[BasePool] = ref(pool)
+	def __init__(self, pool: ReferenceType[BasePool]):
+		self.pool: ReferenceType[BasePool] = pool
 
 	def __repr__(self) -> str:
 		pool = self.pool()
@@ -182,20 +182,5 @@ class BaseMonitor:
 		...
 
 	@abstractmethod
-	def _run(self) -> None:
-		pass
-
 	def run(self) -> None:
-		"""Run the task.
-
-		This usually happens in a worker. Call the concrete _run()
-		implementation, if the pool is still alive.
-		"""
-		pool = self.pool()
-		if not pool or pool.closed:
-			# Pool is no more working. Quietly discard the operation.
-			logger.debug("task run discarded: %s", self)
-			return
-
-		logger.debug("task running in %s: %s", self.current_t_name, self)
-		self._run(pool)
+		pass

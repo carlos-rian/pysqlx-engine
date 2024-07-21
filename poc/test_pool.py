@@ -2,12 +2,12 @@ import asyncio
 import threading
 from contextlib import asynccontextmanager
 from time import monotonic
-from weakref import ReferenceType, ref
+from weakref import ref
 
 from pysqlx_engine._core.aconn import PySQLXEngine
 
-from .base import BaseConnInfo, BaseMonitor, BasePool
-from .errors import PoolAlreadyStarted, PoolClosed, PoolTimeout
+from .base import BaseConnInfo, BaseMonitor, BasePool, logger
+from .errors import PoolAlreadyStarted, PoolTimeout
 
 
 def current_thread_name() -> str:
@@ -29,7 +29,7 @@ class ConnInfoSync(BaseConnInfo):
 		return super()._close()
 
 
-class Pool(BasePool):
+class PySQLXEnginePool(BasePool):
 	def __init__(
 		self,
 		uri: str,
@@ -107,6 +107,13 @@ class Pool(BasePool):
 				await self._put_conn(conn)
 			self._opened = True
 
+	async def _start_workers(self) -> None:
+		if self._opened and self._num_pool > 0:
+			return
+
+		asyncio.create_task(self._start())
+		asyncio.create_task(Monitor(pool=ref(self)).run())
+
 	@asynccontextmanager
 	async def get_connection(self):
 		conn = await self._get_conn()
@@ -131,27 +138,36 @@ class Monitor(BaseMonitor):
 	def current_t_name(self) -> str:
 		return current_task_name()
 
-	async def _run(self: BaseMonitor) -> None:
+	async def run(self) -> None:
 		while True:
 			async with self._lock:
 				pool = self.pool()
-				for _ in range(len(pool._pool)):
-					conn = pool._pool.popleft()
-					if conn.healthy is False:
-						await pool._del_conn(conn=conn)
+				if pool._opened:
+					for _ in range(len(pool._pool)):
+						conn = pool._pool.popleft()
+						if conn.healthy is False:
+							logger.debug(f"Connection: {conn} is unhealthy, closing.")
+							await pool._del_conn(conn=conn)
 
-					elif (pool._min_size > pool._size < pool._max_size) or pool._size > pool._max_size:
-						# close the connection
-						await pool._del_conn(conn=conn)
+						elif (pool._min_size > pool._size < pool._max_size) or pool._size > pool._max_size:
+							# close the connection
+							logger.debug(f"Connection: {conn} health, but pool is full, closing.")
+							await pool._del_conn(conn=conn)
 
-					elif conn.expires:
-						# reuse the connection
-						conn.renew_expire_at()
-						await pool._put_conn(conn=conn)
+						elif conn.expires:
+							# reuse the connection
+							logger.debug(f"Connection: {conn} health, renewing.")
+							conn.renew_expire_at()
+							await pool._put_conn(conn=conn)
 
-					else:
-						await pool._put_conn(conn=conn)
+						else:
+							# reuse the connection
+							logger.debug(f"Connection: {conn} health, reusing.")
+							await pool._put_conn(conn=conn)
+				else:
+					logger.debug("Pool is closed, waiting for the next check.")
 
+			logger.debug(f"Sleeping for {pool._check_interval} seconds")
 			await asyncio.sleep(pool._check_interval)
 
 
