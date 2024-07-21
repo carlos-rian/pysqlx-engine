@@ -13,16 +13,10 @@ from typing_extensions import TypeAlias
 from pysqlx_engine import PySQLXEngine, PySQLXEngineSync
 
 from .errors import PoolClosed
+from .util import get_task_name
 
 logger = logging.getLogger("pysqlx_engine")
 TPySQLXEngineConn: TypeAlias = Union[PySQLXEngine, PySQLXEngineSync]
-
-
-def get_task_name(task: Union[asyncio.Task, threading.Thread]) -> str:
-	if isinstance(task, asyncio.Task):
-		return task.get_name()
-
-	return task.name
 
 
 class BaseConnInfo(ABC):
@@ -81,14 +75,20 @@ class BaseConnInfo(ABC):
 		return value * (1.0 + ((max_pc - min_pc) * random()) + min_pc)
 
 
-class PySQLXEngineWorker:
+class Worker:
 	_worker_num = 0
 
 	def __init__(self, task: Union[asyncio.Task, threading.Thread]):
 		self.task = task
-		self._worker_num = PySQLXEngineWorker._worker_num = PySQLXEngineWorker._worker_num + 1
+		self._worker_num = Worker._worker_num = Worker._worker_num + 1
 		self.name = f"worker-{self._worker_num}-{get_task_name(task)}"
 		logger.debug(f"Worker: {self.name} starting.")
+
+		self.running = True
+
+	def __del__(self):
+		if self.running:
+			self.finish()
 
 	def finish(self):
 		logger.debug(f"Worker: {self.name} finishing.")
@@ -97,9 +97,12 @@ class PySQLXEngineWorker:
 		else:
 			self.task.join()
 
+		self.running = False
+
 
 class BasePool(ABC):
 	_num_pool = 0
+	_lock: Union[asyncio.Lock, threading.RLock]
 
 	def __init__(
 		self,
@@ -145,7 +148,7 @@ class BasePool(ABC):
 
 		self._lock: Union[asyncio.Lock, threading.RLock]
 
-		self._workers: List[PySQLXEngineWorker] = []
+		self._workers: List[Worker] = []
 
 	def __repr__(self) -> str:
 		return f"<{self.__class__.__module__}.{self.__class__.__name__} {self._name!r} at 0x{id(self):x}>"
@@ -198,7 +201,9 @@ class BasePool(ABC):
 	def stop(self) -> None: ...
 
 
-class BaseMonitor:
+class BaseMonitor(ABC):
+	pool: ReferenceType[BasePool]
+
 	def __init__(self, pool: ReferenceType[BasePool]):
 		self.pool: ReferenceType[BasePool] = pool
 
@@ -206,11 +211,6 @@ class BaseMonitor:
 		pool = self.pool()
 		name = repr(pool._name) if pool else "<pool is gone>"
 		return f"<{self.__class__.__name__} {name} at 0x{id(self):x}>"
-
-	@abstractmethod
-	def current_t_name(self) -> str:
-		"""Return the current thread or task name."""
-		...
 
 	@abstractmethod
 	def run(self) -> None:
