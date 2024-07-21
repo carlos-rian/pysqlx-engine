@@ -161,7 +161,7 @@ class PySQLXEnginePool(BasePool):
 		self._workers.append(Worker(task_monitor))
 
 	@asynccontextmanager
-	async def get_connection(self):
+	async def connection(self):
 		conn = await self._get_conn()
 		try:
 			yield conn.conn

@@ -161,7 +161,7 @@ class PySQLXEnginePoolSync(BasePool):
 		self._workers.append(Worker(task_monitor))
 
 	@contextmanager
-	def get_connection(self):
+	def connection(self):
 		conn = self._get_conn()
 		try:
 			yield conn.conn
