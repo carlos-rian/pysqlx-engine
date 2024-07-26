@@ -53,12 +53,10 @@ def force_sync(fn: Callable[P, T]) -> Callable[P, T]:
 		loop = asyncio.get_event_loop()
 
 		# if loop is already running, we don't need to run it again
-		if not loop.is_running():
-			loop = asyncio.new_event_loop()
-			asyncio.set_event_loop(loop)
-
+		if loop.is_running():
+			return res
 		# if the result is a coroutine, we need to run it in the loop synchronously
-		if asyncio.iscoroutine(res):
+		elif asyncio.iscoroutine(res):
 			return loop.run_until_complete(res)
 
 		# case the result is not a coroutine, we just return it
