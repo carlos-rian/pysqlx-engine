@@ -90,14 +90,15 @@ build-backend = "poetry.core.masonry.api"
 testpaths = 'tests'
 log_format = '%(name)s %(levelname)s: %(message)s'
 filterwarnings = 'error'
-timeout = 30
 xfail_strict = true
 
 
 [tool.taskipy.tasks]
 lint = "ruff check . && ruff check . --diff"
 format = "ruff check . --fix && ruff format ."
+stop_db = "rm -rf dev.db & docker-compose --file tests/docker/docker-compose.yml down"
 start_db = "docker-compose --file tests/docker/docker-compose.yml up --build --detach"
-stop_db = "docker-compose --file tests/docker/docker-compose.yml down"
+clear_db = "task stop_db && task start_db"
 test = "pytest tests -vv -x -s --cov=."
+test_clean = "task clear_db && sleep 10 && task test"
 post_test = "coverage html"
