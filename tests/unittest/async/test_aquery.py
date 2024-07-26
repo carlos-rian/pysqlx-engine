@@ -273,8 +273,12 @@ async def test_query_with_null_values(db, typ, create_table: dict):
 		assert isinstance(row.age, (int, type(None)))
 		assert isinstance(row.email, (str, type(None)))
 		assert isinstance(row.phone, (str, type(None)))
-		assert isinstance(row.created_at, (str, datetime))
-		assert isinstance(row.updated_at, (str, datetime))
+		if typ == "sqlite":
+			assert isinstance(row.created_at, str)
+			assert isinstance(row.updated_at, str)
+		else:
+			assert isinstance(row.created_at, datetime)
+			assert isinstance(row.updated_at, datetime)
 
 	resp = await conn.execute(sql="DROP TABLE test_table;")
 	assert isinstance(resp, int)
@@ -311,8 +315,12 @@ async def test_query_with_null_dict_values(db, typ, create_table: dict):
 		assert isinstance(row["age"], (int, type(None)))
 		assert isinstance(row["email"], (str, type(None)))
 		assert isinstance(row["phone"], (str, type(None)))
-		assert isinstance(row["created_at"], datetime)
-		assert isinstance(row["updated_at"], datetime)
+		if typ == "sqlite":
+			assert isinstance(row["created_at"], str)
+			assert isinstance(row["updated_at"], str)
+		else:
+			assert isinstance(row["created_at"], datetime)
+			assert isinstance(row["updated_at"], datetime)
 
 	resp = await conn.execute(sql="DROP TABLE test_table;")
 	assert isinstance(resp, int)
@@ -348,8 +356,12 @@ async def test_query_first_with_null_values(db, typ, create_table: dict):
 	assert isinstance(row.age, (int, type(None)))
 	assert isinstance(row.email, (str, type(None)))
 	assert isinstance(row.phone, (str, type(None)))
-	assert isinstance(row.created_at, (str, datetime))
-	assert isinstance(row.updated_at, (str, datetime))
+	if typ == "sqlite":
+		assert isinstance(row.created_at, str)
+		assert isinstance(row.updated_at, str)
+	else:
+		assert isinstance(row.created_at, datetime)
+		assert isinstance(row.updated_at, datetime)
 
 	resp = await conn.execute(sql="DROP TABLE test_table;")
 	assert isinstance(resp, int)
@@ -385,8 +397,12 @@ async def test_query_first_with_null_dict_values(db, typ, create_table: dict):
 	assert isinstance(row["age"], (int, type(None)))
 	assert isinstance(row["email"], (str, type(None)))
 	assert isinstance(row["phone"], (str, type(None)))
-	assert isinstance(row["created_at"], datetime)
-	assert isinstance(row["updated_at"], datetime)
+	if typ == "sqlite":
+		assert isinstance(row["created_at"], str)
+		assert isinstance(row["updated_at"], str)
+	else:
+		assert isinstance(row["created_at"], datetime)
+		assert isinstance(row["updated_at"], datetime)
 
 	resp = await conn.execute(sql="DROP TABLE test_table;")
 	assert isinstance(resp, int)
@@ -422,20 +438,28 @@ async def test_query_first_get_column_types(db, typ, create_table: dict):
 	assert isinstance(row.age, (int, type(None)))
 	assert isinstance(row.email, (str, type(None)))
 	assert isinstance(row.phone, (str, type(None)))
-	assert isinstance(row.created_at, (str, datetime))
-	assert isinstance(row.updated_at, (str, datetime))
+	if typ == "sqlite":
+		assert isinstance(row.created_at, str)
+		assert isinstance(row.updated_at, str)
+	else:
+		assert isinstance(row.created_at, datetime)
+		assert isinstance(row.updated_at, datetime)
 
 	columns = row.get_columns()
 	assert isinstance(columns, dict)
 	assert len(columns) == 8
 
-	assert isinstance(columns["first_name"], str)
-	assert isinstance(columns["last_name"], str)
-	assert isinstance(columns["age"], int)
-	assert isinstance(columns["email"], str)
-	assert isinstance(columns["phone"], str)
-	assert isinstance(columns["created_at"], (str, datetime))
-	assert isinstance(columns["updated_at"], (str, datetime))
+	assert columns["first_name"] is str
+	assert columns["last_name"] is str
+	assert columns["age"] is int
+	assert columns["email"] is str
+	assert columns["phone"] is str
+	if typ == "sqlite":
+		assert columns["created_at"] is str
+		assert columns["updated_at"] is str
+	else:
+		assert columns["created_at"] is datetime
+		assert columns["updated_at"] is datetime
 
 	resp = await conn.execute(sql="DROP TABLE test_table;")
 	assert isinstance(resp, int)
@@ -521,8 +545,8 @@ async def test_query_with_my_model_get_columns(db):
 
 	columns = row.get_columns()
 
-	assert isinstance(columns["id"], int)
-	assert isinstance(columns["name"], str)
+	assert columns["id"] is int
+	assert columns["name"] is str
 
 
 @pytest.mark.asyncio
@@ -1128,11 +1152,11 @@ async def test_with_complex_param_query_as_dict_adb_pgsql(db: PySQLXEngine = adb
 
 	assert isinstance(resp[0].get("type_boolean"), bool)
 
-	assert isinstance(resp[0].get("type_date"), str)
-	assert isinstance(resp[0].get("type_time"), str)
-	assert isinstance(resp[0].get("type_timestamp"), str)
+	assert isinstance(resp[0].get("type_date"), date)
+	assert isinstance(resp[0].get("type_time"), time)
+	assert isinstance(resp[0].get("type_timestamp"), datetime)
 
-	assert isinstance(resp[0].get("type_json"), str)
+	assert isinstance(resp[0].get("type_json"), list)
 	assert isinstance(resp[0].get("type_bytes"), bytes)
 
 	assert isinstance(resp[0].get("type_int_array"), tuple)
@@ -1215,11 +1239,11 @@ async def test_with_complex_param_query_first_as_dict_adb_pgsql(db: PySQLXEngine
 
 	assert isinstance(resp.get("type_boolean"), bool)
 
-	assert isinstance(resp.get("type_date"), str)
-	assert isinstance(resp.get("type_time"), str)
-	assert isinstance(resp.get("type_timestamp"), str)
+	assert isinstance(resp.get("type_date"), date)
+	assert isinstance(resp.get("type_time"), time)
+	assert isinstance(resp.get("type_timestamp"), datetime)
 
-	assert isinstance(resp.get("type_json"), str)
+	assert isinstance(resp.get("type_json"), list)
 	assert isinstance(resp.get("type_bytes"), bytes)
 
 	assert isinstance(resp.get("type_int_array"), tuple)
