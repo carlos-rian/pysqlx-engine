@@ -1,6 +1,7 @@
 from datetime import date, datetime, time
 from decimal import Decimal
 from os import getenv
+from typing import Union
 from uuid import UUID
 
 from pydantic import VERSION as PYDANTIC_VERSION
@@ -12,18 +13,18 @@ PYDANTIC_IS_V1 = PYDANTIC_VERSION < "2.0.0"
 
 
 TYPES_OUT = {
-    "bool": bool,
-    "str": str,
-    "int": int,
-    "list": tuple,
-    "json": Json,
-    "uuid": UUID,
-    "time": time,
-    "date": date,
-    "datetime": datetime,
-    "float": float,
-    "bytes": bytes,
-    "decimal": Decimal,
+	"bool": bool,
+	"str": str,
+	"int": int,
+	"list": tuple,
+	"json": Union[dict, list, Json],
+	"uuid": UUID,
+	"time": time,
+	"date": date,
+	"datetime": datetime,
+	"float": float,
+	"bytes": bytes,
+	"decimal": Decimal,
 }
 
 TYPES_IN = TYPES_OUT.copy()
@@ -43,9 +44,9 @@ CODE_ParameterInvalidJsonValueError = "PYSQLX005"
 
 
 class LogConfig(BaseConfig):
-    PYSQLX_SQL_LOG: bool = getenv("PYSQLX_SQL_LOG", "0") != "0"
-    PYSQLX_USE_COLOR: bool = getenv("PYSQLX_USE_COLOR", "0") != "0"
-    PYSQLX_ERROR_JSON_FMT: bool = getenv("PYSQLX_ERROR_JSON_FMT", "0") != "0"
+	PYSQLX_SQL_LOG: bool = getenv("PYSQLX_SQL_LOG", "0") != "0"
+	PYSQLX_USE_COLOR: bool = getenv("PYSQLX_USE_COLOR", "0") != "0"
+	PYSQLX_ERROR_JSON_FMT: bool = getenv("PYSQLX_ERROR_JSON_FMT", "0") != "0"
 
 
 LOG_CONFIG = LogConfig()

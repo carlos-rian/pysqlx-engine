@@ -1,6 +1,4 @@
 import pytest
-from io import StringIO
-from dotenv import load_dotenv
 import os
 from pysqlx_engine import PySQLXEnginePoolSync, PySQLXEngineSync
 from pysqlx_engine._core.const import LOG_CONFIG

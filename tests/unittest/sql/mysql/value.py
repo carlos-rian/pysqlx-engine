@@ -2,7 +2,6 @@ from datetime import date, datetime, time
 from decimal import Decimal
 from enum import Enum
 
-from pysqlx_engine import types
 
 
 class EnumType(Enum):

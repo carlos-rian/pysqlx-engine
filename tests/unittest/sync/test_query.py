@@ -529,7 +529,7 @@ def test_sample_query_first_with_param_db_pgsql(db: PySQLXEngineSync = db_pgsql)
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
-    sql = f"""
+    sql = """
         SELECT 
         :id                             AS id, 
         :name                           AS name, 
@@ -581,7 +581,7 @@ def test_sample_query_first_with_param_db_mssql(db: PySQLXEngineSync = db_mssql)
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
-    sql = f"""
+    sql = """
         SELECT 
         :id                             AS id, 
         :name                           AS name, 
@@ -627,7 +627,7 @@ def test_sample_query_first_with_param_db_mysql(db: PySQLXEngineSync = db_mysql)
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
-    sql = f"""
+    sql = """
         SELECT 
         :id                           AS id, 
         :name                         AS name, 
@@ -666,7 +666,7 @@ def test_sample_query_first_with_param_db_sqlite(db: PySQLXEngineSync = db_sqlit
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
-    sql = f"""
+    sql = """
         SELECT 
         :id                     AS id, 
         :name                   AS name, 
@@ -709,7 +709,7 @@ def test_invalid_param_type_db_pgsql(db: PySQLXEngineSync = db_pgsql):
     LOG_CONFIG.PYSQLX_USE_COLOR = True
     LOG_CONFIG.PYSQLX_SQL_LOG = True
 
-    sql = f"SELECT :id AS id"
+    sql = "SELECT :id AS id"
 
     class MyType:
         i = 1
@@ -729,7 +729,7 @@ def test_invalid_param_array_with_heterogeneous_types_db_pgsql(db: PySQLXEngineS
     LOG_CONFIG.PYSQLX_USE_COLOR = False
     LOG_CONFIG.PYSQLX_SQL_LOG = False
 
-    sql = f"SELECT :tuple AS tuple"
+    sql = "SELECT :tuple AS tuple"
     parameters = {"tuple": (1, 2, 3.1)}
 
     with pytest.raises(ParameterInvalidValueError):
@@ -757,7 +757,7 @@ def test_invalid_param_array_with_same_types_but_not_supported_db_pgsql(db: PySQ
     class MyType:
         i = 1
 
-    sql = f"SELECT :tuple AS tuple"
+    sql = "SELECT :tuple AS tuple"
     parameters = {"tuple": (MyType(), MyType(), MyType())}
 
     with pytest.raises(ParameterInvalidProviderError):
@@ -778,7 +778,7 @@ def test_valid_param_with_empty_array_db_pgsql(db: PySQLXEngineSync = db_pgsql):
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
-    sql = f"SELECT cast(:tuple as int[]) AS tuple"
+    sql = "SELECT cast(:tuple as int[]) AS tuple"
     parameters = {"tuple": tuple()}
 
     resp = conn.query_first(sql=sql, parameters=parameters)
@@ -792,7 +792,7 @@ def test_valid_param_with_int_array_db_pgsql(db: PySQLXEngineSync = db_pgsql):
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
-    sql = f"SELECT cast(:tuple as int[]) AS tuple"
+    sql = "SELECT cast(:tuple as int[]) AS tuple"
     parameters = {"tuple": (1, 2, 3, 4, 5)}
 
     resp = conn.query_first(sql=sql, parameters=parameters)
@@ -806,7 +806,7 @@ def test_valid_param_with_float_array_db_pgsql(db: PySQLXEngineSync = db_pgsql):
     conn: PySQLXEngineSync = db()
     assert conn.connected is True
 
-    sql = f"SELECT cast(:tuple as float[]) AS tuple"
+    sql = "SELECT cast(:tuple as float[]) AS tuple"
     parameters = {"tuple": (1.3, 2.4, 3.5, 4.1, 5.2)}
 
     resp = conn.query_first(sql=sql, parameters=parameters)
@@ -825,7 +825,7 @@ def test_invalid_provider_to_array_param(db: PySQLXEngineSync):
     LOG_CONFIG.PYSQLX_USE_COLOR = True
     LOG_CONFIG.PYSQLX_SQL_LOG = True
 
-    sql = f"SELECT :tuple AS tuple"
+    sql = "SELECT :tuple AS tuple"
     parameters = {"tuple": (1, 2, 3)}
 
     with pytest.raises(ParameterInvalidProviderError):
@@ -842,7 +842,7 @@ def test_sample_param_type_db_pgsql_show_sql_colored(db: PySQLXEngineSync = db_p
     LOG_CONFIG.PYSQLX_USE_COLOR = True
     LOG_CONFIG.PYSQLX_SQL_LOG = True
 
-    sql = f"SELECT :id AS id"
+    sql = "SELECT :id AS id"
 
     conn.query_first(sql=sql, parameters={"id": 1})
 
@@ -876,7 +876,7 @@ def test_with_complex_param_query_db_pgsql(db: PySQLXEngineSync = db_pgsql):
         "type_float_array": (1.3, 2.4, 3.5, 4.1, 5.2),
     }
 
-    sql = f"""
+    sql = """
         SELECT
             :type_int AS type_int,
             :type_smallint AS type_smallint,
@@ -962,7 +962,7 @@ def test_with_complex_param_query_first_db_pgsql(db: PySQLXEngineSync = db_pgsql
         "type_float_array": (1.3, 2.4, 3.5, 4.1, 5.2),
     }
 
-    sql = f"""
+    sql = """
         SELECT
             :type_int AS type_int,
             :type_smallint AS type_smallint,
@@ -1048,7 +1048,7 @@ def test_with_complex_param_query_as_dict_db_pgsql(db: PySQLXEngineSync = db_pgs
         "type_float_array": (1.3, 2.4, 3.5, 4.1, 5.2),
     }
 
-    sql = f"""
+    sql = """
         SELECT
             :type_int AS type_int,
             :type_smallint AS type_smallint,
@@ -1134,7 +1134,7 @@ def test_with_complex_param_query_first_as_dict_db_pgsql(db: PySQLXEngineSync = 
         "type_float_array": (1.3, 2.4, 3.5, 4.1, 5.2),
     }
 
-    sql = f"""
+    sql = """
         SELECT
             :type_int AS type_int,
             :type_smallint AS type_smallint,

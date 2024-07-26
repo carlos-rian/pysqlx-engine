@@ -1,4 +1,5 @@
-import asyncio, pytest
+import asyncio
+import pytest
 from pysqlx_engine._core.const import LOG_CONFIG
 import os
 from pysqlx_engine import PySQLXEnginePool, PySQLXEngine
