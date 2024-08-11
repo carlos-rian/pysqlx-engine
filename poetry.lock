@@ -493,9 +493,9 @@ name = "pysqlx-core"
 version = "0.1.49"
 description = "A fast and async SQL database wrapper for Python, with support for MySQL, PostgreSQL, SQLite and MS SQL Server."
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "pysqlx_core-0.1.49-cp38-cp38-manylinux_2_34_x86_64.whl", hash = "sha256:048d0344d086501e52e1b4503314c2b9ac55957da1f410b378adaf6b7a5a2269"},
+    {file = "pysqlx_core-0.1.49-cp38-cp38-manylinux_2_34_x86_64.whl", hash = "sha256:8af34b80310eaa8e322abcc3f71e470800125ff09da1e26b0a19f6d3463cfece"},
 ]
 
 [package.source]
@@ -731,4 +731,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "d5a118216da58d0bf417c14987148ae6f73bdffcbb06cd15523c4f102f4046fd"
+content-hash = "a3f0a62a4f2229a86a74dfefcb966fb99a299c858fda5ffce9f9fc7d93d3bb72"
