@@ -914,29 +914,35 @@ async def test_with_complex_param_query_adb_pgsql(db: PySQLXEngine = adb_pgsql):
 		"type_int": 1,
 		"type_smallint": 2,
 		"type_bigint": 3,
-		"type_numeric": 14.8389,
+		#
 		"type_float": 13343400,
 		"type_double": 1.6655444,
 		"type_decimal": Decimal("19984"),
+		"type_numeric": 14.8389,
+		#
 		"type_char": "r",
 		"type_varchar": "hfhfjjieurjnnd",
 		"type_nvarchar": "$~k;dldëjdjd",
 		"type_text": "hefbvrnjnvorvnojqnour3nbrububutbu9eruinrvouinbrfaoiunbsfobnfsokbf",
+		#
 		"type_boolean": True,
+		#
 		"type_date": date.fromisoformat("2022-01-01"),
 		"type_time": time.fromisoformat("12:10:11"),
 		"type_timestamp": datetime.fromisoformat("2022-12-20 08:59:55"),
+		#
 		"type_json": ["name", "age"],
-		"type_bytes": "super bytes".encode("utf-8"),
+		"type_bytes": b"super bytes",
+		#
 		"type_int_array": (1, 2, 3, 4, 5),
 		"type_float_array": (1.3, 2.4, 3.5, 4.1, 5.2),
 	}
 
 	sql = """
         SELECT
-            :type_int AS type_int,
-            :type_smallint AS type_smallint,
-            :type_bigint AS type_bigint,
+            CAST(:type_int AS integer) AS type_int,
+            CAST(:type_smallint AS smallint) AS type_smallint,
+            CAST(:type_bigint AS bigint) AS type_bigint,
             
             CAST(:type_float AS FLOAT) AS type_float,
             CAST(:type_double AS FLOAT) AS type_double,
@@ -948,7 +954,7 @@ async def test_with_complex_param_query_adb_pgsql(db: PySQLXEngine = adb_pgsql):
             :type_nvarchar AS type_nvarchar,
             :type_text AS type_text,
 
-            :type_boolean AS type_boolean,
+            CAST(:type_boolean AS BOOL) AS type_boolean,
             CAST(:type_date AS DATE) AS type_date,
             CAST(:type_time AS TIME) AS type_time,
             CAST(:type_timestamp AS TIMESTAMP) AS type_timestamp,
