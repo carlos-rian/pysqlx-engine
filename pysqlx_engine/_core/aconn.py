@@ -90,8 +90,8 @@ class PySQLXEngine:
 			if model is not None and not issubclass(model, BaseRow):
 				raise TypeError(model_parameter_error_message())
 
-			parse = ParserSQL(provider=self._provider, sql=sql, parameters=parameters)
-			result = await self._conn.query(sql=parse.sql())
+			stmt = pysqlx_core.PySQLxStatement(provider=self._provider, sql=sql, params=parameters)
+			result = await self._conn.query_typed(stmt)
 			return ParserIn(result=result, model=model).parse()
 		except pysqlx_core.PySQLxError as e:
 			raise pysqlx_get_error(err=e)

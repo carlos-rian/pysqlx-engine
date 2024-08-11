@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Sequence, TypeVar, Union
 from uuid import UUID
 
 from pydantic import BaseModel, create_model
-from pysqlx_core import PySQLxResult
+from pysqlx_core import PySQLxResponse
 
 from pysqlx_engine._core.abc import AbstractDatabaseType
 
@@ -54,8 +54,8 @@ class BaseRow(BaseModel):
 class ParserIn:
 	__slots__ = ("result", "model")
 
-	def __init__(self, result: PySQLxResult, model: MyModel = None):
-		self.result: PySQLxResult = result
+	def __init__(self, result: PySQLxResponse, model: MyModel = None):
+		self.result: PySQLxResponse = result
 		self.model: MyModel = model
 
 	def create_model(self) -> BaseRow:
