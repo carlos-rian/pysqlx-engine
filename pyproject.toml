@@ -68,6 +68,7 @@ toml = "^0.10.2"
 ruff = "^0.5.5"
 taskipy = "^1.13.0"
 trio = "^0.26.0"
+rich = "^13.7.1"
 
 [tool.ruff]
 line-length = 120
@@ -104,3 +105,5 @@ clear_db = "task stop_db && task start_db"
 test = "pytest tests -vv -x -s --cov=."
 test_clean = "task clear_db && sleep 10 && task test"
 post_test = "coverage html"
+
+core = "poetry remove pysqlx-core && poetry add $w/Documents/repo/my-repos/pysqlx-core/target/wheels/pysqlx_core-0.1.49-cp38-cp38-manylinux_2_34_x86_64.whl"
