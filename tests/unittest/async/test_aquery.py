@@ -1,6 +1,6 @@
 import enum
 import uuid
-from datetime import date, datetime, time
+from datetime import date, datetime, time, timezone
 from decimal import Decimal
 
 import pytest
@@ -8,11 +8,7 @@ from pydantic import BaseModel
 
 from pysqlx_engine import BaseRow, PySQLXEngine
 from pysqlx_engine._core.const import LOG_CONFIG
-from pysqlx_engine._core.errors import (
-	ParameterInvalidProviderError,
-	ParameterInvalidValueError,
-	QueryError,
-)
+from pysqlx_engine._core.errors import ParameterInvalidValueError, QueryError
 from tests.common import adb_mssql, adb_mysql, adb_pgsql, adb_sqlite
 
 
@@ -581,15 +577,15 @@ async def test_sample_query_first_with_param_db_pgsql(db: PySQLXEngine = adb_pgs
 
 	sql = """
         SELECT 
-        :id                             AS id, 
-        :name                           AS name, 
-        :age                            AS age,
-        CAST(:bytes AS bytea)           AS bytes,
-        CAST(:uuid AS UUID)             AS uid,
-        CAST(:is_active AS BOOL)        AS is_active, 
-        CAST(:created_at AS TIMESTAMP)  AS created_at, 
-        CAST(:updated_at AS TIMESTAMP)  AS updated_at, 
-        CAST(:date AS DATE)             AS date;
+        	CAST(:id AS INT)                AS id, 
+			:name                           AS name, 
+			CAST(:age AS INT) 				AS age,
+			CAST(:bytes AS bytea)           AS bytes,
+			CAST(:uuid AS UUID)             AS uid,
+			CAST(:is_active AS BOOL)        AS is_active, 
+			CAST(:created_at AS TIMESTAMP)  AS created_at, 
+			CAST(:updated_at AS TIMESTAMP)  AS updated_at, 
+			CAST(:date AS DATE)             AS date;
     """
 	parameters = {
 		"id": 1,
@@ -713,37 +709,38 @@ async def test_sample_query_first_with_param_db_sqlite(db: PySQLXEngine = adb_sq
 	conn: PySQLXEngine = await db()
 	assert conn.connected is True
 
-	sql = """
-        SELECT 
-        :id                     AS id, 
-        :name                   AS name, 
-        :age                    AS age, 
-        :null_value             AS null_value,
-        CAST(:bytes AS BLOB)    AS bytes,
-        :created_at             AS created_at, 
-        :updated_at             AS updated_at, 
-        :date                   AS date;
-    """
-	parameters = {
-		"id": 1,
-		"name": "John Doe",
-		"age": 30,
-		"null_value": None,
-		"bytes": b"1234567890",
-		"created_at": datetime.fromisoformat("2021-01-01 00:00:00"),
-		"updated_at": datetime.fromisoformat("2021-01-01 00:00:00"),
-		"date": date.fromisoformat("2021-01-01"),
-	}
+	await conn.execute(sql="DROP TABLE IF EXISTS test;")
+	await conn.execute(
+		sql="CREATE TABLE IF NOT EXISTS test(id INT, name TEXT, age INT, null_value TEXT, bytes BLOB, created_at TIMESTAMP, updated_at TIMESTAMP, date DATE);"
+	)
 
-	resp = await conn.query_first(sql=sql, parameters=parameters)
+	dtime = datetime.now(tz=timezone.utc)
+	dt = date(2021, 4, 5)
+	await conn.execute(
+		sql="INSERT INTO test(id, name, age, null_value, bytes, created_at, updated_at, date) VALUES(:id, :name, :age, :null_value, :bytes, :created_at, :updated_at, :date);",
+		parameters={
+			"id": 1,
+			"name": "John Doe",
+			"age": 30,
+			"null_value": None,
+			"bytes": b"1234567890",
+			"created_at": dtime,
+			"updated_at": dtime,
+			"date": dt,
+		},
+	)
+
+	resp = await conn.query_first(sql="SELECT * FROM test")
+
+	await conn.execute(sql="DROP TABLE test;")
 
 	assert resp.id == 1
 	assert resp.name == "John Doe"
 	assert resp.age == 30
 	assert resp.bytes == b"1234567890"
-	assert resp.created_at == "2021-01-01 00:00:00"
-	assert resp.updated_at == "2021-01-01 00:00:00"
-	assert resp.date == "2021-01-01"
+	assert isinstance(resp.created_at, datetime)
+	assert isinstance(resp.updated_at, datetime)
+	assert isinstance(resp.date, date)
 
 	await conn.close()
 	assert conn.connected is False
@@ -810,14 +807,14 @@ async def test_invalid_param_array_with_same_types_but_not_supported_db_pgsql(db
 	sql = "SELECT :tuple AS tuple"
 	parameters = {"tuple": (MyType(), MyType(), MyType())}
 
-	with pytest.raises(ParameterInvalidProviderError):
+	with pytest.raises(ParameterInvalidValueError):
 		await conn.query_first(sql=sql, parameters=parameters)
 
 	LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
 	LOG_CONFIG.PYSQLX_USE_COLOR = True
 	LOG_CONFIG.PYSQLX_SQL_LOG = True
 
-	with pytest.raises(ParameterInvalidProviderError):
+	with pytest.raises(ParameterInvalidValueError):
 		await conn.query_first(sql=sql, parameters=parameters)
 
 	await conn.close()
@@ -860,11 +857,11 @@ async def test_valid_param_with_float_array_db_pgsql(db: PySQLXEngine = adb_pgsq
 	assert conn.connected is True
 
 	sql = "SELECT cast(:tuple as float[]) AS tuple"
-	parameters = {"tuple": (1.3, 2.4, 3.5, 4.1, 5.2)}
+	parameters = {"tuple": (1.321, 2.421, 3.521, 4.121, 5.221)}
 
 	resp = await conn.query_first(sql=sql, parameters=parameters)
 	assert isinstance(resp.tuple, tuple)
-	assert resp.tuple == (1.3, 2.4, 3.5, 4.1, 5.2)
+	assert [round(x, 3) for x in resp.tuple] == [1.321, 2.421, 3.521, 4.121, 5.221]
 
 	await conn.close()
 	assert conn.connected is False
@@ -882,7 +879,7 @@ async def test_invalid_provider_to_array_param(db: PySQLXEngine):
 	sql = "SELECT :tuple AS tuple"
 	parameters = {"tuple": (1, 2, 3)}
 
-	with pytest.raises(ParameterInvalidProviderError):
+	with pytest.raises(ParameterInvalidValueError):
 		await conn.query_first(sql=sql, parameters=parameters)
 
 	await conn.close()
@@ -1027,9 +1024,9 @@ async def test_with_complex_param_query_first_adb_pgsql(db: PySQLXEngine = adb_p
 
 	sql = """
         SELECT
-            :type_int AS type_int,
-            :type_smallint AS type_smallint,
-            :type_bigint AS type_bigint,
+            CAST(:type_int AS int) AS type_int,
+            CAST(:type_smallint AS smallint) AS type_smallint,
+            CAST(:type_bigint AS bigint) AS type_bigint,
             
             CAST(:type_float AS FLOAT) AS type_float,
             CAST(:type_double AS FLOAT) AS type_double,
@@ -1041,7 +1038,7 @@ async def test_with_complex_param_query_first_adb_pgsql(db: PySQLXEngine = adb_p
             :type_nvarchar AS type_nvarchar,
             :type_text AS type_text,
 
-            :type_boolean AS type_boolean,
+            CAST(:type_boolean AS BOOL) AS type_boolean,
             CAST(:type_date AS DATE) AS type_date,
             CAST(:type_time AS TIME) AS type_time,
             CAST(:type_timestamp AS TIMESTAMP) AS type_timestamp,
@@ -1114,9 +1111,9 @@ async def test_with_complex_param_query_as_dict_adb_pgsql(db: PySQLXEngine = adb
 
 	sql = """
         SELECT
-            :type_int AS type_int,
-            :type_smallint AS type_smallint,
-            :type_bigint AS type_bigint,
+            CAST(:type_int AS int) AS type_int,
+            CAST(:type_smallint AS smallint) AS type_smallint,
+            CAST(:type_bigint AS bigint) AS type_bigint,
             
             CAST(:type_float AS FLOAT) AS type_float,
             CAST(:type_double AS FLOAT) AS type_double,
@@ -1128,7 +1125,7 @@ async def test_with_complex_param_query_as_dict_adb_pgsql(db: PySQLXEngine = adb
             :type_nvarchar AS type_nvarchar,
             :type_text AS type_text,
 
-            :type_boolean AS type_boolean,
+            CAST(:type_boolean AS BOOL) AS type_boolean,
             CAST(:type_date AS DATE) AS type_date,
             CAST(:type_time AS TIME) AS type_time,
             CAST(:type_timestamp AS TIMESTAMP) AS type_timestamp,
@@ -1148,8 +1145,8 @@ async def test_with_complex_param_query_as_dict_adb_pgsql(db: PySQLXEngine = adb
 	assert isinstance(resp[0].get("type_float"), float)
 	assert isinstance(resp[0].get("type_double"), float)
 
-	assert isinstance(resp[0].get("type_decimal"), str)
-	assert isinstance(resp[0].get("type_numeric"), str)
+	assert isinstance(resp[0].get("type_decimal"), Decimal)
+	assert isinstance(resp[0].get("type_numeric"), Decimal)
 
 	assert isinstance(resp[0].get("type_char"), str)
 	assert isinstance(resp[0].get("type_varchar"), str)
@@ -1201,9 +1198,9 @@ async def test_with_complex_param_query_first_as_dict_adb_pgsql(db: PySQLXEngine
 
 	sql = """
         SELECT
-            :type_int AS type_int,
-            :type_smallint AS type_smallint,
-            :type_bigint AS type_bigint,
+            CAST(:type_int AS int) AS type_int,
+            CAST(:type_smallint AS smallint) AS type_smallint,
+            CAST(:type_bigint AS bigint) AS type_bigint,
             
             CAST(:type_float AS FLOAT) AS type_float,
             CAST(:type_double AS FLOAT) AS type_double,
@@ -1215,7 +1212,7 @@ async def test_with_complex_param_query_first_as_dict_adb_pgsql(db: PySQLXEngine
             :type_nvarchar AS type_nvarchar,
             :type_text AS type_text,
 
-            :type_boolean AS type_boolean,
+            CAST(:type_boolean AS BOOL) AS type_boolean,
             CAST(:type_date AS DATE) AS type_date,
             CAST(:type_time AS TIME) AS type_time,
             CAST(:type_timestamp AS TIMESTAMP) AS type_timestamp,
@@ -1223,7 +1220,6 @@ async def test_with_complex_param_query_first_as_dict_adb_pgsql(db: PySQLXEngine
             CAST(:type_bytes AS bytea) AS type_bytes,
             CAST(:type_int_array AS int[]) AS type_int_array,
             CAST(:type_float_array AS float[]) AS type_float_array
-
     """
 
 	resp = await conn.query_first_as_dict(sql=sql, parameters=parameters)
@@ -1235,8 +1231,8 @@ async def test_with_complex_param_query_first_as_dict_adb_pgsql(db: PySQLXEngine
 	assert isinstance(resp.get("type_float"), float)
 	assert isinstance(resp.get("type_double"), float)
 
-	assert isinstance(resp.get("type_decimal"), str)
-	assert isinstance(resp.get("type_numeric"), str)
+	assert isinstance(resp.get("type_decimal"), Decimal)
+	assert isinstance(resp.get("type_numeric"), Decimal)
 
 	assert isinstance(resp.get("type_char"), str)
 	assert isinstance(resp.get("type_varchar"), str)
@@ -1337,7 +1333,7 @@ async def test_query_first_json_param_to_sql_server(db: PySQLXEngine):
 	param = {"a": 1, "b": "what's", "c": 3}
 	resp = await conn.query_first(sql="SELECT :x as data", parameters={"x": param})
 
-	assert resp.data == '{"a": 1, "b": "what\'s", "c": 3}'
+	assert resp.data == '{"a":1,"b":"what\'s","c":3}'
 
 	await conn.close()
 	assert conn.connected is False

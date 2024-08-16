@@ -5,949 +5,949 @@ from .._core.parser import BaseRow, MyModel, DictParam  # import necessary using
 from .const import ISOLATION_LEVEL
 
 class PySQLXEngineSync:
-    """
-    ## Description
+	"""
+	## Description
 
-    PySQLXEngine is an engine to run pure sql, but you have flexibility to use how you want.
+	PySQLXEngine is an engine to run pure sql, but you have flexibility to use how you want.
 
-    All SQL that is executed using the PySQLXEngine is atomic; that is, only one statement is performed at a time.
+	All SQL that is executed using the PySQLXEngine is atomic; that is, only one statement is performed at a time.
 
-    Only the first one will be completed if you send an Insert and a select.
-    This is one of the ways to deal with SQL ingestion.
+	Only the first one will be completed if you send an Insert and a select.
+	This is one of the ways to deal with SQL ingestion.
 
-    By default the `BEGIN`, `COMMIT` and `ROLLBACK` is automatic (CASE DATABASE NOT NEED REQUIRES ISOLATION FIRST), if the sql is valid, is committed, if not, is rolled back.
+	By default the `BEGIN`, `COMMIT` and `ROLLBACK` is automatic (CASE DATABASE NOT NEED REQUIRES ISOLATION FIRST), if the sql is valid, is committed, if not, is rolled back.
 
-    But you can use the `BEGIN` and `COMMIT` or `ROLLBACK` to control the transaction.
+	But you can use the `BEGIN` and `COMMIT` or `ROLLBACK` to control the transaction.
 
-    ---
+	---
 
-    ### Arguments:
+	### Arguments:
 
-        `uri(str)`: uri of the database, example `postgresql://user:pass@host:port/db?schema=sample`
+	    `uri(str)`: uri of the database, example `postgresql://user:pass@host:port/db?schema=sample`
 
-    ---
+	---
 
-    ### Examples:
+	### Examples:
 
 
-    ##### PostgreSQL
-    ```python
-    from pysqlx_engine import PySQLXEngineSync
+	##### PostgreSQL
+	```python
+	from pysqlx_engine import PySQLXEngineSync
 
-    uri = "postgresql://user:pass@host:port/db?schema=sample"
-    db = PySQLXEngineSync(uri=uri)
-    db.connect()
-    ```
-    ---
-    ##### MySQL
-    ```python
-    from pysqlx_engine import PySQLXEngineSync
+	uri = "postgresql://user:pass@host:port/db?schema=sample"
+	db = PySQLXEngineSync(uri=uri)
+	db.connect()
+	```
+	---
+	##### MySQL
+	```python
+	from pysqlx_engine import PySQLXEngineSync
 
-    uri = "mysql://user:pass@host:port/db?schema=sample"
-    db = PySQLXEngineSync(uri=uri)
-    db.connect()
-    ```
-    ---
-    ##### Microsoft SQL Server
-    ```python
-    from pysqlx_engine import PySQLXEngineSync
+	uri = "mysql://user:pass@host:port/db?schema=sample"
+	db = PySQLXEngineSync(uri=uri)
+	db.connect()
+	```
+	---
+	##### Microsoft SQL Server
+	```python
+	from pysqlx_engine import PySQLXEngineSync
 
-    uri = "sqlserver://host:port;initial catalog=sample;user=sa;password=pass;"
-    db = PySQLXEngineSync(uri=uri)
-    db.connect()
-    ```
-    ---
-    ##### SQLite
-    ```python
-    from pysqlx_engine import PySQLXEngineSync
+	uri = "sqlserver://host:port;initial catalog=sample;user=sa;password=pass;"
+	db = PySQLXEngineSync(uri=uri)
+	db.connect()
+	```
+	---
+	##### SQLite
+	```python
+	from pysqlx_engine import PySQLXEngineSync
 
-    uri = "sqlite:./dev.db"
-    db = PySQLXEngineSync(uri=uri)
-    db.connect()
-    ```
-    """
+	uri = "sqlite:./dev.db"
+	db = PySQLXEngineSync(uri=uri)
+	db.connect()
+	```
+	"""
 
-    __slots__ = ["uri", "connected", "_conn", "_provider"]
+	__slots__ = ["uri", "connected", "_conn", "_provider"]
 
-    uri: str
-    connected: bool
+	uri: str
+	connected: bool
 
-    def __init__(self, uri: str) -> "None": ...
-    def __del__(self):
-        """
-        ## Description
+	def __init__(self, uri: str) -> "None": ...
+	def __del__(self):
+		"""
+		## Description
 
-        Automatically close the connection when the object is deleted.
-        """
-        ...
-    def is_healthy(self) -> "bool":
-        """
-        ## Description
+		Automatically close the connection when the object is deleted.
+		"""
+		...
+	def is_healthy(self) -> "bool":
+		"""
+		## Description
 
-        Check if the connection is healthy.
+		Check if the connection is healthy.
 
-        Returns false, if connection is considered to not be in a working state.
+		Returns false, if connection is considered to not be in a working state.
 
-        ---
+		---
 
-        ### Helper
+		### Helper
 
-            * Arguments: ``None``
+		    * Arguments: ``None``
 
-            * Returns: ``bool``
+		    * Returns: ``bool``
 
-            * Raises: ``None``
+		    * Raises: ``None``
 
-        """
-        ...
-    def requires_isolation_first(self) -> "bool":
-        """
-        ## Description
+		"""
+		...
+	def requires_isolation_first(self) -> "bool":
+		"""
+		## Description
 
-        Returns `True` if the connection requires isolation first, `False` otherwise.
+		Returns `True` if the connection requires isolation first, `False` otherwise.
 
-        This is used to determine if the connection should be isolated before executing a query.
+		This is used to determine if the connection should be isolated before executing a query.
 
-        For example, sqlserver requires isolation before executing a statement using begin in some cases.
+		For example, sqlserver requires isolation before executing a statement using begin in some cases.
 
-        Signals if the isolation level SET needs to happen before or after the BEGIN.
+		Signals if the isolation level SET needs to happen before or after the BEGIN.
 
-        ---
+		---
 
-        ### Helper
+		### Helper
 
-            * Arguments: ``None``
+		    * Arguments: ``None``
 
-            * Returns: ``bool``
+		    * Returns: ``bool``
 
-            * Raises: ``None``
+		    * Raises: ``None``
 
-        ---
+		---
 
-        ### Extra documentation:
-            * [MSSQL](https://learn.microsoft.com/en-us/sql/t-sql/language-elements/transaction-isolation-levels)
-            * [Postgres](https://www.postgresql.org/docs/current/sql-set-transaction.html)
-            * [MySQL](https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html)
-            * [SQLite](https://www.sqlite.org/isolation.html)
-        """
-        ...
-    def __enter__(self) -> "PySQLXEngineSync":
-        """
-        ## Description
+		### Extra documentation:
+		    * [MSSQL](https://learn.microsoft.com/en-us/sql/t-sql/language-elements/transaction-isolation-levels)
+		    * [Postgres](https://www.postgresql.org/docs/current/sql-set-transaction.html)
+		    * [MySQL](https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html)
+		    * [SQLite](https://www.sqlite.org/isolation.html)
+		"""
+		...
+	def __enter__(self) -> "PySQLXEngineSync":
+		"""
+		## Description
 
-        Open a connection to the database. using `with`.
-        """
-        ...
-    def __exit__(
-        self, exc_type: Optional[Type[BaseException]], exc: Optional[BaseException], exc_tb: Optional[TracebackType]
-    ): ...
-    def connect(self) -> "None":
-        """
-        ## Description
+		Open a connection to the database. using `with`.
+		"""
+		...
+	def __exit__(
+		self, exc_type: Optional[Type[BaseException]], exc: Optional[BaseException], exc_tb: Optional[TracebackType]
+	): ...
+	def connect(self) -> "None":
+		"""
+		## Description
 
-        Each connection instance is lazy; only after ``.connect()`` is the database checked and the connection established.
+		Each connection instance is lazy; only after ``.connect()`` is the database checked and the connection established.
 
-        When you use ``async with`` the connection is automatically opened and closed.
+		When you use ``async with`` the connection is automatically opened and closed.
 
-        ---
+		---
 
-        ### Helper
+		### Helper
 
-            * Arguments: ``None``
+		    * Arguments: ``None``
 
-            * Returns: ``None``
+		    * Returns: ``None``
 
-            * Raises: ``ConnectError``
+		    * Raises: ``ConnectError``
 
-        ---
+		---
 
-        ### Example
-        ```python
-            from pysqlx_engine import PySQLXEngineSync
+		### Example
+		```python
+		    from pysqlx_engine import PySQLXEngineSync
 
-            uri = "postgresql://user:pass@host:port/db?schema=sample"
-            db = PySQLXEngineSync(uri=uri)
-            db.connect()
-        ```
-        """
-        ...
-    def close(self) -> "None":
-        """
-        ## Description
+		    uri = "postgresql://user:pass@host:port/db?schema=sample"
+		    db = PySQLXEngineSync(uri=uri)
+		    db.connect()
+		```
+		"""
+		...
+	def close(self) -> "None":
+		"""
+		## Description
 
-        It's a good idea to close the connection, but PySQLXEngine has the core in Rust;
-        closing is automatic when your code leaves the context.
+		It's a good idea to close the connection, but PySQLXEngine has the core in Rust;
+		closing is automatic when your code leaves the context.
 
-        Even if you don't close the connection, don't worry; when the process ends automatically,
-        the connections will be closed, so the database doesn't have an idle connection.
+		Even if you don't close the connection, don't worry; when the process ends automatically,
+		the connections will be closed, so the database doesn't have an idle connection.
 
-        ---
+		---
 
-        ### Helper
+		### Helper
 
-            * Arguments: ``None``
+		    * Arguments: ``None``
 
-            * Returns: ``None``
+		    * Returns: ``None``
 
-            * Raises: ``None``
+		    * Raises: ``None``
 
-        ---
+		---
 
-        ### Example
-        ```python
-            from pysqlx_engine import PySQLXEngineSync
+		### Example
+		```python
+		    from pysqlx_engine import PySQLXEngineSync
 
-            uri = "postgresql://user:pass@host:port/db?schema=sample"
-            db = PySQLXEngineSync(uri=uri)
-            db.connect()
-            db.close()
-        ```
-        """
-        ...
-    def raw_cmd(self, sql: str) -> "None":
-        """
-        ## Description
-        Run a command in the database, for queries that can't be run using prepared statements(queries/execute).
+		    uri = "postgresql://user:pass@host:port/db?schema=sample"
+		    db = PySQLXEngineSync(uri=uri)
+		    db.connect()
+		    db.close()
+		```
+		"""
+		...
+	def raw_cmd(self, sql: str) -> "None":
+		"""
+		## Description
+		Run a command in the database, for queries that can't be run using prepared statements(queries/execute).
 
-        ---
+		---
 
-        ### Helper
+		### Helper
 
-            * Arguments:
+		    * Arguments:
 
-                ``sql(str)``: sql to be executed.
+		        ``sql(str)``: sql to be executed.
 
-            * Returns: ``None``
+		    * Returns: ``None``
 
-            * Raises: ``RawCmdError``
+		    * Raises: ``RawCmdError``
 
-        ---
+		---
 
-        ### Example
-        ```python
-            from pysqlx_engine import PySQLXEngineSync
+		### Example
+		```python
+		    from pysqlx_engine import PySQLXEngineSync
 
-            uri = "postgresql://user:pass@host:port/db?schema=sample"
-            db = PySQLXEngineSync(uri=uri)
-            db.connect()
+		    uri = "postgresql://user:pass@host:port/db?schema=sample"
+		    db = PySQLXEngineSync(uri=uri)
+		    db.connect()
 
-            db.raw_cmd(sql="SET TRANSACTION ISOLATION LEVEL READ COMMITTED;")
+		    db.raw_cmd(sql="SET TRANSACTION ISOLATION LEVEL READ COMMITTED;")
 
-        ```
-        """
-        ...
-    # all
-    @overload
-    def query(self, sql: str, parameters: Optional[DictParam] = None) -> Union[List[BaseRow], List]:
-        """
-        ## Description
+		```
+		"""
+		...
+	# all
+	@overload
+	def query(self, sql: str, parameters: Optional[DictParam] = None) -> Union[List[BaseRow], List]:
+		"""
+		## Description
 
-        Returns all rows from query result as``BaseRow list``, ``MyModel list`` or ``empty list``.
+		Returns all rows from query result as``BaseRow list``, ``MyModel list`` or ``empty list``.
 
-        ---
+		---
 
-        ### Helper
-            * Arguments:
+		### Helper
+		    * Arguments:
 
-                ``sql(str)``: sql query to be executed.
+		        ``sql(str)``: sql query to be executed.
 
-                ``parameters(dict)``: (default is None) parameters must be a dictionary with the name of the parameter and the value.
+		        ``parameters(dict)``: (default is None) parameters must be a dictionary with the name of the parameter and the value.
 
-                ``model(BaseRow)``: (default is None) is your model that inherits from BaseRow.
+		        ``model(BaseRow)``: (default is None) is your model that inherits from BaseRow.
 
-            * Returns:
+		    * Returns:
 
-                ``List[BaseRow] | List[MyModel] | List``: BaseRow list, MyModel list or empty list.
+		        ``List[BaseRow] | List[MyModel] | List``: BaseRow list, MyModel list or empty list.
 
-            * Raises: ``QueryError``|``TypeError`` | ``ParameterInvalidProviderError``|``ParameterInvalidValueError``|``ParameterInvalidJsonValueError``
+		    * Raises: ``QueryError``|``TypeError`` | ``ParameterInvalidProviderError``|``ParameterInvalidValueError``|``ParameterInvalidJsonValueError``
 
-        ---
+		---
 
-        ### Parameters Helper
+		### Parameters Helper
 
-        Parameters are built into SQL at the application level; that is, the SQL and separate parameters are not sent to the database;
-        although most databases support this type of operation, the PySQLXEngine does it before calling the database to avoid possible incompatibilities.
-        This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
+		Parameters are built into SQL at the application level; that is, the SQL and separate parameters are not sent to the database;
+		although most databases support this type of operation, the PySQLXEngine does it before calling the database to avoid possible incompatibilities.
+		This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
 
-        #### SQL with parameters syntax
-            * SQL: ``SELECT * FROM table WHERE id = :id``
-            * Parameters: ``{"id": 1}``
+		#### SQL with parameters syntax
+		    * SQL: ``SELECT * FROM table WHERE id = :id``
+		    * Parameters: ``{"id": 1}``
 
-        #### Parameters(dict):
+		#### Parameters(dict):
 
-            * dict ``key`` must be a valid string.
-            * dict ``value`` can be one of the types: (
-                ``bool``,
-                ``bytes``,
-                ``date``,
-                ``datetime``,
-                ``Decimal``,
-                ``dict``,
-                ``Enum``, # Enum must be a subclass of enum.Enum
-                ``float``,
-                ``int``,
-                ``list``,
-                ``str``,
-                ``time``,
-                ``tuple``,
-                ``UUID``,
-                ``None``
-            )
+		    * dict ``key`` must be a valid string.
+		    * dict ``value`` can be one of the types: (
+		        ``bool``,
+		        ``bytes``,
+		        ``date``,
+		        ``datetime``,
+		        ``Decimal``,
+		        ``dict``,
+		        ``Enum``, # Enum must be a subclass of enum.Enum
+		        ``float``,
+		        ``int``,
+		        ``list``,
+		        ``str``,
+		        ``time``,
+		        ``tuple``,
+		        ``UUID``,
+		        ``None``
+		    )
 
-        #### Python types vs SQL types:
+		#### Python types vs SQL types:
 
-            [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
+		    [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
 
-        ```
-            * bool     -> bool|bit|boolean|tinyint|etc
-            * bytes    -> bytea|binary|varbinary|etc
-            * date     -> date|nvarchar|varchar|string|etc
-            * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
-            * Decimal  -> decimal|numeric|etc
-            * dict     -> json|jsonb|nvarchar|varchar|string|etc
-            * float    -> float|real|numeric|etc
-            * int      -> int|integer|smallint|bigint|tinyint|etc
-            * list     -> json|jsonb|nvarchar|varchar|string|etc
-            * str      -> varchar|text|nvarchar|char|etc
-            * time     -> time|nvarchar|varchar|string|etc
-            * tuple    -> array(Postgres Native), another database: error.
-            * UUID     -> uuid|varchar|text|nvarchar|etc
-            * Enum     -> varchar|text|nvarchar|etc
-            * None     -> null
-        ```
+		```
+		    * bool     -> bool|bit|boolean|tinyint|etc
+		    * bytes    -> bytea|binary|varbinary|etc
+		    * date     -> date|nvarchar|varchar|string|etc
+		    * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
+		    * Decimal  -> decimal|numeric|etc
+		    * dict     -> json|jsonb|nvarchar|varchar|string|etc
+		    * float    -> float|real|numeric|etc
+		    * int      -> int|integer|smallint|bigint|tinyint|etc
+		    * list     -> json|jsonb|nvarchar|varchar|string|etc
+		    * str      -> varchar|text|nvarchar|char|etc
+		    * time     -> time|nvarchar|varchar|string|etc
+		    * tuple    -> array(Postgres Native), another database: error.
+		    * UUID     -> uuid|varchar|text|nvarchar|etc
+		    * Enum     -> varchar|text|nvarchar|etc
+		    * None     -> null
+		```
 
-        ---
+		---
 
-        ### Example
-        ```python
-            from pysqlx_engine import PySQLXEngineSync
+		### Example
+		```python
+		    from pysqlx_engine import PySQLXEngineSync
 
-            uri = "postgresql://user:pass@host:port/db?schema=sample"
-            db = PySQLXEngineSync(uri=uri)
-            db.connect()
+		    uri = "postgresql://user:pass@host:port/db?schema=sample"
+		    db = PySQLXEngineSync(uri=uri)
+		    db.connect()
 
-            result = db.query("SELECT 1 as id, 'rian' as name")
-            print(result)
-            # output -> [BaseRow(id=1, name='rian')]
+		    result = db.query("SELECT 1 as id, 'rian' as name")
+		    print(result)
+		    # output -> [BaseRow(id=1, name='rian')]
 
-            result = db.query(sql="SELECT 1 as :id, 'rian' as name", parameters={"id": 1})
-            print(result)
-            # output -> [BaseRow(id=1, name='rian')]
+		    result = db.query(sql="SELECT 1 as :id, 'rian' as name", parameters={"id": 1})
+		    print(result)
+		    # output -> [BaseRow(id=1, name='rian')]
 
-            db.close()
+		    db.close()
 
-        ```
-        """
-        ...
-    @overload
-    def query(
-        self, sql: str, parameters: Optional[DictParam] = None, model: Optional[Type["MyModel"]] = None
-    ) -> Union[List[Type["MyModel"]], List]: ...
-    # dict
-    def query_as_dict(self, sql: str, parameters: Optional[DictParam] = None) -> Union[List[Dict[str, Any]], List]:
-        """
-        ## Description
+		```
+		"""
+		...
+	@overload
+	def query(
+		self, sql: str, parameters: Optional[DictParam] = None, model: Optional[Type["MyModel"]] = None
+	) -> Union[List[Type["MyModel"]], List]: ...
+	# dict
+	def query_as_dict(self, sql: str, parameters: Optional[DictParam] = None) -> Union[List[Dict[str, Any]], List]:
+		"""
+		## Description
 
-        Returns all rows from query result as ``dict list`` or ``empty list``.
+		Returns all rows from query result as ``dict list`` or ``empty list``.
 
-        ---
+		---
 
-        ### Helper
-            * Arguments:
+		### Helper
+		    * Arguments:
 
-                ``sql(str)``: sql query to be executed
+		        ``sql(str)``: sql query to be executed
 
-                ``parameters(dict)``: (default is None) parameters must be a dictionary with the name of the parameter and the value.
+		        ``parameters(dict)``: (default is None) parameters must be a dictionary with the name of the parameter and the value.
 
-            * Returns:
+		    * Returns:
 
-                ``List[Dict[str, Any]] | List``: dict list or empty list.
+		        ``List[Dict[str, Any]] | List``: dict list or empty list.
 
-            * Raises: ``QueryError``|``TypeError`` | ``ParameterInvalidProviderError``|``ParameterInvalidValueError``|``ParameterInvalidJsonValueError``
+		    * Raises: ``QueryError``|``TypeError`` | ``ParameterInvalidProviderError``|``ParameterInvalidValueError``|``ParameterInvalidJsonValueError``
 
-        ---
+		---
 
-        ### Parameters Helper
+		### Parameters Helper
 
-        Parameters are built into SQL at the application level; that is, the SQL and separate parameters are not sent to the database;
-        although most databases support this type of operation, the PySQLXEngine does it before calling the database to avoid possible incompatibilities.
-        This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
+		Parameters are built into SQL at the application level; that is, the SQL and separate parameters are not sent to the database;
+		although most databases support this type of operation, the PySQLXEngine does it before calling the database to avoid possible incompatibilities.
+		This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
 
-        #### SQL with parameters syntax
-            * SQL: ``SELECT * FROM table WHERE id = :id``
-            * Parameters: ``{"id": 1}``
+		#### SQL with parameters syntax
+		    * SQL: ``SELECT * FROM table WHERE id = :id``
+		    * Parameters: ``{"id": 1}``
 
-        #### Parameters(dict):
+		#### Parameters(dict):
 
-            * dict ``key`` must be a valid string.
-            * dict ``value`` can be one of the types: (
-                ``bool``,
-                ``bytes``,
-                ``date``,
-                ``datetime``,
-                ``Decimal``,
-                ``dict``,
-                ``Enum``, # Enum must be a subclass of enum.Enum
-                ``float``,
-                ``int``,
-                ``list``,
-                ``str``,
-                ``time``,
-                ``tuple``,
-                ``UUID``,
-                ``None``
-            )
+		    * dict ``key`` must be a valid string.
+		    * dict ``value`` can be one of the types: (
+		        ``bool``,
+		        ``bytes``,
+		        ``date``,
+		        ``datetime``,
+		        ``Decimal``,
+		        ``dict``,
+		        ``Enum``, # Enum must be a subclass of enum.Enum
+		        ``float``,
+		        ``int``,
+		        ``list``,
+		        ``str``,
+		        ``time``,
+		        ``tuple``,
+		        ``UUID``,
+		        ``None``
+		    )
 
-        #### Python types vs SQL types:
+		#### Python types vs SQL types:
 
-            [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
+		    [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
 
-        ```
-            * bool     -> bool|bit|boolean|tinyint|etc
-            * bytes    -> bytea|binary|varbinary|etc
-            * date     -> date|nvarchar|varchar|string|etc
-            * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
-            * Decimal  -> decimal|numeric|etc
-            * dict     -> json|jsonb|nvarchar|varchar|string|etc
-            * float    -> float|real|numeric|etc
-            * int      -> int|integer|smallint|bigint|tinyint|etc
-            * list     -> json|jsonb|nvarchar|varchar|string|etc
-            * str      -> varchar|text|nvarchar|char|etc
-            * time     -> time|nvarchar|varchar|string|etc
-            * tuple    -> array(Postgres Native), another database: error.
-            * UUID     -> uuid|varchar|text|nvarchar|etc
-            * Enum     -> varchar|text|nvarchar|etc
-            * None     -> null
-        ```
+		```
+		    * bool     -> bool|bit|boolean|tinyint|etc
+		    * bytes    -> bytea|binary|varbinary|etc
+		    * date     -> date|nvarchar|varchar|string|etc
+		    * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
+		    * Decimal  -> decimal|numeric|etc
+		    * dict     -> json|jsonb|nvarchar|varchar|string|etc
+		    * float    -> float|real|numeric|etc
+		    * int      -> int|integer|smallint|bigint|tinyint|etc
+		    * list     -> json|jsonb|nvarchar|varchar|string|etc
+		    * str      -> varchar|text|nvarchar|char|etc
+		    * time     -> time|nvarchar|varchar|string|etc
+		    * tuple    -> array(Postgres Native), another database: error.
+		    * UUID     -> uuid|varchar|text|nvarchar|etc
+		    * Enum     -> varchar|text|nvarchar|etc
+		    * None     -> null
+		```
 
-        ---
+		---
 
-        ### Example
-        ```python
-            from pysqlx_engine import PySQLXEngineSync
+		### Example
+		```python
+		    from pysqlx_engine import PySQLXEngineSync
 
-            uri = "postgresql://user:pass@host:port/db?schema=sample"
-            db = PySQLXEngineSync(uri=uri)
-            db.connect()
+		    uri = "postgresql://user:pass@host:port/db?schema=sample"
+		    db = PySQLXEngineSync(uri=uri)
+		    db.connect()
 
-            result = db.query_as_dict(sql="SELECT 1 as id, 'rian' as name")
-            print(result)
-            # output -> [{'id': 1, 'name': 'rian'}]
+		    result = db.query_as_dict(sql="SELECT 1 as id, 'rian' as name")
+		    print(result)
+		    # output -> [{'id': 1, 'name': 'rian'}]
 
-            result = db.query_as_dict(sql="SELECT 1 as :id, 'rian' as name", parameters={"id": 1})
-            print(result)
-            # output -> [{'id': 1, 'name': 'rian'}]
+		    result = db.query_as_dict(sql="SELECT 1 as :id, 'rian' as name", parameters={"id": 1})
+		    print(result)
+		    # output -> [{'id': 1, 'name': 'rian'}]
 
-            db.close()
-        ```
-        """
-        ...
-    # fisrt
-    @overload
-    def query_first(self, sql: str, parameters: DictParam = None) -> Union[BaseRow, None]:
-        """
-        ## Description
+		    db.close()
+		```
+		"""
+		...
+	# fisrt
+	@overload
+	def query_first(self, sql: str, parameters: DictParam = None) -> Union[BaseRow, None]:
+		"""
+		## Description
 
-        Returns first row from query result as ``BaseRow``, ``MyModel`` or ``None``.
+		Returns first row from query result as ``BaseRow``, ``MyModel`` or ``None``.
 
-        ---
+		---
 
-        ### Helper
-            * Arguments:
+		### Helper
+		    * Arguments:
 
-                ``sql(str)``: sql query to be executed.
+		        ``sql(str)``: sql query to be executed.
 
-                ``parameters(dict)``: (default is None) parameters must be a dictionary with the name of the parameter and the value.
+		        ``parameters(dict)``: (default is None) parameters must be a dictionary with the name of the parameter and the value.
 
-                ``model(BaseRow)``: (default is None) is your model that inherits from BaseRow.
+		        ``model(BaseRow)``: (default is None) is your model that inherits from BaseRow.
 
-            * Returns:
+		    * Returns:
 
-                ``BaseRow | MyModel | None``: BaseRow, MyModel or None if no rows are found.
+		        ``BaseRow | MyModel | None``: BaseRow, MyModel or None if no rows are found.
 
-            * Raises: ``QueryError``|``TypeError`` | ``ParameterInvalidProviderError``|``ParameterInvalidValueError``|``ParameterInvalidJsonValueError``
+		    * Raises: ``QueryError``|``TypeError`` | ``ParameterInvalidProviderError``|``ParameterInvalidValueError``|``ParameterInvalidJsonValueError``
 
-        ---
+		---
 
-        ### Parameters Helper
+		### Parameters Helper
 
-        Parameters are built into SQL at the application level; that is, the SQL and separate parameters are not sent to the database;
-        although most databases support this type of operation, the PySQLXEngine does it before calling the database to avoid possible incompatibilities.
-        This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
+		Parameters are built into SQL at the application level; that is, the SQL and separate parameters are not sent to the database;
+		although most databases support this type of operation, the PySQLXEngine does it before calling the database to avoid possible incompatibilities.
+		This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
 
-        #### SQL with parameters syntax
-            * SQL: ``SELECT * FROM table WHERE id = :id``
-            * Parameters: ``{"id": 1}``
+		#### SQL with parameters syntax
+		    * SQL: ``SELECT * FROM table WHERE id = :id``
+		    * Parameters: ``{"id": 1}``
 
-        #### Parameters(dict):
+		#### Parameters(dict):
 
-            * dict ``key`` must be a valid string.
-            * dict ``value`` can be one of the types: (
-                ``bool``,
-                ``bytes``,
-                ``date``,
-                ``datetime``,
-                ``Decimal``,
-                ``dict``,
-                ``Enum``, # Enum must be a subclass of enum.Enum
-                ``float``,
-                ``int``,
-                ``list``,
-                ``str``,
-                ``time``,
-                ``tuple``,
-                ``UUID``,
-                ``None``
-            )
+		    * dict ``key`` must be a valid string.
+		    * dict ``value`` can be one of the types: (
+		        ``bool``,
+		        ``bytes``,
+		        ``date``,
+		        ``datetime``,
+		        ``Decimal``,
+		        ``dict``,
+		        ``Enum``, # Enum must be a subclass of enum.Enum
+		        ``float``,
+		        ``int``,
+		        ``list``,
+		        ``str``,
+		        ``time``,
+		        ``tuple``,
+		        ``UUID``,
+		        ``None``
+		    )
 
-        #### Python types vs SQL types:
+		#### Python types vs SQL types:
 
-            [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
+		    [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
 
-        ```
-            * bool     -> bool|bit|boolean|tinyint|etc
-            * bytes    -> bytea|binary|varbinary|etc
-            * date     -> date|nvarchar|varchar|string|etc
-            * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
-            * Decimal  -> decimal|numeric|etc
-            * dict     -> json|jsonb|nvarchar|varchar|string|etc
-            * float    -> float|real|numeric|etc
-            * int      -> int|integer|smallint|bigint|tinyint|etc
-            * list     -> json|jsonb|nvarchar|varchar|string|etc
-            * str      -> varchar|text|nvarchar|char|etc
-            * time     -> time|nvarchar|varchar|string|etc
-            * tuple    -> array(Postgres Native), another database: error.
-            * UUID     -> uuid|varchar|text|nvarchar|etc
-            * Enum     -> varchar|text|nvarchar|etc
-            * None     -> null
-        ```
+		```
+		    * bool     -> bool|bit|boolean|tinyint|etc
+		    * bytes    -> bytea|binary|varbinary|etc
+		    * date     -> date|nvarchar|varchar|string|etc
+		    * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
+		    * Decimal  -> decimal|numeric|etc
+		    * dict     -> json|jsonb|nvarchar|varchar|string|etc
+		    * float    -> float|real|numeric|etc
+		    * int      -> int|integer|smallint|bigint|tinyint|etc
+		    * list     -> json|jsonb|nvarchar|varchar|string|etc
+		    * str      -> varchar|text|nvarchar|char|etc
+		    * time     -> time|nvarchar|varchar|string|etc
+		    * tuple    -> array(Postgres Native), another database: error.
+		    * UUID     -> uuid|varchar|text|nvarchar|etc
+		    * Enum     -> varchar|text|nvarchar|etc
+		    * None     -> null
+		```
 
-        ---
+		---
 
-        ### Example
-        ```python
-            from pysqlx_engine import PySQLXEngineSync
+		### Example
+		```python
+		    from pysqlx_engine import PySQLXEngineSync
 
-            uri = "postgresql://user:pass@host:port/db?schema=sample"
-            db = PySQLXEngineSync(uri=uri)
-            db.connect()
+		    uri = "postgresql://user:pass@host:port/db?schema=sample"
+		    db = PySQLXEngineSync(uri=uri)
+		    db.connect()
 
-            result = db.query_first("SELECT 1 as id, 'rian' as name")
-            print(result)
-            # output -> BaseRow(id=1, name='rian')
+		    result = db.query_first("SELECT 1 as id, 'rian' as name")
+		    print(result)
+		    # output -> BaseRow(id=1, name='rian')
 
-            result = db.query_first(sql="SELECT 1 as :id, 'rian' as name", parameters={"id": 1})
-            print(result)
-            # output -> BaseRow(id=1, name='rian')
+		    result = db.query_first(sql="SELECT 1 as :id, 'rian' as name", parameters={"id": 1})
+		    print(result)
+		    # output -> BaseRow(id=1, name='rian')
 
-            db.close()
+		    db.close()
 
-        ```
-        """
-        ...
-    @overload
-    def query_first(
-        self, sql: str, parameters: DictParam = None, model: Type["MyModel"] = None
-    ) -> Union[Type["MyModel"], None]: ...
-    # dict
-    def query_first_as_dict(self, sql: str, parameters: Optional[DictParam] = None) -> Optional[Dict[str, Any]]:
-        """
-        ## Description
+		```
+		"""
+		...
+	@overload
+	def query_first(
+		self, sql: str, parameters: DictParam = None, model: Type["MyModel"] = None
+	) -> Union[Type["MyModel"], None]: ...
+	# dict
+	def query_first_as_dict(self, sql: str, parameters: Optional[DictParam] = None) -> Optional[Dict[str, Any]]:
+		"""
+		## Description
 
-        Returns first row from query result as ``dict`` or ``None``.
+		Returns first row from query result as ``dict`` or ``None``.
 
-        ---
+		---
 
-        ### Helper
-            * Arguments:
+		### Helper
+		    * Arguments:
 
-                ``sql(str)``: sql query to be executed.
+		        ``sql(str)``: sql query to be executed.
 
-                ``parameters(dict)``: (default is None) parameters must be a dictionary with the name of the parameter and the value.
+		        ``parameters(dict)``: (default is None) parameters must be a dictionary with the name of the parameter and the value.
 
-            * Returns:
+		    * Returns:
 
-                ``Dict[str, Any] | None``: dict or None.
+		        ``Dict[str, Any] | None``: dict or None.
 
-            * Raises: ``QueryError``|``TypeError`` | ``ParameterInvalidProviderError``|``ParameterInvalidValueError``|``ParameterInvalidJsonValueError``
+		    * Raises: ``QueryError``|``TypeError`` | ``ParameterInvalidProviderError``|``ParameterInvalidValueError``|``ParameterInvalidJsonValueError``
 
-        ---
+		---
 
-        ### Parameters Helper
+		### Parameters Helper
 
-        Parameters are built into SQL at the application level; that is, the SQL and separate parameters are not sent to the database;
-        although most databases support this type of operation, the PySQLXEngine does it before calling the database to avoid possible incompatibilities.
-        This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
+		Parameters are built into SQL at the application level; that is, the SQL and separate parameters are not sent to the database;
+		although most databases support this type of operation, the PySQLXEngine does it before calling the database to avoid possible incompatibilities.
+		This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
 
-        #### SQL with parameters syntax
-            * SQL: ``SELECT * FROM table WHERE id = :id``
-            * Parameters: ``{"id": 1}``
+		#### SQL with parameters syntax
+		    * SQL: ``SELECT * FROM table WHERE id = :id``
+		    * Parameters: ``{"id": 1}``
 
-        #### Parameters(dict):
+		#### Parameters(dict):
 
-            * dict ``key`` must be a valid string.
-            * dict ``value`` can be one of the types: (
-                ``bool``,
-                ``bytes``,
-                ``date``,
-                ``datetime``,
-                ``Decimal``,
-                ``dict``,
-                ``Enum``, # Enum must be a subclass of enum.Enum
-                ``float``,
-                ``int``,
-                ``list``,
-                ``str``,
-                ``time``,
-                ``tuple``,
-                ``UUID``,
-                ``None``
-            )
+		    * dict ``key`` must be a valid string.
+		    * dict ``value`` can be one of the types: (
+		        ``bool``,
+		        ``bytes``,
+		        ``date``,
+		        ``datetime``,
+		        ``Decimal``,
+		        ``dict``,
+		        ``Enum``, # Enum must be a subclass of enum.Enum
+		        ``float``,
+		        ``int``,
+		        ``list``,
+		        ``str``,
+		        ``time``,
+		        ``tuple``,
+		        ``UUID``,
+		        ``None``
+		    )
 
-        #### Python types vs SQL types:
+		#### Python types vs SQL types:
 
-            [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
+		    [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
 
-        ```
-            * bool     -> bool|bit|boolean|tinyint|etc
-            * bytes    -> bytea|binary|varbinary|etc
-            * date     -> date|nvarchar|varchar|string|etc
-            * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
-            * Decimal  -> decimal|numeric|etc
-            * dict     -> json|jsonb|nvarchar|varchar|string|etc
-            * float    -> float|real|numeric|etc
-            * int      -> int|integer|smallint|bigint|tinyint|etc
-            * list     -> json|jsonb|nvarchar|varchar|string|etc
-            * str      -> varchar|text|nvarchar|char|etc
-            * time     -> time|nvarchar|varchar|string|etc
-            * tuple    -> array(Postgres Native), another database: error.
-            * UUID     -> uuid|varchar|text|nvarchar|etc
-            * Enum     -> varchar|text|nvarchar|etc
-            * None     -> null
-        ```
+		```
+		    * bool     -> bool|bit|boolean|tinyint|etc
+		    * bytes    -> bytea|binary|varbinary|etc
+		    * date     -> date|nvarchar|varchar|string|etc
+		    * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
+		    * Decimal  -> decimal|numeric|etc
+		    * dict     -> json|jsonb|nvarchar|varchar|string|etc
+		    * float    -> float|real|numeric|etc
+		    * int      -> int|integer|smallint|bigint|tinyint|etc
+		    * list     -> json|jsonb|nvarchar|varchar|string|etc
+		    * str      -> varchar|text|nvarchar|char|etc
+		    * time     -> time|nvarchar|varchar|string|etc
+		    * tuple    -> array(Postgres Native), another database: error.
+		    * UUID     -> uuid|varchar|text|nvarchar|etc
+		    * Enum     -> varchar|text|nvarchar|etc
+		    * None     -> null
+		```
 
-        ---
+		---
 
-        ### Example
-        ```python
-            from pysqlx_engine import PySQLXEngineSync
+		### Example
+		```python
+		    from pysqlx_engine import PySQLXEngineSync
 
-            uri = "postgresql://user:pass@host:port/db?schema=sample"
-            db = PySQLXEngineSync(uri=uri)
-            db.connect()
+		    uri = "postgresql://user:pass@host:port/db?schema=sample"
+		    db = PySQLXEngineSync(uri=uri)
+		    db.connect()
 
-            result = db.query_first_as_dict(sql="SELECT 1 as id, 'rian' as name")
-            print(result)
-            # output -> {'id': 1, 'name': 'rian'}
-
-            result = db.query_first_as_dict(sql="SELECT 1 as :id, 'rian' as name", parameters={"id": 1})
-            print(result)
-            # output -> {'id': 1, 'name': 'rian'}
-
-            db.close()
-        ```
-        """
-        ...
-    # --
-    def execute(self, sql: str, parameters: Optional[DictParam] = None) -> "int":
-        """
-        ## Description
+		    result = db.query_first_as_dict(sql="SELECT 1 as id, 'rian' as name")
+		    print(result)
+		    # output -> {'id': 1, 'name': 'rian'}
+
+		    result = db.query_first_as_dict(sql="SELECT 1 as :id, 'rian' as name", parameters={"id": 1})
+		    print(result)
+		    # output -> {'id': 1, 'name': 'rian'}
+
+		    db.close()
+		```
+		"""
+		...
+	# --
+	def execute(self, sql: str, parameters: Optional[DictParam] = None) -> "int":
+		"""
+		## Description
 
-        Executes a query/sql and returns the number of rows affected.
+		Executes a query/sql and returns the number of rows affected.
 
-        ---
+		---
 
-        ### Helper
+		### Helper
 
-            * Arguments:
+		    * Arguments:
 
-                ``sql(str)``:  sql to be executed.
+		        ``sql(str)``:  sql to be executed.
 
-                ``parameters(dict)``: (Default is None) parameters must be a dictionary with the name of the parameter and the value.
+		        ``parameters(dict)``: (Default is None) parameters must be a dictionary with the name of the parameter and the value.
 
-            * Returns: ``int``: number of rows affected.
+		    * Returns: ``int``: number of rows affected.
 
-            * Raises: ``ExecuteError``|``TypeError`` | ``ParameterInvalidProviderError``|``ParameterInvalidValueError``|``ParameterInvalidJsonValueError``
+		    * Raises: ``ExecuteError``|``TypeError`` | ``ParameterInvalidProviderError``|``ParameterInvalidValueError``|``ParameterInvalidJsonValueError``
 
-        ### Parameters Helper
+		### Parameters Helper
 
-        Parameters are built into SQL at the application level; that is, the SQL and separate parameters are not sent to the database;
-        although most databases support this type of operation, the PySQLXEngine does it before calling the database to avoid possible incompatibilities.
-        This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
+		Parameters are built into SQL at the application level; that is, the SQL and separate parameters are not sent to the database;
+		although most databases support this type of operation, the PySQLXEngine does it before calling the database to avoid possible incompatibilities.
+		This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
 
-        #### SQL with parameters syntax
-            * SQL: ``SELECT * FROM table WHERE id = :id``
-            * Parameters: ``{"id": 1}``
+		#### SQL with parameters syntax
+		    * SQL: ``SELECT * FROM table WHERE id = :id``
+		    * Parameters: ``{"id": 1}``
 
-        #### Parameters(dict):
+		#### Parameters(dict):
 
-            * dict ``key`` must be a valid string.
-            * dict ``value`` can be one of the types: (
-                ``bool``,
-                ``bytes``,
-                ``date``,
-                ``datetime``,
-                ``Decimal``,
-                ``dict``,
-                ``Enum``, # Enum must be a subclass of enum.Enum
-                ``float``,
-                ``int``,
-                ``list``,
-                ``str``,
-                ``time``,
-                ``tuple``,
-                ``UUID``,
-                ``None``
-            )
+		    * dict ``key`` must be a valid string.
+		    * dict ``value`` can be one of the types: (
+		        ``bool``,
+		        ``bytes``,
+		        ``date``,
+		        ``datetime``,
+		        ``Decimal``,
+		        ``dict``,
+		        ``Enum``, # Enum must be a subclass of enum.Enum
+		        ``float``,
+		        ``int``,
+		        ``list``,
+		        ``str``,
+		        ``time``,
+		        ``tuple``,
+		        ``UUID``,
+		        ``None``
+		    )
 
-        #### Python types vs SQL types:
+		#### Python types vs SQL types:
 
-            [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
+		    [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
 
-        ```
-            * bool     -> bool|bit|boolean|tinyint|etc
-            * bytes    -> bytea|binary|varbinary|etc
-            * date     -> date|nvarchar|varchar|string|etc
-            * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
-            * Decimal  -> decimal|numeric|etc
-            * dict     -> json|jsonb|nvarchar|varchar|string|etc
-            * float    -> float|real|numeric|etc
-            * int      -> int|integer|smallint|bigint|tinyint|etc
-            * list     -> json|jsonb|nvarchar|varchar|string|etc
-            * str      -> varchar|text|nvarchar|char|etc
-            * time     -> time|nvarchar|varchar|string|etc
-            * tuple    -> array(Postgres Native), another database: error.
-            * UUID     -> uuid|varchar|text|nvarchar|etc
-            * Enum     -> varchar|text|nvarchar|etc
-            * None     -> null
-        ```
+		```
+		    * bool     -> bool|bit|boolean|tinyint|etc
+		    * bytes    -> bytea|binary|varbinary|etc
+		    * date     -> date|nvarchar|varchar|string|etc
+		    * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
+		    * Decimal  -> decimal|numeric|etc
+		    * dict     -> json|jsonb|nvarchar|varchar|string|etc
+		    * float    -> float|real|numeric|etc
+		    * int      -> int|integer|smallint|bigint|tinyint|etc
+		    * list     -> json|jsonb|nvarchar|varchar|string|etc
+		    * str      -> varchar|text|nvarchar|char|etc
+		    * time     -> time|nvarchar|varchar|string|etc
+		    * tuple    -> array(Postgres Native), another database: error.
+		    * UUID     -> uuid|varchar|text|nvarchar|etc
+		    * Enum     -> varchar|text|nvarchar|etc
+		    * None     -> null
+		```
 
-        ---
+		---
 
-        ### Example
-        ```python
-            from pysqlx_engine import PySQLXEngineSync
+		### Example
+		```python
+		    from pysqlx_engine import PySQLXEngineSync
 
-            uri = "postgresql://user:pass@host:port/db?schema=sample"
-            db = PySQLXEngineSync(uri=uri)
-            db.connect()
+		    uri = "postgresql://user:pass@host:port/db?schema=sample"
+		    db = PySQLXEngineSync(uri=uri)
+		    db.connect()
 
-            result = db.execute("INSERT INTO users (name) VALUES ('rian')")
-            print(f"rows_affected = {result}")
-            # output -> rows_affected = 1
-        ```
-        """
-        ...
-    def set_isolation_level(self, isolation_level: ISOLATION_LEVEL) -> "None":
-        """
-        ## Description
+		    result = db.execute("INSERT INTO users (name) VALUES ('rian')")
+		    print(f"rows_affected = {result}")
+		    # output -> rows_affected = 1
+		```
+		"""
+		...
+	def set_isolation_level(self, isolation_level: ISOLATION_LEVEL) -> "None":
+		"""
+		## Description
 
-        Sets the isolation level of the connection.
+		Sets the isolation level of the connection.
 
-        The isolation level is set before the transaction is started.
-        Is used to separate the transaction per level.
+		The isolation level is set before the transaction is started.
+		Is used to separate the transaction per level.
 
-        The `Snapshot` isolation level is supported by MS SQL Server.
+		The `Snapshot` isolation level is supported by MS SQL Server.
 
-        The Sqlite does not support the isolation level.
+		The Sqlite does not support the isolation level.
 
-        ---
+		---
 
-        ### Helper
+		### Helper
 
-            * Arguments: ``isolation_level(str)``: isolation level to be set (
-                ReadUncommitted,
-                ReadCommitted,
-                RepeatableRead,
-                Snapshot,
-                Serializable
-            )
+		    * Arguments: ``isolation_level(str)``: isolation level to be set (
+		        ReadUncommitted,
+		        ReadCommitted,
+		        RepeatableRead,
+		        Snapshot,
+		        Serializable
+		    )
 
-            * Returns: ``None``
+		    * Returns: ``None``
 
-            * Raises: ``IsolationLevelError``, ``ValueError``
+		    * Raises: ``IsolationLevelError``, ``ValueError``
 
-        ---
+		---
 
-        ### Example
-        ```python
-            from pysqlx_engine import PySQLXEngineSync
+		### Example
+		```python
+		    from pysqlx_engine import PySQLXEngineSync
 
-            uri = "postgresql://user:pass@host:port/db?schema=sample"
-            db = PySQLXEngineSync(uri=uri)
-            db.connect()
-            db.set_isolation_level(isolation_level="ReadUncommitted")
-        ```
-        ---
+		    uri = "postgresql://user:pass@host:port/db?schema=sample"
+		    db = PySQLXEngineSync(uri=uri)
+		    db.connect()
+		    db.set_isolation_level(isolation_level="ReadUncommitted")
+		```
+		---
 
-        ### Isolation Level Help
-            * [MSSQL](https://learn.microsoft.com/en-us/sql/t-sql/language-elements/transaction-isolation-levels)
-            * [Postgres](https://www.postgresql.org/docs/current/sql-set-transaction.html)
-            * [MySQL](https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html)
-            * [SQLite](https://www.sqlite.org/isolation.html)
-        """
-        ...
-    def begin(self) -> "None":
-        """
-        ## Description
+		### Isolation Level Help
+		    * [MSSQL](https://learn.microsoft.com/en-us/sql/t-sql/language-elements/transaction-isolation-levels)
+		    * [Postgres](https://www.postgresql.org/docs/current/sql-set-transaction.html)
+		    * [MySQL](https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html)
+		    * [SQLite](https://www.sqlite.org/isolation.html)
+		"""
+		...
+	def begin(self) -> "None":
+		"""
+		## Description
 
-        Starts a transaction using ``BEGIN``.
+		Starts a transaction using ``BEGIN``.
 
-        ``begin()`` is equivalent to `start_transaction()` without setting the isolation level.
+		``begin()`` is equivalent to `start_transaction()` without setting the isolation level.
 
-        ---
+		---
 
-        ### Helper
+		### Helper
 
-            * Arguments: ``None``
+		    * Arguments: ``None``
 
-            * Returns: ``None``
+		    * Returns: ``None``
 
-            * Raises: ``RawCmdError``
+		    * Raises: ``RawCmdError``
 
-        ---
+		---
 
-        ### Example
-        ```python
-            from pysqlx_engine import PySQLXEngineSync
+		### Example
+		```python
+		    from pysqlx_engine import PySQLXEngineSync
 
-            uri = "postgresql://user:pass@host:port/db?schema=sample"
-            db = PySQLXEngineSync(uri=uri)
-            db.connect()
-            db.begin()
-        ```
-        """
-        ...
-    def commit(self) -> "None":
-        """
-        ## Description
+		    uri = "postgresql://user:pass@host:port/db?schema=sample"
+		    db = PySQLXEngineSync(uri=uri)
+		    db.connect()
+		    db.begin()
+		```
+		"""
+		...
+	def commit(self) -> "None":
+		"""
+		## Description
 
-        Commits the current transaction.
+		Commits the current transaction.
 
-        The `begin()` method must be called before calling `commit()`.
+		The `begin()` method must be called before calling `commit()`.
 
-        If the database not need set the isolation level, maybe you can not use `begin()` and `commit()`.
+		If the database not need set the isolation level, maybe you can not use `begin()` and `commit()`.
 
-        The PySQLXEngine by default uses the `begin()` and `commit()` in all transactions.
+		The PySQLXEngine by default uses the `begin()` and `commit()` in all transactions.
 
-        ---
+		---
 
-        ### Helper
+		### Helper
 
-            * Arguments: ``None`
+		    * Arguments: ``None`
 
-            * Returns: ``None``
+		    * Returns: ``None``
 
-            * Raises: ``RawCmdError``
+		    * Raises: ``RawCmdError``
 
-        ---
+		---
 
-        ### Example
-        ```python
-            from pysqlx_engine import PySQLXEngineSync
+		### Example
+		```python
+		    from pysqlx_engine import PySQLXEngineSync
 
-            uri = "postgresql://user:pass@host:port/db?schema=sample"
-            db = PySQLXEngineSync(uri=uri)
-            db.connect()
+		    uri = "postgresql://user:pass@host:port/db?schema=sample"
+		    db = PySQLXEngineSync(uri=uri)
+		    db.connect()
 
-            db.begin()
-            db.execute("CREATE TABLE users (id serial PRIMARY KEY, name varchar(255))")
-            db.execute("INSERT INTO users (name) VALUES ('rian')")
-            db.commit()
-        ```
-        """
-        ...
-    def rollback(self) -> "None":
-        """
-        ## Description
+		    db.begin()
+		    db.execute("CREATE TABLE users (id serial PRIMARY KEY, name varchar(255))")
+		    db.execute("INSERT INTO users (name) VALUES ('rian')")
+		    db.commit()
+		```
+		"""
+		...
+	def rollback(self) -> "None":
+		"""
+		## Description
 
-        Rollbacks the current transaction.
+		Rollbacks the current transaction.
 
-        Rollback is used to cancel the transaction, when you uses the rollback,
-        the transaction is canceled and the changes are not saved.
+		Rollback is used to cancel the transaction, when you uses the rollback,
+		the transaction is canceled and the changes are not saved.
 
-        The ``begin()`` method must be called before calling ``rollback()``.
+		The ``begin()`` method must be called before calling ``rollback()``.
 
-        If the database not need set the isolation level, maybe you can not use ``begin()`` and ``rollback()``.
+		If the database not need set the isolation level, maybe you can not use ``begin()`` and ``rollback()``.
 
-        The PySQLXEngine by default try uses the ``begin()`` and ``commit()`` in all transactions.
+		The PySQLXEngine by default try uses the ``begin()`` and ``commit()`` in all transactions.
 
-        ---
+		---
 
-        ### Helper
+		### Helper
 
-            * Arguments: ``None``
+		    * Arguments: ``None``
 
-            * Returns: ``None``
+		    * Returns: ``None``
 
-            * Raises: ``RawCmdError``
+		    * Raises: ``RawCmdError``
 
-        ---
+		---
 
-        ### Example
-        ```python
-            from pysqlx_engine import PySQLXEngineSync
+		### Example
+		```python
+		    from pysqlx_engine import PySQLXEngineSync
 
-            uri = "postgresql://user:pass@host:port/db?schema=sample"
-            db = PySQLXEngineSync(uri=uri)
-            db.connect()
+		    uri = "postgresql://user:pass@host:port/db?schema=sample"
+		    db = PySQLXEngineSync(uri=uri)
+		    db.connect()
 
-            db.begin()
-            db.execute("CREATE TABLE users (id serial PRIMARY KEY, name varchar(255))")
-            db.execute("INSERT INTO users (name) VALUES ('rian')")
-            db.rollback()
-        ```
-        """
-        ...
-    def start_transaction(self, isolation_level: Union[ISOLATION_LEVEL, None] = None) -> "None":
-        """
-        ## Description
+		    db.begin()
+		    db.execute("CREATE TABLE users (id serial PRIMARY KEY, name varchar(255))")
+		    db.execute("INSERT INTO users (name) VALUES ('rian')")
+		    db.rollback()
+		```
+		"""
+		...
+	def start_transaction(self, isolation_level: Union[ISOLATION_LEVEL, None] = None) -> "None":
+		"""
+		## Description
 
-        Starts a transaction with ``BEGIN/BEGIN TRANSACTION``. by default, does not set the isolation level.
+		Starts a transaction with ``BEGIN/BEGIN TRANSACTION``. by default, does not set the isolation level.
 
-        The ``Snapshot`` isolation level is supported by MS SQL Server.
+		The ``Snapshot`` isolation level is supported by MS SQL Server.
 
-        The Sqlite does not support the isolation level.
+		The Sqlite does not support the isolation level.
 
-        ---
+		---
 
-        ### Helper
+		### Helper
 
-            * Arguments: ``isolation_level(str)``: by default is None. Isolation level to be set (
-                ReadUncommitted,
-                ReadCommitted,
-                RepeatableRead,
-                Snapshot,
-                Serializable
-            )
+		    * Arguments: ``isolation_level(str)``: by default is None. Isolation level to be set (
+		        ReadUncommitted,
+		        ReadCommitted,
+		        RepeatableRead,
+		        Snapshot,
+		        Serializable
+		    )
 
-            * Returns: `None`
+		    * Returns: `None`
 
-            * Raises: (`IsolationLevelError`, `StartTransactionError` `ValueError`)
+		    * Raises: (`IsolationLevelError`, `StartTransactionError` `ValueError`)
 
-        ---
+		---
 
-        ### Example
-        ```python
-            from pysqlx_engine import PySQLXEngineSync
+		### Example
+		```python
+		    from pysqlx_engine import PySQLXEngineSync
 
-            uri = "postgresql://user:pass@host:port/db?schema=sample"
-            db = PySQLXEngineSync(uri=uri)
-            db.connect()
+		    uri = "postgresql://user:pass@host:port/db?schema=sample"
+		    db = PySQLXEngineSync(uri=uri)
+		    db.connect()
 
-            # with isolation level
-            db.start_transaction(isolation_level="ReadCommitted")
+		    # with isolation level
+		    db.start_transaction(isolation_level="ReadCommitted")
 
-            # without isolation level
-            db.start_transaction()
-        ```
+		    # without isolation level
+		    db.start_transaction()
+		```
 
-        ---
+		---
 
-        ### Isolation Level Help
-            * [MSSQL](https://learn.microsoft.com/en-us/sql/t-sql/language-elements/transaction-isolation-levels)
-            * [Postgres](https://www.postgresql.org/docs/current/sql-set-transaction.html)
-            * [MySQL](https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html)
-            * [SQLite](https://www.sqlite.org/isolation.html)
-        """
-        ...
+		### Isolation Level Help
+		    * [MSSQL](https://learn.microsoft.com/en-us/sql/t-sql/language-elements/transaction-isolation-levels)
+		    * [Postgres](https://www.postgresql.org/docs/current/sql-set-transaction.html)
+		    * [MySQL](https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html)
+		    * [SQLite](https://www.sqlite.org/isolation.html)
+		"""
+		...

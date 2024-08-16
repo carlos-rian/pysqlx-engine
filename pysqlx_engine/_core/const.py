@@ -56,20 +56,23 @@ LOG_CONFIG = LogConfig()
 
 CONFIG constant for PySQLXEngine, is used to configure the log and exception messages.
 
-You can set the following ``environment variables``: 
-    - ``PYSQLX_SQL_LOG``
-    - ``PYSQLX_USE_COLOR``
-    - ``PYSQLX_ERROR_JSON_FMT``
+You can set the following ``environment variables``:
+    - `PYSQLX_DEV_MODE`
+    - `PYSQLX_SQL_LOG`
+    - `PYSQLX_USE_COLOR`
+    - `PYSQLX_ERROR_JSON_FMT`
 
 ---
 
 ### Helper
+    * `PYSQLX_DEV_MODE`: bool = False
+        If True, the development mode will be activated, showing the sql builded before executing.
 
-    * ``PYSQLX_SQL_LOG``: bool = False
+    * `PYSQLX_SQL_LOG`: bool = False
         If True, the SQL statements will be printed in the console.
-    * ``PYSQLX_USE_COLOR``: bool = False
+    * `PYSQLX_USE_COLOR`: bool = False
         If True, the messages will be printed in color.
-    * ``PYSQLX_ERROR_JSON_FMT``: bool = False
+    * `PYSQLX_ERROR_JSON_FMT`: bool = False
         If True, the error messages will be printed in JSON format.
 
 Or you can set the value of the variables in the code.

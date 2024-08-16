@@ -7,17 +7,17 @@ from .errors import ParameterInvalidJsonValueError
 
 
 class PySQLXJsonEnconder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, bytes):
-            return obj.hex()
+	def default(self, obj):
+		if isinstance(obj, bytes):
+			return obj.hex()
 
-        elif isinstance(obj, (UUID, time, date, datetime, Decimal)):
-            return str(obj)
-        try:
-            return super().default(obj)
-        except TypeError as err:
-            raise ParameterInvalidJsonValueError(
-                typ_from=type(obj),
-                typ_to="json",
-                details=str(err),
-            )
+		elif isinstance(obj, (UUID, time, date, datetime, Decimal)):
+			return str(obj)
+		try:
+			return super().default(obj)
+		except TypeError as err:
+			raise ParameterInvalidJsonValueError(
+				typ_from=type(obj),
+				typ_to="json",
+				details=str(err),
+			)

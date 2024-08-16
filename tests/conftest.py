@@ -8,8 +8,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 @pytest.fixture(name="create_table", scope="session")
 def get_create_table():
-    return {
-        "sqlite": """
+	return {
+		"sqlite": """
             create table test_table (
                 id          integer   PRIMARY KEY,
                 first_name  text      not null,
@@ -21,7 +21,7 @@ def get_create_table():
                 updated_at  text      not null
             );
         """,
-        "pgsql": """
+		"pgsql": """
             create table test_table (
                 id         serial        not null,
                 first_name varchar(100)  not null,
@@ -35,7 +35,7 @@ def get_create_table():
                     primary key (id)
             );
         """,
-        "mssql": """
+		"mssql": """
             create table test_table (
                 id         int           not null IDENTITY(1,1),
                 first_name nvarchar(100) not null,
@@ -49,7 +49,7 @@ def get_create_table():
                     primary key (id)
             );
         """,
-        "mysql": """
+		"mysql": """
             create table test_table (
                 id         int           not null auto_increment,
                 first_name nvarchar(100) not null,
@@ -63,4 +63,4 @@ def get_create_table():
                     primary key (id)
             );
         """,
-    }
+	}

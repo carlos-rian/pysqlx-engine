@@ -10,42 +10,42 @@ from pygments.lexers.sql import SqlLexer
 
 
 def _colorizer_json_message(dumps: str):
-    return highlight(dumps, JsonLexer(), TerminalFormatter())
+	return highlight(dumps, JsonLexer(), TerminalFormatter())
 
 
 def fe_json(data: dict) -> str:
-    """create a error message format for python code"""
-    dumps = json.dumps(data, indent=2)
-    if LOG_CONFIG.PYSQLX_USE_COLOR:
-        return "\n" + _colorizer_json_message(dumps)
-    return "\n" + dumps
+	"""create a error message format for python code"""
+	dumps = json.dumps(data, indent=2)
+	if LOG_CONFIG.PYSQLX_USE_COLOR:
+		return "\n" + _colorizer_json_message(dumps)
+	return "\n" + dumps
 
 
 def _colorizer_py_code_message(message: str):
-    return highlight(message, PythonLexer(), TerminalFormatter())
+	return highlight(message, PythonLexer(), TerminalFormatter())
 
 
 def fe_py(message: str) -> str:
-    """create a error message format for python code"""
-    if LOG_CONFIG.PYSQLX_USE_COLOR:
-        return _colorizer_py_code_message(message)
-    return message
+	"""create a error message format for python code"""
+	if LOG_CONFIG.PYSQLX_USE_COLOR:
+		return _colorizer_py_code_message(message)
+	return message
 
 
 @lru_cache(maxsize=None)
 def _colorizer_sql_message(sql: str):
-    return highlight(sql, SqlLexer(), TerminalFormatter())
+	return highlight(sql, SqlLexer(), TerminalFormatter())
 
 
 def fe_sql(sql: str) -> str:
-    """create a error message format for python code"""
-    if LOG_CONFIG.PYSQLX_USE_COLOR:
-        return _colorizer_sql_message(sql)
-    return sql
+	"""create a error message format for python code"""
+	if LOG_CONFIG.PYSQLX_USE_COLOR:
+		return _colorizer_sql_message(sql)
+	return sql
 
 
 def isolation_error_message():
-    return f"""
+	return f"""
     the isolation_level must be a valid value.
 
     possible values:
@@ -61,7 +61,7 @@ def isolation_error_message():
 
 
 def not_connected_error_message():
-    return f"""
+	return f"""
         not connected to the database.
 
         before using the methods, you must connect to the database.
@@ -81,7 +81,7 @@ def not_connected_error_message():
 
 
 def model_parameter_error_message():
-    return f"""
+	return f"""
         model parameter must be a subclass of BaseRow
 
         try importing the BaseRow class from the pysqlx_engine package.
@@ -111,7 +111,7 @@ def model_parameter_error_message():
 
 
 def sql_type_error_message():
-    return f"""
+	return f"""
         the queries and statements must be a valid string.
 
         you can not use a type other than string.
@@ -141,7 +141,7 @@ def sql_type_error_message():
 
 
 def parameters_type_error_message():
-    return f"""
+	return f"""
         the parameters must be a valid dict.
 
         you can not use a type other than dict[str, any].

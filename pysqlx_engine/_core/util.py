@@ -1,6 +1,5 @@
 import asyncio
 import functools
-import logging
 from datetime import date, datetime, time
 from decimal import Decimal
 from enum import Enum
@@ -13,7 +12,7 @@ from pysqlx_core import PySQLxError as _PySQLXError
 from typing_extensions import ParamSpec
 
 from .abc import AbstractDatabaseType
-from .const import ISOLATION_LEVEL, LOG_CONFIG, PYDANTIC_IS_V1
+from .const import ISOLATION_LEVEL, PYDANTIC_IS_V1
 from .errors import (
 	ConnectError,
 	ExecuteError,
@@ -24,12 +23,7 @@ from .errors import (
 	RawCmdError,
 	StartTransactionError,
 )
-from .helper import (
-	fe_sql,
-	isolation_error_message,
-	parameters_type_error_message,
-	sql_type_error_message,
-)
+from .helper import isolation_error_message, parameters_type_error_message, sql_type_error_message
 from .param_converter import convert
 
 if PYDANTIC_IS_V1:
@@ -134,11 +128,6 @@ def build_sql(provider: str, sql: str, parameters: dict = None) -> str:
 
 		for key, value in param_as_list_of_tuples:
 			new_sql = new_sql.replace(f":{key}", str(value))
-
-	if LOG_CONFIG.PYSQLX_SQL_LOG:
-		new_sql = new_sql.strip()
-		logging.info(fe_sql(sql=new_sql))
-
 	return new_sql
 
 
