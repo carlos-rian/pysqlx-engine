@@ -530,7 +530,7 @@ description = "A fast and async SQL database wrapper for Python, with support fo
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "pysqlx_core-0.1.49-cp38-cp38-manylinux_2_34_x86_64.whl", hash = "sha256:fee73213aaa379bf25a728127cfdeb06d8beaa6df1706f5f82f047d9e78eb01d"},
+    {file = "pysqlx_core-0.1.49-cp38-cp38-manylinux_2_34_x86_64.whl", hash = "sha256:b338b1649c875b9cb842b526814d0bc715cdb48521a958529a1402d19a1cdb06"},
 ]
 
 [package.source]

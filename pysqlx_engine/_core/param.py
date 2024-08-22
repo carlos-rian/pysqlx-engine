@@ -114,17 +114,6 @@ def try_decimal(_p: PROVIDER, value: Decimal, _f: str = "") -> str:
 def try_enum(provider: PROVIDER, value: Enum, field: str = "") -> str:
 	new_value = value.value
 	func = get_method(typ=type(new_value))
-	if func is None:
-		raise ParameterInvalidValueError(
-			field=field,
-			provider=provider,
-			typ_from="enum",
-			typ_to="text",
-			details=(
-				"the enum value must be of the following types: "
-				"(bool, str, int, list, dict, tuple, UUID, time, date, datetime, float, bytes, Decimal)"
-			),
-		)
 	return func(provider, new_value, field)
 
 
@@ -152,32 +141,14 @@ def try_tuple_enum(provider: PROVIDER, values: List[Enum], field: str = "") -> s
 
 @lru_cache(maxsize=None)
 def try_tuple(provider: PROVIDER, values: Tuple[Any], field: str = "") -> str:
-	if not provider.startswith("postgresql"):
-		raise ParameterInvalidProviderError(field=field, provider=provider, typ="array")
-
 	types = set([type(v) for v in values])
-
-	if len(types) > 1:
-		raise ParameterInvalidValueError(
-			field=field,
-			provider=provider,
-			typ_from="tuple",
-			typ_to="array",
-			details=(
-				"the tuple must be of the same type, eg: (1, 2, 3). "
-				"tuple is represented as a array in sql, sql does not support heterogeneous array."
-			),
-		)
-
 	if len(values) > 0:
 		typ_ = types.pop()
 		method = get_method(typ=typ_)
 
-		if method is None:
-			raise ParameterInvalidProviderError(field=field, provider=provider, typ=typ_)
-
 		data = str([method(provider, value, field) for value in values]).replace("[", "{").replace("]", "}")
 		return f"'{data}'"
+
 	return "'{}'"
 
 

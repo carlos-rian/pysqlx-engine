@@ -3,10 +3,8 @@ from enum import Enum
 import pytest
 
 from pysqlx_engine import PySQLXEngine
-from pysqlx_engine._core.errors import (
-	ParameterInvalidProviderError,
-	ParameterInvalidValueError,
-)
+from pysqlx_engine._core.const import LOG_CONFIG
+from pysqlx_engine._core.errors import ParameterInvalidProviderError, ParameterInvalidValueError
 from pysqlx_engine._core.param import try_tuple_enum
 from pysqlx_engine.errors import ExecuteError
 from tests.common import adb_mssql, adb_mysql, adb_pgsql, adb_sqlite
@@ -156,6 +154,10 @@ async def test_execute_sql_with_array_enum(db):
 	await conn.execute(sql="DROP TABLE IF EXISTS t_pysqlx_table;")
 	await conn.execute(sql="DROP TYPE IF EXISTS t_colors;")
 
+	with pytest.raises(ParameterInvalidProviderError):
+		try_tuple_enum("mysql", (), "")
+
+	LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = False
 	with pytest.raises(ParameterInvalidProviderError):
 		try_tuple_enum("mysql", (), "")
 

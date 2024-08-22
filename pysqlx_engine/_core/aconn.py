@@ -79,22 +79,17 @@ class PySQLXEngine:
 		return await self._run(func=self._conn.raw_cmd, sql=sql)
 
 	def _dev_mode(self, sql: str, parameters: Optional[dict] = None):
-		if LOG_CONFIG.PYSQLX_DEV_MODE:
-			try:
-				from rich.console import Console
-			except ImportError:
-				raise ImportError(
-					"rich library is required to use the development mode, install it using: pip install rich"
-				)
-			console = Console()
-			console.rule("THIS IS A DEVELOPMENT MODE")
-			console.rule("THIS SQL STATEMENT IS NOT SEND TO THE DATABASE BELOW!")
-			log_sql = ParserSQL(provider=self._provider, sql=sql, parameters=parameters).sql()
-			console.log(fe_sql(sql=log_sql))
-			console.rule("THIS SQL STATEMENT IS NOT SEND TO THE DATABASE ABOVE!")
+		logger.warning("PYSQLX-ENGINE DEVELOPMENT MODE")
+		logger.warning(
+			(
+				"THIS SQL STATEMENT IS PRE BUILD JUST FOR DEVELOPMENT PURPOSE, "
+				"ALL SQL AND PARAMS WILL PASS TO DATABASE"
+			)
+		)
+		log_sql = ParserSQL(provider=self._provider, sql=sql, parameters=parameters).sql()
+		logger.info(fe_sql(sql=log_sql))
 
 	async def _run(self, func, sql: str, parameters: Optional[dict] = None, model: Optional[MyModel] = None):
-		self._pre_validate(sql=sql, parameters=parameters)
 		if model is not None and not issubclass(model, BaseRow):
 			raise TypeError(model_parameter_error_message())
 
@@ -120,21 +115,26 @@ class PySQLXEngine:
 			)
 
 	async def query(self, sql: str, parameters: Optional[dict] = None, model: Optional[MyModel] = None):
+		self._pre_validate(sql=sql, parameters=parameters)
 		result = await self._run(func=self._conn.query_typed, sql=sql, parameters=parameters, model=model)
 		return ParserIn(result=result, model=model).parse()
 
 	async def query_as_dict(self, sql: str, parameters: Optional[dict] = None):
+		self._pre_validate(sql=sql, parameters=parameters)
 		return await self._run(self._conn.query_all, sql=sql, parameters=parameters)
 
 	async def query_first(self, sql: str, parameters: Optional[dict] = None, model: Optional[MyModel] = None):
+		self._pre_validate(sql=sql, parameters=parameters)
 		result = await self._run(self._conn.query_typed, sql=sql, parameters=parameters, model=model)
 		return ParserIn(result=result, model=model).parse_first()
 
 	async def query_first_as_dict(self, sql: str, parameters: Optional[dict] = None):
+		self._pre_validate(sql=sql, parameters=parameters)
 		row = await self._run(self._conn.query_one, sql=sql, parameters=parameters)
 		return row if row else None
 
 	async def execute(self, sql: str, parameters: Optional[dict] = None):
+		self._pre_validate(sql=sql, parameters=parameters)
 		return await self._run(self._conn.execute, sql=sql, parameters=parameters)
 
 	async def set_isolation_level(self, isolation_level: ISOLATION_LEVEL):
