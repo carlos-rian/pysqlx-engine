@@ -1,11 +1,13 @@
 import asyncio
 import threading
 import time
-from typing import Any, Callable, Coroutine, Union
+from typing import Any, Callable, Coroutine, TypeVar, Union
+
+T = TypeVar("T")
 
 
 def aspawn(
-	f: Callable[..., Coroutine[Any, Any, None]], args: tuple[Any, ...] = (), name: str | None = None
+	f: Callable[..., Coroutine[Any, Any, None]], args: tuple[Any, T] = (), name: str | None = None
 ) -> asyncio.Task[None]:
 	"""
 	Equivalent to asyncio.create_task.
@@ -27,7 +29,7 @@ def sleep(seconds: float) -> None:
 	return time.sleep(seconds)
 
 
-def spawn(f: Callable[..., Any], args: tuple[Any, ...] = (), name: str | None = None) -> threading.Thread:
+def spawn(f: Callable[..., Any], args: tuple[Any, T] = (), name: str | None = None) -> threading.Thread:
 	"""
 	Equivalent to creating and running a daemon thread.
 	"""
