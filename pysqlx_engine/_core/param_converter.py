@@ -1,7 +1,6 @@
 from enum import Enum
 from typing import Union
 
-from .abc import AbstractDatabaseType
 from .const import PROVIDER
 from .errors import ParameterInvalidValueError
 from .param import SupportedValueType, get_method, try_enum, try_tuple_enum
@@ -10,10 +9,6 @@ from .param import SupportedValueType, get_method, try_enum, try_tuple_enum
 def convert(provider: PROVIDER, value: SupportedValueType, field: str = "") -> Union[str, int, float]:
 	if value is None:
 		return "NULL"
-
-	elif isinstance(value, AbstractDatabaseType):
-		v = value.convert(provider=provider, field=field)
-		return "NULL" if v is None else v
 
 	elif isinstance(value, Enum):
 		return try_enum(provider, value, field)
