@@ -525,17 +525,73 @@ windows-terminal = ["colorama (>=0.4.6)"]
 
 [[package]]
 name = "pysqlx-core"
-version = "0.1.49"
+version = "0.1.51"
 description = "A fast and async SQL database wrapper for Python, with support for MySQL, PostgreSQL, SQLite and MS SQL Server."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "pysqlx_core-0.1.49-cp38-cp38-manylinux_2_34_x86_64.whl", hash = "sha256:b338b1649c875b9cb842b526814d0bc715cdb48521a958529a1402d19a1cdb06"},
+    {file = "pysqlx_core-0.1.51-cp310-cp310-macosx_10_12_x86_64.whl", hash = "sha256:2d9a058f50ce40f4d1ebad63f28118f20a08e25225dd4bb429dbf2d291d0c867"},
+    {file = "pysqlx_core-0.1.51-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:b09ca6a9585d81c94274c252975cc032e3d9b8f5030d09f4715e23913f3646fd"},
+    {file = "pysqlx_core-0.1.51-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:22494ddba6abc9fbcff5ce0589c042bdf38f2c98091a412482950601ca533163"},
+    {file = "pysqlx_core-0.1.51-cp310-cp310-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:6efe25d8f75e23262ff09cde6a8db1a80c7c140ecd3114849d1dec3f6815f388"},
+    {file = "pysqlx_core-0.1.51-cp310-cp310-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:f4cea381050cd7b98415fe32484c10e8f1f25a9cdc3f3d67f2a19af12bfbe327"},
+    {file = "pysqlx_core-0.1.51-cp310-cp310-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:5e37f76bae05c3aa4e4c8e7076f5cf306ad8f3db2f343f0f14c37dc92608fd90"},
+    {file = "pysqlx_core-0.1.51-cp310-cp310-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:31b7b091a3bef678163b6203309a9caaf8e291dbdcb97d548530bfdefa15f5d8"},
+    {file = "pysqlx_core-0.1.51-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:dad103d83b72949af380786d485dbb5b49b3220865b3aba707b2050bfadb3507"},
+    {file = "pysqlx_core-0.1.51-cp310-cp310-musllinux_1_1_aarch64.whl", hash = "sha256:90794cf2a5ffd5608dfaf3e539ccf5e5d662763c6cfe8ccbdd36c21c1e6ab1e3"},
+    {file = "pysqlx_core-0.1.51-cp310-cp310-musllinux_1_1_x86_64.whl", hash = "sha256:6103a60aeca2d3c4f9cb7fc9182ccd7e0c09f19dd19d594103cf4db5ec3695bd"},
+    {file = "pysqlx_core-0.1.51-cp310-none-win32.whl", hash = "sha256:53f099e056b9f162b9d901d6ddf4a276fd71f7a71191f31d63e7246fda0f6f0c"},
+    {file = "pysqlx_core-0.1.51-cp310-none-win_amd64.whl", hash = "sha256:43cf65a2968b9b66920b526484c3e3705befec9c9d9f7f9aff914b2773837b99"},
+    {file = "pysqlx_core-0.1.51-cp311-cp311-macosx_10_12_x86_64.whl", hash = "sha256:2b94442865193e0ad79033a79ae159552f2b5a9cf6704c57ec566b12ef74637d"},
+    {file = "pysqlx_core-0.1.51-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:f836e166fdd535ba1d1452a3d62addee17aef33ce7cf8c7c4883b0b506cd4920"},
+    {file = "pysqlx_core-0.1.51-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:cc9dac80032675685503b77a3fb8f7262780554f26c57783036611337d1c72fc"},
+    {file = "pysqlx_core-0.1.51-cp311-cp311-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:3917f5a7afe6d19d19c96382d08f78f830b4aa267abcb751bf96879f7abceba3"},
+    {file = "pysqlx_core-0.1.51-cp311-cp311-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:ad15fe5543abb454ed07ab4dba1dcd48b64234c1d4113f0dc5170aa90e1a5a5f"},
+    {file = "pysqlx_core-0.1.51-cp311-cp311-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:89a7e7b361f2a2662feca4906cfc2961e3a6a3a5261ac32363e3aa5e3350177f"},
+    {file = "pysqlx_core-0.1.51-cp311-cp311-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:b546a83c2f7035306cf5b0f97bda7e1dd9c3fe0b6f54678a0ccbf92e6b5664cb"},
+    {file = "pysqlx_core-0.1.51-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:1877010d158e609049ac87584b1e74a7c8ca1e44419b4f742bc256897821ab28"},
+    {file = "pysqlx_core-0.1.51-cp311-cp311-musllinux_1_1_aarch64.whl", hash = "sha256:0bc4196f07f96e7ab10bbe98b6d056cac2c7741d29e726cbd86b982520f2d19e"},
+    {file = "pysqlx_core-0.1.51-cp311-cp311-musllinux_1_1_x86_64.whl", hash = "sha256:525e1fba43172a3a1dbe86aa9f577c7c6107e7203068340b7f7929f2dd3aac61"},
+    {file = "pysqlx_core-0.1.51-cp311-none-win32.whl", hash = "sha256:d30bfb88b8fbb1eef5f5a3e3cd603c8a077eaf4ad561676c710e472f6157fe7a"},
+    {file = "pysqlx_core-0.1.51-cp311-none-win_amd64.whl", hash = "sha256:79efb32af10a2b26fd0fde75d0d9ecddb2497ec1dea073f5727a7c0a3c4f02ce"},
+    {file = "pysqlx_core-0.1.51-cp312-cp312-macosx_10_12_x86_64.whl", hash = "sha256:feab17f4c57d2c42e6cae903de92fb6347bacb0f686fc87bda9e2e28497d2310"},
+    {file = "pysqlx_core-0.1.51-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:a747206bf6adbab375898ca221ee4f340464a60300fa15888a7f610725695bb8"},
+    {file = "pysqlx_core-0.1.51-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:07f879b8d89d6ad4e04867898d5a3db46dd9acd4f3f66bc3a4471cc31fcb021c"},
+    {file = "pysqlx_core-0.1.51-cp312-cp312-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:f23d477752132bc2777425ef9fe0016c115fe4206023b082c433f5778ad9d0d7"},
+    {file = "pysqlx_core-0.1.51-cp312-cp312-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:240b43a4d0f5311065f1d2a013fce3b709978ef2361cdee8afb289faeb1fb349"},
+    {file = "pysqlx_core-0.1.51-cp312-cp312-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:ec8b4aa3346bb8c37305bc3dd7292e3729f25479d45b4c38b6be03f25a5f9d25"},
+    {file = "pysqlx_core-0.1.51-cp312-cp312-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:3e543305e72ebce1273e9d6ceb7bd73e18882edc58b371f22b2f8b8f155c3252"},
+    {file = "pysqlx_core-0.1.51-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:ed353a35248a1d68bf680bd389a5bf03c155d2d3626df3499c9f535701ccee22"},
+    {file = "pysqlx_core-0.1.51-cp312-cp312-musllinux_1_1_aarch64.whl", hash = "sha256:94452c17716dcc1ab76f8e04442261072784be2fb4e2e70cfb8b1a6757e69245"},
+    {file = "pysqlx_core-0.1.51-cp312-cp312-musllinux_1_1_x86_64.whl", hash = "sha256:576617632de69ace329b327a31173775323c8e2394828ef79c334a2d7dde4020"},
+    {file = "pysqlx_core-0.1.51-cp312-none-win32.whl", hash = "sha256:bd45cc3e3ea74b8c040b52921855f7f40c694a16d7174281f87638b2243502e9"},
+    {file = "pysqlx_core-0.1.51-cp312-none-win_amd64.whl", hash = "sha256:8420735cdd429a992de7d16596e6a7e4dd165bd55aeda549487a26ddf4cf3bce"},
+    {file = "pysqlx_core-0.1.51-cp38-cp38-macosx_10_12_x86_64.whl", hash = "sha256:070082dd3c1f664ece5b1a0a287c280893747c6b9f9a4fb797efc1a161a9327c"},
+    {file = "pysqlx_core-0.1.51-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:64831db21b5820884c1d188aaeb68e6bff48590ef394981a2fbeb23514fd3be8"},
+    {file = "pysqlx_core-0.1.51-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:8ae672b8ace3cb0e2620971f49602ac630e83f5911d449f8ca620a83277139a3"},
+    {file = "pysqlx_core-0.1.51-cp38-cp38-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:af1e2318d033c364b1c3a0f5fdc37d89c8d692e241f6a8446e44d0ee4e0f7760"},
+    {file = "pysqlx_core-0.1.51-cp38-cp38-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:96befd3508161c51f1b595395c1945b99fb83caf3748e86c225d98c68f982b61"},
+    {file = "pysqlx_core-0.1.51-cp38-cp38-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:091788f68a5bca73bc969ffcd4157fc3a16e381a5ff8ffb727a96bf2d440195b"},
+    {file = "pysqlx_core-0.1.51-cp38-cp38-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:ab0baf3b012a2d1eafc0a43932bc13a31b5cb649ae890ce701ec4ce82c36785a"},
+    {file = "pysqlx_core-0.1.51-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:42b30f0ac0244d820841b5ec63d6f512983bb7d6d58e6890ead04386996c83ec"},
+    {file = "pysqlx_core-0.1.51-cp38-cp38-musllinux_1_1_aarch64.whl", hash = "sha256:11974ea776a8872f64022e726d48294d3718f9cdfff36b0def7e1b6171deeb88"},
+    {file = "pysqlx_core-0.1.51-cp38-cp38-musllinux_1_1_x86_64.whl", hash = "sha256:191a4819554955c06b4e6c402a06c7b9949e9c36628c8854ca64f4056ed75692"},
+    {file = "pysqlx_core-0.1.51-cp38-none-win32.whl", hash = "sha256:6c3bc3f149c741fd8902407ccae8d6b6807738d69b0a6111a6cbb87fa805f93c"},
+    {file = "pysqlx_core-0.1.51-cp38-none-win_amd64.whl", hash = "sha256:beef32c73b64f15042166b2052a2f06d0ab10a1d427d7ab63bace52ba7621fd6"},
+    {file = "pysqlx_core-0.1.51-cp39-cp39-macosx_10_12_x86_64.whl", hash = "sha256:4b15cc819a7b40b36aadc623a741630f8e286ac0eb4c8185b29e6f902db5048a"},
+    {file = "pysqlx_core-0.1.51-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:632f840dec0915a9dcb7360f943cff1ca2bea9d70167aefd1f3efc5b71d3d820"},
+    {file = "pysqlx_core-0.1.51-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:dff679604d72ea8cc2971ca35182a00f1d93540d3b147f1a9a5fa8ce709b0802"},
+    {file = "pysqlx_core-0.1.51-cp39-cp39-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:c40c6e2cc1e215e2e9f56d65f71ec1272dd78fe023ec7f6c1497f80bb716d921"},
+    {file = "pysqlx_core-0.1.51-cp39-cp39-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:0ef6ee24d762443ce88e13b3635ad67410b2f2313caeeb1c588d0ef4a233ea79"},
+    {file = "pysqlx_core-0.1.51-cp39-cp39-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:8d77eed5b1ec68ad49dc02c75b13635e3f3797639cfdc9517696372003fb90ef"},
+    {file = "pysqlx_core-0.1.51-cp39-cp39-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:3483b291162f9024e95e48a3fb22ecc4475b6d02fc1d8c2f452c113076519666"},
+    {file = "pysqlx_core-0.1.51-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:2c1785a7a8eb33bda5baf06dd1e36dbaeeb4c01538086a1b34a1a950e13261b7"},
+    {file = "pysqlx_core-0.1.51-cp39-cp39-musllinux_1_1_aarch64.whl", hash = "sha256:1002c4105add261eb514d64e995b1ee53f2fe422b3f84737f7048a7e903f23a0"},
+    {file = "pysqlx_core-0.1.51-cp39-cp39-musllinux_1_1_x86_64.whl", hash = "sha256:399ce1d5e3a876db5334eea6d995bb86e59acca21a6f22616c5babbd8714ab3b"},
+    {file = "pysqlx_core-0.1.51-cp39-none-win32.whl", hash = "sha256:88c78b48f9dd46f388e099ceee10dce20e9272d404eca0621b2e02326bd88d32"},
+    {file = "pysqlx_core-0.1.51-cp39-none-win_amd64.whl", hash = "sha256:ea15faba0ed79b13cd2ef92004c074374b0c5436f6090f48bcbbbf955febbbaf"},
+    {file = "pysqlx_core-0.1.51.tar.gz", hash = "sha256:9676c3c9e38087abb3b05829200773be3ca7a01e39c1194edb112ad6103c65da"},
 ]
-
-[package.source]
-type = "file"
-url = "../pysqlx-core/target/wheels/pysqlx_core-0.1.49-cp38-cp38-manylinux_2_34_x86_64.whl"
 
 [[package]]
 name = "pytest"
@@ -785,4 +841,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "e68a86654371f3dc1961c3e7c138fc66f01a4d291bbb659e983d76953f0f30ae"
+content-hash = "8675d25c3454933bc7ea98b07e5b989f7f454dc79417f9e12a5cc423c26f30cc"
