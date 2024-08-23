@@ -135,6 +135,6 @@ def create_log_line(text: str, character: str = "=") -> str:
 
 	# If there's any difference, adjust the line to match the terminal width
 	if len(line) < terminal_width:
-		line += character * (terminal_width - len(line))
+		line += character * (terminal_width - len(line))  # pragma: no cover
 
 	return line
