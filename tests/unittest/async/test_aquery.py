@@ -1389,3 +1389,20 @@ async def test_query_first_enum_param_invalid_value(db: PySQLXEngine):
 
 	await conn.close()
 	assert conn.connected is False
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("db", [adb_mssql, adb_mysql, adb_sqlite, adb_pgsql])
+async def test_query_unicode_param(db: PySQLXEngine):
+	conn: PySQLXEngine = await db()
+	assert conn.connected is True
+
+	sql = "SELECT :text AS text"
+	param = {"text": "你好🎉🥳😁"}
+
+	resp = await conn.query_first(sql=sql, parameters=param)
+
+	assert resp.text == "你好🎉🥳😁"
+
+	await conn.close()
+	assert conn.connected is False
