@@ -1,5 +1,6 @@
 import asyncio
 import functools
+import shutil
 from datetime import date, datetime, time
 from decimal import Decimal
 from enum import Enum
@@ -116,3 +117,24 @@ def build_sql(provider: str, sql: str, parameters: dict = None) -> str:
 
 def parse_obj_as(type_: Union[BaseModel, List[BaseModel]], obj: Union[dict, list]) -> type:
 	return _parse_obj_as(type_=type_, obj=obj) if PYDANTIC_IS_V1 else TypeAdapter(type=type_).validate_python(obj)
+
+
+def create_log_line(text: str, character: str = "=") -> str:
+	# Get the terminal width
+	terminal_width = shutil.get_terminal_size().columns
+
+	# If the text is longer than the terminal width, truncate it
+	if len(text) > terminal_width:
+		text = text[:terminal_width]
+
+	# Calculate the space needed to center the text
+	space = (terminal_width - len(text)) // 2
+
+	# Create the line
+	line = f"{character * space}{text}{character * space}"
+
+	# If there's any difference, adjust the line to match the terminal width
+	if len(line) < terminal_width:
+		line += character * (terminal_width - len(line))
+
+	return line

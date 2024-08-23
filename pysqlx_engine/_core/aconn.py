@@ -11,7 +11,7 @@ from .._core.parser import BaseRow, MyModel, ParserIn, ParserSQL
 from .const import ISOLATION_LEVEL
 from .errors import AlreadyConnectedError, NotConnectedError, ParameterInvalidValueError
 from .helper import fe_sql, model_parameter_error_message, not_connected_error_message
-from .util import check_isolation_level, check_sql_and_parameters, pysqlx_get_error
+from .util import check_isolation_level, check_sql_and_parameters, create_log_line, pysqlx_get_error
 
 
 class PySQLXEngine:
@@ -79,15 +79,15 @@ class PySQLXEngine:
 		return await self._run(func=self._conn.raw_cmd, sql=sql)
 
 	def _dev_mode(self, sql: str, parameters: Optional[dict] = None):
-		logger.warning("PYSQLX-ENGINE DEVELOPMENT MODE")
-		logger.warning(
-			(
+		logger.debug(create_log_line(" PYSQLX-ENGINE DEVELOPMENT MODE "))
+		logger.debug(
+			create_log_line(
 				"THIS SQL STATEMENT IS PRE BUILD JUST FOR DEVELOPMENT PURPOSE, "
-				"ALL SQL AND PARAMS WILL PASS TO DATABASE"
+				"ALL SQL AND PARAMS WILL PASS TO DATABASE."
 			)
 		)
 		log_sql = ParserSQL(provider=self._provider, sql=sql, parameters=parameters).sql()
-		logger.info(fe_sql(sql=log_sql))
+		logger.debug(fe_sql(sql=log_sql))
 
 	async def _run(self, func, sql: str, parameters: Optional[dict] = None, model: Optional[MyModel] = None):
 		if model is not None and not issubclass(model, BaseRow):
@@ -99,7 +99,8 @@ class PySQLXEngine:
 				self._dev_mode(sql=sql, parameters=parameters)
 
 			if LOG_CONFIG.PYSQLX_SQL_LOG:
-				logger.info(f"SQL: {stmt.sql()}\nPARAMS: {stmt.params()}")
+				logger.debug(create_log_line(" THIS SQL IS THE FINAL SQL AND PARAMS STATEMENT THAT WILL BE EXECUTED "))
+				logger.info(f"\nSQL: {fe_sql(stmt.sql())}\nPARAMS: {stmt.params()}")
 
 			return await func(stmt)
 

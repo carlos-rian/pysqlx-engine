@@ -1,4 +1,5 @@
 import enum
+import logging
 import uuid
 from datetime import date, datetime, time, timezone
 from decimal import Decimal
@@ -1394,6 +1395,13 @@ async def test_query_first_enum_param_invalid_value(db: PySQLXEngine):
 @pytest.mark.asyncio
 @pytest.mark.parametrize("db", [adb_mssql, adb_mysql, adb_sqlite, adb_pgsql])
 async def test_query_unicode_param(db: PySQLXEngine):
+	LOG_CONFIG.PYSQLX_DEV_MODE = True
+	LOG_CONFIG.PYSQLX_SQL_LOG = True
+	LOG_CONFIG.PYSQLX_USE_COLOR = True
+	LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
+
+	logging.basicConfig(level=logging.DEBUG)
+
 	conn: PySQLXEngine = await db()
 	assert conn.connected is True
 
