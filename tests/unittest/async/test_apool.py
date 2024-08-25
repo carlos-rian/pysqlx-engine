@@ -10,8 +10,7 @@ from pysqlx_engine import PySQLXEnginePool
 async def pool():
 	uri = "sqlite:./dev.db"  # SQLite database URI for testing
 	pool = PySQLXEnginePool(uri=uri, min_size=3)
-	while pool._opened is False:
-		await asyncio.sleep(1)
+	await pool.start()
 	yield pool
 	await pool.stop()
 

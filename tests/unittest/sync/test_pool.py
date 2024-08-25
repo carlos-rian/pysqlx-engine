@@ -1,5 +1,3 @@
-from asyncio import sleep
-
 import pytest
 
 from pysqlx_engine import PySQLXEnginePoolSync
@@ -9,7 +7,7 @@ from pysqlx_engine import PySQLXEnginePoolSync
 def sync_pool():
 	uri = "sqlite:./dev.db"  # SQLite database URI for testing
 	pool = PySQLXEnginePoolSync(uri=uri, min_size=3)
-	sleep(1)
+	pool.start()
 	yield pool
 	pool.stop()
 
@@ -17,8 +15,7 @@ def sync_pool():
 def test_sync_pool_initialization(sync_pool):
 	assert sync_pool._min_size == 3, "Min size should be 3"
 	assert sync_pool._opened is True
-	with sync_pool._lock:
-		assert len(sync_pool._pool) == 3, "Pool should have 3 connections"
+	assert len(sync_pool._pool) == 3, "Pool should have 3 connections"
 	# Additional assertions can be made here regarding the pool's initial state
 
 
