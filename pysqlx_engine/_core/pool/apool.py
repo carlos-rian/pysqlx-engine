@@ -72,9 +72,6 @@ class PySQLXEnginePool(BasePool):
 		)
 		self._lock: asyncio.Lock = asyncio.Lock()
 
-		task_worker = aspawn(self._start_workers)
-		self._workers.append(Worker(task_worker))
-
 	def __del__(self) -> None:
 		if getattr(self, "_pool", None):
 			asyncio.run(self.stop())
@@ -154,11 +151,13 @@ class PySQLXEnginePool(BasePool):
 			return
 
 		logger.debug("Starting the pool workers.")
-		task_start = aspawn(self._start)
+		await self._start()
 		task_monitor = aspawn(Monitor(pool=ref(self)).run)
 
-		self._workers.append(Worker(task_start))
 		self._workers.append(Worker(task_monitor))
+
+	async def start(self) -> None:
+		await self._start_workers()
 
 	@asynccontextmanager
 	async def connection(self):
