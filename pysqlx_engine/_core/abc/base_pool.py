@@ -195,6 +195,9 @@ class BasePool(ABC):
 	def _start_workers(self) -> None: ...
 
 	@abstractmethod
+	def start(self) -> None: ...
+
+	@abstractmethod
 	def connection(self) -> TPySQLXEngineConn: ...
 
 	@abstractmethod
