@@ -3,6 +3,7 @@ import functools
 import shutil
 import threading
 import time
+from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime
 from decimal import Decimal
 from enum import Enum
@@ -46,7 +47,12 @@ def force_sync(fn: Callable[P, T]) -> Callable[P, T]:
 	@functools.wraps(fn)
 	def wrapper(*args: P.args, **kwds: P.kwargs) -> T:
 		res = fn(*args, **kwds)
-		loop = asyncio.get_event_loop()
+
+		try:
+			loop = asyncio.get_event_loop()
+		except RuntimeError:
+			loop = asyncio.new_event_loop()
+			asyncio.set_event_loop(loop)
 
 		# if loop is already running, we don't need to run it again
 		if loop.is_running():
@@ -145,9 +151,7 @@ def create_log_line(text: str, character: str = "=") -> str:
 T = TypeVar("T")
 
 
-def aspawn(
-	f: Callable[..., Coroutine[Any, Any, None]], args: tuple[Any, T] = (), name: str | None = None
-) -> asyncio.Task[None]:
+def aspawn(f: Callable, args: tuple = (), name: Union[str, None] = None) -> asyncio.Task:
 	"""
 	Equivalent to asyncio.create_task.
 	"""
@@ -168,7 +172,7 @@ def sleep(seconds: float) -> None:
 	return time.sleep(seconds)
 
 
-def spawn(f: Callable[..., Any], args: tuple[Any, T] = (), name: str | None = None) -> threading.Thread:
+def spawn(f: Callable, args: tuple = (), name: Union[str, None] = None) -> threading.Thread:
 	"""
 	Equivalent to creating and running a daemon thread.
 	"""

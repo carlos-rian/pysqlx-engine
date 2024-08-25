@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import asyncio
 import logging
 import threading
@@ -5,10 +7,8 @@ from abc import ABC, abstractmethod
 from collections import deque as Deque
 from random import random
 from time import monotonic
-from typing import List, Union
+from typing import List, TypeAlias, Union
 from weakref import ReferenceType
-
-from typing_extensions import TypeAlias
 
 from pysqlx_engine import PySQLXEngine, PySQLXEngineSync
 
@@ -17,6 +17,7 @@ from ..util import get_task_name
 
 logger = logging.getLogger("pysqlx_engine")
 TPySQLXEngineConn: TypeAlias = Union[PySQLXEngine, PySQLXEngineSync]
+TReferenceType: TypeAlias = ReferenceType["BasePool"]
 
 
 class BaseConnInfo(ABC):
@@ -57,12 +58,12 @@ class BaseConnInfo(ABC):
 	async def _aclose(self) -> None:
 		await self.conn.close()
 		self.expire_at = monotonic()
-		print(f"Removed: {self} from pool, the conn was open for {self.expire_at - self.start_at} secs")
+		print(f"Removed: {self} from pool, the conn was open for {self.expire_at - self.start_at:.5f} secs")
 
 	def _close(self) -> None:
 		self.conn.close()
 		self.expire_at = monotonic()
-		print(f"Removed: {self} from pool, the conn was open for {self.expire_at - self.start_at} secs")
+		print(f"Removed: {self} from pool, the conn was open for {self.expire_at - self.start_at:.5f} secs")
 
 	def renew_expire_at(self):
 		self.expire_at = monotonic() + self._jitter(value=self.keep_alive, min_pc=-0.05, max_pc=0.0)
@@ -86,14 +87,13 @@ class Worker:
 
 		self.running = True
 
-	def __del__(self):
-		if self.running:
-			self.finish()
-
 	def finish(self):
 		logger.debug(f"Worker: {self.name} finishing.")
 		if isinstance(self.task, asyncio.Task):
-			self.task.cancel()
+			try:
+				self.task.cancel()
+			except RuntimeError:
+				del self.task
 		else:
 			self.task.join()
 
@@ -157,7 +157,7 @@ class BasePool(ABC):
 	def closed(self) -> bool:
 		return self._opened is False
 
-	def _check_size(self, min_size: int, max_size: Union[int | None]):
+	def _check_size(self, min_size: int, max_size: Union[int, None]):
 		if max_size is None:
 			max_size = min_size
 
@@ -202,9 +202,9 @@ class BasePool(ABC):
 
 
 class BaseMonitor(ABC):
-	pool: ReferenceType[BasePool]
+	pool: TReferenceType
 
-	def __init__(self, pool: ReferenceType[BasePool]):
+	def __init__(self, pool: TReferenceType):
 		self.pool: ReferenceType[BasePool] = pool
 
 	def __repr__(self) -> str:
@@ -214,4 +214,5 @@ class BaseMonitor(ABC):
 
 	@abstractmethod
 	def run(self) -> None:
+		pass
 		pass

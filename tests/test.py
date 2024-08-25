@@ -1,7 +1,7 @@
 import asyncio
 import logging
 
-from poc.apool import PySQLXEnginePool
+from pysqlx_engine._core.pool.apool import PySQLXEnginePool
 
 logging.basicConfig(level=logging.DEBUG)
 

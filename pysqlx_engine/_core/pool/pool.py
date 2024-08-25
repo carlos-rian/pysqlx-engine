@@ -49,7 +49,7 @@ class MonitorSync(BaseMonitor):
 				logger.debug("Pool is closed, waiting for the next check.")
 
 			logger.debug(f"Sleeping for {pool._check_interval} seconds")
-			pool._check_interval(pool._check_interval)
+			sleep(pool._check_interval)
 
 
 class PySQLXEnginePoolSync(BasePool):

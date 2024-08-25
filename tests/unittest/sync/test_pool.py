@@ -1,73 +1,38 @@
+from asyncio import sleep
+
 import pytest
-import os
-from pysqlx_engine import PySQLXEnginePoolSync, PySQLXEngineSync
-from pysqlx_engine._core.const import LOG_CONFIG
-from pysqlx_engine.errors import PoolMaxConnectionsError
+
+from pysqlx_engine import PySQLXEnginePoolSync
 
 
-@pytest.mark.parametrize(
-	"environment", ["DATABASE_URI_SQLITE", "DATABASE_URI_POSTGRESQL", "DATABASE_URI_MSSQL", "DATABASE_URI_MYSQL"]
-)
-def test_pool(environment: str):
-	uri = os.environ[environment]
-	pool = PySQLXEnginePoolSync(uri=uri, max_connections=3)
-
-	conn1 = pool.new_connection()
-	conn2 = pool.new_connection()
-	conn3 = pool.new_connection()
-	# multiple queries can be run in parallel
-	results = [
-		conn1.query_first("SELECT 1 AS one"),
-		conn2.query_first("SELECT 2 AS two"),
-		conn3.query_first("SELECT 3 AS three"),
-	]
-
-	assert len(results) == 3
-	assert results[0].one == 1
-	assert results[1].two == 2
-	assert results[2].three == 3
-
-	with pytest.raises(PoolMaxConnectionsError):
-		pool.new_connection()
+@pytest.fixture
+def sync_pool():
+	uri = "sqlite:./dev.db"  # SQLite database URI for testing
+	pool = PySQLXEnginePoolSync(uri=uri, min_size=3)
+	sleep(1)
+	yield pool
+	pool.stop()
 
 
-def test_pool_error():
-	LOG_CONFIG.PYSQLX_USE_COLOR = True
-	LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
-
-	uri = "postgresql://postgres:Build!Test321@localhost:4442/engine"
-	pool = PySQLXEnginePoolSync(uri=uri, max_connections=3)
-
-	pool.new_connection()
-	pool.new_connection()
-	pool.new_connection()
-
-	with pytest.raises(PoolMaxConnectionsError):
-		pool.new_connection()
+def test_sync_pool_initialization(sync_pool):
+	assert sync_pool._min_size == 3, "Min size should be 3"
+	assert sync_pool._opened is True
+	with sync_pool._lock:
+		assert len(sync_pool._pool) == 3, "Pool should have 3 connections"
+	# Additional assertions can be made here regarding the pool's initial state
 
 
-def test_pool_error_no_color_logs():
-	LOG_CONFIG.PYSQLX_USE_COLOR = False
-	LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = False
-
-	uri = "postgresql://postgres:Build!Test321@localhost:4442/engine"
-	pool = PySQLXEnginePoolSync(uri=uri, max_connections=3)
-
-	pool.new_connection()
-	pool.new_connection()
-	pool.new_connection()
-
-	with pytest.raises(PoolMaxConnectionsError):
-		pool.new_connection()
+def test_sync_get_connection_uses_all_min_connections(sync_pool):
+	contexts = [sync_pool.connection() for _ in range(3)]
+	connections = [ctx.__enter__() for ctx in contexts]
+	assert len(connections) == 3, "Should use all min connections"
+	for context in contexts:
+		context.__exit__(None, None, None)
+	assert len(sync_pool._pool) == 3, "All connections should be returned to the pool"
 
 
-@pytest.mark.parametrize(
-	"environment", ["DATABASE_URI_SQLITE", "DATABASE_URI_POSTGRESQL", "DATABASE_URI_MSSQL", "DATABASE_URI_MYSQL"]
-)
-def test_pool_using_context(environment: str):
-	uri = os.environ[environment]
-	pool = PySQLXEnginePoolSync(uri=uri, max_connections=3)
-
-	with pool as conn:
-		assert conn.connected is True
-		assert isinstance(conn, PySQLXEngineSync)
+def test_sync_return_connection_to_pool(sync_pool):
+	with sync_pool.connection() as conn:
+		assert conn is not None, "Connection should not be None"
+		assert len(sync_pool._pool) == 2, "Connection should be removed from the pool"
+	assert len(sync_pool._pool) == 3, "Connection should be returned to the pool"
