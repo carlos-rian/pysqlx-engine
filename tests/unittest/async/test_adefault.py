@@ -4,7 +4,7 @@ import pytest
 
 from pysqlx_engine import PySQLXEngine
 from pysqlx_engine._core.const import LOG_CONFIG
-from pysqlx_engine._core.util import force_sync, pysqlx_get_error
+from pysqlx_engine._core.util import pysqlx_get_error
 from pysqlx_engine.errors import AlreadyConnectedError, ConnectError, NotConnectedError, PySQLXError, RawCmdError
 from tests.common import adb_mssql, adb_mysql, adb_pgsql, adb_sqlite
 
@@ -152,14 +152,6 @@ def test_pysqlx_call_methods():
 
 	with pytest.raises(PySQLXError):
 		raise error
-
-
-def test_force_sync():
-	@force_sync
-	async def async_func():
-		return 1
-
-	assert async_func() == 1
 
 
 @pytest.mark.asyncio
