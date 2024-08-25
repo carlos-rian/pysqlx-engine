@@ -73,12 +73,8 @@ class PySQLXEnginePoolSync(BasePool):
 		self._lock: threading.Lock = threading.Lock()
 
 	def __del__(self) -> None:
-		if getattr(self, "_pool", None):
-			self.stop()
-
-		if getattr(self, "_workers", None):
-			for worker in self._workers:
-				worker.finish()
+		if self._opened:
+			self._stop()
 
 	def _new_conn(self) -> ConnInfoSync:
 		conn = PySQLXEngineSync(uri=self.uri)
@@ -167,9 +163,24 @@ class PySQLXEnginePoolSync(BasePool):
 		finally:
 			self._put_conn(conn)
 
-	def stop(self) -> None:
-		with self._lock:
-			self._opened = False
+	def _stop(self) -> None:
+		if not self._opened:
+			return
+
+		logger.debug("Stopping the pool.")
+		self._opened = False
+		self._opening = False
+
+		if getattr(self, "_pool", None):
 			while self._pool:
 				conn = self._pool.popleft()
 				self._del_conn(conn)
+
+		if getattr(self, "_workers", None):
+			for _ in len(self._workers):
+				worker = self._workers.pop()
+				worker.finish()
+
+	def stop(self) -> None:
+		with self._lock:
+			self._stop()

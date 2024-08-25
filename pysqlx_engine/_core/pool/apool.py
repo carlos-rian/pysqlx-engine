@@ -73,12 +73,8 @@ class PySQLXEnginePool(BasePool):
 		self._lock: asyncio.Lock = asyncio.Lock()
 
 	def __del__(self) -> None:
-		if getattr(self, "_pool", None):
-			asyncio.run(self.stop())
-
-		if getattr(self, "_workers", None):
-			for worker in self._workers:
-				worker.finish()
+		if self._opened:
+			self._stop()
 
 	async def _new_conn(self) -> BaseConnInfo:
 		conn = PySQLXEngine(uri=self.uri)
@@ -167,9 +163,24 @@ class PySQLXEnginePool(BasePool):
 		finally:
 			await self._put_conn(conn)
 
-	async def stop(self) -> None:
-		async with self._lock:
-			self._opened = False
+	async def _stop(self) -> None:
+		if not self._opened:
+			return
+
+		logger.debug("Stopping the pool.")
+		self._opened = False
+		self._opening = False
+
+		if getattr(self, "_pool", None):
 			while self._pool:
 				conn = self._pool.popleft()
 				await self._del_conn(conn)
+
+		if getattr(self, "_workers", None):
+			for _ in len(self._workers):
+				worker = self._workers.pop()
+				worker.finish()
+
+	async def stop(self) -> None:
+		async with self._lock:
+			await self._stop()

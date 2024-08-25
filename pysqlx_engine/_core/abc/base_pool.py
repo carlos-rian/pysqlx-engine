@@ -201,6 +201,9 @@ class BasePool(ABC):
 	def connection(self) -> TPySQLXEngineConn: ...
 
 	@abstractmethod
+	def _stop(self) -> None: ...
+
+	@abstractmethod
 	def stop(self) -> None: ...
 
 
