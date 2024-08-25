@@ -5,9 +5,9 @@ from weakref import ReferenceType, ref
 
 from pysqlx_engine import PySQLXEngineSync
 
-from .base import BaseConnInfo, BaseMonitor, BasePool, Worker, logger
-from .errors import PoolAlreadyStarted, PoolTimeout
-from .util import sleep, spawn
+from ..abc.base_pool import BaseConnInfo, BaseMonitor, BasePool, Worker, logger
+from ..errors import PoolAlreadyStarted, PoolTimeout
+from ..util import sleep, spawn
 
 
 ### Sync Pool

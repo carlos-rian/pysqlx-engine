@@ -1,4 +1,4 @@
-from ._core.aconn import PySQLXEngine as PySQLXEngine
+from ._core._aconn import PySQLXEngine as PySQLXEngine
 from ._core.apool import PySQLXEnginePool as PySQLXEnginePool
 from ._core.pool import PySQLXEnginePoolSync as PySQLXEnginePoolSync
 from ._core.conn import PySQLXEngineSync as PySQLXEngineSync

@@ -22,7 +22,6 @@ from .const import (
 	CODE_ParameterInvalidJsonValueError,
 	CODE_ParameterInvalidProviderError,
 	CODE_ParameterInvalidValueError,
-	CODE_PoolMaxConnectionsError,
 )
 from .helper import fe_json
 
@@ -133,31 +132,6 @@ class AlreadyConnectedError(Exception):
 			super().__init__(msg)
 
 
-class PoolMaxConnectionsError(Exception):
-	"""
-	Raised when the user tries to get a connection from the pool
-	but the maximum number of connections has been reached.
-	"""
-
-	def __init__(self, *args: object) -> None:
-		if LOG_CONFIG.PYSQLX_ERROR_JSON_FMT:
-			msg = fe_json(
-				{
-					"code": CODE_PoolMaxConnectionsError,
-					"message": "maximum number of connections reached",
-					"error": "PoolMaxConnectionsError",
-				}
-			)
-
-			super().__init__(msg)
-		else:
-			msg = (
-				f"PoolMaxConnectionsError(code='{CODE_PoolMaxConnectionsError}', "
-				"message='maximum number of connections reached')"
-			)
-			super().__init__(msg)
-
-
 class ParameterInvalidProviderError(Exception):
 	"""
 	Raised when the user tries to pass an invalid type to a provider.
@@ -251,3 +225,13 @@ class ParameterInvalidJsonValueError(Exception):
 				f"message='{message}', details='{self.details}')"
 			)
 			super().__init__(msg)
+
+
+# new pool
+class PoolClosed(Exception): ...
+
+
+class PoolTimeout(Exception): ...
+
+
+class PoolAlreadyStarted(Exception): ...

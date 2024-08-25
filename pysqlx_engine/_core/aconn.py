@@ -2,15 +2,13 @@ from typing import Optional
 
 import pysqlx_core
 
-from .._core.const import LOG_CONFIG
-from .._core.logger import logger
-from .._core.parser import BaseRow, MyModel, ParserIn, ParserSQL
-
 # ParserSQL,
 # import necessary using _core to not subscribe default parser
-from .const import ISOLATION_LEVEL
+from .const import ISOLATION_LEVEL, LOG_CONFIG
 from .errors import AlreadyConnectedError, NotConnectedError, ParameterInvalidValueError
 from .helper import fe_sql, model_parameter_error_message, not_connected_error_message
+from .logger import logger
+from .parser import BaseRow, MyModel, ParserIn, ParserSQL
 from .util import check_isolation_level, check_sql_and_parameters, create_log_line, pysqlx_get_error
 
 

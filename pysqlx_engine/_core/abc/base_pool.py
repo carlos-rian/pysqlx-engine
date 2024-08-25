@@ -12,8 +12,8 @@ from typing_extensions import TypeAlias
 
 from pysqlx_engine import PySQLXEngine, PySQLXEngineSync
 
-from .errors import PoolClosed
-from .util import get_task_name
+from ..errors import PoolClosed
+from ..util import get_task_name
 
 logger = logging.getLogger("pysqlx_engine")
 TPySQLXEngineConn: TypeAlias = Union[PySQLXEngine, PySQLXEngineSync]

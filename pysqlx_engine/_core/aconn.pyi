@@ -1,7 +1,7 @@
 from types import TracebackType
 from typing import Any, Dict, List, Optional, Type, Union, overload
 
-from .._core.parser import BaseRow, MyModel, DictParam  # import necessary using _core to not subscribe default parser
+from .parser import BaseRow, MyModel, DictParam  # import necessary using _core to not subscribe default parser
 from .const import ISOLATION_LEVEL
 
 class PySQLXEngine:

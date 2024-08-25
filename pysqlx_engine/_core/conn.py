@@ -1,9 +1,9 @@
 from typing import Optional
 
-from .._core.parser import MyModel  # import necessary using _core to not subscribe default parser
-from .const import ISOLATION_LEVEL
-from .util import force_sync
 from .aconn import PySQLXEngine as _PySQLXEngine
+from .const import ISOLATION_LEVEL
+from .parser import MyModel  # import necessary using _core to not subscribe default parser
+from .util import force_sync
 
 
 class PySQLXEngineSync(_PySQLXEngine):

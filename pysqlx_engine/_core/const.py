@@ -37,7 +37,7 @@ PROVIDER = Literal["postgresql", "mysql", "sqlserver", "sqlite"]
 
 
 CODE_AlreadyConnectedError = "PYSQLX001"
-CODE_PoolMaxConnectionsError = "PYSQLX002"
+# CODE_PoolMaxConnectionsError = "PYSQLX002"
 CODE_ParameterInvalidProviderError = "PYSQLX003"
 CODE_ParameterInvalidValueError = "PYSQLX004"
 CODE_ParameterInvalidJsonValueError = "PYSQLX005"
