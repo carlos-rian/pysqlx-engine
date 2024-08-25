@@ -1,6 +1,5 @@
 import asyncio
 import shutil
-import threading
 import time
 from datetime import date, datetime
 from datetime import time as dt_time
@@ -13,6 +12,7 @@ from uuid import UUID
 from pydantic import BaseModel
 from pysqlx_core import PySQLxError as _PySQLXError
 
+from .abc.workers import PySQLXTask, PySQLXThread
 from .const import ISOLATION_LEVEL, PYDANTIC_IS_V1
 from .errors import (
 	ConnectError,
@@ -117,11 +117,12 @@ def create_log_line(text: str, character: str = "=") -> str:
 T = TypeVar("T")
 
 
-def aspawn(f: Callable, args: tuple = (), name: Union[str, None] = None) -> asyncio.Task:
+def aspawn(f: Callable, args: tuple = (), name: Union[str, None] = None) -> PySQLXTask:
 	"""
 	Equivalent to asyncio.create_task.
 	"""
-	return asyncio.create_task(f(*args), name=name)
+	t = PySQLXTask(f=f, name=name, *args)
+	return t
 
 
 def asleep(seconds: float) -> Coroutine[Any, Any, None]:
@@ -138,17 +139,10 @@ def sleep(seconds: float) -> None:
 	return time.sleep(seconds)
 
 
-def spawn(f: Callable, args: tuple = (), name: Union[str, None] = None) -> threading.Thread:
+def spawn(f: Callable, args: tuple = (), name: Union[str, None] = None) -> PySQLXThread:
 	"""
 	Equivalent to creating and running a daemon thread.
 	"""
-	t = threading.Thread(target=f, args=args, name=name, daemon=True)
+	t = PySQLXThread(target=f, args=args, name=name, daemon=True)
 	t.start()
 	return t
-
-
-def get_task_name(task: Union[asyncio.Task, threading.Thread]) -> str:
-	if isinstance(task, asyncio.Task):
-		return task.get_name()
-
-	return task.name

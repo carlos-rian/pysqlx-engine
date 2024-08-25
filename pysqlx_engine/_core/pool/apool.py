@@ -20,36 +20,35 @@ class Monitor(BaseMonitor):
 	pool: ReferenceType["PySQLXEnginePool"]
 
 	async def run(self) -> None:
-		while True:
-			pool = self.pool()
-			if pool._opened and pool._size > 0 and not pool._lock.locked():
-				async with pool._lock:
-					for _ in range(len(pool._pool)):
-						conn = pool._pool.popleft()
-						if conn.healthy is False:
-							logger.debug(f"Connection: {conn} is unhealthy, closing.")
-							await pool._del_conn(conn=conn)
+		pool = self.pool()
+		if pool._opened and pool._size > 0 and not pool._lock.locked():
+			async with pool._lock:
+				for _ in range(len(pool._pool)):
+					conn = pool._pool.popleft()
+					if conn.healthy is False:
+						logger.debug(f"Connection: {conn} is unhealthy, closing.")
+						await pool._del_conn(conn=conn)
 
-						elif (pool._min_size > pool._size < pool._max_size) or pool._size > pool._max_size:
-							# close the connection
-							logger.debug(f"Connection: {conn} health, but pool is full, closing.")
-							await pool._del_conn(conn=conn)
+					elif (pool._min_size > pool._size < pool._max_size) or pool._size > pool._max_size:
+						# close the connection
+						logger.debug(f"Connection: {conn} health, but pool is full, closing.")
+						await pool._del_conn(conn=conn)
 
-						elif conn.expires:
-							# reuse the connection
-							logger.debug(f"Connection: {conn} health, renewing.")
-							conn.renew_expire_at()
-							await pool._put_conn(conn=conn)
+					elif conn.expires:
+						# reuse the connection
+						logger.debug(f"Connection: {conn} health, renewing.")
+						conn.renew_expire_at()
+						await pool._put_conn_unchecked(conn=conn)
 
-						else:
-							# reuse the connection
-							logger.debug(f"Connection: {conn} health, reusing.")
-							await pool._put_conn(conn=conn)
-			else:
-				logger.debug("Pool is closed, waiting for the next check.")
+					else:
+						# reuse the connection
+						logger.debug(f"Connection: {conn} health, reusing.")
+						await pool._put_conn_unchecked(conn=conn)
+		else:
+			logger.debug("Pool is closed, waiting for the next check.")
 
-			logger.debug(f"Sleeping for {pool._check_interval} seconds")
-			await asleep(pool._check_interval)
+		logger.debug(f"Sleeping for {pool._check_interval} seconds")
+		await asleep(pool._check_interval)
 
 
 class PySQLXEnginePool(BasePool):
@@ -98,6 +97,16 @@ class PySQLXEnginePool(BasePool):
 
 		self._pool.append(conn)
 		self._size += 1
+
+	async def _put_conn_unchecked(self, conn: BaseConnInfo) -> None:
+		self._check_closed()
+		if not conn.reusable:
+			logger.debug(f"Connection: {conn} is not reusable, closing.")
+			await self._del_conn(conn)
+			logger.debug("Creating a new connection.")
+			conn = await self._new_conn()
+
+		self._pool.append(conn)
 
 	async def _get_ready_conn(self) -> BaseConnInfo:
 		logger.debug("Getting a ready connection.")
@@ -148,7 +157,7 @@ class PySQLXEnginePool(BasePool):
 
 		logger.debug("Starting the pool workers.")
 		await self._start()
-		task_monitor = aspawn(Monitor(pool=ref(self)).run)
+		task_monitor = aspawn(Monitor(pool=ref(self)).run, name="Monitor")
 
 		self._workers.append(Worker(task_monitor))
 
@@ -168,8 +177,6 @@ class PySQLXEnginePool(BasePool):
 			return
 
 		logger.debug("Stopping the pool.")
-		self._opened = False
-		self._opening = False
 
 		if getattr(self, "_pool", None):
 			while self._pool:
@@ -177,9 +184,12 @@ class PySQLXEnginePool(BasePool):
 				await self._del_conn(conn)
 
 		if getattr(self, "_workers", None):
-			for _ in len(self._workers):
+			for _ in range(len(self._workers)):
 				worker = self._workers.pop()
-				worker.finish()
+				await worker.afinish()
+
+		self._opened = False
+		self._opening = False
 
 	async def stop(self) -> None:
 		async with self._lock:

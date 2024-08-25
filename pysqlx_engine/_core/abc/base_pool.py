@@ -13,11 +13,16 @@ from weakref import ReferenceType
 from pysqlx_engine import PySQLXEngine, PySQLXEngineSync
 
 from ..errors import PoolClosed
-from ..util import get_task_name
+from ..util import asleep
+from .workers import PySQLXTask, PySQLXThread
 
 logger = logging.getLogger("pysqlx_engine")
 TPySQLXEngineConn: TypeAlias = Union[PySQLXEngine, PySQLXEngineSync]
 TReferenceType: TypeAlias = ReferenceType["BasePool"]
+
+
+def get_task_name(task: Union[PySQLXTask, PySQLXThread]) -> str:
+	return task.name
 
 
 class BaseConnInfo(ABC):
@@ -58,12 +63,12 @@ class BaseConnInfo(ABC):
 	async def _aclose(self) -> None:
 		await self.conn.close()
 		self.expire_at = monotonic()
-		print(f"Removed: {self} from pool, the conn was open for {self.expire_at - self.start_at:.5f} secs")
+		logger.info(f"Removed: {self} from pool, the conn was open for {self.expire_at - self.start_at:.5f} secs")
 
 	def _close(self) -> None:
 		self.conn.close()
 		self.expire_at = monotonic()
-		print(f"Removed: {self} from pool, the conn was open for {self.expire_at - self.start_at:.5f} secs")
+		logger.info(f"Removed: {self} from pool, the conn was open for {self.expire_at - self.start_at:.5f} secs")
 
 	def renew_expire_at(self):
 		self.expire_at = monotonic() + self._jitter(value=self.keep_alive, min_pc=-0.05, max_pc=0.0)
@@ -79,7 +84,7 @@ class BaseConnInfo(ABC):
 class Worker:
 	_worker_num = 0
 
-	def __init__(self, task: Union[asyncio.Task, threading.Thread]):
+	def __init__(self, task: Union[PySQLXTask, PySQLXThread]):
 		self.task = task
 		self._worker_num = Worker._worker_num = Worker._worker_num + 1
 		self.name = f"Worker-{self._worker_num}-{get_task_name(task)}"
@@ -87,17 +92,25 @@ class Worker:
 
 		self.running = True
 
-	def finish(self):
+	async def afinish(self):
+		"""
+		Finish the async worker.
+		"""
 		logger.debug(f"Worker: {self.name} finishing.")
-		if isinstance(self.task, asyncio.Task):
-			try:
-				self.task.cancel()
-			except RuntimeError:
-				del self.task
-		else:
-			self.task.join()
+		self.task.stop()
+		await asleep(0.01)
+		try:
+			await self.task.task
+		except asyncio.CancelledError:
+			...
 
-		self.running = False
+	def finish(self):
+		"""
+		Finish the thread worker.
+		"""
+		logger.debug(f"Worker: {self.name} finishing.")
+		self.task.stop()
+		self.task.join()
 
 
 class BasePool(ABC):
@@ -181,6 +194,9 @@ class BasePool(ABC):
 
 	@abstractmethod
 	def _put_conn(self, conn: BaseConnInfo) -> None: ...
+
+	@abstractmethod
+	def _put_conn_unchecked(self, conn: BaseConnInfo) -> None: ...
 
 	@abstractmethod
 	def _get_ready_conn(self) -> BaseConnInfo: ...

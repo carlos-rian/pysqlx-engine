@@ -6,7 +6,7 @@ import pytest_asyncio
 from pysqlx_engine import PySQLXEnginePool
 
 
-@pytest_asyncio.fixture
+@pytest_asyncio.fixture(scope="function")
 async def pool():
 	uri = "sqlite:./dev.db"  # SQLite database URI for testing
 	pool = PySQLXEnginePool(uri=uri, min_size=3)

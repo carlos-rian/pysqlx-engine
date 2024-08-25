@@ -3,7 +3,7 @@ import pytest
 from pysqlx_engine import PySQLXEnginePoolSync
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def sync_pool():
 	uri = "sqlite:./dev.db"  # SQLite database URI for testing
 	pool = PySQLXEnginePoolSync(uri=uri, min_size=3)
