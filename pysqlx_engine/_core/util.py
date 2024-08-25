@@ -1,10 +1,9 @@
 import asyncio
-import functools
 import shutil
 import threading
 import time
-from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime
+from datetime import time as dt_time
 from decimal import Decimal
 from enum import Enum
 from functools import lru_cache
@@ -13,7 +12,6 @@ from uuid import UUID
 
 from pydantic import BaseModel
 from pysqlx_core import PySQLxError as _PySQLXError
-from typing_extensions import ParamSpec
 
 from .const import ISOLATION_LEVEL, PYDANTIC_IS_V1
 from .errors import (
@@ -33,38 +31,6 @@ if PYDANTIC_IS_V1:
 	from pydantic import parse_obj_as as _parse_obj_as  # pragma: no cover
 else:
 	from pydantic import TypeAdapter  # pragma: no cover
-
-
-P = ParamSpec("P")
-T = TypeVar("T")
-
-
-def force_sync(fn: Callable[P, T]) -> Callable[P, T]:
-	"""
-	turn an async function to sync function
-	"""
-
-	@functools.wraps(fn)
-	def wrapper(*args: P.args, **kwds: P.kwargs) -> T:
-		res = fn(*args, **kwds)
-
-		try:
-			loop = asyncio.get_event_loop()
-		except RuntimeError:
-			loop = asyncio.new_event_loop()
-			asyncio.set_event_loop(loop)
-
-		# if loop is already running, we don't need to run it again
-		if loop.is_running():
-			return res
-		# if the result is a coroutine, we need to run it in the loop synchronously
-		elif asyncio.iscoroutine(res):
-			return loop.run_until_complete(res)
-
-		# case the result is not a coroutine, we just return it
-		return res
-
-	return wrapper
 
 
 def pysqlx_get_error(err: _PySQLXError) -> PySQLXError:
@@ -89,7 +55,7 @@ def check_sql_and_parameters(sql: str, parameters: dict):
 		raise TypeError(sql_type_error_message())
 
 	if parameters is not None:
-		_types = (bool, str, int, list, dict, tuple, UUID, time, date, datetime, float, bytes, Decimal, Enum)
+		_types = (bool, str, int, list, dict, tuple, UUID, dt_time, date, datetime, float, bytes, Decimal, Enum)
 		if (
 			not isinstance(parameters, dict)
 			or not all([isinstance(key, str) for key in parameters.keys()])
