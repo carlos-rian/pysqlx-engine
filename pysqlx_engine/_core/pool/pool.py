@@ -72,9 +72,6 @@ class PySQLXEnginePoolSync(BasePool):
 		)
 		self._lock: threading.Lock = threading.Lock()
 
-		task_worker = spawn(self._start_workers)
-		self._workers.append(Worker(task_worker))
-
 	def __del__(self) -> None:
 		if getattr(self, "_pool", None):
 			self.stop()
@@ -154,11 +151,13 @@ class PySQLXEnginePoolSync(BasePool):
 			return
 
 		logger.debug("Starting the pool workers.")
-		task_start = spawn(self._start)
+		self._start()
 		task_monitor = spawn(MonitorSync(pool=ref(self)).run)
 
-		self._workers.append(Worker(task_start))
 		self._workers.append(Worker(task_monitor))
+
+	def start(self) -> None:
+		self._start_workers()
 
 	@contextmanager
 	def connection(self):
