@@ -237,4 +237,3 @@ class BaseMonitor(ABC):
 	@abstractmethod
 	def run(self) -> None:
 		pass
-		pass
