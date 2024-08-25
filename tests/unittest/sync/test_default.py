@@ -6,7 +6,7 @@ from pysqlx_engine import PySQLXEngineSync
 from pysqlx_engine._core import param, param_converter
 from pysqlx_engine._core.const import LOG_CONFIG
 from pysqlx_engine._core.errors import ParameterInvalidJsonValueError, ParameterInvalidValueError
-from pysqlx_engine._core.util import force_sync, pysqlx_get_error
+from pysqlx_engine._core.util import pysqlx_get_error
 from pysqlx_engine.errors import AlreadyConnectedError, ConnectError, NotConnectedError, RawCmdError
 from tests.common import db_mssql, db_mysql, db_pgsql, db_sqlite
 from tests.unittest.sql.mysql.value import data
@@ -121,14 +121,6 @@ def test_pysqlx_get_error_default():
 
 	error = pysqlx_get_error(err=GenericError())
 	assert isinstance(error, GenericError)
-
-
-def test_force_sync():
-	@force_sync
-	def sync_func():
-		return 1
-
-	assert sync_func() == 1
 
 
 def test_invalid_convert_type_error_invalid_value():
