@@ -74,15 +74,16 @@ if __name__ == "__main__":
 			print("Hello from external function!")
 			await asyncio.sleep(0.5)
 
-		# Criação e execução da tarefa personalizada
+		# create a task
 		task = PySQLXTask(my_function)
 
-		# Simula algum trabalho no código principal
+		# await the task
 		await asyncio.sleep(5)
 
-		# Parada da tarefa
+		# create a event to stop the task
 		task.stop()
 
+		# await the task
 		await asyncio.sleep(1)
 
 	asyncio.run(main())
