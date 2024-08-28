@@ -7,7 +7,7 @@ from pysqlx_engine import PySQLXEngine
 
 from ..abc.base_pool import BaseConnInfo, BaseMonitor, BasePool, Worker, logger
 from ..errors import PoolAlreadyStarted, PoolTimeout
-from ..util import asleep, aspawn
+from ..util import asleep, aspawn_loop
 
 
 ### Async Pool
@@ -157,7 +157,7 @@ class PySQLXEnginePool(BasePool):
 
 		logger.debug("Starting the pool workers.")
 		await self._start()
-		task_monitor = aspawn(Monitor(pool=ref(self)).run, name="Monitor")
+		task_monitor = aspawn_loop(Monitor(pool=ref(self)).run, name="Monitor")
 
 		self._workers.append(Worker(task_monitor))
 

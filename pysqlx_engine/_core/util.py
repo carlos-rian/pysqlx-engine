@@ -12,7 +12,7 @@ from uuid import UUID
 from pydantic import BaseModel
 from pysqlx_core import PySQLxError as _PySQLXError
 
-from .abc.workers import PySQLXTask, PySQLXThread
+from .abc.workers import PySQLXTaskLoop, PySQLXThreadLoop
 from .const import ISOLATION_LEVEL, PYDANTIC_IS_V1
 from .errors import (
 	ConnectError,
@@ -117,11 +117,13 @@ def create_log_line(text: str, character: str = "=") -> str:
 T = TypeVar("T")
 
 
-def aspawn(f: Callable, args: tuple = (), name: Union[str, None] = None) -> PySQLXTask:
+def aspawn_loop(f: Callable, args: tuple = (), name: Union[str, None] = None) -> PySQLXTaskLoop:
 	"""
 	Equivalent to asyncio.create_task.
+
+	Where the task will run the coroutine until the stop method is called.
 	"""
-	t = PySQLXTask(f=f, name=name, *args)
+	t = PySQLXTaskLoop(f=f, name=name, *args)
 	return t
 
 
@@ -132,17 +134,19 @@ def asleep(seconds: float) -> Coroutine[Any, Any, None]:
 	return asyncio.sleep(seconds)
 
 
+def spawn_loop(f: Callable, args: tuple = (), name: Union[str, None] = None) -> PySQLXThreadLoop:
+	"""
+	Equivalent to creating and running a daemon thread.
+
+	Where the thread will run the target function until the stop method is called.
+	"""
+	t = PySQLXThreadLoop(target=f, args=args, name=name, daemon=True)
+	t.start()
+	return t
+
+
 def sleep(seconds: float) -> None:
 	"""
 	Equivalent to time.sleep().
 	"""
 	return time.sleep(seconds)
-
-
-def spawn(f: Callable, args: tuple = (), name: Union[str, None] = None) -> PySQLXThread:
-	"""
-	Equivalent to creating and running a daemon thread.
-	"""
-	t = PySQLXThread(target=f, args=args, name=name, daemon=True)
-	t.start()
-	return t

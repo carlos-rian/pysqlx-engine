@@ -8,9 +8,11 @@ from pysqlx_engine._core.logger import logger
 logging.basicConfig(level=logging.DEBUG)
 
 
-class PySQLXThread(threading.Thread):
+class PySQLXThreadLoop(threading.Thread):
 	"""
 	A subclass of threading.Thread that sets the thread as a daemon thread.
+
+	Where the thread will run the target function until the stop method is called.
 	"""
 
 	def __init__(self, *args, **kwargs):
@@ -31,9 +33,11 @@ class PySQLXThread(threading.Thread):
 		self._stop_event.set()
 
 
-class PySQLXTask:
+class PySQLXTaskLoop:
 	"""
 	A class that wraps a coroutine and runs it as a task.
+
+	Where the task will run the coroutine until the stop method is called.
 	"""
 
 	def __init__(self, f: Callable, force_sleep: bool = False, name: str = None, *args, **kwargs):

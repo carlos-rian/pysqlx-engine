@@ -14,14 +14,14 @@ from pysqlx_engine import PySQLXEngine, PySQLXEngineSync
 
 from ..errors import PoolClosed
 from ..util import asleep
-from .workers import PySQLXTask, PySQLXThread
+from .workers import PySQLXTaskLoop, PySQLXThreadLoop
 
 logger = logging.getLogger("pysqlx_engine")
 TPySQLXEngineConn: TypeAlias = Union[PySQLXEngine, PySQLXEngineSync]
 TReferenceType: TypeAlias = ReferenceType["BasePool"]
 
 
-def get_task_name(task: Union[PySQLXTask, PySQLXThread]) -> str:
+def get_task_name(task: Union[PySQLXTaskLoop, PySQLXThreadLoop]) -> str:
 	return task.name
 
 
@@ -84,7 +84,7 @@ class BaseConnInfo(ABC):
 class Worker:
 	_worker_num = 0
 
-	def __init__(self, task: Union[PySQLXTask, PySQLXThread]):
+	def __init__(self, task: Union[PySQLXTaskLoop, PySQLXThreadLoop]):
 		self.task = task
 		self._worker_num = Worker._worker_num = Worker._worker_num + 1
 		self.name = f"Worker-{self._worker_num}-{get_task_name(task)}"

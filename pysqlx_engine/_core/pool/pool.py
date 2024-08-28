@@ -7,7 +7,7 @@ from pysqlx_engine import PySQLXEngineSync
 
 from ..abc.base_pool import BaseConnInfo, BaseMonitor, BasePool, Worker, logger
 from ..errors import PoolAlreadyStarted, PoolTimeout
-from ..util import sleep, spawn
+from ..util import sleep, spawn_loop
 
 
 ### Sync Pool
@@ -161,7 +161,7 @@ class PySQLXEnginePoolSync(BasePool):
 		logger.debug("Starting the pool workers.")
 		self._start()
 
-		task_monitor = spawn(MonitorSync(pool=ref(self)).run, name="Monitor")
+		task_monitor = spawn_loop(MonitorSync(pool=ref(self)).run, name="Monitor")
 
 		self._workers.append(Worker(task_monitor))
 
