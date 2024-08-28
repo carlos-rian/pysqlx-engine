@@ -65,25 +65,3 @@ class PySQLXTask:
 	def stop(self):
 		logger.debug(f"Async -> Stopping task: {self.name}")
 		self._stop_event.set()
-
-
-if __name__ == "__main__":
-
-	async def main():
-		async def my_function():
-			print("Hello from external function!")
-			await asyncio.sleep(0.5)
-
-		# create a task
-		task = PySQLXTask(my_function)
-
-		# await the task
-		await asyncio.sleep(5)
-
-		# create a event to stop the task
-		task.stop()
-
-		# await the task
-		await asyncio.sleep(1)
-
-	asyncio.run(main())

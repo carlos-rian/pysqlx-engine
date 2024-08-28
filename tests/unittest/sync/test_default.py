@@ -6,7 +6,7 @@ from pysqlx_engine import PySQLXEngineSync
 from pysqlx_engine._core import param, param_converter
 from pysqlx_engine._core.const import LOG_CONFIG
 from pysqlx_engine._core.errors import ParameterInvalidJsonValueError, ParameterInvalidValueError
-from pysqlx_engine._core.util import pysqlx_get_error
+from pysqlx_engine._core.util import create_log_line, pysqlx_get_error
 from pysqlx_engine.errors import AlreadyConnectedError, ConnectError, NotConnectedError, RawCmdError
 from tests.common import db_mssql, db_mysql, db_pgsql, db_sqlite
 from tests.unittest.sql.mysql.value import data
@@ -162,3 +162,11 @@ def test_valid_json_convert_type_mysql():
 		""""2022-12-20 08:59:55", "type_datetime": "2022-12-20 09:00:00", "type_enum": "black", """
 		""""type_json": ["name", "age"], "type_bytes": "7375706572206279746573"}\'"""
 	)
+
+
+def test_create_log_line():
+	assert "=" not in create_log_line(1000 * "T")
+	assert create_log_line(10 * "T", "=").startswith("=====")
+	assert create_log_line(10 * "T", "=").endswith("=====")
+	assert create_log_line(10 * "T", "-").startswith("-----")
+	assert create_log_line(10 * "T", "-").endswith("-----")

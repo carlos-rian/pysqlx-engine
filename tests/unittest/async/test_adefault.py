@@ -1,8 +1,10 @@
+import asyncio
 import os
 
 import pytest
 
 from pysqlx_engine import PySQLXEngine
+from pysqlx_engine._core.abc.workers import PySQLXTask
 from pysqlx_engine._core.const import LOG_CONFIG
 from pysqlx_engine._core.util import pysqlx_get_error
 from pysqlx_engine.errors import AlreadyConnectedError, ConnectError, NotConnectedError, PySQLXError, RawCmdError
@@ -202,3 +204,19 @@ async def test_py_sqlx_error_json_fmt_with_colorize():
 
 	with pytest.raises(PySQLXError):
 		raise error
+
+
+@pytest.mark.asyncio
+async def test_force_sleep_async():
+	async def test():
+		pass
+
+	task = PySQLXTask(test, force_sleep=True)
+	await asyncio.sleep(0.1)
+	task.stop()
+	await asyncio.sleep(0.2)
+
+	try:
+		await task.task
+	except asyncio.CancelledError:
+		print("Task was cancelled")
