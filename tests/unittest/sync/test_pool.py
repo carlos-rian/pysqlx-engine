@@ -4,7 +4,7 @@ from pysqlx_engine import PySQLXEnginePoolSync
 from pysqlx_engine._core.errors import PoolClosedError
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="function", autouse=False)
 def sync_pool():
 	uri = "sqlite:./dev.db"  # SQLite database URI for testing
 	pool = PySQLXEnginePoolSync(uri=uri, min_size=3)
@@ -17,6 +17,7 @@ def test_sync_pool_initialization(sync_pool: PySQLXEnginePoolSync):
 	assert sync_pool._opened is True
 	assert len(sync_pool._pool) == 3, "Pool should have 3 connections"
 	# Additional assertions can be made here regarding the pool's initial state
+	sync_pool.stop()
 
 
 def test_sync_get_connection_uses_all_min_connections(sync_pool: PySQLXEnginePoolSync):
@@ -26,6 +27,7 @@ def test_sync_get_connection_uses_all_min_connections(sync_pool: PySQLXEnginePoo
 	for context in contexts:
 		context.__exit__(None, None, None)
 	assert len(sync_pool._pool) == 3, "All connections should be returned to the pool"
+	sync_pool.stop()
 
 
 def test_sync_return_connection_to_pool(sync_pool: PySQLXEnginePoolSync):
@@ -33,6 +35,7 @@ def test_sync_return_connection_to_pool(sync_pool: PySQLXEnginePoolSync):
 		assert conn is not None, "Connection should not be None"
 		assert len(sync_pool._pool) == 2, "Connection should be removed from the pool"
 	assert len(sync_pool._pool) == 3, "Connection should be returned to the pool"
+	sync_pool.stop()
 
 
 def test_pool_stoped(sync_pool: PySQLXEnginePoolSync):

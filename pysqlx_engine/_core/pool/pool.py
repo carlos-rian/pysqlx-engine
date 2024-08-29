@@ -7,7 +7,7 @@ from pysqlx_engine import PySQLXEngineSync
 
 from ..abc.base_pool import BaseConnInfo, BaseMonitor, BasePool, Worker, logger
 from ..errors import PoolAlreadyStartedError, PoolTimeoutError
-from ..util import sleep, spawn_loop
+from ..util import gather, sleep, spawn_loop
 
 
 ### Sync Pool
@@ -146,8 +146,8 @@ class PySQLXEnginePoolSync(BasePool):
 		self._opening = True
 		logger.debug("Starting the pool.")
 		with self._lock:
-			for _ in range(self._min_size):
-				conn = self._new_conn()
+			conns = gather(*[self._new_conn for _ in range(self._min_size)])
+			for conn in conns:
 				self._put_conn(conn)
 			self._opened = True
 
@@ -181,8 +181,6 @@ class PySQLXEnginePoolSync(BasePool):
 			return
 
 		logger.debug("Stopping the pool.")
-		self._opened = False
-		self._opening = False
 
 		if getattr(self, "_pool", None):
 			while self._pool:
@@ -193,6 +191,9 @@ class PySQLXEnginePoolSync(BasePool):
 			for _ in range(len(self._workers)):
 				worker = self._workers.pop()
 				worker.finish()
+
+		self._opened = False
+		self._opening = False
 
 	def stop(self) -> None:
 		with self._lock:

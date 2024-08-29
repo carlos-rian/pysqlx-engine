@@ -7,7 +7,7 @@ from pysqlx_engine import PySQLXEngine
 
 from ..abc.base_pool import BaseConnInfo, BaseMonitor, BasePool, Worker, logger
 from ..errors import PoolAlreadyStartedError, PoolTimeoutError
-from ..util import asleep, aspawn_loop
+from ..util import agather, asleep, aspawn_loop
 
 
 ### Async Pool
@@ -73,7 +73,8 @@ class PySQLXEnginePool(BasePool):
 
 	def __del__(self) -> None:
 		if self._opened:
-			self._stop()
+			del self._pool
+			del self._workers
 
 	async def _new_conn(self) -> BaseConnInfo:
 		conn = PySQLXEngine(uri=self.uri)
@@ -143,8 +144,8 @@ class PySQLXEnginePool(BasePool):
 		self._opening = True
 		logger.debug("Starting the pool.")
 		async with self._lock:
-			for _ in range(self._min_size):
-				conn = await self._new_conn()
+			conns = await agather(*[self._new_conn() for _ in range(self._min_size)])
+			for conn in conns:
 				await self._put_conn(conn)
 			self._opened = True
 
