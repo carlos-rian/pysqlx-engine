@@ -6,7 +6,7 @@ from weakref import ReferenceType, ref
 from pysqlx_engine import PySQLXEngineSync
 
 from ..abc.base_pool import BaseConnInfo, BaseMonitor, BasePool, Worker, logger
-from ..errors import PoolAlreadyStarted, PoolTimeout
+from ..errors import PoolAlreadyStartedError, PoolTimeoutError
 from ..util import sleep, spawn_loop
 
 
@@ -131,7 +131,7 @@ class PySQLXEnginePoolSync(BasePool):
 			timeout = deadline - monotonic()
 
 			if timeout < 0.0:
-				raise PoolTimeout("Timeout waiting for a connection")
+				raise PoolTimeoutError("Timeout waiting for a connection")
 
 			conn = self._get_ready_conn()
 			if conn:
@@ -141,7 +141,7 @@ class PySQLXEnginePoolSync(BasePool):
 
 	def _start(self) -> None:
 		if self._size > 0 and self._opened:
-			raise PoolAlreadyStarted("Pool is already started")
+			raise PoolAlreadyStartedError("Pool is already started")
 
 		self._opening = True
 		logger.debug("Starting the pool.")

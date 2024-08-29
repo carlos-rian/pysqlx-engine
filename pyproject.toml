@@ -94,7 +94,7 @@ filterwarnings = 'error'
 xfail_strict = true
 env_files = "tests/.env.test"
 asyncio_mode = "strict"
-asyncio_default_fixture_loop_scope="module"
+asyncio_default_fixture_loop_scope="session"
 
 
 [tool.taskipy.tasks]

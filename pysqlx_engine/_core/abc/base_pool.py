@@ -12,7 +12,7 @@ from weakref import ReferenceType
 
 from pysqlx_engine import PySQLXEngine, PySQLXEngineSync
 
-from ..errors import PoolClosed
+from ..errors import PoolClosedError
 from ..util import asleep
 from .workers import PySQLXTaskLoop, PySQLXThreadLoop
 
@@ -98,7 +98,7 @@ class Worker:
 		"""
 		logger.debug(f"Worker: {self.name} finishing.")
 		self.task.stop()
-		await asleep(0.01)
+		await asleep(0.1)
 		try:
 			await self.task.task
 		except asyncio.CancelledError:
@@ -184,7 +184,7 @@ class BasePool(ABC):
 
 	def _check_closed(self) -> None:
 		if self.closed is True and self._opening is False:
-			raise PoolClosed("Pool is closed")
+			raise PoolClosedError("Pool is closed")
 
 	@abstractmethod
 	def _new_conn(self) -> BaseConnInfo: ...
