@@ -4,6 +4,7 @@ from time import monotonic
 from weakref import ReferenceType, ref
 
 from pysqlx_engine import PySQLXEngine
+from pysqlx_engine._core.abc.workers import PySQLXTask
 
 from ..abc.base_pool import BaseConnInfo, BaseMonitor, BasePool, Worker, logger
 from ..errors import PoolAlreadyStartedError, PoolTimeoutError
@@ -27,12 +28,12 @@ class Monitor(BaseMonitor):
 					conn = pool._pool.popleft()
 					if conn.healthy is False:
 						logger.debug(f"Connection: {conn} is unhealthy, closing.")
-						await pool._del_conn(conn=conn)
+						await pool._del_conn_unchecked(conn=conn)
 
 					elif (pool._min_size > pool._size < pool._max_size) or pool._size > pool._max_size:
 						# close the connection
 						logger.debug(f"Connection: {conn} health, but pool is full, closing.")
-						await pool._del_conn(conn=conn)
+						await pool._del_conn_unchecked(conn=conn)
 
 					elif conn.expires:
 						# reuse the connection
@@ -45,7 +46,7 @@ class Monitor(BaseMonitor):
 						logger.debug(f"Connection: {conn} health, reusing.")
 						await pool._put_conn_unchecked(conn=conn)
 		else:
-			logger.debug("Pool is closed, waiting for the next check.")
+			logger.debug("Pool locked/closed/empty, waiting for the next check.")
 
 		logger.debug(f"Sleeping for {pool._check_interval} seconds")
 		await asleep(pool._check_interval)
@@ -77,27 +78,44 @@ class PySQLXEnginePool(BasePool):
 			del self._workers
 
 	async def _new_conn(self) -> BaseConnInfo:
+		async with self._lock:
+			conn = PySQLXEngine(uri=self.uri)
+			await conn.connect()
+			conn_info = ConnInfo(conn=conn, keep_alive=self._keep_alive)
+			logger.debug(f"Connection: {conn_info} created.")
+			self._size += 1
+		return conn_info
+
+	async def _new_conn_unchecked(self) -> BaseConnInfo:
 		conn = PySQLXEngine(uri=self.uri)
 		await conn.connect()
 		conn_info = ConnInfo(conn=conn, keep_alive=self._keep_alive)
 		logger.debug(f"Connection: {conn_info} created.")
+		self._size += 1
 		return conn_info
 
 	async def _del_conn(self, conn: BaseConnInfo) -> None:
+		logger.debug(f"Connection: {conn} closing.")
+		async with self._lock:
+			await conn.close()
+			self._size -= 1
+
+	async def _del_conn_unchecked(self, conn: BaseConnInfo) -> None:
 		logger.debug(f"Connection: {conn} closing.")
 		await conn.close()
 		self._size -= 1
 
 	async def _put_conn(self, conn: BaseConnInfo) -> None:
 		self._check_closed()
-		if not conn.reusable:
-			logger.debug(f"Connection: {conn} is not reusable, closing.")
-			await self._del_conn(conn)
-			logger.debug("Creating a new connection.")
-			conn = await self._new_conn()
+		if conn.reusable:
+			self._pool.append(conn)
+			return
 
+		logger.debug(f"Connection: {conn} is not reusable, closing.")
+		await self._del_conn(conn)
+		logger.debug("Creating a new connection.")
+		conn = await self._new_conn()
 		self._pool.append(conn)
-		self._size += 1
 
 	async def _put_conn_unchecked(self, conn: BaseConnInfo) -> None:
 		self._check_closed()
@@ -110,7 +128,6 @@ class PySQLXEnginePool(BasePool):
 		self._pool.append(conn)
 
 	async def _get_ready_conn(self) -> BaseConnInfo:
-		logger.debug("Getting a ready connection.")
 		if self._pool:
 			logger.debug("Getting for a ready connection.")
 			conn = self._pool.popleft()
@@ -124,7 +141,7 @@ class PySQLXEnginePool(BasePool):
 	async def _get_conn(self) -> BaseConnInfo:
 		self._check_closed()
 		deadline = monotonic() + self._conn_timeout
-
+		logger.debug("Getting a ready connection.")
 		while True:
 			timeout = deadline - monotonic()
 
@@ -144,7 +161,7 @@ class PySQLXEnginePool(BasePool):
 		self._opening = True
 		logger.debug("Starting the pool.")
 		async with self._lock:
-			conns = await agather(*[self._new_conn() for _ in range(self._min_size)])
+			conns = await agather(*[self._new_conn_unchecked() for _ in range(self._min_size)])
 			for conn in conns:
 				await self._put_conn(conn)
 			self._opened = True
@@ -171,7 +188,8 @@ class PySQLXEnginePool(BasePool):
 		try:
 			yield conn.conn
 		finally:
-			await self._put_conn(conn)
+			task = PySQLXTask(self._put_conn, conn=conn, name="AddConnection")
+			self._workers.append(Worker(task))
 
 	async def _stop(self) -> None:
 		if not self._opened:
@@ -182,7 +200,7 @@ class PySQLXEnginePool(BasePool):
 		if getattr(self, "_pool", None):
 			while self._pool:
 				conn = self._pool.popleft()
-				await self._del_conn(conn)
+				await self._del_conn_unchecked(conn)
 
 		if getattr(self, "_workers", None):
 			for _ in range(len(self._workers)):
