@@ -95,7 +95,8 @@ xfail_strict = true
 env_files = "tests/.env.test"
 asyncio_mode = "strict"
 asyncio_default_fixture_loop_scope="session"
-
+log_cli = true
+log_cli_level = "DEBUG"
 
 [tool.taskipy.tasks]
 lint = "ruff check . && ruff check . --diff"

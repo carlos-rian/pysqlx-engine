@@ -13,7 +13,7 @@ from .util import check_isolation_level, check_sql_and_parameters, create_log_li
 
 
 class PySQLXEngineSync:
-	__slots__ = ["uri", "connected", "_conn", "_provider"]
+	__slots__ = ["uri", "connected", "_conn", "_provider", "_on_transaction"]
 
 	uri: str
 	connected: bool
@@ -37,7 +37,13 @@ class PySQLXEngineSync:
 			if self.uri.startswith(prov):
 				self._provider = prov
 
+		self._on_transaction: bool = False
+
 	def __del__(self):
+		if self._on_transaction:
+			logger.warning("Transaction is still active, please commit or rollback before closing the connection.")
+			self._on_transaction = False
+
 		if self.connected:
 			del self._conn
 			self._conn = None
@@ -56,6 +62,9 @@ class PySQLXEngineSync:
 		return self
 
 	def __exit__(self, exc_type, exc, exc_tb):
+		if self._on_transaction:
+			logger.warning("Transaction is still active, please commit or rollback before closing the connection.")
+			self._on_transaction = False
 		self.close()
 
 	def connect(self):
@@ -68,6 +77,10 @@ class PySQLXEngineSync:
 			raise pysqlx_get_error(err=e)
 
 	def close(self):
+		if self._on_transaction:
+			logger.warning("Transaction is still active, please commit or rollback before closing the connection.")
+			self._on_transaction = False
+
 		if self.connected:
 			del self._conn
 			self._conn = None

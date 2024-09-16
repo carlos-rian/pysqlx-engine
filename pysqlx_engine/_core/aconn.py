@@ -13,7 +13,7 @@ from .util import check_isolation_level, check_sql_and_parameters, create_log_li
 
 
 class PySQLXEngine:
-	__slots__ = ["uri", "connected", "_conn", "_provider"]
+	__slots__ = ["uri", "connected", "_conn", "_provider", "_on_transaction"]
 
 	uri: str
 	connected: bool
@@ -37,7 +37,13 @@ class PySQLXEngine:
 			if self.uri.startswith(prov):
 				self._provider = prov
 
+		self._on_transaction: bool = False
+
 	def __del__(self):
+		if self._on_transaction:
+			logger.warning("Transaction is still active, please commit or rollback before closing the connection.")
+			self._on_transaction = False
+
 		if self.connected:
 			del self._conn
 			self._conn = None
@@ -56,6 +62,9 @@ class PySQLXEngine:
 		return self
 
 	async def __aexit__(self, exc_type, exc, exc_tb):
+		if self._on_transaction:
+			logger.warning("Transaction is still active, please commit or rollback before closing the connection.")
+			self._on_transaction = False
 		await self.close()
 
 	async def connect(self):
@@ -68,6 +77,10 @@ class PySQLXEngine:
 			raise pysqlx_get_error(err=e)
 
 	async def close(self):
+		if self._on_transaction:
+			logger.warning("Transaction is still active, please commit or rollback before closing the connection.")
+			self._on_transaction = False
+
 		if self.connected:
 			del self._conn
 			self._conn = None
@@ -148,6 +161,7 @@ class PySQLXEngine:
 
 	async def commit(self):
 		self._pre_validate()
+		self._on_transaction = False
 		if self._provider == "sqlserver":
 			await self.raw_cmd(sql="COMMIT TRANSACTION;")
 		else:
@@ -155,6 +169,7 @@ class PySQLXEngine:
 
 	async def rollback(self):
 		self._pre_validate()
+		self._on_transaction = False
 		if self._provider == "sqlserver":
 			await self.raw_cmd(sql="ROLLBACK TRANSACTION;")
 		else:
@@ -163,6 +178,7 @@ class PySQLXEngine:
 	async def start_transaction(self, isolation_level: Optional[ISOLATION_LEVEL] = None):
 		self._pre_validate(isolation_level=isolation_level)
 		try:
+			self._on_transaction = True
 			await self._conn.start_transaction(isolation_level=isolation_level)
 		except pysqlx_core.PySQLxError as e:
 			raise pysqlx_get_error(err=e)

@@ -52,3 +52,57 @@ async def test_pool_stoped(pool: PySQLXEnginePool):
 	with pytest.raises(PoolClosedError):
 		async with pool.connection() as _:
 			...  # pragma: no cover
+
+
+@pytest.mark.asyncio
+async def test_reuse_connection():
+	uri = "sqlite:./dev.db"  # SQLite database URI for testing
+	pool = PySQLXEnginePool(uri=uri, min_size=2, keep_alive=5)
+	await pool.start()
+	contexts = [pool.connection() for _ in range(2)]
+	connections = [await ctx.__aenter__() for ctx in contexts]
+	assert len(connections) == 2, "Should use all min connections"
+	assert pool._size == 2, "Should have 2 connections"
+	conn_ids = [id(conn) for conn in connections]
+	for context in contexts:
+		await context.__aexit__(None, None, None)
+
+	# Connection should be renewed
+	await asyncio.sleep(6)
+	contexts = [pool.connection() for _ in range(2)]
+	connections = [await ctx.__aenter__() for ctx in contexts]
+	assert len(connections) == 2, "Should use all min connections"
+	assert pool._size == 2, "Should have 2 connections"
+	new_conn_ids = [id(conn) for conn in connections]
+
+	conn_ids.sort()
+	new_conn_ids.sort()
+	assert conn_ids == new_conn_ids, "Connections should be renewed"
+	await pool.stop()
+
+
+@pytest.mark.asyncio
+async def test_renew_connection():
+	uri = "sqlite:./dev.db"  # SQLite database URI for testing
+	pool = PySQLXEnginePool(uri=uri, min_size=2, keep_alive=2, check_interval=2)
+	await pool.start()
+	contexts = [pool.connection() for _ in range(2)]
+	connections = [await ctx.__aenter__() for ctx in contexts]
+	assert len(connections) == 2, "Should use all min connections"
+	assert pool._size == 2, "Should have 2 connections"
+	conn_ids = [id(conn) for conn in connections]
+	for context in contexts:
+		await context.__aexit__(None, None, None)
+
+	# Connection should be renewed
+	await asyncio.sleep(15)
+	contexts = [pool.connection() for _ in range(2)]
+	connections = [await ctx.__aenter__() for ctx in contexts]
+	assert len(connections) == 2, "Should use all min connections"
+	assert pool._size == 2, "Should have 2 connections"
+	new_conn_ids = [id(conn) for conn in connections]
+
+	conn_ids.sort()
+	new_conn_ids.sort()
+	assert conn_ids != new_conn_ids, "Connections should be renewed"
+	await pool.stop()
