@@ -69,3 +69,18 @@ class PySQLXTaskLoop:
 	def stop(self):
 		logger.debug(f"Async -> Stopping task: {self.name}")
 		self._stop_event.set()
+
+
+class PySQLXTask(PySQLXTaskLoop):
+	async def run(self):
+		logger.debug(f"Async -> Starting task: {self.name}")
+		logger.debug(f"Async -> Running task: {self.name}")
+		if self._coro:
+			await self._coro(*self._args, **self._kwargs)
+
+		logger.debug(f"Async -> Stopped task: {self.name}")
+
+	async def stop(self):
+		logger.debug(f"Async -> Stopping task: {self.name}")
+		self._stop_event.set()
+		await self.task
