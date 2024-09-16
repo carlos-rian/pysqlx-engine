@@ -84,7 +84,7 @@ async def test_reuse_connection():
 @pytest.mark.asyncio
 async def test_renew_connection():
 	uri = "sqlite:./dev.db"  # SQLite database URI for testing
-	pool = PySQLXEnginePool(uri=uri, min_size=2, keep_alive=2, check_interval=2)
+	pool = PySQLXEnginePool(uri=uri, min_size=2, keep_alive=2, check_interval=1, conn_timeout=10)
 	await pool.start()
 	contexts = [pool.connection() for _ in range(2)]
 	connections = [await ctx.__aenter__() for ctx in contexts]
