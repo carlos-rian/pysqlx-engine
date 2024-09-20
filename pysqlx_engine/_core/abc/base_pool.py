@@ -34,7 +34,7 @@ class BaseConnInfo(ABC):
 		self.conn = conn
 
 		self.keep_alive = keep_alive
-		self.expire_at = monotonic() + self._jitter(value=self.keep_alive, min_pc=-0.05, max_pc=0.0)
+		self.expires_at = monotonic() + self._jitter(value=self.keep_alive, min_pc=-0.05, max_pc=0.0)
 		self.start_at = monotonic()
 
 	def __repr__(self) -> str:
@@ -47,7 +47,7 @@ class BaseConnInfo(ABC):
 
 	@property
 	def expires(self) -> bool:
-		return self.expire_at < monotonic()
+		return self.expires_at < monotonic()
 
 	@property
 	def healthy(self) -> bool:
@@ -62,16 +62,16 @@ class BaseConnInfo(ABC):
 
 	async def _aclose(self) -> None:
 		await self.conn.close()
-		self.expire_at = monotonic()
-		logger.info(f"Removed: {self} from pool, the conn was open for {self.expire_at - self.start_at:.5f} secs")
+		self.expires_at = monotonic()
+		logger.info(f"Removed: {self} from pool, the conn was open for {self.expires_at - self.start_at:.5f} secs")
 
 	def _close(self) -> None:
 		self.conn.close()
-		self.expire_at = monotonic()
-		logger.info(f"Removed: {self} from pool, the conn was open for {self.expire_at - self.start_at:.5f} secs")
+		self.expires_at = monotonic()
+		logger.info(f"Removed: {self} from pool, the conn was open for {self.expires_at - self.start_at:.5f} secs")
 
 	def renew_expire_at(self):
-		self.expire_at = monotonic() + self._jitter(value=self.keep_alive, min_pc=-0.05, max_pc=0.0)
+		self.expires_at = monotonic() + self._jitter(value=self.keep_alive, min_pc=-0.05, max_pc=0.0)
 
 	@classmethod
 	def _jitter(cls, value: float, min_pc: float, max_pc: float) -> float:
@@ -186,10 +186,10 @@ class BasePool(ABC):
 		if self.closed is True and self._opening is False:
 			raise PoolClosedError("Pool is closed")
 
-	@abstractmethod
+	# @abstractmethod
 	def _new_conn(self) -> BaseConnInfo: ...
 
-	@abstractmethod
+	# @abstractmethod
 	def _del_conn(self, conn: BaseConnInfo) -> None: ...
 
 	@abstractmethod
@@ -198,7 +198,7 @@ class BasePool(ABC):
 	@abstractmethod
 	def _put_conn_unchecked(self, conn: BaseConnInfo) -> None: ...
 
-	@abstractmethod
+	# @abstractmethod
 	def _get_ready_conn(self) -> BaseConnInfo: ...
 
 	@abstractmethod
