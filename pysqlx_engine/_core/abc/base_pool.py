@@ -109,8 +109,8 @@ class Worker:
 		Finish the thread worker.
 		"""
 		logger.debug(f"Worker: {self.name} finishing.")
-		self.task.stop()
-		self.task.join()
+		if self.task.is_alive():
+			self.task.join(timeout=2)
 
 
 class BasePool(ABC):

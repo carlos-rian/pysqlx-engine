@@ -1,6 +1,7 @@
 import asyncio
 import os
 import shutil
+import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date, datetime
@@ -161,13 +162,29 @@ async def agather(*coro: Coroutine):
 	return await asyncio.gather(*coro)
 
 
-def gather(*funcs: Callable):
+def gather(*funcs: Callable, **kwargs):
 	"""
 	Equivalent to threading.Thread(target=func).start().
 	"""
 	max_workers = min(32, (os.cpu_count() or 1) + 2)
 	with ThreadPoolExecutor(max_workers=max_workers) as executor:
-		futures = [executor.submit(func) for func in funcs]
+		futures = [executor.submit(func, **kwargs) for func in funcs]
 		results = [future.result() for future in as_completed(futures)]
 
 	return results
+
+
+def spawn(func: Callable, name: str, **kwargs):
+	"""
+	Equivalent to threading.Thread(target=func).start().
+	"""
+	thread = threading.Thread(target=func, name=name, kwargs=kwargs, daemon=True)
+	thread.start()
+	return thread
+
+
+def aspawn(func: Coroutine, name: str):
+	"""
+	Equivalent to asyncio.create_task(func).
+	"""
+	return asyncio.create_task(func, name=name)

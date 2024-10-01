@@ -2,7 +2,6 @@ import asyncio
 from asyncio import Queue, Semaphore
 from contextlib import asynccontextmanager
 from time import monotonic
-from weakref import ReferenceType, ref
 
 from pysqlx_engine import PySQLXEngine
 
@@ -17,39 +16,38 @@ class ConnInfo(BaseConnInfo):
 
 
 class Monitor(BaseMonitor):
-	pool: ReferenceType["PySQLXEnginePool"]
+	pool: "PySQLXEnginePool"
 
 	async def run(self) -> None:
-		pool = self.pool()
 		logger.info("Monitor: Started monitoring the pool.")
-		await pool._monitor_semaphore.acquire()
-		try:
-			async with pool._monitor_lock:
-				conns_to_check = min(pool._pool.qsize(), pool._batch_size)
+		async with self.pool._monitor_lock:
+			await self.pool._monitor_semaphore.acquire()
+			try:
+				conns_to_check = min(self.pool._pool.qsize(), self.pool._batch_size)
 				for _ in range(conns_to_check):
 					try:
-						conn = pool._pool.get_nowait()
+						conn = self.pool._pool.get_nowait()
 					except asyncio.QueueEmpty:
 						break
 
 					if conn.healthy is False or conn.reusable is False:
 						logger.debug(f"Connection: {conn} is unhealthy, closing.")
-						await pool._del_conn_unchecked(conn=conn)
+						await self.pool._del_conn_unchecked(conn=conn)
 
 					elif monotonic() >= conn.expires_at:
 						logger.debug(f"Monitor: Connection {conn} has expired, renewing.")
 						conn.renew_expire_at()
-						await pool._put_conn_unchecked(conn)
+						await self.pool._put_conn_unchecked(conn)
 
 					else:
 						logger.debug(f"Monitor: Reusing healthy connection {conn}.")
-						await pool._pool.put(conn)
-		finally:
-			# Ensure that semaphore is released even if an error occurs
-			pool._monitor_semaphore.release()
+						await self.pool._pool.put(conn)
+			finally:
+				# Ensure that semaphore is released even if an error occurs
+				self.pool._monitor_semaphore.release()
 
-		logger.debug(f"Monitor: Sleeping for {pool._check_interval} seconds.")
-		await asleep(pool._check_interval)
+		logger.debug(f"Monitor: Sleeping for {self.pool._check_interval} seconds.")
+		await asleep(self.pool._check_interval)
 
 
 class PySQLXEnginePool(BasePool):
@@ -83,27 +81,25 @@ class PySQLXEnginePool(BasePool):
 		self._lock = asyncio.Lock()
 
 	async def _new_conn_unchecked(self) -> ConnInfo:
-		try:
-			conn = PySQLXEngine(uri=self.uri)
-			await conn.connect()
-			conn_info = ConnInfo(conn=conn, keep_alive=self._keep_alive)
-			logger.debug(f"Pool: New connection created: {conn_info}")
-			self._size += 1
-			return conn_info
-		except Exception as e:
-			logger.error(f"Pool: Failed to create a new connection: {e}")
-			raise
+		conn = PySQLXEngine(uri=self.uri)
+		await conn.connect()
+		conn_info = ConnInfo(conn=conn, keep_alive=self._keep_alive)
+		logger.debug(f"Pool: New connection created: {conn_info}")
+		self._size += 1
+		return conn_info
 
-	async def _del_conn_unchecked(self, conn: ConnInfo) -> None:
-		try:
+	async def _del_conn_unchecked(self, conn: ConnInfo, use_lock: bool = False) -> None:
+		if use_lock:
+			async with self._lock:
+				await conn.close()
+				self._size -= 1
+		else:
 			await conn.close()
 			self._size -= 1
-			logger.debug(f"Pool: Connection closed: {conn}")
-		except Exception as e:
-			logger.error(f"Pool: Error closing connection {conn}: {e}")
+		logger.debug(f"Pool: Connection closed: {conn}")
 
 	async def _put_conn_unchecked(self, conn: ConnInfo) -> None:
-		if conn.healthy and monotonic() < conn.expires_at:
+		if conn.healthy and conn.reusable:
 			try:
 				await self._pool.put(conn)
 				logger.debug(f"Pool: Connection returned to pool: {conn}")
@@ -113,18 +109,19 @@ class PySQLXEnginePool(BasePool):
 		else:
 			logger.debug(f"Pool: Connection is not reusable or expired: {conn}")
 			await self._del_conn_unchecked(conn)
-			logger.debug("Pool: Creating a new connection to maintain pool size.")
-			new_conn = await self._new_conn_unchecked()
-			await self._pool.put(new_conn)
+			if self._size < self._min_size:
+				logger.debug("Pool: Creating a new connection to maintain pool size.")
+				new_conn = await self._new_conn_unchecked()
+				await self._pool.put(new_conn)
 
 	async def _get_ready_conn(self) -> BaseConnInfo:
-		if self._pool:
+		if self._pool.qsize() > 0:
 			logger.debug("Getting for a ready connection.")
 			try:
 				conn = await asyncio.wait_for(self._pool.get(), timeout=0.1)
 				return conn
 			except asyncio.TimeoutError:
-				...
+				return
 
 		if self._size < self._max_size:
 			logger.debug("Creating a new connection.")
@@ -190,7 +187,7 @@ class PySQLXEnginePool(BasePool):
 
 		await self._start()
 		# Initialize and start the monitor
-		self._monitor = aspawn_loop(Monitor(pool=ref(self)).run, name="ConnectionMonitor")
+		self._monitor = aspawn_loop(Monitor(pool=self).run, name="ConnectionMonitor")
 		self._workers.append(Worker(self._monitor))
 		logger.info("Pool: Workers started.")
 
@@ -204,10 +201,13 @@ class PySQLXEnginePool(BasePool):
 			yield conn.conn
 		except Exception as e:
 			logger.error(f"Pool: Error during connection usage: {e}")
-			conn.healthy = False
 			raise
 		finally:
-			await self._put_conn(conn)
+			if conn.conn._on_transaction:
+				logger.warning("Transaction is still active, please commit or rollback before closing the connection.")
+				await self._del_conn_unchecked(conn, use_lock=True)
+			else:
+				await self._put_conn(conn)
 
 	async def _stop(self) -> None:
 		if not self._opened:
