@@ -15,7 +15,7 @@ from uuid import UUID
 from pydantic import BaseModel
 from pysqlx_core import PySQLxError as _PySQLXError
 
-from .abc.workers import PySQLXTaskLoop, PySQLXThreadLoop
+from .abc.workers import PySQLXTask, PySQLXTaskSync
 from .const import ISOLATION_LEVEL, PYDANTIC_IS_V1
 from .errors import (
 	ConnectError,
@@ -120,13 +120,13 @@ def create_log_line(text: str, character: str = "=") -> str:
 T = TypeVar("T")
 
 
-def aspawn_loop(f: Callable, args: tuple = (), name: Union[str, None] = None) -> PySQLXTaskLoop:
+def aspawn_loop(f: Callable, args: tuple = (), name: Union[str, None] = None) -> PySQLXTask:
 	"""
 	Equivalent to asyncio.create_task.
 
 	Where the task will run the coroutine until the stop method is called.
 	"""
-	t = PySQLXTaskLoop(f=f, name=name, *args)
+	t = PySQLXTask(f=f, name=name, *args)
 	return t
 
 
@@ -137,13 +137,13 @@ def asleep(seconds: float) -> Coroutine[Any, Any, None]:
 	return asyncio.sleep(seconds)
 
 
-def spawn_loop(f: Callable, args: tuple = (), name: Union[str, None] = None) -> PySQLXThreadLoop:
+def spawn_loop(f: Callable, args: tuple = (), name: Union[str, None] = None) -> PySQLXTaskSync:
 	"""
 	Equivalent to creating and running a daemon thread.
 
 	Where the thread will run the target function until the stop method is called.
 	"""
-	t = PySQLXThreadLoop(target=f, args=args, name=name, daemon=True)
+	t = PySQLXTaskSync(target=f, args=args, name=name, daemon=True)
 	t.start()
 	return t
 

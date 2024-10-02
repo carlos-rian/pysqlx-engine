@@ -8,7 +8,7 @@ from pysqlx_engine._core.logger import logger
 logging.basicConfig(level=logging.DEBUG)
 
 
-class PySQLXThreadLoop(threading.Thread):
+class PySQLXTaskSync(threading.Thread):
 	"""
 	A subclass of threading.Thread that sets the thread as a daemon thread.
 
@@ -21,7 +21,7 @@ class PySQLXThreadLoop(threading.Thread):
 
 	def run(self):
 		logger.debug(f"Starting thread: {self.name}")
-		while not self._stop_event.is_set():
+		if self._coro and not self._stop_event.is_set():
 			logger.debug(f"Running thread: {self.name}")
 			if self._target:
 				self._target(*self._args, **self._kwargs)
@@ -33,7 +33,7 @@ class PySQLXThreadLoop(threading.Thread):
 		self._stop_event.set()
 
 
-class PySQLXTaskLoop:
+class PySQLXTask:
 	"""
 	A class that wraps a coroutine and runs it as a task.
 
@@ -56,31 +56,16 @@ class PySQLXTaskLoop:
 
 	async def run(self):
 		logger.debug(f"Async -> Starting task: {self.name}")
-		while not self._stop_event.is_set():
+		if self._coro and not self._stop_event.is_set():
 			logger.debug(f"Async -> Running task: {self.name}")
-			if self._coro:
-				await self._coro(*self._args, **self._kwargs)
-				if self._force_sleep:
-					await asyncio.sleep(0.01)  # case the coroutine doesn't have a I/O operation
+			await self._coro(*self._args, **self._kwargs)
+			if self._force_sleep:
+				await asyncio.sleep(0.01)  # case the coroutine doesn't have a I/O operation
 
-		self.task.cancel()
-		logger.debug(f"Async -> Stopped task: {self.name}")
+		if not self.task.done():
+			self.task.cancel()
+
+		logger.debug(f"Async -> Stopping task: {self.name}")
 
 	def stop(self):
-		logger.debug(f"Async -> Stopping task: {self.name}")
 		self._stop_event.set()
-
-
-class PySQLXTask(PySQLXTaskLoop):
-	async def run(self):
-		logger.debug(f"Async -> Starting task: {self.name}")
-		logger.debug(f"Async -> Running task: {self.name}")
-		if self._coro:
-			await self._coro(*self._args, **self._kwargs)
-
-		logger.debug(f"Async -> Stopped task: {self.name}")
-
-	async def stop(self):
-		logger.debug(f"Async -> Stopping task: {self.name}")
-		self._stop_event.set()
-		await self.task

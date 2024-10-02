@@ -14,14 +14,14 @@ from pysqlx_engine import PySQLXEngine, PySQLXEngineSync
 
 from ..errors import PoolClosedError
 from ..util import asleep
-from .workers import PySQLXTaskLoop, PySQLXThreadLoop
+from .workers import PySQLXTask, PySQLXTaskSync
 
 logger = logging.getLogger("pysqlx_engine")
 TPySQLXEngineConn: TypeAlias = Union[PySQLXEngine, PySQLXEngineSync]
 TReferenceType: TypeAlias = ReferenceType["BasePool"]
 
 
-def get_task_name(task: Union[PySQLXTaskLoop, PySQLXThreadLoop]) -> str:
+def get_task_name(task: Union[PySQLXTask, PySQLXTaskSync]) -> str:
 	return task.name
 
 
@@ -70,7 +70,7 @@ class BaseConnInfo(ABC):
 		self.expires_at = monotonic()
 		logger.info(f"Removed: {self} from pool, the conn was open for {self.expires_at - self.start_at:.5f} secs")
 
-	def renew_expire_at(self):
+	def renew_expires_at(self):
 		self.expires_at = monotonic() + self._jitter(value=self.keep_alive, min_pc=-0.05, max_pc=0.0)
 
 	@classmethod
@@ -84,7 +84,7 @@ class BaseConnInfo(ABC):
 class Worker:
 	_worker_num = 0
 
-	def __init__(self, task: Union[PySQLXTaskLoop, PySQLXThreadLoop]):
+	def __init__(self, task: Union[PySQLXTask, PySQLXTaskSync]):
 		self.task = task
 		self._worker_num = Worker._worker_num = Worker._worker_num + 1
 		self.name = f"Worker-{self._worker_num}-{get_task_name(task)}"
@@ -224,10 +224,10 @@ class BasePool(ABC):
 
 
 class BaseMonitor(ABC):
-	pool: TReferenceType
+	pool: BasePool
 
-	def __init__(self, pool: TReferenceType):
-		self.pool: ReferenceType[BasePool] = pool
+	def __init__(self, pool: BasePool):
+		self.pool: BasePool = pool
 
 	def __repr__(self) -> str:
 		pool = self.pool()
@@ -235,5 +235,4 @@ class BaseMonitor(ABC):
 		return f"<{self.__class__.__name__} {name} at 0x{id(self):x}>"
 
 	@abstractmethod
-	def run(self) -> None:
-		pass
+	def run(self) -> None: ...

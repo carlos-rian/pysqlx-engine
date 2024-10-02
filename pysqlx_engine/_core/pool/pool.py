@@ -22,34 +22,46 @@ class Monitor(BaseMonitor):
 
 	def run(self) -> None:
 		logger.info("Monitor: Started monitoring the pool.")
-		with self.pool._monitor_lock:
-			self.pool._monitor_semaphore.acquire()
-			try:
-				conns_to_check = min(self.pool._pool.qsize(), self.pool._batch_size)
-				for _ in range(conns_to_check):
-					try:
-						conn = self.pool._pool.get_nowait()
-					except queue.Empty:
-						break
+		while self.pool._opened:
+			with self.pool._monitor_lock:
+				self.pool._monitor_semaphore.acquire()
+				try:
+					conns_to_check = min(self.pool._pool.qsize(), self.pool._batch_size)
+					for _ in range(conns_to_check):
+						try:
+							conn = self.pool._pool.get_nowait()
+						except queue.Empty:
+							break
 
-					if conn.healthy is False or conn.reusable is False:
-						logger.debug(f"Connection: {conn} is unhealthy, closing.")
-						self.pool._del_conn_unchecked(conn=conn)
+						if conn.healthy is False or conn.reusable is False:
+							logger.debug(f"Connection: {conn} is unhealthy, closing.")
+							self.pool._del_conn_unchecked(conn=conn)
 
-					elif monotonic() >= conn.expires_at:
-						logger.debug(f"Monitor: Connection {conn} has expired, renewing.")
-						conn.renew_expire_at()
-						self.pool._put_conn_unchecked(conn)
+						elif monotonic() >= conn.expires_at:
+							logger.debug(f"Monitor: Connection {conn} has expired, renewing.")
+							conn.renew_expires_at()
+							self.pool._pool.put_nowait(conn)
 
-					else:
-						logger.debug(f"Monitor: Reusing healthy connection {conn}.")
-						self.pool._pool.put(conn)
-			finally:
-				# Ensure that semaphore is released even if an error occurs
-				self.pool._monitor_semaphore.release()
+						else:
+							logger.debug(f"Monitor: Reusing healthy connection {conn}.")
+							self.pool._pool.put_nowait(conn)
 
-		logger.debug(f"Monitor: Sleeping for {self.pool._check_interval} seconds.")
-		sleep(self.pool._check_interval)
+					if self.pool._size < self.pool._min_size:
+						logger.debug("Monitor: Pool size is below minimum, creating new connections.")
+						new_conns = gather(
+							*[self.pool._new_conn_unchecked for _ in range(self.pool._min_size - self.pool._size)]
+						)
+						for conn in new_conns:
+							self.pool._pool.put(conn)
+
+				finally:
+					# Ensure that semaphore is released even if an error occurs
+					self.pool._monitor_semaphore.release()
+
+			logger.debug(f"Monitor: Sleeping for {self.pool._check_interval} seconds.")
+			sleep(self.pool._check_interval)
+
+		logger.info("Monitor: Stopped monitoring the pool.")
 
 
 class PySQLXEnginePoolSync(BasePool):
