@@ -35,11 +35,10 @@ def test_get_connection_uses_all_min_connections(pool: PySQLXEnginePool):
 
 
 def test_return_connection_to_pool(pool: PySQLXEnginePool):
-	with pool._lock:
-		with pool.connection() as conn:
-			assert conn is not None, "Connection should not be None"
-			assert pool._pool.qsize() == 2, "Connection should be removed from the pool"
-		assert pool._pool.qsize() == 3, "Connection should be returned to the pool"
+	with pool.connection() as conn:
+		assert conn is not None, "Connection should not be None"
+		assert pool._pool.qsize() == 2, "Connection should be removed from the pool"
+	assert pool._pool.qsize() == 3, "Connection should be returned to the pool"
 
 
 def test_pool_stoped(pool: PySQLXEnginePool):
