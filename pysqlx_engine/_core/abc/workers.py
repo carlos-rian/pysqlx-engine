@@ -21,7 +21,7 @@ class PySQLXTaskSync(threading.Thread):
 
 	def run(self):
 		logger.debug(f"Starting thread: {self.name}")
-		if self._coro and not self._stop_event.is_set():
+		if self._target and not self._stop_event.is_set():
 			logger.debug(f"Running thread: {self.name}")
 			if self._target:
 				self._target(*self._args, **self._kwargs)

@@ -12,7 +12,7 @@ from ..util import agather, asleep, aspawn_loop
 
 class ConnInfo(BaseConnInfo):
 	async def close(self) -> None:
-		return await super()._aclose()
+		await super()._aclose()
 
 
 class Monitor(BaseMonitor):
@@ -155,7 +155,6 @@ class PySQLXEnginePool(BasePool):
 			logger.debug("Getting a ready connection.")
 			while True:
 				timeout = deadline - monotonic()
-
 				if timeout < 0.0:
 					raise PoolTimeoutError("Timeout waiting for a connection")
 

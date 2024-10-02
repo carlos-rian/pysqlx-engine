@@ -9,7 +9,7 @@ from pysqlx_engine._core.errors import PoolClosedError
 @pytest.fixture(scope="function")
 def pool():
 	uri = "sqlite:./dev.db"  # SQLite database URI for testing
-	pool = PySQLXEnginePool(uri=uri, min_size=3)
+	pool = PySQLXEnginePool(uri=uri, min_size=3, check_interval=2)
 	pool.start()
 	return pool
 
@@ -35,6 +35,7 @@ def test_get_connection_uses_all_min_connections(pool: PySQLXEnginePool):
 
 
 def test_return_connection_to_pool(pool: PySQLXEnginePool):
+	pool._check_interval = 10
 	with pool.connection() as conn:
 		assert conn is not None, "Connection should not be None"
 		assert pool._pool.qsize() == 2, "Connection should be removed from the pool"
@@ -77,7 +78,7 @@ def test_reuse_connection():
 
 def test_renew_connection():
 	uri = "sqlite:./dev.db"  # SQLite database URI for testing
-	pool = PySQLXEnginePool(uri=uri, min_size=2, keep_alive=2, check_interval=1, conn_timeout=10)
+	pool = PySQLXEnginePool(uri=uri, min_size=2, max_size=2, keep_alive=1, check_interval=1, conn_timeout=5)
 	pool.start()
 	contexts = [pool.connection() for _ in range(2)]
 	connections = [ctx.__enter__() for ctx in contexts]
@@ -88,7 +89,7 @@ def test_renew_connection():
 		context.__exit__(None, None, None)
 
 	# Connection should be renewed
-	time.sleep(15)
+	time.sleep(6)
 	contexts = [pool.connection() for _ in range(2)]
 	connections = [ctx.__enter__() for ctx in contexts]
 	assert len(connections) == 2, "Should use all min connections"

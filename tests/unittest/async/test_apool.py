@@ -39,6 +39,7 @@ async def test_get_connection_uses_all_min_connections(pool: PySQLXEnginePool):
 
 @pytest.mark.asyncio
 async def test_return_connection_to_pool(pool: PySQLXEnginePool):
+	pool._check_interval = 10
 	async with pool.connection() as conn:
 		assert conn is not None, "Connection should not be None"
 		assert pool._pool.qsize() == 2, "Connection should be removed from the pool"

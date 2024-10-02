@@ -18,7 +18,7 @@ class ConnInfo(BaseConnInfo):
 
 
 class Monitor(BaseMonitor):
-	pool: "PySQLXEnginePoolSync"  # ReferenceType["PySQLXEnginePoolSync"]
+	pool: "PySQLXEnginePoolSync"
 
 	def run(self) -> None:
 		logger.info("Monitor: Started monitoring the pool.")
@@ -33,7 +33,11 @@ class Monitor(BaseMonitor):
 						except queue.Empty:
 							break
 
-						if conn.healthy is False or conn.reusable is False:
+						if self.pool._size > self.pool._max_size:
+							logger.debug("Monitor: Pool size is above minimum, closing connection.")
+							self.pool._del_conn_unchecked(conn=conn)
+
+						elif conn.healthy is False or conn.reusable is False:
 							logger.debug(f"Connection: {conn} is unhealthy, closing.")
 							self.pool._del_conn_unchecked(conn=conn)
 
@@ -52,8 +56,7 @@ class Monitor(BaseMonitor):
 							*[self.pool._new_conn_unchecked for _ in range(self.pool._min_size - self.pool._size)]
 						)
 						for conn in new_conns:
-							self.pool._pool.put(conn)
-
+							self.pool._put_conn_unchecked(conn)
 				finally:
 					# Ensure that semaphore is released even if an error occurs
 					self.pool._monitor_semaphore.release()
@@ -98,8 +101,8 @@ class PySQLXEnginePoolSync(BasePool):
 		conn = PySQLXEngine(uri=self.uri)
 		conn.connect()
 		conn_info = ConnInfo(conn=conn, keep_alive=self._keep_alive)
-		logger.debug(f"Pool: New connection created: {conn_info}")
 		self._size += 1
+		logger.debug(f"Pool: New connection created: {conn_info} PoolSize: {self._size}")
 		return conn_info
 
 	def _del_conn_unchecked(self, conn: ConnInfo, use_lock: bool = False) -> None:
@@ -110,12 +113,12 @@ class PySQLXEnginePoolSync(BasePool):
 		else:
 			conn.close()
 			self._size -= 1
-		logger.debug(f"Pool: Connection closed: {conn}")
+		logger.debug(f"Pool: Connection closed: {conn} PoolSize: {self._size}")
 
 	def _put_conn_unchecked(self, conn: ConnInfo) -> None:
-		if conn.healthy and conn.reusable:
+		if conn.healthy and conn.reusable and self._size < self._max_size:
 			try:
-				self._pool.put_nowait(conn)
+				self._pool.put(conn)
 				logger.debug(f"Pool: Connection returned to pool: {conn}")
 			except queue.Full:
 				logger.debug(f"Pool: Pool is full. Closing connection: {conn}")
@@ -123,10 +126,6 @@ class PySQLXEnginePoolSync(BasePool):
 		else:
 			logger.debug(f"Pool: Connection is not reusable or expired: {conn}")
 			self._del_conn_unchecked(conn)
-			if self._size < self._min_size:
-				logger.debug("Pool: Creating a new connection to maintain pool size.")
-				new_conn = self._new_conn_unchecked()
-				self._pool.put(new_conn)
 
 	def _get_ready_conn(self) -> BaseConnInfo:
 		if self._pool.qsize() > 0:
@@ -135,12 +134,13 @@ class PySQLXEnginePoolSync(BasePool):
 				conn = self._pool.get(timeout=0.1)
 				return conn
 			except queue.Empty:
-				return None
+				return
 
-		if self._size < self._max_size:
-			logger.debug("Creating a new connection.")
-			conn = self._new_conn_unchecked()
-			return conn
+		with self._lock:
+			if self._size < self._max_size:
+				logger.debug("Creating a new connection.")
+				conn = self._new_conn_unchecked()
+				return conn
 
 	def _get_conn(self) -> ConnInfo:
 		self._check_closed()
@@ -172,7 +172,8 @@ class PySQLXEnginePoolSync(BasePool):
 
 	def _put_conn(self, conn: ConnInfo) -> None:
 		try:
-			self._put_conn_unchecked(conn)
+			with self._lock:
+				self._put_conn_unchecked(conn)
 		finally:
 			self._semaphore.release()
 
@@ -184,8 +185,9 @@ class PySQLXEnginePoolSync(BasePool):
 		self._opening = True
 		logger.info("Pool: Starting the connection pool.")
 		with self._lock:
+			tasks = [self._new_conn_unchecked for _ in range(self._min_size)]
 			try:
-				conns = gather(*[self._new_conn_unchecked for _ in range(self._min_size)])
+				conns = gather(*tasks)
 				for conn in conns:
 					self._pool.put(conn)
 			except Exception as e:
