@@ -97,6 +97,7 @@ asyncio_mode = "strict"
 asyncio_default_fixture_loop_scope="session"
 log_cli = true
 log_cli_level = "DEBUG"
+addopts = "--maxfail=10"
 
 [tool.taskipy.tasks]
 lint = "ruff check . && ruff check . --diff"
@@ -109,4 +110,4 @@ test_with_cache = "pytest tests -vv -x -s --cov=. --cache-clear"
 test_clean = "task clear_db && sleep 10 && task test"
 cov = "coverage html"
 
-core = "poetry remove pysqlx-core && poetry add $w/Documents/repo/my-repos/pysqlx-core/target/wheels/pysqlx_core-0.1.49-cp38-cp38-manylinux_2_34_x86_64.whl"
+local_core = "poetry remove pysqlx-core && poetry add $w/Documents/repo/my-repos/pysqlx-core/target/wheels/pysqlx_core-0.1.49-cp38-cp38-manylinux_2_34_x86_64.whl"

@@ -23,6 +23,7 @@ class Monitor(BaseMonitor):
 	def run(self) -> None:
 		logger.info("Monitor: Started monitoring the pool.")
 		while self.pool._opened:
+			self._checking = True
 			with self.pool._monitor_lock:
 				self.pool._monitor_semaphore.acquire()
 				try:
@@ -61,6 +62,7 @@ class Monitor(BaseMonitor):
 					# Ensure that semaphore is released even if an error occurs
 					self.pool._monitor_semaphore.release()
 
+			self._checking = False
 			logger.debug(f"Monitor: Sleeping for {self.pool._check_interval} seconds.")
 			sleep(self.pool._check_interval)
 

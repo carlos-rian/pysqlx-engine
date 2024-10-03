@@ -34,12 +34,16 @@ def test_get_connection_uses_all_min_connections(pool: PySQLXEnginePool):
 	pool.stop()
 
 
-def test_return_connection_to_pool(pool: PySQLXEnginePool):
-	pool._check_interval = 10
+def test_return_connection_to_pool():
+	uri = "sqlite:./dev.db"
+	pool = PySQLXEnginePool(uri=uri, min_size=3, check_interval=10)
+	pool.start()
+	time.sleep(1)
 	with pool.connection() as conn:
 		assert conn is not None, "Connection should not be None"
 		assert pool._pool.qsize() == 2, "Connection should be removed from the pool"
 	assert pool._pool.qsize() == 3, "Connection should be returned to the pool"
+	pool.stop()
 
 
 def test_pool_stoped(pool: PySQLXEnginePool):

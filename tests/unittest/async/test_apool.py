@@ -39,11 +39,15 @@ async def test_get_connection_uses_all_min_connections(pool: PySQLXEnginePool):
 
 @pytest.mark.asyncio
 async def test_return_connection_to_pool(pool: PySQLXEnginePool):
-	pool._check_interval = 10
+	uri = "sqlite:./dev.db"  # SQLite database URI for testing
+	pool = PySQLXEnginePool(uri=uri, min_size=3, check_interval=10)
+	await pool.start()
+	await asyncio.sleep(1)
 	async with pool.connection() as conn:
 		assert conn is not None, "Connection should not be None"
 		assert pool._pool.qsize() == 2, "Connection should be removed from the pool"
 	assert pool._pool.qsize() == 3, "Connection should be returned to the pool"
+	await pool.stop()
 
 
 @pytest.mark.asyncio

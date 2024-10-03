@@ -17,9 +17,11 @@ class PySQLXEngine:
 
 	uri: str
 	connected: bool
+	_on_transaction: bool
 
 	def __init__(self, uri: str):
 		self.connected: bool = False
+		self._on_transaction: bool = False
 
 		_providers = ["postgresql", "mysql", "sqlserver", "sqlite"]
 		if not uri or not any([uri.startswith(prov) for prov in [*_providers, "file"]]):
@@ -37,10 +39,8 @@ class PySQLXEngine:
 			if self.uri.startswith(prov):
 				self._provider = prov
 
-		self._on_transaction: bool = False
-
 	def __del__(self):
-		if self._on_transaction:
+		if getattr(self, "_on_transaction") and self._on_transaction:
 			logger.warning("Transaction is still active, please commit or rollback before closing the connection.")
 			self._on_transaction = False
 
@@ -62,9 +62,6 @@ class PySQLXEngine:
 		return self
 
 	async def __aexit__(self, exc_type, exc, exc_tb):
-		if self._on_transaction:
-			logger.warning("Transaction is still active, please commit or rollback before closing the connection.")
-			self._on_transaction = False
 		await self.close()
 
 	async def connect(self):

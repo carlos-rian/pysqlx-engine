@@ -228,6 +228,7 @@ class BaseMonitor(ABC):
 
 	def __init__(self, pool: BasePool):
 		self.pool: BasePool = pool
+		self._checking: bool = False
 
 	def __repr__(self) -> str:
 		pool = self.pool()

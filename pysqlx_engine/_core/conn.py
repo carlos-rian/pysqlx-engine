@@ -20,6 +20,7 @@ class PySQLXEngineSync:
 
 	def __init__(self, uri: str):
 		self.connected: bool = False
+		self._on_transaction: bool = False
 
 		_providers = ["postgresql", "mysql", "sqlserver", "sqlite"]
 		if not uri or not any([uri.startswith(prov) for prov in [*_providers, "file"]]):
@@ -37,17 +38,8 @@ class PySQLXEngineSync:
 			if self.uri.startswith(prov):
 				self._provider = prov
 
-		self._on_transaction: bool = False
-
 	def __del__(self):
-		if self._on_transaction:
-			logger.warning("Transaction is still active, please commit or rollback before closing the connection.")
-			self._on_transaction = False
-
-		if self.connected:
-			del self._conn
-			self._conn = None
-			self.connected = False
+		self.close()
 
 	def is_healthy(self):
 		self._pre_validate()
@@ -62,9 +54,6 @@ class PySQLXEngineSync:
 		return self
 
 	def __exit__(self, exc_type, exc, exc_tb):
-		if self._on_transaction:
-			logger.warning("Transaction is still active, please commit or rollback before closing the connection.")
-			self._on_transaction = False
 		self.close()
 
 	def connect(self):
@@ -77,7 +66,7 @@ class PySQLXEngineSync:
 			raise pysqlx_get_error(err=e)
 
 	def close(self):
-		if self._on_transaction:
+		if getattr(self, "_on_transaction") and self._on_transaction:
 			logger.warning("Transaction is still active, please commit or rollback before closing the connection.")
 			self._on_transaction = False
 
