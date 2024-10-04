@@ -154,7 +154,6 @@ class PySQLXEnginePool(BasePool):
 		except asyncio.TimeoutError:
 			raise PoolTimeoutError("Timeout waiting for a connection semaphore")
 		try:
-			logger.debug("Getting a ready connection.")
 			while True:
 				timeout = deadline - monotonic()
 				if timeout < 0.0:

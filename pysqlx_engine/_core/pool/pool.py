@@ -131,7 +131,7 @@ class PySQLXEnginePoolSync(BasePool):
 
 	def _get_ready_conn(self) -> BaseConnInfo:
 		if self._pool.qsize() > 0:
-			logger.debug("Getting a ready connection.")
+			logger.debug("Getting for a ready connection.")
 			try:
 				conn = self._pool.get(timeout=0.1)
 				return conn
