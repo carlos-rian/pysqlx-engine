@@ -6,7 +6,7 @@ from time import monotonic
 from pysqlx_engine import PySQLXEngine
 
 from ..abc.base_pool import BaseConnInfo, BaseMonitor, BasePool, Worker, logger
-from ..errors import PoolAlreadyStartedError, PoolTimeoutError
+from ..errors import PoolAlreadyClosedError, PoolAlreadyStartedError, PoolTimeoutError
 from ..util import agather, asleep, aspawn
 
 
@@ -97,7 +97,7 @@ class PySQLXEnginePool(BasePool):
 		self._batch_size = monitor_batch_size
 		self._lock = asyncio.Lock()
 
-	async def _new_conn_unchecked(self, use_lock: bool = False) -> ConnInfo:
+	async def _new_conn_unchecked(self) -> ConnInfo:
 		conn = PySQLXEngine(uri=self.uri)
 		await conn.connect()
 		conn_info = ConnInfo(conn=conn, keep_alive=self._keep_alive)
@@ -139,7 +139,7 @@ class PySQLXEnginePool(BasePool):
 		async with self._lock:
 			if self._size < self._max_size:
 				logger.debug("Creating a new connection.")
-				conn = await self._new_conn_unchecked(use_lock=True)
+				conn = await self._new_conn_unchecked()
 				return conn
 
 	async def _get_conn(self) -> ConnInfo:
@@ -196,10 +196,6 @@ class PySQLXEnginePool(BasePool):
 		self._opening = False
 
 	async def _start_workers(self) -> None:
-		if self._opened and self._size > 0:
-			logger.debug("Pool: Workers already started.")
-			return
-
 		await self._start()
 		# Initialize and start the monitor
 		self._monitor = aspawn(Monitor(pool=self).run, name="ConnectionMonitor")
@@ -226,8 +222,7 @@ class PySQLXEnginePool(BasePool):
 
 	async def _stop(self) -> None:
 		if not self._opened:
-			logger.debug("Pool: Attempted to stop a pool that is not opened.")
-			return
+			raise PoolAlreadyClosedError("Pool is already closed")
 
 		logger.info("Pool: Stopping the connection pool.")
 		self._opened = False
@@ -246,10 +241,3 @@ class PySQLXEnginePool(BasePool):
 	async def stop(self) -> None:
 		async with self._lock:
 			await self._stop()
-
-	async def __aenter__(self):
-		await self.start()
-		return self
-
-	async def __aexit__(self, exc_type, exc, tb):
-		await self.stop()

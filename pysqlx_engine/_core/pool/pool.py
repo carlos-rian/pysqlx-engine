@@ -6,7 +6,7 @@ from time import monotonic
 from pysqlx_engine import PySQLXEngineSync as PySQLXEngine
 
 from ..abc.base_pool import BaseConnInfo, BaseMonitor, BasePool, Worker, logger
-from ..errors import PoolAlreadyStartedError, PoolTimeoutError
+from ..errors import PoolAlreadyClosedError, PoolAlreadyStartedError, PoolTimeoutError
 from ..util import gather, sleep, spawn
 
 # from weakref import ReferenceType
@@ -200,10 +200,6 @@ class PySQLXEnginePoolSync(BasePool):
 		self._opening = False
 
 	def _start_workers(self) -> None:
-		if self._opened and self._size > 0:
-			logger.debug("Pool: Workers already started.")
-			return
-
 		self._start()
 		# Initialize and start the monitor
 		self._monitor = spawn(Monitor(pool=self).run, name="ConnectionMonitor")
@@ -230,8 +226,7 @@ class PySQLXEnginePoolSync(BasePool):
 
 	def _stop(self) -> None:
 		if not self._opened:
-			logger.debug("Pool: Attempted to stop a pool that is not opened.")
-			return
+			raise PoolAlreadyClosedError("Pool is already closed")
 
 		logger.info("Pool: Stopping the connection pool.")
 		self._opened = False
@@ -250,10 +245,3 @@ class PySQLXEnginePoolSync(BasePool):
 	def stop(self) -> None:
 		with self._lock:
 			self._stop()
-
-	def __enter__(self):
-		self.start()
-		return self
-
-	def __exit__(self, exc_type, exc, tb):
-		self.stop()
