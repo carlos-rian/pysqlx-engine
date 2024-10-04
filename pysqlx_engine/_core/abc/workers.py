@@ -1,11 +1,8 @@
 import asyncio
-import logging
 import threading
 from typing import Callable
 
 from pysqlx_engine._core.logger import logger
-
-logging.basicConfig(level=logging.DEBUG)
 
 
 class PySQLXTaskSync(threading.Thread):
