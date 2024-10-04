@@ -109,13 +109,14 @@ class Worker:
 		Finish the thread worker.
 		"""
 		logger.debug(f"Worker: {self.name} finishing.")
+		self.task.stop()
 		if self.task.is_alive():
 			self.task.join(timeout=2)
 
 
 class BasePool(ABC):
 	_num_pool = 0
-	_lock: Union[asyncio.Lock, threading.RLock]
+	_lock: Union[asyncio.Lock, threading.Lock]
 
 	def __init__(
 		self,
@@ -138,13 +139,14 @@ class BasePool(ABC):
 		PySQLXEngine(uri)
 
 		self.uri = uri
+
+		assert conn_timeout > 0, "conn_timeout must be greater than 0"
+		assert keep_alive > 0, "max_lifetime must be greater than 0"
+		assert check_interval > 0, "check_interval must be greater than 0"
+
 		self._conn_timeout = conn_timeout or 30.0
 		self._keep_alive = keep_alive or 60 * 15
 		self._check_interval = check_interval or 5.0
-
-		assert self._conn_timeout > 0, "conn_timeout must be greater than 0"
-		assert self._keep_alive > 0, "max_lifetime must be greater than 0"
-		assert check_interval > 0, "check_interval must be greater than 0"
 
 		if self._keep_alive < 60:
 			logger.warning("max_lifetime is less than 60 seconds, this is not recommended")
@@ -186,19 +188,19 @@ class BasePool(ABC):
 		if self.closed is True and self._opening is False:
 			raise PoolClosedError("Pool is closed")
 
-	# @abstractmethod
-	def _new_conn(self) -> BaseConnInfo: ...
+	@abstractmethod
+	def _new_conn_unchecked(self) -> BaseConnInfo: ...
 
-	# @abstractmethod
-	def _del_conn(self, conn: BaseConnInfo) -> None: ...
+	@abstractmethod
+	def _del_conn_unchecked(self, conn: BaseConnInfo) -> None: ...
+
+	@abstractmethod
+	def _put_conn_unchecked(self, conn: BaseConnInfo) -> None: ...
 
 	@abstractmethod
 	def _put_conn(self, conn: BaseConnInfo) -> None: ...
 
 	@abstractmethod
-	def _put_conn_unchecked(self, conn: BaseConnInfo) -> None: ...
-
-	# @abstractmethod
 	def _get_ready_conn(self) -> BaseConnInfo: ...
 
 	@abstractmethod
@@ -231,8 +233,7 @@ class BaseMonitor(ABC):
 		self._checking: bool = False
 
 	def __repr__(self) -> str:
-		pool = self.pool()
-		name = repr(pool._name) if pool else "<pool is gone>"
+		name = repr(self.pool._name) if self.pool else "<pool is gone>"
 		return f"<{self.__class__.__name__} {name} at 0x{id(self):x}>"
 
 	@abstractmethod
