@@ -269,3 +269,12 @@ def test_start_transaction_with_invalid_isolation_level_with_colored_log(db):
 
 	conn.close()
 	assert conn.connected is False
+
+
+@pytest.mark.parametrize("db", [db_sqlite, db_pgsql, db_mssql, db_mysql])
+def test_execute_open_transaction_warning(db):
+	conn: PySQLXEngineSync = db()
+	assert conn.connected is True
+	conn.start_transaction()
+
+	conn.__del__()

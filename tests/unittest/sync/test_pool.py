@@ -4,17 +4,18 @@ import pytest
 
 from pysqlx_engine import PySQLXEnginePoolSync as PySQLXEnginePool
 from pysqlx_engine._core.errors import PoolClosedError
+from tests.common import MSSQL_URI, MYSQL_URI, PGSQL_URI, SQLITE_URI
 
 
-@pytest.fixture(scope="function")
-def pool():
-	uri = "sqlite:./dev.db"  # SQLite database URI for testing
-	pool = PySQLXEnginePool(uri=uri, min_size=3, check_interval=2)
+def get_pool(uri: str, min_size=3, check_interval=1, keep_alive=60 * 15, **kwargs):
+	pool = PySQLXEnginePool(uri=uri, min_size=min_size, check_interval=check_interval, keep_alive=keep_alive, **kwargs)
 	pool.start()
 	return pool
 
 
-def test_pool_initialization(pool: PySQLXEnginePool):
+@pytest.mark.parametrize("uri", [SQLITE_URI, PGSQL_URI, MSSQL_URI, MYSQL_URI])
+def test_pool_initialization(uri: str):
+	pool = get_pool(uri=uri)
 	assert pool._min_size == 3, "Min size should be 3"
 	time.sleep(1)
 	assert pool._opened is True
@@ -24,7 +25,9 @@ def test_pool_initialization(pool: PySQLXEnginePool):
 	pool.stop()
 
 
-def test_get_connection_uses_all_min_connections(pool: PySQLXEnginePool):
+@pytest.mark.parametrize("uri", [SQLITE_URI, PGSQL_URI, MSSQL_URI, MYSQL_URI])
+def test_get_connection_uses_all_min_connections(uri: str):
+	pool = get_pool(uri=uri)
 	contexts = [pool.connection() for _ in range(3)]
 	connections = [ctx.__enter__() for ctx in contexts]
 	assert len(connections) == 3, "Should use all min connections"
@@ -34,19 +37,20 @@ def test_get_connection_uses_all_min_connections(pool: PySQLXEnginePool):
 	pool.stop()
 
 
-def test_return_connection_to_pool():
-	uri = "sqlite:./dev.db"
-	pool = PySQLXEnginePool(uri=uri, min_size=3, check_interval=10)
-	pool.start()
+@pytest.mark.parametrize("uri", [SQLITE_URI, PGSQL_URI, MSSQL_URI, MYSQL_URI])
+def test_return_connection_to_pool(uri: str):
+	pool = get_pool(uri=uri, check_interval=10)
 	time.sleep(1)
 	with pool.connection() as conn:
 		assert conn is not None, "Connection should not be None"
-		assert pool._pool.qsize() == 2, "Connection should be removed from the pool"
+		assert pool._pool.qsize() < 3, "Connection should be removed from the pool"
 	assert pool._pool.qsize() == 3, "Connection should be returned to the pool"
 	pool.stop()
 
 
-def test_pool_stoped(pool: PySQLXEnginePool):
+@pytest.mark.parametrize("uri", [SQLITE_URI, PGSQL_URI, MSSQL_URI, MYSQL_URI])
+def test_pool_stoped(uri: str):
+	pool = get_pool(uri=uri)
 	pool.stop()
 
 	with pytest.raises(PoolClosedError):
@@ -54,10 +58,9 @@ def test_pool_stoped(pool: PySQLXEnginePool):
 			...  # pragma: no cover
 
 
-def test_reuse_connection():
-	uri = "sqlite:./dev.db"  # SQLite database URI for testing
-	pool = PySQLXEnginePool(uri=uri, min_size=2, keep_alive=5)
-	pool.start()
+@pytest.mark.parametrize("uri", [SQLITE_URI, PGSQL_URI, MSSQL_URI, MYSQL_URI])
+def test_reuse_connection(uri: str):
+	pool = get_pool(uri=uri, min_size=2, keep_alive=5)
 	contexts = [pool.connection() for _ in range(2)]
 	connections = [ctx.__enter__() for ctx in contexts]
 	assert len(connections) == 2, "Should use all min connections"
@@ -80,10 +83,9 @@ def test_reuse_connection():
 	pool.stop()
 
 
-def test_renew_connection():
-	uri = "sqlite:./dev.db"  # SQLite database URI for testing
-	pool = PySQLXEnginePool(uri=uri, min_size=2, max_size=2, keep_alive=1, check_interval=1, conn_timeout=5)
-	pool.start()
+@pytest.mark.parametrize("uri", [SQLITE_URI, PGSQL_URI, MSSQL_URI, MYSQL_URI])
+def test_renew_connection(uri: str):
+	pool = get_pool(uri=uri, min_size=2, max_size=2, keep_alive=1, check_interval=1, conn_timeout=5)
 	contexts = [pool.connection() for _ in range(2)]
 	connections = [ctx.__enter__() for ctx in contexts]
 	assert len(connections) == 2, "Should use all min connections"

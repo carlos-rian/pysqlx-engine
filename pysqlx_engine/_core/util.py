@@ -1,7 +1,6 @@
 import asyncio
 import os
 import shutil
-import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date, datetime
@@ -120,7 +119,7 @@ def create_log_line(text: str, character: str = "=") -> str:
 T = TypeVar("T")
 
 
-def aspawn_loop(f: Callable, args: tuple = (), name: Union[str, None] = None) -> PySQLXTask:
+def aspawn(f: Callable, args: tuple = (), name: Union[str, None] = None) -> PySQLXTask:
 	"""
 	Equivalent to asyncio.create_task.
 
@@ -130,14 +129,7 @@ def aspawn_loop(f: Callable, args: tuple = (), name: Union[str, None] = None) ->
 	return t
 
 
-def asleep(seconds: float) -> Coroutine[Any, Any, None]:
-	"""
-	Equivalent to asyncio.sleep(), converted to time.sleep() by async_to_sync.
-	"""
-	return asyncio.sleep(seconds)
-
-
-def spawn_loop(f: Callable, args: tuple = (), name: Union[str, None] = None) -> PySQLXTaskSync:
+def spawn(f: Callable, args: tuple = (), name: Union[str, None] = None) -> PySQLXTaskSync:
 	"""
 	Equivalent to creating and running a daemon thread.
 
@@ -153,6 +145,13 @@ def sleep(seconds: float) -> None:
 	Equivalent to time.sleep().
 	"""
 	return time.sleep(seconds)
+
+
+def asleep(seconds: float) -> Coroutine[Any, Any, None]:
+	"""
+	Equivalent to asyncio.sleep(), converted to time.sleep() by async_to_sync.
+	"""
+	return asyncio.sleep(seconds)
 
 
 async def agather(*coro: Coroutine):
@@ -172,19 +171,3 @@ def gather(*funcs: Callable, **kwargs):
 		results = [future.result() for future in as_completed(futures)]
 
 	return results
-
-
-def spawn(func: Callable, name: str, **kwargs):
-	"""
-	Equivalent to threading.Thread(target=func).start().
-	"""
-	thread = threading.Thread(target=func, name=name, kwargs=kwargs, daemon=True)
-	thread.start()
-	return thread
-
-
-def aspawn(func: Coroutine, name: str):
-	"""
-	Equivalent to asyncio.create_task(func).
-	"""
-	return asyncio.create_task(func, name=name)

@@ -3,9 +3,8 @@ import os
 
 import pytest
 
-from pysqlx_engine import PySQLXEngine
+from pysqlx_engine import LOG_CONFIG, PySQLXEngine
 from pysqlx_engine._core.abc.workers import PySQLXTask
-from pysqlx_engine._core.const import LOG_CONFIG
 from pysqlx_engine._core.util import pysqlx_get_error
 from pysqlx_engine.errors import AlreadyConnectedError, ConnectError, NotConnectedError, PySQLXError, RawCmdError
 from tests.common import adb_mssql, adb_mysql, adb_pgsql, adb_sqlite
@@ -95,6 +94,13 @@ async def test_delete_default_connection(db: PySQLXEngine):
 @pytest.mark.asyncio
 @pytest.mark.parametrize("db", [adb_sqlite, adb_pgsql, adb_mssql, adb_mysql])
 async def test_connection_already_exists_error(db: PySQLXEngine):
+	conn: PySQLXEngine = await db()
+	assert conn.connected is True
+	with pytest.raises(AlreadyConnectedError):
+		await conn.connect()
+
+	LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
+
 	conn: PySQLXEngine = await db()
 	assert conn.connected is True
 	with pytest.raises(AlreadyConnectedError):

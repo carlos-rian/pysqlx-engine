@@ -1,7 +1,7 @@
 import pytest
-from pysqlx_engine._core.const import LOG_CONFIG
 
 from pysqlx_engine import PySQLXEngine
+from pysqlx_engine._core.const import LOG_CONFIG
 from pysqlx_engine.errors import IsoLevelError, QueryError, StartTransactionError
 from tests.common import adb_mssql, adb_mysql, adb_pgsql, adb_sqlite
 
@@ -278,3 +278,13 @@ async def test_start_transaction_with_invalid_isolation_level_with_colored_log(d
 
 	await conn.close()
 	assert conn.connected is False
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("db", [adb_sqlite, adb_pgsql, adb_mssql, adb_mysql])
+async def test_execute_open_transaction_warning(db):
+	conn: PySQLXEngine = await db()
+	assert conn.connected is True
+	await conn.start_transaction()
+
+	conn.__del__()

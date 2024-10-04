@@ -27,6 +27,8 @@ def get_task_name(task: Union[PySQLXTask, PySQLXTaskSync]) -> str:
 
 class BaseConnInfo(ABC):
 	_num_conn: int = 0
+	INITIAL_DELAY: float = 1.0
+	DELAY_JITTER: float = 0.1
 
 	def __init__(self, conn: TPySQLXEngineConn, keep_alive: float):
 		self._num_conn = BaseConnInfo._num_conn = BaseConnInfo._num_conn + 1
@@ -44,10 +46,6 @@ class BaseConnInfo(ABC):
 	def _can_reuse(self) -> bool:
 		finish = self.start_at + (self.keep_alive * 4)
 		return finish > monotonic()
-
-	@property
-	def expires(self) -> bool:
-		return self.expires_at < monotonic()
 
 	@property
 	def healthy(self) -> bool:
@@ -74,7 +72,9 @@ class BaseConnInfo(ABC):
 		self.expires_at = monotonic() + self._jitter(value=self.keep_alive, min_pc=-0.05, max_pc=0.0)
 
 	@classmethod
-	def _jitter(cls, value: float, min_pc: float, max_pc: float) -> float:
+	def _jitter(
+		cls, value: float = INITIAL_DELAY, min_pc: float = -DELAY_JITTER, max_pc: float = DELAY_JITTER
+	) -> float:
 		"""
 		Add a random value to *value* between *min_pc* and *max_pc* percent.
 		"""

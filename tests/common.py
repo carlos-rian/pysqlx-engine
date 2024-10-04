@@ -2,58 +2,55 @@ import os
 
 from pysqlx_engine import PySQLXEngine, PySQLXEngineSync
 
+SQLITE_URI = os.environ["DATABASE_URI_SQLITE"]
+PGSQL_URI = os.environ["DATABASE_URI_POSTGRESQL"]
+MSSQL_URI = os.environ["DATABASE_URI_MSSQL"]
+MYSQL_URI = os.environ["DATABASE_URI_MYSQL"]
+
 
 async def adb_sqlite():
-	uri = os.environ["DATABASE_URI_SQLITE"]
-	_db = PySQLXEngine(uri=uri)
-	await _db.connect()
-	return _db
+	db = PySQLXEngine(uri=SQLITE_URI)
+	await db.connect()
+	return db
 
 
 async def adb_pgsql():
-	uri = os.environ["DATABASE_URI_POSTGRESQL"]
-	_db = PySQLXEngine(uri=uri)
-	await _db.connect()
-	return _db
+	db = PySQLXEngine(uri=PGSQL_URI)
+	await db.connect()
+	return db
 
 
 async def adb_mssql():
-	uri = os.environ["DATABASE_URI_MSSQL"]
-	_db = PySQLXEngine(uri=uri)
-	await _db.connect()
-	return _db
+	db = PySQLXEngine(uri=MSSQL_URI)
+	await db.connect()
+	return db
 
 
 async def adb_mysql():
-	uri = os.environ["DATABASE_URI_MYSQL"]
-	_db = PySQLXEngine(uri=uri)
-	await _db.connect()
-	return _db
+	db = PySQLXEngine(uri=MYSQL_URI)
+	await db.connect()
+	return db
 
 
 def db_sqlite():
-	uri = os.environ["DATABASE_URI_SQLITE"]
-	_db = PySQLXEngineSync(uri=uri)
-	_db.connect()
-	return _db
+	db = PySQLXEngineSync(uri=SQLITE_URI)
+	db.connect()
+	return db
 
 
 def db_pgsql():
-	uri = os.environ["DATABASE_URI_POSTGRESQL"]
-	_db = PySQLXEngineSync(uri=uri)
-	_db.connect()
-	return _db
+	db = PySQLXEngineSync(uri=PGSQL_URI)
+	db.connect()
+	return db
 
 
 def db_mssql():
-	uri = os.environ["DATABASE_URI_MSSQL"]
-	_db = PySQLXEngineSync(uri=uri)
-	_db.connect()
-	return _db
+	db = PySQLXEngineSync(uri=MSSQL_URI)
+	db.connect()
+	return db
 
 
 def db_mysql():
-	uri = os.environ["DATABASE_URI_MYSQL"]
-	_db = PySQLXEngineSync(uri=uri)
-	_db.connect()
-	return _db
+	db = PySQLXEngineSync(uri=MYSQL_URI)
+	db.connect()
+	return db

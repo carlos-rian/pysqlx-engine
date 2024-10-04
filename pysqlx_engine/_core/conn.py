@@ -17,6 +17,7 @@ class PySQLXEngineSync:
 
 	uri: str
 	connected: bool
+	_on_transaction: bool
 
 	def __init__(self, uri: str):
 		self.connected: bool = False
@@ -150,6 +151,7 @@ class PySQLXEngineSync:
 
 	def commit(self):
 		self._pre_validate()
+		self._on_transaction = False
 		if self._provider == "sqlserver":
 			self.raw_cmd(sql="COMMIT TRANSACTION;")
 		else:
@@ -157,6 +159,7 @@ class PySQLXEngineSync:
 
 	def rollback(self):
 		self._pre_validate()
+		self._on_transaction = False
 		if self._provider == "sqlserver":
 			self.raw_cmd(sql="ROLLBACK TRANSACTION;")
 		else:
@@ -165,6 +168,7 @@ class PySQLXEngineSync:
 	def start_transaction(self, isolation_level: Optional[ISOLATION_LEVEL] = None):
 		self._pre_validate(isolation_level=isolation_level)
 		try:
+			self._on_transaction = True
 			self._conn.start_transaction_sync(isolation_level=isolation_level)
 		except pysqlx_core.PySQLxError as e:
 			raise pysqlx_get_error(err=e)

@@ -7,7 +7,7 @@ from pysqlx_engine import PySQLXEngine
 
 from ..abc.base_pool import BaseConnInfo, BaseMonitor, BasePool, Worker, logger
 from ..errors import PoolAlreadyStartedError, PoolTimeoutError
-from ..util import agather, asleep, aspawn_loop
+from ..util import agather, asleep, aspawn
 
 
 class ConnInfo(BaseConnInfo):
@@ -202,7 +202,7 @@ class PySQLXEnginePool(BasePool):
 
 		await self._start()
 		# Initialize and start the monitor
-		self._monitor = aspawn_loop(Monitor(pool=self).run, name="ConnectionMonitor")
+		self._monitor = aspawn(Monitor(pool=self).run, name="ConnectionMonitor")
 		self._workers.append(Worker(self._monitor))
 		logger.info("Pool: Workers started.")
 
