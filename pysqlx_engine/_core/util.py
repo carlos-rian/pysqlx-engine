@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import os
 import shutil
 import time
@@ -95,9 +96,24 @@ def parse_obj_as(type_: Union[BaseModel, List[BaseModel]], obj: Union[dict, list
 	return _parse_obj_as(type_=type_, obj=obj) if PYDANTIC_IS_V1 else TypeAdapter(type=type_).validate_python(obj)
 
 
+@lru_cache(maxsize=None)
+def get_logger_length() -> int:
+	try:
+		logger = logging.getLogger()  # fake logger, just to get the prefix length
+		test_record = logger.makeRecord(
+			name=logger.name, level=logger.level, fn="", lno=0, msg="", args=(), exc_info=None
+		)
+		prefix = logger.handlers[0].format(test_record)
+		return len(prefix)
+	except Exception:  # pragma: no cover
+		return 0  # pragma: no cover
+
+
 def create_log_line(text: str, character: str = "=") -> str:
 	# Get the terminal width
 	terminal_width = shutil.get_terminal_size().columns
+	logger_lenght = get_logger_length()
+	terminal_width -= logger_lenght if terminal_width > logger_lenght else 0
 
 	# If the text is longer than the terminal width, truncate it
 	if len(text) > terminal_width:
