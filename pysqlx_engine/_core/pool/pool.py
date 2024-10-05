@@ -120,7 +120,7 @@ class PySQLXEnginePoolSync(BasePool):
 	def _put_conn_unchecked(self, conn: ConnInfo) -> None:
 		if conn.healthy and conn.reusable and self._size < self._max_size:
 			try:
-				self._pool.put(conn)
+				self._pool.put(conn, timeout=1)
 				logger.debug(f"Pool: Connection returned to pool: {conn}")
 			except queue.Full:
 				logger.debug(f"Pool: Pool is full. Closing connection: {conn}")
@@ -131,7 +131,6 @@ class PySQLXEnginePoolSync(BasePool):
 
 	def _get_ready_conn(self) -> BaseConnInfo:
 		if self._pool.qsize() > 0:
-			logger.debug("Getting for a ready connection.")
 			try:
 				conn = self._pool.get(timeout=0.1)
 				return conn

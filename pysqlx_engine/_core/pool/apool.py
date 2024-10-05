@@ -118,9 +118,9 @@ class PySQLXEnginePool(BasePool):
 	async def _put_conn_unchecked(self, conn: ConnInfo) -> None:
 		if conn.healthy and conn.reusable and self._size < self._max_size:
 			try:
-				await self._pool.put(conn)
+				await asyncio.wait_for(self._pool.put(conn), timeout=1)
 				logger.debug(f"Pool: Connection returned to pool: {conn}")
-			except asyncio.QueueFull:
+			except (asyncio.QueueFull, asyncio.TimeoutError):
 				logger.debug(f"Pool: Pool is full. Closing connection: {conn}")
 				await self._del_conn_unchecked(conn)
 		else:
@@ -129,7 +129,6 @@ class PySQLXEnginePool(BasePool):
 
 	async def _get_ready_conn(self) -> BaseConnInfo:
 		if self._pool.qsize() > 0:
-			logger.debug("Getting for a ready connection.")
 			try:
 				conn = await asyncio.wait_for(self._pool.get(), timeout=0.1)
 				return conn
