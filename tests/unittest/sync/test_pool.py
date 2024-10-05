@@ -187,7 +187,7 @@ def test_pool_timeout_raise():
 		assert pool._pool.qsize() < 1, "Connection should be removed from the pool"
 		with pytest.raises(PoolTimeoutError):
 			with pool.connection() as _:
-				...
+				...  # pragma: no cover
 	pool.stop()
 
 
@@ -250,11 +250,12 @@ def test_pool_get_ready_conn():
 	pool.stop()
 
 
-def test_pool__put_conn_unchecked_raise():
-	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1, max_size=10)
+def test_pool_put_conn_unchecked_raise():
+	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1, max_size=1, check_interval=10)
 	pool.start()
-	with unittest.mock.patch.object(pool._pool, "put", side_effect=queue.Full):
-		conn = pool._new_conn_unchecked()
-		pool._put_conn_unchecked(conn)
+	time.sleep(1)
+	pool._max_size = 10
+	conn = pool._new_conn_unchecked()
+	pool._put_conn(conn)
 
 	pool.stop()

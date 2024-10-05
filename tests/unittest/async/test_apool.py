@@ -193,7 +193,7 @@ async def test_pool_timeout_raise():
 		assert pool._pool.qsize() < 1, "Connection should be removed from the pool"
 		with pytest.raises(PoolTimeoutError):
 			async with pool.connection() as _:
-				...
+				...  # pragma: no cover
 	await pool.stop()
 
 
@@ -230,7 +230,7 @@ async def test_pool_start_twice():
 	await pool.start()
 	with pytest.raises(PoolAlreadyStartedError):
 		await pool.start()
-	pool.stop()
+	await pool.stop()
 
 
 @pytest.mark.asyncio
@@ -265,7 +265,7 @@ async def test_pool_get_ready_conn():
 
 
 @pytest.mark.asyncio
-async def test_pool__put_conn_unchecked_raise():
+async def test_pool_put_conn_unchecked_raise():
 	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1, max_size=10)
 	await pool.start()
 	with unittest.mock.patch.object(pool._pool, "put", side_effect=asyncio.QueueFull):
