@@ -159,6 +159,9 @@ class BasePool(ABC):
 		self._opened = False
 		self._opening = False
 
+		self._growing = False
+		self._waiting = 0
+
 		self._min_size, self._max_size = self._check_size(min_size, max_size)
 
 		self._lock: Union[asyncio.Lock, threading.RLock]
