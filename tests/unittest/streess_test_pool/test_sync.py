@@ -3,7 +3,7 @@ import logging
 import random
 import time
 
-from pysqlx_engine._core.pool.pool import PySQLXEnginePoolSync
+from pysqlx_engine._core.pool import PySQLXEnginePoolSync
 
 logging.basicConfig(level=logging.DEBUG)
 

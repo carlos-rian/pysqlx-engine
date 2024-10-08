@@ -4,13 +4,13 @@ import unittest.mock
 import pytest
 
 from pysqlx_engine import PySQLXEnginePool
+from pysqlx_engine._core.apool import Monitor
 from pysqlx_engine._core.errors import (
 	PoolAlreadyClosedError,
 	PoolAlreadyStartedError,
 	PoolClosedError,
 	PoolTimeoutError,
 )
-from pysqlx_engine._core.pool.apool import Monitor
 from tests.common import MSSQL_URI, MYSQL_URI, PGSQL_URI, SQLITE_URI
 
 

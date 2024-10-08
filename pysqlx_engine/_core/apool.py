@@ -5,12 +5,14 @@ from time import monotonic
 
 from pysqlx_engine import PySQLXEngine
 
-from ..abc.base_pool import BaseConnInfo, BaseMonitor, BasePool, Worker, logger
-from ..errors import PoolAlreadyClosedError, PoolAlreadyStartedError, PoolTimeoutError
-from ..util import agather, asleep, aspawn
+from .abc.base_pool import BaseConnInfo, BaseMonitor, BasePool, Worker, logger
+from .errors import PoolAlreadyClosedError, PoolAlreadyStartedError, PoolTimeoutError
+from .util import agather, asleep, aspawn
 
 
 class ConnInfo(BaseConnInfo):
+	conn: PySQLXEngine
+
 	async def close(self) -> None:
 		await super()._aclose()
 
@@ -56,6 +58,12 @@ class Monitor(BaseMonitor):
 						)
 						for conn in new_conns:
 							await self.pool._put_conn_unchecked(conn)
+					elif self.pool._growing and self.pool._size < self.pool._max_size:
+						logger.debug("Monitor: Pool is growing, creating new connections.")
+						conn = await self.pool._new_conn_unchecked()
+						await self.pool._put_conn_unchecked(conn)
+						self.pool._growing = False
+
 				finally:
 					# Ensure that semaphore is released even if an error occurs
 					self.pool._monitor_semaphore.release()
@@ -128,21 +136,24 @@ class PySQLXEnginePool(BasePool):
 			await self._del_conn_unchecked(conn)
 
 	async def _get_ready_conn(self) -> BaseConnInfo:
-		if self._pool.qsize() > 0:
-			try:
-				conn = await asyncio.wait_for(self._pool.get(), timeout=0.1)
-				return conn
-			except asyncio.TimeoutError:
+		try:
+			conn = await asyncio.wait_for(self._pool.get(), timeout=BaseConnInfo._jitter())
+			return conn
+		except asyncio.TimeoutError:
+			return
+
+	async def _check_grow(self, value: int) -> None:
+		async with self._lock:
+			self._waiting += value
+			if self._size >= self._max_size:
 				return
 
-		async with self._lock:
-			if self._size < self._max_size:
-				logger.debug("Creating a new connection.")
-				conn = await self._new_conn_unchecked()
-				return conn
+			self._growing = self._waiting > 0
+			logger.debug(f"Pool: Growing: {self._growing} Waiting: {self._waiting}")
 
 	async def _get_conn(self) -> ConnInfo:
 		self._check_closed()
+		start_time = monotonic()
 		deadline = monotonic() + self._conn_timeout
 		logger.debug("Getting a ready connection.")
 		try:
@@ -153,6 +164,7 @@ class PySQLXEnginePool(BasePool):
 		except asyncio.TimeoutError:
 			raise PoolTimeoutError("Timeout waiting for a connection semaphore")
 		try:
+			await self._check_grow(1)
 			while True:
 				timeout = deadline - monotonic()
 				if timeout < 0.0:
@@ -160,10 +172,12 @@ class PySQLXEnginePool(BasePool):
 
 				conn = await self._get_ready_conn()
 				if conn:
+					logger.debug(f"Pool: Connection: {conn} retrieved in {monotonic() - start_time:.5f} seconds.")
 					return conn
 
-				await asleep(0.1)
+				await asleep(BaseConnInfo._jitter())
 		finally:
+			await self._check_grow(-1)
 			self._semaphore.release()
 
 	async def _put_conn(self, conn: ConnInfo) -> None:

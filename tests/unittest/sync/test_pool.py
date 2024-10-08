@@ -12,7 +12,7 @@ from pysqlx_engine._core.errors import (
 	PoolClosedError,
 	PoolTimeoutError,
 )
-from pysqlx_engine._core.pool.pool import Monitor
+from pysqlx_engine._core.pool import Monitor
 from tests.common import MSSQL_URI, MYSQL_URI, PGSQL_URI, SQLITE_URI
 
 

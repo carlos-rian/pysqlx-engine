@@ -187,3 +187,10 @@ def gather(*funcs: Callable, **kwargs):
 		results = [future.result() for future in as_completed(futures)]
 
 	return results
+
+
+def monotonic():
+	"""
+	Equivalent to time.monotonic().
+	"""
+	return time.monotonic()

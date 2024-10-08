@@ -1,23 +1,18 @@
-from __future__ import annotations
-
 import asyncio
 import logging
 import threading
 from abc import ABC, abstractmethod
 from collections import deque as Deque
 from random import random
-from time import monotonic
 from typing import List, TypeAlias, Union
 from weakref import ReferenceType
 
-from pysqlx_engine import PySQLXEngine, PySQLXEngineSync
-
 from ..errors import PoolClosedError
-from ..util import asleep
+from ..util import asleep, monotonic
+from .conn import TPySQLXEngineConn, validate_uri
 from .workers import PySQLXTask, PySQLXTaskSync
 
 logger = logging.getLogger("pysqlx_engine")
-TPySQLXEngineConn: TypeAlias = Union[PySQLXEngine, PySQLXEngineSync]
 TReferenceType: TypeAlias = ReferenceType["BasePool"]
 
 
@@ -29,6 +24,7 @@ class BaseConnInfo(ABC):
 	_num_conn: int = 0
 	INITIAL_DELAY: float = 1.0
 	DELAY_JITTER: float = 0.1
+	conn: TPySQLXEngineConn
 
 	def __init__(self, conn: TPySQLXEngineConn, keep_alive: float):
 		self._num_conn = BaseConnInfo._num_conn = BaseConnInfo._num_conn + 1
@@ -136,7 +132,7 @@ class BasePool(ABC):
 		:param check_interval: The interval in seconds to check for idle connections to be closed, recycled or created.
 		"""
 		# check if the uri is valid
-		PySQLXEngine(uri)
+		validate_uri(uri)
 
 		self.uri = uri
 

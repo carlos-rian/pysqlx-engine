@@ -1,8 +1,8 @@
 from types import TracebackType
 from typing import Any, Dict, List, Optional, Type, Union, overload
 
-from .parser import BaseRow, MyModel, DictParam  # import necessary using _core to not subscribe default parser
 from .const import ISOLATION_LEVEL
+from .parser import BaseRow, DictParam, MyModel  # import necessary using _core to not subscribe default parser
 
 class PySQLXEngine:
 	"""
@@ -31,40 +31,40 @@ class PySQLXEngine:
 
 
 	##### PostgreSQL
-	```python
+	``python
 	from pysqlx_engine import PySQLXEngine
 
 	uri = "postgresql://user:pass@host:port/db?schema=sample"
 	db = PySQLXEngine(uri=uri)
 	await db.connect()
-	```
+	``
 	---
 	##### MySQL
-	```python
+	``python
 	from pysqlx_engine import PySQLXEngine
 
 	uri = "mysql://user:pass@host:port/db?schema=sample"
 	db = PySQLXEngine(uri=uri)
 	await db.connect()
-	```
+	``
 	---
 	##### Microsoft SQL Server
-	```python
+	``python
 	from pysqlx_engine import PySQLXEngine
 
 	uri = "sqlserver://host:port;initial catalog=sample;user=sa;password=pass;"
 	db = PySQLXEngine(uri=uri)
 	await db.connect()
-	```
+	``
 	---
 	##### SQLite
-	```python
+	``python
 	from pysqlx_engine import PySQLXEngine
 
 	uri = "sqlite:./dev.db"
 	db = PySQLXEngine(uri=uri)
 	await db.connect()
-	```
+	``
 	"""
 
 	__slots__ = ["uri", "connected", "_conn", "_provider"]
@@ -92,11 +92,11 @@ class PySQLXEngine:
 
 		### Helper
 
-		    * Arguments: ``None``
+		    * Arguments: `None`
 
-		    * Returns: ``bool``
+		    * Returns: `bool`
 
-		    * Raises: ``None``
+		    * Raises: `None`
 
 		"""
 		...
@@ -116,11 +116,11 @@ class PySQLXEngine:
 
 		### Helper
 
-		    * Arguments: ``None``
+		    * Arguments: `None`
 
-		    * Returns: ``bool``
+		    * Returns: `bool`
 
-		    * Raises: ``None``
+		    * Raises: `None`
 
 		---
 
@@ -145,30 +145,30 @@ class PySQLXEngine:
 		"""
 		## Description
 
-		Each connection instance is lazy; only after ``.connect()`` is the database checked and the connection established.
+		Each connection instance is lazy; only after `.connect()` is the database checked and the connection established.
 
-		When you use ``async with`` the connection is automatically opened and closed.
+		When you use `async with` the connection is automatically opened and closed.
 
 		---
 
 		### Helper
 
-		    * Arguments: ``None``
+		    * Arguments: `None`
 
-		    * Returns: ``None``
+		    * Returns: `None`
 
-		    * Raises: ``ConnectError``
+		    * Raises: `ConnectError`
 
 		---
 
 		### Example
-		```python
+		``python
 		    from pysqlx_engine import PySQLXEngine
 
 		    uri = "postgresql://user:pass@host:port/db?schema=sample"
 		    db = PySQLXEngineSync(uri=uri)
 		    await db.connect()
-		```
+		``
 		"""
 		...
 	async def close(self) -> "None":
@@ -185,23 +185,23 @@ class PySQLXEngine:
 
 		### Helper
 
-		    * Arguments: ``None``
+		    * Arguments: `None`
 
-		    * Returns: ``None``
+		    * Returns: `None`
 
-		    * Raises: ``None``
+		    * Raises: `None`
 
 		---
 
 		### Example
-		```python
+		``python
 		    from pysqlx_engine import PySQLXEngine
 
 		    uri = "postgresql://user:pass@host:port/db?schema=sample"
 		    db = PySQLXEngine(uri=uri)
 		    await db.connect()
 		    await db.close()
-		```
+		``
 		"""
 		...
 	async def raw_cmd(self, sql: str) -> "None":
@@ -216,16 +216,16 @@ class PySQLXEngine:
 
 		    * Arguments:
 
-		        ``sql(str)``: sql to be executed.
+		        `sql(str)`: sql to be executed.
 
-		    * Returns: ``None``
+		    * Returns: `None`
 
-		    * Raises: ``RawCmdError``
+		    * Raises: `RawCmdError`
 
 		---
 
 		### Example
-		```python
+		``python
 		    from pysqlx_engine import PySQLXEngine
 
 		    uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -234,33 +234,33 @@ class PySQLXEngine:
 
 		    await db.raw_cmd(sql="SET TRANSACTION ISOLATION LEVEL READ COMMITTED;")
 
-		```
+		``
 		"""
 		...
 	# all
 	@overload
-	async def query(self, sql: str, parameters: Optional[DictParam] = None) -> Union[List[BaseRow], List]:
+	async def query(self, sql: str) -> Union[List[BaseRow], List]:
 		"""
 		## Description
 
-		Returns all rows from query result as``BaseRow list``, ``MyModel list`` or ``empty list``.
+		Returns all rows from query result as `BaseRow list`, `MyModel list` or `empty list`.
 
 		---
 
 		### Helper
 		    * Arguments:
 
-		        ``sql(str)``: sql query to be executed.
+		        `sql(str)`: sql query to be executed.
 
-		        ``parameters(dict)``: (default is None) parameters must be a dictionary with the name of the parameter and the value.
+		        `parameters(dict)`: (default is None) parameters must be a dictionary with the name of the parameter and the value.
 
-		        ``model(BaseRow)``: (default is None) is your model that inherits from BaseRow.
+		        `model(BaseRow)`: (default is None) is your model that inherits from BaseRow.
 
 		    * Returns:
 
-		        ``List[BaseRow] | List[MyModel] | List``: BaseRow list, MyModel list or empty list.
+		        `List[BaseRow] | List[MyModel] | List`: BaseRow list, MyModel list or empty list.
 
-		    * Raises: ``QueryError``|``TypeError`` | ``ParameterInvalidProviderError``|``ParameterInvalidValueError``|``ParameterInvalidJsonValueError``
+		    * Raises: `QueryError`|`TypeError` | `ParameterInvalidProviderError`|`ParameterInvalidValueError`|`ParameterInvalidJsonValueError`
 
 		---
 
@@ -271,35 +271,35 @@ class PySQLXEngine:
 		This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
 
 		#### SQL with parameters syntax
-		    * SQL: ``SELECT * FROM table WHERE id = :id``
-		    * Parameters: ``{"id": 1}``
+		    * SQL: `SELECT * FROM table WHERE id = :id`
+		    * Parameters: `{"id": 1}`
 
 		#### Parameters(dict):
 
-		    * dict ``key`` must be a valid string.
-		    * dict ``value`` can be one of the types: (
-		        ``bool``,
-		        ``bytes``,
-		        ``date``,
-		        ``datetime``,
-		        ``Decimal``,
-		        ``dict``,
-		        ``Enum``, # Enum must be a subclass of enum.Enum
-		        ``float``,
-		        ``int``,
-		        ``list``,
-		        ``str``,
-		        ``time``,
-		        ``tuple``,
-		        ``UUID``,
-		        ``None``
+		    * dict `key` must be a valid string.
+		    * dict `value` can be one of the types: (
+		        `bool`,
+		        `bytes`,
+		        `date`,
+		        `datetime`,
+		        `Decimal`,
+		        `dict`,
+		        `Enum`, # Enum must be a subclass of enum.Enum
+		        `float`,
+		        `int`,
+		        `list`,
+		        `str`,
+		        `time`,
+		        `tuple`,
+		        `UUID`,
+		        `None`
 		    )
 
 		#### Python types vs SQL types:
 
 		    [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
 
-		```
+		``
 		    * bool     -> bool|bit|boolean|tinyint|etc
 		    * bytes    -> bytea|binary|varbinary|etc
 		    * date     -> date|nvarchar|varchar|string|etc
@@ -315,12 +315,12 @@ class PySQLXEngine:
 		    * UUID     -> uuid|varchar|text|nvarchar|etc
 		    * Enum     -> varchar|text|nvarchar|etc
 		    * None     -> null
-		```
+		``
 
 		---
 
 		### Example
-		```python
+		``python
 		    from pysqlx_engine import PySQLXEngine
 
 		    uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -337,36 +337,32 @@ class PySQLXEngine:
 
 		    await db.close()
 
-		```
+		``
 		"""
 		...
 	@overload
-	async def query(
-		self, sql: str, parameters: Optional[DictParam] = None, model: Optional[Type["MyModel"]] = None
-	) -> Union[List[Type["MyModel"]], List]: ...
-	# dict
-	async def query_as_dict(
-		self, sql: str, parameters: Optional[DictParam] = None
-	) -> Union[List[Dict[str, Any]], List]:
+	async def query(self, sql: str, parameters: Optional[DictParam] = None) -> Union[List[BaseRow], List]:
 		"""
 		## Description
 
-		Returns all rows from query result as ``dict list`` or ``empty list``.
+		Returns all rows from query result as`BaseRow list`, `MyModel list` or `empty list`.
 
 		---
 
 		### Helper
 		    * Arguments:
 
-		        ``sql(str)``: sql query to be executed
+		        `sql(str)`: sql query to be executed.
 
-		        ``parameters(dict)``: (default is None) parameters must be a dictionary with the name of the parameter and the value.
+		        `parameters(dict)`: (default is None) parameters must be a dictionary with the name of the parameter and the value.
+
+		        `model(BaseRow)`: (default is None) is your model that inherits from BaseRow.
 
 		    * Returns:
 
-		        ``List[Dict[str, Any]] | List``: dict list or empty list.
+		        `List[BaseRow] | List[MyModel] | List`: BaseRow list, MyModel list or empty list.
 
-		    * Raises: ``QueryError``|``TypeError`` | ``ParameterInvalidProviderError``|``ParameterInvalidValueError``|``ParameterInvalidJsonValueError``
+		    * Raises: `QueryError`|`TypeError` | `ParameterInvalidProviderError`|`ParameterInvalidValueError`|`ParameterInvalidJsonValueError`
 
 		---
 
@@ -377,35 +373,35 @@ class PySQLXEngine:
 		This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
 
 		#### SQL with parameters syntax
-		    * SQL: ``SELECT * FROM table WHERE id = :id``
-		    * Parameters: ``{"id": 1}``
+		    * SQL: `SELECT * FROM table WHERE id = :id`
+		    * Parameters: `{"id": 1}`
 
 		#### Parameters(dict):
 
-		    * dict ``key`` must be a valid string.
-		    * dict ``value`` can be one of the types: (
-		        ``bool``,
-		        ``bytes``,
-		        ``date``,
-		        ``datetime``,
-		        ``Decimal``,
-		        ``dict``,
-		        ``Enum``, # Enum must be a subclass of enum.Enum
-		        ``float``,
-		        ``int``,
-		        ``list``,
-		        ``str``,
-		        ``time``,
-		        ``tuple``,
-		        ``UUID``,
-		        ``None``
+		    * dict `key` must be a valid string.
+		    * dict `value` can be one of the types: (
+		        `bool`,
+		        `bytes`,
+		        `date`,
+		        `datetime`,
+		        `Decimal`,
+		        `dict`,
+		        `Enum`, # Enum must be a subclass of enum.Enum
+		        `float`,
+		        `int`,
+		        `list`,
+		        `str`,
+		        `time`,
+		        `tuple`,
+		        `UUID`,
+		        `None`
 		    )
 
 		#### Python types vs SQL types:
 
 		    [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
 
-		```
+		``
 		    * bool     -> bool|bit|boolean|tinyint|etc
 		    * bytes    -> bytea|binary|varbinary|etc
 		    * date     -> date|nvarchar|varchar|string|etc
@@ -421,12 +417,217 @@ class PySQLXEngine:
 		    * UUID     -> uuid|varchar|text|nvarchar|etc
 		    * Enum     -> varchar|text|nvarchar|etc
 		    * None     -> null
-		```
+		``
 
 		---
 
 		### Example
-		```python
+		``python
+		    from pysqlx_engine import PySQLXEngine
+
+		    uri = "postgresql://user:pass@host:port/db?schema=sample"
+		    db = PySQLXEngine(uri=uri)
+		    await db.connect()
+
+		    result = await db.query("SELECT 1 as id, 'rian' as name")
+		    print(result)
+		    # output -> [BaseRow(id=1, name='rian')]
+
+		    result = await db.query(sql="SELECT 1 as :id, 'rian' as name", parameters={"id": 1})
+		    print(result)
+		    # output -> [BaseRow(id=1, name='rian')]
+
+		    await db.close()
+
+		``
+		"""
+		...
+	@overload
+	async def query(
+		self, sql: str, parameters: Optional[DictParam] = None, model: Optional[Type["MyModel"]] = None
+	) -> Union[List[Type["MyModel"]], List]:
+		"""
+		## Description
+
+		Returns all rows from query result as`BaseRow list`, `MyModel list` or `empty list`.
+
+		---
+
+		### Helper
+		    * Arguments:
+
+		        `sql(str)`: sql query to be executed.
+
+		        `parameters(dict)`: (default is None) parameters must be a dictionary with the name of the parameter and the value.
+
+		        `model(BaseRow)`: (default is None) is your model that inherits from BaseRow.
+
+		    * Returns:
+
+		        `List[BaseRow] | List[MyModel] | List`: BaseRow list, MyModel list or empty list.
+
+		    * Raises: `QueryError`|`TypeError` | `ParameterInvalidProviderError`|`ParameterInvalidValueError`|`ParameterInvalidJsonValueError`
+
+		---
+
+		### Parameters Helper
+
+		Parameters are built into SQL at the application level; that is, the SQL and separate parameters are not sent to the database;
+		although most databases support this type of operation, the PySQLXEngine does it before calling the database to avoid possible incompatibilities.
+		This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
+
+		#### SQL with parameters syntax
+		    * SQL: `SELECT * FROM table WHERE id = :id`
+		    * Parameters: `{"id": 1}`
+
+		#### Parameters(dict):
+
+		    * dict `key` must be a valid string.
+		    * dict `value` can be one of the types: (
+		        `bool`,
+		        `bytes`,
+		        `date`,
+		        `datetime`,
+		        `Decimal`,
+		        `dict`,
+		        `Enum`, # Enum must be a subclass of enum.Enum
+		        `float`,
+		        `int`,
+		        `list`,
+		        `str`,
+		        `time`,
+		        `tuple`,
+		        `UUID`,
+		        `None`
+		    )
+
+		#### Python types vs SQL types:
+
+		    [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
+
+		``
+		    * bool     -> bool|bit|boolean|tinyint|etc
+		    * bytes    -> bytea|binary|varbinary|etc
+		    * date     -> date|nvarchar|varchar|string|etc
+		    * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
+		    * Decimal  -> decimal|numeric|etc
+		    * dict     -> json|jsonb|nvarchar|varchar|string|etc
+		    * float    -> float|real|numeric|etc
+		    * int      -> int|integer|smallint|bigint|tinyint|etc
+		    * list     -> json|jsonb|nvarchar|varchar|string|etc
+		    * str      -> varchar|text|nvarchar|char|etc
+		    * time     -> time|nvarchar|varchar|string|etc
+		    * tuple    -> array(Postgres Native), another database: error.
+		    * UUID     -> uuid|varchar|text|nvarchar|etc
+		    * Enum     -> varchar|text|nvarchar|etc
+		    * None     -> null
+		``
+
+		---
+
+		### Example
+		``python
+		    from pysqlx_engine import PySQLXEngine
+
+		    uri = "postgresql://user:pass@host:port/db?schema=sample"
+		    db = PySQLXEngine(uri=uri)
+		    await db.connect()
+
+		    result = await db.query("SELECT 1 as id, 'rian' as name")
+		    print(result)
+		    # output -> [BaseRow(id=1, name='rian')]
+
+		    result = await db.query(sql="SELECT 1 as :id, 'rian' as name", parameters={"id": 1})
+		    print(result)
+		    # output -> [BaseRow(id=1, name='rian')]
+
+		    await db.close()
+
+		``
+		"""
+		...
+	# dict
+	@overload
+	async def query_as_dict(self, sql: str) -> Union[List[Dict[str, Any]], List]:
+		"""
+		## Description
+
+		Returns all rows from query result as `dict list` or `empty list`.
+
+		---
+
+		### Helper
+		    * Arguments:
+
+		        `sql(str)`: sql query to be executed
+
+		        `parameters(dict)`: (default is None) parameters must be a dictionary with the name of the parameter and the value.
+
+		    * Returns:
+
+		        `List[Dict[str, Any]] | List`: dict list or empty list.
+
+		    * Raises: `QueryError`|`TypeError` | `ParameterInvalidProviderError`|`ParameterInvalidValueError`|`ParameterInvalidJsonValueError`
+
+		---
+
+		### Parameters Helper
+
+		Parameters are built into SQL at the application level; that is, the SQL and separate parameters are not sent to the database;
+		although most databases support this type of operation, the PySQLXEngine does it before calling the database to avoid possible incompatibilities.
+		This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
+
+		#### SQL with parameters syntax
+		    * SQL: `SELECT * FROM table WHERE id = :id`
+		    * Parameters: `{"id": 1}`
+
+		#### Parameters(dict):
+
+		    * dict `key` must be a valid string.
+		    * dict `value` can be one of the types: (
+		        `bool`,
+		        `bytes`,
+		        `date`,
+		        `datetime`,
+		        `Decimal`,
+		        `dict`,
+		        `Enum`, # Enum must be a subclass of enum.Enum
+		        `float`,
+		        `int`,
+		        `list`,
+		        `str`,
+		        `time`,
+		        `tuple`,
+		        `UUID`,
+		        `None`
+		    )
+
+		#### Python types vs SQL types:
+
+		    [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
+
+		``
+		    * bool     -> bool|bit|boolean|tinyint|etc
+		    * bytes    -> bytea|binary|varbinary|etc
+		    * date     -> date|nvarchar|varchar|string|etc
+		    * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
+		    * Decimal  -> decimal|numeric|etc
+		    * dict     -> json|jsonb|nvarchar|varchar|string|etc
+		    * float    -> float|real|numeric|etc
+		    * int      -> int|integer|smallint|bigint|tinyint|etc
+		    * list     -> json|jsonb|nvarchar|varchar|string|etc
+		    * str      -> varchar|text|nvarchar|char|etc
+		    * time     -> time|nvarchar|varchar|string|etc
+		    * tuple    -> array(Postgres Native), another database: error.
+		    * UUID     -> uuid|varchar|text|nvarchar|etc
+		    * Enum     -> varchar|text|nvarchar|etc
+		    * None     -> null
+		``
+
+		---
+
+		### Example
+		``python
 		    from pysqlx_engine import PySQLXEngine
 
 		    uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -442,33 +643,32 @@ class PySQLXEngine:
 		    # output -> [{'id': 1, 'name': 'rian'}]
 
 		    await db.close()
-		```
+		``
 		"""
 		...
-	# fisrt
 	@overload
-	async def query_first(self, sql: str, parameters: DictParam = None) -> Union[BaseRow, None]:
+	async def query_as_dict(
+		self, sql: str, parameters: Optional[DictParam] = None
+	) -> Union[List[Dict[str, Any]], List]:
 		"""
 		## Description
 
-		Returns first row from query result as ``BaseRow``, ``MyModel`` or ``None``.
+		Returns all rows from query result as `dict list` or `empty list`.
 
 		---
 
 		### Helper
 		    * Arguments:
 
-		        ``sql(str)``: sql query to be executed.
+		        `sql(str)`: sql query to be executed
 
-		        ``parameters(dict)``: (default is None) parameters must be a dictionary with the name of the parameter and the value.
-
-		        ``model(BaseRow)``: (default is None) is your model that inherits from BaseRow.
+		        `parameters(dict)`: (default is None) parameters must be a dictionary with the name of the parameter and the value.
 
 		    * Returns:
 
-		        ``BaseRow | MyModel | None``: BaseRow, MyModel or None if no rows are found.
+		        `List[Dict[str, Any]] | List`: dict list or empty list.
 
-		    * Raises: ``QueryError``|``TypeError`` | ``ParameterInvalidProviderError``|``ParameterInvalidValueError``|``ParameterInvalidJsonValueError``
+		    * Raises: `QueryError`|`TypeError` | `ParameterInvalidProviderError`|`ParameterInvalidValueError`|`ParameterInvalidJsonValueError`
 
 		---
 
@@ -479,35 +679,35 @@ class PySQLXEngine:
 		This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
 
 		#### SQL with parameters syntax
-		    * SQL: ``SELECT * FROM table WHERE id = :id``
-		    * Parameters: ``{"id": 1}``
+		    * SQL: `SELECT * FROM table WHERE id = :id`
+		    * Parameters: `{"id": 1}`
 
 		#### Parameters(dict):
 
-		    * dict ``key`` must be a valid string.
-		    * dict ``value`` can be one of the types: (
-		        ``bool``,
-		        ``bytes``,
-		        ``date``,
-		        ``datetime``,
-		        ``Decimal``,
-		        ``dict``,
-		        ``Enum``, # Enum must be a subclass of enum.Enum
-		        ``float``,
-		        ``int``,
-		        ``list``,
-		        ``str``,
-		        ``time``,
-		        ``tuple``,
-		        ``UUID``,
-		        ``None``
+		    * dict `key` must be a valid string.
+		    * dict `value` can be one of the types: (
+		        `bool`,
+		        `bytes`,
+		        `date`,
+		        `datetime`,
+		        `Decimal`,
+		        `dict`,
+		        `Enum`, # Enum must be a subclass of enum.Enum
+		        `float`,
+		        `int`,
+		        `list`,
+		        `str`,
+		        `time`,
+		        `tuple`,
+		        `UUID`,
+		        `None`
 		    )
 
 		#### Python types vs SQL types:
 
 		    [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
 
-		```
+		``
 		    * bool     -> bool|bit|boolean|tinyint|etc
 		    * bytes    -> bytea|binary|varbinary|etc
 		    * date     -> date|nvarchar|varchar|string|etc
@@ -523,12 +723,114 @@ class PySQLXEngine:
 		    * UUID     -> uuid|varchar|text|nvarchar|etc
 		    * Enum     -> varchar|text|nvarchar|etc
 		    * None     -> null
-		```
+		``
 
 		---
 
 		### Example
-		```python
+		``python
+		    from pysqlx_engine import PySQLXEngine
+
+		    uri = "postgresql://user:pass@host:port/db?schema=sample"
+		    db = PySQLXEngine(uri=uri)
+		    await db.connect()
+
+		    result = await db.query_as_dict(sql="SELECT 1 as id, 'rian' as name")
+		    print(result)
+		    # output -> [{'id': 1, 'name': 'rian'}]
+
+		    result = await db.query_as_dict(sql="SELECT 1 as :id, 'rian' as name", parameters={"id": 1})
+		    print(result)
+		    # output -> [{'id': 1, 'name': 'rian'}]
+
+		    await db.close()
+		``
+		"""
+		...
+	# fisrt
+	@overload
+	async def query_first(self, sql: str) -> Union[BaseRow, None]:
+		"""
+		## Description
+
+		Returns first row from query result as `BaseRow`, `MyModel` or `None`.
+
+		---
+
+		### Helper
+		    * Arguments:
+
+		        `sql(str)`: sql query to be executed.
+
+		        `parameters(dict)`: (default is None) parameters must be a dictionary with the name of the parameter and the value.
+
+		        `model(BaseRow)`: (default is None) is your model that inherits from BaseRow.
+
+		    * Returns:
+
+		        `BaseRow | MyModel | None`: BaseRow, MyModel or None if no rows are found.
+
+		    * Raises: `QueryError`|`TypeError` | `ParameterInvalidProviderError`|`ParameterInvalidValueError`|`ParameterInvalidJsonValueError`
+
+		---
+
+		### Parameters Helper
+
+		Parameters are built into SQL at the application level; that is, the SQL and separate parameters are not sent to the database;
+		although most databases support this type of operation, the PySQLXEngine does it before calling the database to avoid possible incompatibilities.
+		This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
+
+		#### SQL with parameters syntax
+		    * SQL: `SELECT * FROM table WHERE id = :id`
+		    * Parameters: `{"id": 1}`
+
+		#### Parameters(dict):
+
+		    * dict `key` must be a valid string.
+		    * dict `value` can be one of the types: (
+		        `bool`,
+		        `bytes`,
+		        `date`,
+		        `datetime`,
+		        `Decimal`,
+		        `dict`,
+		        `Enum`, # Enum must be a subclass of enum.Enum
+		        `float`,
+		        `int`,
+		        `list`,
+		        `str`,
+		        `time`,
+		        `tuple`,
+		        `UUID`,
+		        `None`
+		    )
+
+		#### Python types vs SQL types:
+
+		    [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
+
+		``
+		    * bool     -> bool|bit|boolean|tinyint|etc
+		    * bytes    -> bytea|binary|varbinary|etc
+		    * date     -> date|nvarchar|varchar|string|etc
+		    * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
+		    * Decimal  -> decimal|numeric|etc
+		    * dict     -> json|jsonb|nvarchar|varchar|string|etc
+		    * float    -> float|real|numeric|etc
+		    * int      -> int|integer|smallint|bigint|tinyint|etc
+		    * list     -> json|jsonb|nvarchar|varchar|string|etc
+		    * str      -> varchar|text|nvarchar|char|etc
+		    * time     -> time|nvarchar|varchar|string|etc
+		    * tuple    -> array(Postgres Native), another database: error.
+		    * UUID     -> uuid|varchar|text|nvarchar|etc
+		    * Enum     -> varchar|text|nvarchar|etc
+		    * None     -> null
+		``
+
+		---
+
+		### Example
+		``python
 		    from pysqlx_engine import PySQLXEngine
 
 		    uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -545,34 +847,32 @@ class PySQLXEngine:
 
 		    await db.close()
 
-		```
+		``
 		"""
 		...
 	@overload
-	async def query_first(
-		self, sql: str, parameters: DictParam = None, model: Type["MyModel"] = None
-	) -> Union[Type["MyModel"], None]: ...
-	# dict
-	async def query_first_as_dict(self, sql: str, parameters: Optional[DictParam] = None) -> Optional[Dict[str, Any]]:
+	async def query_first(self, sql: str, parameters: DictParam = None) -> Union[BaseRow, None]:
 		"""
 		## Description
 
-		Returns first row from query result as ``dict`` or ``None``.
+		Returns first row from query result as `BaseRow`, `MyModel` or `None`.
 
 		---
 
 		### Helper
 		    * Arguments:
 
-		        ``sql(str)``: sql query to be executed.
+		        `sql(str)`: sql query to be executed.
 
-		        ``parameters(dict)``: (default is None) parameters must be a dictionary with the name of the parameter and the value.
+		        `parameters(dict)`: (default is None) parameters must be a dictionary with the name of the parameter and the value.
+
+		        `model(BaseRow)`: (default is None) is your model that inherits from BaseRow.
 
 		    * Returns:
 
-		        ``Dict[str, Any] | None``: dict or None.
+		        `BaseRow | MyModel | None`: BaseRow, MyModel or None if no rows are found.
 
-		    * Raises: ``QueryError``|``TypeError`` | ``ParameterInvalidProviderError``|``ParameterInvalidValueError``|``ParameterInvalidJsonValueError``
+		    * Raises: `QueryError`|`TypeError` | `ParameterInvalidProviderError`|`ParameterInvalidValueError`|`ParameterInvalidJsonValueError`
 
 		---
 
@@ -583,35 +883,35 @@ class PySQLXEngine:
 		This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
 
 		#### SQL with parameters syntax
-		    * SQL: ``SELECT * FROM table WHERE id = :id``
-		    * Parameters: ``{"id": 1}``
+		    * SQL: `SELECT * FROM table WHERE id = :id`
+		    * Parameters: `{"id": 1}`
 
 		#### Parameters(dict):
 
-		    * dict ``key`` must be a valid string.
-		    * dict ``value`` can be one of the types: (
-		        ``bool``,
-		        ``bytes``,
-		        ``date``,
-		        ``datetime``,
-		        ``Decimal``,
-		        ``dict``,
-		        ``Enum``, # Enum must be a subclass of enum.Enum
-		        ``float``,
-		        ``int``,
-		        ``list``,
-		        ``str``,
-		        ``time``,
-		        ``tuple``,
-		        ``UUID``,
-		        ``None``
+		    * dict `key` must be a valid string.
+		    * dict `value` can be one of the types: (
+		        `bool`,
+		        `bytes`,
+		        `date`,
+		        `datetime`,
+		        `Decimal`,
+		        `dict`,
+		        `Enum`, # Enum must be a subclass of enum.Enum
+		        `float`,
+		        `int`,
+		        `list`,
+		        `str`,
+		        `time`,
+		        `tuple`,
+		        `UUID`,
+		        `None`
 		    )
 
 		#### Python types vs SQL types:
 
 		    [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
 
-		```
+		``
 		    * bool     -> bool|bit|boolean|tinyint|etc
 		    * bytes    -> bytea|binary|varbinary|etc
 		    * date     -> date|nvarchar|varchar|string|etc
@@ -627,12 +927,217 @@ class PySQLXEngine:
 		    * UUID     -> uuid|varchar|text|nvarchar|etc
 		    * Enum     -> varchar|text|nvarchar|etc
 		    * None     -> null
-		```
+		``
 
 		---
 
 		### Example
-		```python
+		``python
+		    from pysqlx_engine import PySQLXEngine
+
+		    uri = "postgresql://user:pass@host:port/db?schema=sample"
+		    db = PySQLXEngine(uri=uri)
+		    await db.connect()
+
+		    result = await db.query_first("SELECT 1 as id, 'rian' as name")
+		    print(result)
+		    # output -> BaseRow(id=1, name='rian')
+
+		    result = await db.query_first(sql="SELECT 1 as :id, 'rian' as name", parameters={"id": 1})
+		    print(result)
+		    # output -> BaseRow(id=1, name='rian')
+
+		    await db.close()
+
+		``
+		"""
+		...
+	@overload
+	async def query_first(
+		self, sql: str, parameters: DictParam = None, model: Type["MyModel"] = None
+	) -> Union[Type["MyModel"], None]:
+		"""
+		## Description
+
+		Returns first row from query result as `BaseRow`, `MyModel` or `None`.
+
+		---
+
+		### Helper
+		    * Arguments:
+
+		        `sql(str)`: sql query to be executed.
+
+		        `parameters(dict)`: (default is None) parameters must be a dictionary with the name of the parameter and the value.
+
+		        `model(BaseRow)`: (default is None) is your model that inherits from BaseRow.
+
+		    * Returns:
+
+		        `BaseRow | MyModel | None`: BaseRow, MyModel or None if no rows are found.
+
+		    * Raises: `QueryError`|`TypeError` | `ParameterInvalidProviderError`|`ParameterInvalidValueError`|`ParameterInvalidJsonValueError`
+
+		---
+
+		### Parameters Helper
+
+		Parameters are built into SQL at the application level; that is, the SQL and separate parameters are not sent to the database;
+		although most databases support this type of operation, the PySQLXEngine does it before calling the database to avoid possible incompatibilities.
+		This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
+
+		#### SQL with parameters syntax
+		    * SQL: `SELECT * FROM table WHERE id = :id`
+		    * Parameters: `{"id": 1}`
+
+		#### Parameters(dict):
+
+		    * dict `key` must be a valid string.
+		    * dict `value` can be one of the types: (
+		        `bool`,
+		        `bytes`,
+		        `date`,
+		        `datetime`,
+		        `Decimal`,
+		        `dict`,
+		        `Enum`, # Enum must be a subclass of enum.Enum
+		        `float`,
+		        `int`,
+		        `list`,
+		        `str`,
+		        `time`,
+		        `tuple`,
+		        `UUID`,
+		        `None`
+		    )
+
+		#### Python types vs SQL types:
+
+		    [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
+
+		``
+		    * bool     -> bool|bit|boolean|tinyint|etc
+		    * bytes    -> bytea|binary|varbinary|etc
+		    * date     -> date|nvarchar|varchar|string|etc
+		    * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
+		    * Decimal  -> decimal|numeric|etc
+		    * dict     -> json|jsonb|nvarchar|varchar|string|etc
+		    * float    -> float|real|numeric|etc
+		    * int      -> int|integer|smallint|bigint|tinyint|etc
+		    * list     -> json|jsonb|nvarchar|varchar|string|etc
+		    * str      -> varchar|text|nvarchar|char|etc
+		    * time     -> time|nvarchar|varchar|string|etc
+		    * tuple    -> array(Postgres Native), another database: error.
+		    * UUID     -> uuid|varchar|text|nvarchar|etc
+		    * Enum     -> varchar|text|nvarchar|etc
+		    * None     -> null
+		``
+
+		---
+
+		### Example
+		``python
+		    from pysqlx_engine import PySQLXEngine
+
+		    uri = "postgresql://user:pass@host:port/db?schema=sample"
+		    db = PySQLXEngine(uri=uri)
+		    await db.connect()
+
+		    result = await db.query_first("SELECT 1 as id, 'rian' as name")
+		    print(result)
+		    # output -> BaseRow(id=1, name='rian')
+
+		    result = await db.query_first(sql="SELECT 1 as :id, 'rian' as name", parameters={"id": 1})
+		    print(result)
+		    # output -> BaseRow(id=1, name='rian')
+
+		    await db.close()
+
+		``
+		"""
+		...
+	# dict
+	@overload
+	async def query_first_as_dict(self, sql: str) -> Optional[Dict[str, Any]]:
+		"""
+		## Description
+
+		Returns first row from query result as `dict` or `None`.
+
+		---
+
+		### Helper
+		    * Arguments:
+
+		        `sql(str)`: sql query to be executed.
+
+		        `parameters(dict)`: (default is None) parameters must be a dictionary with the name of the parameter and the value.
+
+		    * Returns:
+
+		        `Dict[str, Any] | None`: dict or None.
+
+		    * Raises: `QueryError`|`TypeError` | `ParameterInvalidProviderError`|`ParameterInvalidValueError`|`ParameterInvalidJsonValueError`
+
+		---
+
+		### Parameters Helper
+
+		Parameters are built into SQL at the application level; that is, the SQL and separate parameters are not sent to the database;
+		although most databases support this type of operation, the PySQLXEngine does it before calling the database to avoid possible incompatibilities.
+		This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
+
+		#### SQL with parameters syntax
+		    * SQL: `SELECT * FROM table WHERE id = :id`
+		    * Parameters: `{"id": 1}`
+
+		#### Parameters(dict):
+
+		    * dict `key` must be a valid string.
+		    * dict `value` can be one of the types: (
+		        `bool`,
+		        `bytes`,
+		        `date`,
+		        `datetime`,
+		        `Decimal`,
+		        `dict`,
+		        `Enum`, # Enum must be a subclass of enum.Enum
+		        `float`,
+		        `int`,
+		        `list`,
+		        `str`,
+		        `time`,
+		        `tuple`,
+		        `UUID`,
+		        `None`
+		    )
+
+		#### Python types vs SQL types:
+
+		    [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
+
+		``
+		    * bool     -> bool|bit|boolean|tinyint|etc
+		    * bytes    -> bytea|binary|varbinary|etc
+		    * date     -> date|nvarchar|varchar|string|etc
+		    * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
+		    * Decimal  -> decimal|numeric|etc
+		    * dict     -> json|jsonb|nvarchar|varchar|string|etc
+		    * float    -> float|real|numeric|etc
+		    * int      -> int|integer|smallint|bigint|tinyint|etc
+		    * list     -> json|jsonb|nvarchar|varchar|string|etc
+		    * str      -> varchar|text|nvarchar|char|etc
+		    * time     -> time|nvarchar|varchar|string|etc
+		    * tuple    -> array(Postgres Native), another database: error.
+		    * UUID     -> uuid|varchar|text|nvarchar|etc
+		    * Enum     -> varchar|text|nvarchar|etc
+		    * None     -> null
+		``
+
+		---
+
+		### Example
+		``python
 		    from pysqlx_engine import PySQLXEngine
 
 		    uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -648,29 +1153,32 @@ class PySQLXEngine:
 		    # output -> {'id': 1, 'name': 'rian'}
 
 		    await db.close()
-		```
+		``
 		"""
 		...
-	# --
-	async def execute(self, sql: str, parameters: Optional[DictParam] = None) -> "int":
+	@overload
+	async def query_first_as_dict(self, sql: str, parameters: Optional[DictParam] = None) -> Optional[Dict[str, Any]]:
 		"""
 		## Description
 
-		Executes a query/sql and returns the number of rows affected.
+		Returns first row from query result as `dict` or `None`.
 
 		---
 
 		### Helper
-
 		    * Arguments:
 
-		        ``sql(str)``:  sql to be executed.
+		        `sql(str)`: sql query to be executed.
 
-		        ``parameters(dict)``: (Default is None) parameters must be a dictionary with the name of the parameter and the value.
+		        `parameters(dict)`: (default is None) parameters must be a dictionary with the name of the parameter and the value.
 
-		    * Returns: ``int``: number of rows affected.
+		    * Returns:
 
-		    * Raises: ``ExecuteError``|``TypeError`` | ``ParameterInvalidProviderError``|``ParameterInvalidValueError``|``ParameterInvalidJsonValueError``
+		        `Dict[str, Any] | None`: dict or None.
+
+		    * Raises: `QueryError`|`TypeError` | `ParameterInvalidProviderError`|`ParameterInvalidValueError`|`ParameterInvalidJsonValueError`
+
+		---
 
 		### Parameters Helper
 
@@ -679,35 +1187,35 @@ class PySQLXEngine:
 		This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
 
 		#### SQL with parameters syntax
-		    * SQL: ``SELECT * FROM table WHERE id = :id``
-		    * Parameters: ``{"id": 1}``
+		    * SQL: `SELECT * FROM table WHERE id = :id`
+		    * Parameters: `{"id": 1}`
 
 		#### Parameters(dict):
 
-		    * dict ``key`` must be a valid string.
-		    * dict ``value`` can be one of the types: (
-		        ``bool``,
-		        ``bytes``,
-		        ``date``,
-		        ``datetime``,
-		        ``Decimal``,
-		        ``dict``,
-		        ``Enum``, # Enum must be a subclass of enum.Enum
-		        ``float``,
-		        ``int``,
-		        ``list``,
-		        ``str``,
-		        ``time``,
-		        ``tuple``,
-		        ``UUID``,
-		        ``None``
+		    * dict `key` must be a valid string.
+		    * dict `value` can be one of the types: (
+		        `bool`,
+		        `bytes`,
+		        `date`,
+		        `datetime`,
+		        `Decimal`,
+		        `dict`,
+		        `Enum`, # Enum must be a subclass of enum.Enum
+		        `float`,
+		        `int`,
+		        `list`,
+		        `str`,
+		        `time`,
+		        `tuple`,
+		        `UUID`,
+		        `None`
 		    )
 
 		#### Python types vs SQL types:
 
 		    [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
 
-		```
+		``
 		    * bool     -> bool|bit|boolean|tinyint|etc
 		    * bytes    -> bytea|binary|varbinary|etc
 		    * date     -> date|nvarchar|varchar|string|etc
@@ -723,12 +1231,109 @@ class PySQLXEngine:
 		    * UUID     -> uuid|varchar|text|nvarchar|etc
 		    * Enum     -> varchar|text|nvarchar|etc
 		    * None     -> null
-		```
+		``
 
 		---
 
 		### Example
-		```python
+		``python
+		    from pysqlx_engine import PySQLXEngine
+
+		    uri = "postgresql://user:pass@host:port/db?schema=sample"
+		    db = PySQLXEngine(uri=uri)
+		    await db.connect()
+
+		    result = await db.query_first_as_dict(sql="SELECT 1 as id, 'rian' as name")
+		    print(result)
+		    # output -> {'id': 1, 'name': 'rian'}
+
+		    result = await db.query_first_as_dict(sql="SELECT 1 as :id, 'rian' as name", parameters={"id": 1})
+		    print(result)
+		    # output -> {'id': 1, 'name': 'rian'}
+
+		    await db.close()
+		``
+		"""
+		...
+	# --
+	@overload
+	async def execute(self, sql: str) -> "int":
+		"""
+		## Description
+
+		Executes a query/sql and returns the number of rows affected.
+
+		---
+
+		### Helper
+
+		    * Arguments:
+
+		        `sql(str)`:  sql to be executed.
+
+		        `parameters(dict)`: (Default is None) parameters must be a dictionary with the name of the parameter and the value.
+
+		    * Returns: `int`: number of rows affected.
+
+		    * Raises: `ExecuteError`|`TypeError` | `ParameterInvalidProviderError`|`ParameterInvalidValueError`|`ParameterInvalidJsonValueError`
+
+		### Parameters Helper
+
+		Parameters are built into SQL at the application level; that is, the SQL and separate parameters are not sent to the database;
+		although most databases support this type of operation, the PySQLXEngine does it before calling the database to avoid possible incompatibilities.
+		This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
+
+		#### SQL with parameters syntax
+		    * SQL: `SELECT * FROM table WHERE id = :id`
+		    * Parameters: `{"id": 1}`
+
+		#### Parameters(dict):
+
+		    * dict `key` must be a valid string.
+		    * dict `value` can be one of the types: (
+		        `bool`,
+		        `bytes`,
+		        `date`,
+		        `datetime`,
+		        `Decimal`,
+		        `dict`,
+		        `Enum`, # Enum must be a subclass of enum.Enum
+		        `float`,
+		        `int`,
+		        `list`,
+		        `str`,
+		        `time`,
+		        `tuple`,
+		        `UUID`,
+		        `None`
+		    )
+
+		#### Python types vs SQL types:
+
+		    [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
+
+		``
+		    * bool     -> bool|bit|boolean|tinyint|etc
+		    * bytes    -> bytea|binary|varbinary|etc
+		    * date     -> date|nvarchar|varchar|string|etc
+		    * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
+		    * Decimal  -> decimal|numeric|etc
+		    * dict     -> json|jsonb|nvarchar|varchar|string|etc
+		    * float    -> float|real|numeric|etc
+		    * int      -> int|integer|smallint|bigint|tinyint|etc
+		    * list     -> json|jsonb|nvarchar|varchar|string|etc
+		    * str      -> varchar|text|nvarchar|char|etc
+		    * time     -> time|nvarchar|varchar|string|etc
+		    * tuple    -> array(Postgres Native), another database: error.
+		    * UUID     -> uuid|varchar|text|nvarchar|etc
+		    * Enum     -> varchar|text|nvarchar|etc
+		    * None     -> null
+		``
+
+		---
+
+		### Example
+		``python
 		    from pysqlx_engine import PySQLXEngine
 
 		    uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -738,7 +1343,98 @@ class PySQLXEngine:
 		    result = await db.execute("INSERT INTO users (name) VALUES ('rian')")
 		    print(f"rows_affected = {result}")
 		    # output -> rows_affected = 1
-		```
+		``
+		"""
+		...
+
+	@overload
+	async def execute(self, sql: str, parameters: Optional[DictParam] = None) -> "int":
+		"""
+		## Description
+
+		Executes a query/sql and returns the number of rows affected.
+
+		---
+
+		### Helper
+
+		    * Arguments:
+
+		        `sql(str)`:  sql to be executed.
+
+		        `parameters(dict)`: (Default is None) parameters must be a dictionary with the name of the parameter and the value.
+
+		    * Returns: `int`: number of rows affected.
+
+		    * Raises: `ExecuteError`|`TypeError` | `ParameterInvalidProviderError`|`ParameterInvalidValueError`|`ParameterInvalidJsonValueError`
+
+		### Parameters Helper
+
+		Parameters are built into SQL at the application level; that is, the SQL and separate parameters are not sent to the database;
+		although most databases support this type of operation, the PySQLXEngine does it before calling the database to avoid possible incompatibilities.
+		This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
+
+		#### SQL with parameters syntax
+		    * SQL: `SELECT * FROM table WHERE id = :id`
+		    * Parameters: `{"id": 1}`
+
+		#### Parameters(dict):
+
+		    * dict `key` must be a valid string.
+		    * dict `value` can be one of the types: (
+		        `bool`,
+		        `bytes`,
+		        `date`,
+		        `datetime`,
+		        `Decimal`,
+		        `dict`,
+		        `Enum`, # Enum must be a subclass of enum.Enum
+		        `float`,
+		        `int`,
+		        `list`,
+		        `str`,
+		        `time`,
+		        `tuple`,
+		        `UUID`,
+		        `None`
+		    )
+
+		#### Python types vs SQL types:
+
+		    [Documentation](https://carlos-rian.github.io/pysqlx-engine/type_mappings/)
+
+		``
+		    * bool     -> bool|bit|boolean|tinyint|etc
+		    * bytes    -> bytea|binary|varbinary|etc
+		    * date     -> date|nvarchar|varchar|string|etc
+		    * datetime -> timestamp|timestamptz|datetime|datetime2|nvarchar|varchar|string|etc
+		    * Decimal  -> decimal|numeric|etc
+		    * dict     -> json|jsonb|nvarchar|varchar|string|etc
+		    * float    -> float|real|numeric|etc
+		    * int      -> int|integer|smallint|bigint|tinyint|etc
+		    * list     -> json|jsonb|nvarchar|varchar|string|etc
+		    * str      -> varchar|text|nvarchar|char|etc
+		    * time     -> time|nvarchar|varchar|string|etc
+		    * tuple    -> array(Postgres Native), another database: error.
+		    * UUID     -> uuid|varchar|text|nvarchar|etc
+		    * Enum     -> varchar|text|nvarchar|etc
+		    * None     -> null
+		``
+
+		---
+
+		### Example
+		``python
+		    from pysqlx_engine import PySQLXEngine
+
+		    uri = "postgresql://user:pass@host:port/db?schema=sample"
+		    db = PySQLXEngine(uri=uri)
+		    await db.connect()
+
+		    result = await db.execute("INSERT INTO users (name) VALUES ('rian')")
+		    print(f"rows_affected = {result}")
+		    # output -> rows_affected = 1
+		``
 		"""
 		...
 	async def set_isolation_level(self, isolation_level: ISOLATION_LEVEL) -> "None":
@@ -758,7 +1454,7 @@ class PySQLXEngine:
 
 		### Helper
 
-		    * Arguments: ``isolation_level(str)``: isolation level to be set (
+		    * Arguments: `isolation_level(str)`: isolation level to be set (
 		        ReadUncommitted,
 		        ReadCommitted,
 		        RepeatableRead,
@@ -766,21 +1462,21 @@ class PySQLXEngine:
 		        Serializable
 		    )
 
-		    * Returns: ``None``
+		    * Returns: `None`
 
-		    * Raises: ``IsolationLevelError``, ``ValueError``
+		    * Raises: `IsolationLevelError`, `ValueError`
 
 		---
 
 		### Example
-		```python
+		``python
 		    from pysqlx_engine import PySQLXEngine
 
 		    uri = "postgresql://user:pass@host:port/db?schema=sample"
 		    db = PySQLXEngine(uri=uri)
 		    await db.connect()
 		    await db.set_isolation_level(isolation_level="ReadUncommitted")
-		```
+		``
 		---
 
 		### Isolation Level Help
@@ -794,31 +1490,31 @@ class PySQLXEngine:
 		"""
 		## Description
 
-		Starts a transaction using ``BEGIN``.
+		Starts a transaction using `BEGIN`.
 
-		``begin()`` is equivalent to `start_transaction()` without setting the isolation level.
+		`begin()` is equivalent to `start_transaction()` without setting the isolation level.
 
 		---
 
 		### Helper
 
-		    * Arguments: ``None``
+		    * Arguments: `None`
 
-		    * Returns: ``None``
+		    * Returns: `None`
 
-		    * Raises: ``RawCmdError``
+		    * Raises: `RawCmdError`
 
 		---
 
 		### Example
-		```python
+		``python
 		    from pysqlx_engine import PySQLXEngine
 
 		    uri = "postgresql://user:pass@host:port/db?schema=sample"
 		    db = PySQLXEngine(uri=uri)
 		    await db.connect()
 		    await db.begin()
-		```
+		``
 		"""
 		...
 	async def commit(self) -> "None":
@@ -837,16 +1533,16 @@ class PySQLXEngine:
 
 		### Helper
 
-		    * Arguments: ``None`
+		    * Arguments: `None`
 
-		    * Returns: ``None``
+		    * Returns: `None`
 
-		    * Raises: ``RawCmdError``
+		    * Raises: `RawCmdError`
 
 		---
 
 		### Example
-		```python
+		``python
 		    from pysqlx_engine import PySQLXEngine
 
 		    uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -857,7 +1553,7 @@ class PySQLXEngine:
 		    await db.execute("CREATE TABLE users (id serial PRIMARY KEY, name varchar(255))")
 		    await db.execute("INSERT INTO users (name) VALUES ('rian')")
 		    await db.commit()
-		```
+		``
 		"""
 		...
 	async def rollback(self) -> "None":
@@ -869,26 +1565,26 @@ class PySQLXEngine:
 		Rollback is used to cancel the transaction, when you uses the rollback,
 		the transaction is canceled and the changes are not saved.
 
-		The ``begin()`` method must be called before calling ``rollback()``.
+		The `begin()` method must be called before calling `rollback()`.
 
-		If the database not need set the isolation level, maybe you can not use ``begin()`` and ``rollback()``.
+		If the database not need set the isolation level, maybe you can not use `begin()` and `rollback()`.
 
-		The PySQLXEngine by default try uses the ``begin()`` and ``commit()`` in all transactions.
+		The PySQLXEngine by default try uses the `begin()` and `commit()` in all transactions.
 
 		---
 
 		### Helper
 
-		    * Arguments: ``None``
+		    * Arguments: `None`
 
-		    * Returns: ``None``
+		    * Returns: `None`
 
-		    * Raises: ``RawCmdError``
+		    * Raises: `RawCmdError`
 
 		---
 
 		### Example
-		```python
+		``python
 		    from pysqlx_engine import PySQLXEngine
 
 		    uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -899,16 +1595,16 @@ class PySQLXEngine:
 		    await db.execute("CREATE TABLE users (id serial PRIMARY KEY, name varchar(255))")
 		    await db.execute("INSERT INTO users (name) VALUES ('rian')")
 		    await db.rollback()
-		```
+		``
 		"""
 		...
 	async def start_transaction(self, isolation_level: Union[ISOLATION_LEVEL, None] = None) -> "None":
 		"""
 		## Description
 
-		Starts a transaction with ``BEGIN/BEGIN TRANSACTION``. by default, does not set the isolation level.
+		Starts a transaction with `BEGIN/BEGIN TRANSACTION`. by default, does not set the isolation level.
 
-		The ``Snapshot`` isolation level is supported by MS SQL Server.
+		The `Snapshot` isolation level is supported by MS SQL Server.
 
 		The Sqlite does not support the isolation level.
 
@@ -916,7 +1612,7 @@ class PySQLXEngine:
 
 		### Helper
 
-		    * Arguments: ``isolation_level(str)``: by default is None. Isolation level to be set (
+		    * Arguments: `isolation_level(str)`: by default is None. Isolation level to be set (
 		        ReadUncommitted,
 		        ReadCommitted,
 		        RepeatableRead,
@@ -931,7 +1627,7 @@ class PySQLXEngine:
 		---
 
 		### Example
-		```python
+		``python
 		    from pysqlx_engine import PySQLXEngine
 
 		    uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -943,7 +1639,7 @@ class PySQLXEngine:
 
 		    # without isolation level
 		    await db.start_transaction()
-		```
+		``
 
 		---
 

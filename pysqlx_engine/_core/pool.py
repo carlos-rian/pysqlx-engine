@@ -5,14 +5,14 @@ from time import monotonic
 
 from pysqlx_engine import PySQLXEngineSync as PySQLXEngine
 
-from ..abc.base_pool import BaseConnInfo, BaseMonitor, BasePool, Worker, logger
-from ..errors import PoolAlreadyClosedError, PoolAlreadyStartedError, PoolTimeoutError
-from ..util import gather, sleep, spawn
-
-# from weakref import ReferenceType
+from .abc.base_pool import BaseConnInfo, BaseMonitor, BasePool, Worker, logger
+from .errors import PoolAlreadyClosedError, PoolAlreadyStartedError, PoolTimeoutError
+from .util import gather, sleep, spawn
 
 
 class ConnInfo(BaseConnInfo):
+	conn: PySQLXEngine
+
 	def close(self) -> None:
 		super()._close()
 
@@ -58,6 +58,13 @@ class Monitor(BaseMonitor):
 						)
 						for conn in new_conns:
 							self.pool._put_conn_unchecked(conn)
+
+					elif self.pool._growing and self.pool._size < self.pool._max_size:
+						logger.debug("Monitor: Pool is growing, creating new connections.")
+						conn = self.pool._new_conn_unchecked()
+						self.pool._put_conn_unchecked(conn)
+						self.pool._growing = False
+
 				finally:
 					# Ensure that semaphore is released even if an error occurs
 					self.pool._monitor_semaphore.release()
@@ -130,21 +137,24 @@ class PySQLXEnginePoolSync(BasePool):
 			self._del_conn_unchecked(conn)
 
 	def _get_ready_conn(self) -> BaseConnInfo:
-		if self._pool.qsize() > 0:
-			try:
-				conn = self._pool.get(timeout=0.1)
-				return conn
-			except queue.Empty:
+		try:
+			conn = self._pool.get(timeout=BaseConnInfo._jitter())
+			return conn
+		except queue.Empty:
+			return
+
+	def _check_grow(self, value: int) -> None:
+		with self._lock:
+			self._waiting += value
+			if self._size >= self._max_size:
 				return
 
-		with self._lock:
-			if self._size < self._max_size:
-				logger.debug("Creating a new connection.")
-				conn = self._new_conn_unchecked()
-				return conn
+			self._growing = self._waiting > 0
+			logger.debug(f"Pool: Growing: {self._growing} Waiting: {self._waiting}")
 
 	def _get_conn(self) -> ConnInfo:
 		self._check_closed()
+		start_time = monotonic()
 		deadline = monotonic() + self._conn_timeout
 		logger.debug("Getting a ready connection.")
 		try:
@@ -158,6 +168,7 @@ class PySQLXEnginePoolSync(BasePool):
 			raise PoolTimeoutError("Timeout waiting for a connection semaphore") from e
 
 		try:
+			self._check_grow(1)
 			while True:
 				timeout = deadline - monotonic()
 				if timeout < 0.0:
@@ -165,10 +176,12 @@ class PySQLXEnginePoolSync(BasePool):
 
 				conn = self._get_ready_conn()
 				if conn:
+					logger.debug(f"Pool: Connection: {conn} retrieved in {monotonic() - start_time:.5f} seconds.")
 					return conn
 
-				sleep(0.1)
+				sleep(BaseConnInfo._jitter())
 		finally:
+			self._check_grow(-1)
 			self._semaphore.release()
 
 	def _put_conn(self, conn: ConnInfo) -> None:
