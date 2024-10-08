@@ -137,7 +137,7 @@ class PySQLXEnginePool(BasePool):
 
 	async def _get_ready_conn(self) -> BaseConnInfo:
 		try:
-			conn = await asyncio.wait_for(self._pool.get(), timeout=BaseConnInfo._jitter())
+			conn = await asyncio.wait_for(self._pool.get(), timeout=BaseConnInfo._jitter(value=0.3))
 			return conn
 		except asyncio.TimeoutError:
 			return
@@ -175,7 +175,7 @@ class PySQLXEnginePool(BasePool):
 					logger.debug(f"Pool: Connection: {conn} retrieved in {monotonic() - start_time:.5f} seconds.")
 					return conn
 
-				await asleep(BaseConnInfo._jitter())
+				await asleep(BaseConnInfo._jitter(value=0.3))
 		finally:
 			await self._check_grow(-1)
 			self._semaphore.release()

@@ -138,7 +138,7 @@ class PySQLXEnginePoolSync(BasePool):
 
 	def _get_ready_conn(self) -> BaseConnInfo:
 		try:
-			conn = self._pool.get(timeout=BaseConnInfo._jitter())
+			conn = self._pool.get(timeout=BaseConnInfo._jitter(value=0.3))
 			return conn
 		except queue.Empty:
 			return
@@ -179,7 +179,7 @@ class PySQLXEnginePoolSync(BasePool):
 					logger.debug(f"Pool: Connection: {conn} retrieved in {monotonic() - start_time:.5f} seconds.")
 					return conn
 
-				sleep(BaseConnInfo._jitter())
+				sleep(BaseConnInfo._jitter(value=0.3))
 		finally:
 			self._check_grow(-1)
 			self._semaphore.release()
