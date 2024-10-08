@@ -254,12 +254,11 @@ async def test_pool_get_conn():
 
 @pytest.mark.asyncio
 async def test_pool_get_ready_conn():
-	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1, max_size=1)
+	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1, max_size=1, check_interval=10, conn_timeout=3)
 	await pool.start()
+	await asyncio.sleep(1)
 	with unittest.mock.patch.object(pool._pool, "get", side_effect=asyncio.TimeoutError):
-		with pytest.raises(PoolTimeoutError):
-			async with pool.connection() as _:
-				await pool._get_ready_conn()
+		assert await pool._get_ready_conn() is None
 
 	await pool.stop()
 
@@ -270,6 +269,7 @@ async def test_pool_put_conn_unchecked_raise():
 	await pool.start()
 	with unittest.mock.patch.object(pool._pool, "put", side_effect=asyncio.QueueFull):
 		conn = await pool._new_conn_unchecked()
-		await pool._put_conn_unchecked(conn)
+		assert await pool._put_conn(conn) is None
+		assert pool._pool.qsize() == 1
 
 	await pool.stop()

@@ -256,6 +256,7 @@ def test_pool_put_conn_unchecked_raise():
 	time.sleep(1)
 	pool._max_size = 10
 	conn = pool._new_conn_unchecked()
-	pool._put_conn(conn)
+	assert pool._put_conn(conn) is None
+	assert pool._pool.qsize() == 1
 
 	pool.stop()
