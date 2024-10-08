@@ -173,7 +173,7 @@ class BasePool(ABC):
 
 	def _check_size(self, min_size: int, max_size: Union[int, None]):
 		if max_size is None:
-			max_size = min_size
+			max_size = min_size + 1
 
 		if min_size <= 0:
 			raise ValueError("min_size must be greater than 0")
