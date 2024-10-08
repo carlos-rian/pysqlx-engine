@@ -29,9 +29,12 @@ def stress_test_sync_pool(pool, num_threads=50, num_requests=1000):
 
 if __name__ == "__main__":
 	# Initialize your pool here
+	start = time.monotonic()
 	pool = PySQLXEnginePoolSync(
-		uri="sqlite:./dev.db", min_size=5, max_size=30, conn_timeout=60, check_interval=2
+		uri="sqlite:./dev.db", min_size=5, max_size=30, conn_timeout=60, check_interval=0.5
 	)  # Adjust parameters as needed
 	pool.start()
 	stress_test_sync_pool(pool)
 	pool.stop()
+	end = time.monotonic()
+	logging.info(f"Time taken: {end - start:.2f} seconds")
