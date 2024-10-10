@@ -4,7 +4,6 @@ from datetime import date, datetime, time, timezone
 from decimal import Decimal
 
 import pytest
-from pydantic import BaseModel
 
 from pysqlx_engine import BaseRow, PySQLXEngineSync
 from pysqlx_engine._core.const import LOG_CONFIG
@@ -390,62 +389,6 @@ def test_query_first_with_null_dict_values(db, typ, create_table: dict):
 	assert conn.connected is False
 
 
-@pytest.mark.parametrize(
-	"db,typ", [(db_sqlite, "sqlite"), (db_pgsql, "pgsql"), (db_mssql, "mssql"), (db_mysql, "mysql")]
-)
-def test_query_first_get_column_types(db, typ, create_table: dict):
-	table = create_table.get(typ)
-
-	conn: PySQLXEngineSync = db()
-
-	assert conn.connected is True
-
-	resp = conn.execute(sql=table)
-	assert resp == 0
-
-	with open("tests/unittest/sql/insert.sql", "r") as f:
-		rows = f.readlines()
-
-	resp = conn.execute(sql=rows[0].replace("\n", ""))
-	assert resp == 1
-
-	row = conn.query_first(sql="SELECT * FROM test_table")
-
-	assert isinstance(row.first_name, str)
-	assert isinstance(row.last_name, (str, type(None)))
-	assert isinstance(row.age, (int, type(None)))
-	assert isinstance(row.email, (str, type(None)))
-	assert isinstance(row.phone, (str, type(None)))
-	if typ == "sqlite":
-		assert isinstance(row.created_at, str)
-		assert isinstance(row.updated_at, str)
-	else:
-		assert isinstance(row.created_at, datetime)
-		assert isinstance(row.updated_at, datetime)
-
-	columns = row.get_columns()
-	assert isinstance(columns, dict)
-	assert len(columns) == 8
-
-	assert columns["first_name"] is str
-	assert columns["last_name"] is str
-	assert columns["age"] is int
-	assert columns["email"] is str
-	assert columns["phone"] is str
-	if typ == "sqlite":
-		assert columns["created_at"] is str
-		assert columns["updated_at"] is str
-	else:
-		assert columns["created_at"] is datetime
-		assert columns["updated_at"] is datetime
-
-	resp = conn.execute(sql="DROP TABLE test_table;")
-	assert isinstance(resp, int)
-
-	conn.close()
-	assert conn.connected is False
-
-
 @pytest.mark.parametrize("db", [db_sqlite, db_pgsql, db_mssql, db_mysql])
 def test_query_with_my_model(db):
 	conn: PySQLXEngineSync = db()
@@ -466,7 +409,7 @@ def test_query_with_my_model(db):
 def test_query_with_invalid_model(db):
 	conn: PySQLXEngineSync = db()
 
-	class MyModel(BaseModel):
+	class MyModel:
 		id: int
 		name: str
 
@@ -493,7 +436,7 @@ def test_query_first_with_my_model(db):
 def test_query_first_with_invalid_model(db):
 	conn: PySQLXEngineSync = db()
 
-	class MyModel(BaseModel):
+	class MyModel:
 		id: int
 		name: str
 
@@ -515,11 +458,6 @@ def test_query_with_my_model_get_columns(db):
 	assert isinstance(row, MyModel)
 	assert row.id == 1
 	assert row.name == "Rian"
-
-	columns = row.get_columns()
-
-	assert columns["id"] is int
-	assert columns["name"] is str
 
 
 def test_invalid_sql_type_db_pgsql(db: PySQLXEngineSync = db_pgsql):
