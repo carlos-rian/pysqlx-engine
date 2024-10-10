@@ -1,6 +1,7 @@
 from typing import Optional
 
 import pysqlx_core
+from pydantic import BaseModel
 
 # ParserSQL,
 # import necessary using _core to not subscribe default parser
@@ -98,7 +99,7 @@ class PySQLXEngine:
 		logger.debug(fe_sql(sql=log_sql))
 
 	async def _run(self, func, sql: str, parameters: Optional[dict] = None, model: Optional[MyModel] = None):
-		if model is not None and not issubclass(model, BaseRow):
+		if model is not None and not issubclass(model, (BaseRow, BaseModel)):
 			raise TypeError(model_parameter_error_message())
 
 		try:
