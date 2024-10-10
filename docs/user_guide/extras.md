@@ -321,7 +321,7 @@ Returns all rows from query result as ``BaseRow list``, ``MyModel list`` or ``em
 
     ``` py linenums="1"
     from pysqlx_engine import PySQLXEngine
-
+    
     uri = "postgresql://user:pass@host:port/db?schema=sample"
     db = PySQLXEngine(uri=uri)
     await db.connect()

@@ -7,6 +7,7 @@ You can configure these settings using environment variables or `LOG_CONFIG` con
 ---
 ## **Keyword**
 
+* `PYSQLX_DEV_MODE`: default(`False`) If `True`, the PySQLXEngine will be in development mode. In this mode, will show the SQL statements builded with the parameters. (Just for development, the SQL is not sent to the database).
 * `PYSQLX_SQL_LOG`: default(`False`) If `True`, the SQL statements will be printed in the console. This log is available at the `INFO` level of the `logging`.
 * `PYSQLX_USE_COLOR`: default(`False`) If `True`, the messages will be printed in color.
 * `PYSQLX_ERROR_JSON_FMT`: default(`False`) If `True`, the error messages will be printed in JSON format.
@@ -18,6 +19,7 @@ You can configure these settings using environment variables or `LOG_CONFIG` con
 === "**Linux**"
 
     ```bash
+    export PYSQLX_DEV_MODE=1
     export PYSQLX_SQL_LOG=1
     export PYSQLX_USE_COLOR=1
     export PYSQLX_ERROR_JSON_FMT=1
@@ -25,6 +27,7 @@ You can configure these settings using environment variables or `LOG_CONFIG` con
 === "**Windows**"
 
     ```bash
+    set PYSQLX_DEV_MODE=1
     set PYSQLX_SQL_LOG=1
     set PYSQLX_USE_COLOR=1
     set PYSQLX_ERROR_JSON_FMT=1
@@ -36,6 +39,7 @@ You can configure these settings using environment variables or `LOG_CONFIG` con
 ``` py linenums="1"
 from pysqlx_engine import LOG_CONFIG
 
+LOG_CONFIG.PYSQLX_DEV_MODE = True
 LOG_CONFIG.PYSQLX_SQL_LOG = True
 LOG_CONFIG.PYSQLX_USE_COLOR = True
 LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
@@ -75,6 +79,7 @@ The PySQLXEngine logger is available at root logger.
     import logging
     from pysqlx_engine import PySQLXEngineSync, LOG_CONFIG
 
+    LOG_CONFIG.PYSQLX_DEV_MODE = True
     LOG_CONFIG.PYSQLX_SQL_LOG = True
     LOG_CONFIG.PYSQLX_USE_COLOR = True
     LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True

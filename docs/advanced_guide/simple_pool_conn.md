@@ -1,72 +1,118 @@
 # **Simple pool with concurrent connections**
 
 The PySQLXEngine allows you to create a pool of connections to the database. 
-This is useful when you need to make many queries at the same time. 
-The PySQLXEngine not limit the number of connections, but it is recommended you set a limit.
+You can reuse and recycle connections to the database, which can improve the performance of your application.
 
-This example will use the `PostgreSQL` database and `PySQLXEngine` class. 
+This example will use the `SQLite` database.
 
 Create a `main.py` file and add the code examples below.
 
 
-## **Example**
+=== "**Async**"
+    ``` py
+    import asyncio
+    import logging
+    import random
+    import time
 
-``` py
+    from pysqlx_engine import PySQLXEnginePool, LOG_CONFIG
 
-import asyncio
+    LOG_CONFIG.PYSQLX_DEV_MODE = True
+    LOG_CONFIG.PYSQLX_SQL_LOG = True
+    LOG_CONFIG.PYSQLX_USE_COLOR = True
+    LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
 
-from pysqlx_engine import PySQLXEngine, PySQLXEnginePool
+    logging.basicConfig(level=logging.DEBUG)
 
-uri = "postgresql://user:password@localhost:5432/db"
-
-async def create_table():
-    db = PySQLXEngine(uri=uri)
-    await db.connect()
-    sql = "CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, x_position FLOAT, y_position FLOAT)"
-    await db.execute(sql=sql)
-    await db.close()
+    MAX_CONCURRENT_WORKERS = 50
+    semaphore = asyncio.Semaphore(MAX_CONCURRENT_WORKERS)
 
 
-async def main():
-    # create users table
-    await create_table()
+    async def simulate_work_async(pool: PySQLXEnginePool):
+        async with semaphore:  # Limit the number of simultaneous workers
+            try:
+                async with pool.connection() as conn:
+                    # Simulate some async work
+                    resp = await conn.query_first("SELECT 1 as a")
+                    assert resp.a == 1
+                    await asyncio.sleep(random.uniform(0.1, 0.5))
+            except Exception as e:
+                logging.error(f"Error occurred: {e}")
 
-    # create a pool of 10 connections
-    pool = PySQLXEnginePool(uri=uri, max_connections=3)
 
-    # create database connections
-    db1 = await pool.new_connection() 
-    db2 = await pool.new_connection() 
-    db3 = await pool.new_connection() 
+    async def stress_test_async_pool(pool, num_requests=1000):
+        tasks = [simulate_work_async(pool) for _ in range(num_requests)]
+        await asyncio.gather(*tasks)
 
-    sql = "INSERT INTO users(x_position, y_position) VALUES (:x, :y)"
-    # these calls are lazy, not blocking.
-    calls = [
-        db1.execute(sql=sql, parameters={"x": 1.2, "y": 2.3}),
-        db2.execute(sql=sql, parameters={"x": 4.3, "y": 5.6}),
-        db3.execute(sql=sql, parameters={"x": 6.5, "y": 1.8}),
 
-    ]
-    
-    # run the calls concurrently
-    inserts = await asyncio.gather(*calls)
-    print("inserts:", inserts, "affects rows")
+    if __name__ == "__main__":
+        start = time.monotonic()
 
-    # query all users
-    sql = "SELECT * FROM users"
-    resp = await db1.query(sql=sql)
+        async def main():
+            # Initialize your async pool here
+            pool = PySQLXEnginePool(
+                uri="sqlite:./dev.db", min_size=5, max_size=30, conn_timeout=60, check_interval=0.5
+            )  # Adjust parameters as needed
+            await pool.start()  # Ensure to start the pool if there's such a method
+            await stress_test_async_pool(pool)
+            await pool.stop()  # Properly close the pool after testing
 
-    print("rows:", resp)
+        asyncio.run(main())
+        end = time.monotonic()
+        logging.info(f"Time taken: {end - start:.2f} seconds")
+    ```
 
-    # close the connections
-    await db1.close()
-    await db2.close()
-    await db3.close()
+=== "**Sync**"
 
-import asyncio
-asyncio.run(main())
+    ``` py
+    import concurrent.futures
+    import logging
+    import random
+    import time
 
-```
+    from pysqlx_engine import PySQLXEnginePoolSync, LOG_CONFIG
+
+    LOG_CONFIG.PYSQLX_DEV_MODE = True
+    LOG_CONFIG.PYSQLX_SQL_LOG = True
+    LOG_CONFIG.PYSQLX_USE_COLOR = True
+    LOG_CONFIG.PYSQLX_ERROR_JSON_FMT = True
+
+    logging.basicConfig(level=logging.DEBUG)
+
+    MAX_CONCURRENT_WORKERS = 50
+    #
+
+
+    def simulate_work(pool: PySQLXEnginePoolSync):
+        try:
+            with pool.connection() as conn:
+                # Simulate some work with the connection
+                resp = conn.query_first("SELECT 1 as a")
+                assert resp.a == 1
+                time.sleep(random.uniform(0.1, 0.5))
+        except Exception as e:
+            logging.error(f"Error occurred: {e}")
+
+
+    def stress_test_sync_pool(pool, num_requests=1000):
+        with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_CONCURRENT_WORKERS) as executor:
+            # Submit multiple tasks to simulate concurrent connections
+            futures = [executor.submit(simulate_work, pool) for _ in range(num_requests)]
+            concurrent.futures.wait(futures)
+
+
+    if __name__ == "__main__":
+        # Initialize your pool here
+        start = time.monotonic()
+        pool = PySQLXEnginePoolSync(
+            uri="sqlite:./dev.db", min_size=5, max_size=30, conn_timeout=60, check_interval=0.5
+        )  # Adjust parameters as needed
+        pool.start()
+        stress_test_sync_pool(pool)
+        pool.stop()
+        end = time.monotonic()
+        logging.info(f"Time taken: {end - start:.2f} seconds")
+    ```
 
 Running the code using the terminal
 
@@ -75,14 +121,7 @@ Running the code using the terminal
 ```console
 
 $ python3 main.py
-
-inserts: [1, 1, 1] affects rows 
-rows: [
-    BaseModel(id=1, x_position=1.2, y_position=2.3), 
-    BaseModel(id=2, x_position=4.3, y_position=5.6), 
-    BaseModel(id=3, x_position=6.5, y_position=1.8)
-]
-
+...
 ```
 
 </div>

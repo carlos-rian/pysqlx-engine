@@ -10,9 +10,12 @@ The PySQLX-Engine supports the parameters. The parameters are passed as a dictio
 
 These functions are described in the [Documentation for methods](/pysqlx-engine/user_guide/extras/) section.
 
-**Parameters** are built into SQL at the application level; that is, the SQL and separate parameters are not sent to the database;
-although most databases support this operation, the PySQLXEngine does it before calling the database to avoid possible incompatibilities.
-This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
+**Parameters** are has prepared statements, where the values are converted to rust types and then to SQL types.
+
+Python types > Rust types > SQL types
+
+!!! Note
+    In development mode, the SQL statements are printed in the console with the parameters builded and raw SQL. But the SQL builded with the parameters is not sent to the database.
 
 The PySQLXEngine supports many Python types with automatic conversion to SQL.
 
