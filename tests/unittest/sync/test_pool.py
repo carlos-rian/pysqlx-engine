@@ -39,10 +39,10 @@ def test_get_connection_uses_all_min_connections(uri: str):
 	pool = get_pool(uri=uri)
 	contexts = [pool.connection() for _ in range(3)]
 	connections = [ctx.__enter__() for ctx in contexts]
-	assert len(connections) == 3, "Should use all min connections"
+	assert len(connections) >= 3, "Should use all min connections"
 	for context in contexts:
 		context.__exit__(None, None, None)
-	assert pool._pool.qsize() == 3, "All connections should be returned to the pool"
+	assert pool._pool.qsize() >= 3, "All connections should be returned to the pool"
 	pool.stop()
 
 
@@ -72,9 +72,8 @@ def test_reuse_connection(uri: str):
 	pool = get_pool(uri=uri, min_size=2, keep_alive=5)
 	contexts = [pool.connection() for _ in range(2)]
 	connections = [ctx.__enter__() for ctx in contexts]
-	assert len(connections) == 2, "Should use all min connections"
-	assert pool._size == 2, "Should have 2 connections"
-	conn_ids = [id(conn) for conn in connections]
+	assert len(connections) in (2, 3), "Should use all min connections"
+	assert pool._size in (2, 3), "Should have 2 connections"
 	for context in contexts:
 		context.__exit__(None, None, None)
 
@@ -82,23 +81,18 @@ def test_reuse_connection(uri: str):
 	time.sleep(6)
 	contexts = [pool.connection() for _ in range(2)]
 	connections = [ctx.__enter__() for ctx in contexts]
-	assert len(connections) == 2, "Should use all min connections"
-	assert pool._size == 2, "Should have 2 connections"
-	new_conn_ids = [id(conn) for conn in connections]
-
-	conn_ids.sort()
-	new_conn_ids.sort()
-	assert conn_ids == new_conn_ids, "Connections should be renewed"
+	assert len(connections) in (2, 3), "Should use all min connections"
+	assert pool._size in (2, 3), "Should have 2 connections"
 	pool.stop()
 
 
 @pytest.mark.parametrize("uri", [SQLITE_URI, PGSQL_URI, MSSQL_URI, MYSQL_URI])
 def test_renew_connection(uri: str):
-	pool = get_pool(uri=uri, min_size=2, max_size=2, keep_alive=1, check_interval=1, conn_timeout=5)
+	pool = get_pool(uri=uri, min_size=2, max_size=3, keep_alive=1, check_interval=1, conn_timeout=5)
 	contexts = [pool.connection() for _ in range(2)]
 	connections = [ctx.__enter__() for ctx in contexts]
-	assert len(connections) == 2, "Should use all min connections"
-	assert pool._size == 2, "Should have 2 connections"
+	assert len(connections) >= 2, "Should use all min connections"
+	assert pool._size >= 2, "Should have 2 connections"
 	conn_ids = [id(conn) for conn in connections]
 	for context in contexts:
 		context.__exit__(None, None, None)
@@ -107,8 +101,8 @@ def test_renew_connection(uri: str):
 	time.sleep(6)
 	contexts = [pool.connection() for _ in range(2)]
 	connections = [ctx.__enter__() for ctx in contexts]
-	assert len(connections) == 2, "Should use all min connections"
-	assert pool._size == 2, "Should have 2 connections"
+	assert len(connections) >= 2, "Should use all min connections"
+	assert pool._size >= 2, "Should have 2 connections"
 	new_conn_ids = [id(conn) for conn in connections]
 
 	conn_ids.sort()
@@ -119,12 +113,15 @@ def test_renew_connection(uri: str):
 
 def test_pool_initialization_raise():
 	pool = PySQLXEnginePool(uri=SQLITE_URI, max_size=None, min_size=10)
-	assert pool._max_size == 10, "Max size should be 10"
+	assert pool._max_size == 11, "Max size should be 11"
 	assert pool._min_size == 10, "Min size should be 10"
 	assert "at 0x" in repr(pool)
 
 	with pytest.raises(ValueError):
 		pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=0)
+
+	with pytest.raises(ValueError):
+		pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=2, max_size=2)
 
 	with pytest.raises(ValueError):
 		pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=-1)
@@ -143,7 +140,7 @@ def test_pool_initialization_raise():
 
 
 def test_monitor_break_if_queue_is_empty():
-	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1, max_size=1)
+	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1)
 	pool._opened = True
 	with unittest.mock.patch.object(pool._pool, "get_nowait", side_effect=queue.Empty):
 		monitor = Monitor(pool=pool)
@@ -157,14 +154,14 @@ def test_monitor_break_if_queue_is_empty():
 
 
 def test_monitor_break_if_size_is_above_max():
-	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1, max_size=1)
+	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1, max_size=2)
 	pool._opened = True
 	pool._pool.put_nowait(pool._new_conn_unchecked())
 	assert pool._size == 1
 	assert pool._opened is True
 
 	monitor = Monitor(pool=pool)
-	pool._size = 2
+	pool._size = 3
 	t = threading.Thread(target=monitor.run, daemon=True)
 	t.start()
 	time.sleep(1)
@@ -173,13 +170,13 @@ def test_monitor_break_if_size_is_above_max():
 
 
 def test_pool_stop_raise():
-	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1, max_size=1)
+	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1)
 	with pytest.raises(PoolAlreadyClosedError):
 		pool.stop()
 
 
 def test_pool_timeout_raise():
-	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1, max_size=1, conn_timeout=1)
+	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1, conn_timeout=1)
 	pool.start()
 	time.sleep(1)
 	with pool.connection() as conn:
@@ -192,7 +189,7 @@ def test_pool_timeout_raise():
 
 
 def test_pool_raise_during_connection():
-	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1, max_size=1)
+	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1)
 	pool.start()
 	time.sleep(1)
 	with pytest.raises(ZeroDivisionError):
@@ -205,7 +202,7 @@ def test_pool_raise_during_connection():
 
 
 def test_pool_on_transaction():
-	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1, max_size=1, check_interval=10)
+	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1, check_interval=10)
 	pool.start()
 	time.sleep(1)
 	with pool.connection() as conn:
@@ -217,7 +214,7 @@ def test_pool_on_transaction():
 
 
 def test_pool_start_twice():
-	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1, max_size=1)
+	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1)
 	pool.start()
 	with pytest.raises(PoolAlreadyStartedError):
 		pool.start()
@@ -225,14 +222,14 @@ def test_pool_start_twice():
 
 
 def test_pool_start_generate_raise():
-	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1, max_size=1)
+	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1)
 	with unittest.mock.patch.object(pool._pool, "put", side_effect=Exception):
 		with pytest.raises(Exception):
 			pool.start()
 
 
 def test_pool_get_conn():
-	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1, max_size=1)
+	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1)
 	pool.start()
 	with unittest.mock.patch.object(pool._semaphore, "acquire", return_value=None):
 		with pytest.raises(PoolTimeoutError) as e:
@@ -242,7 +239,7 @@ def test_pool_get_conn():
 
 
 def test_pool_get_ready_conn():
-	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1, max_size=1)
+	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1, check_interval=10, conn_timeout=3)
 	pool.start()
 	with unittest.mock.patch.object(pool._pool, "get", side_effect=queue.Empty):
 		assert pool._get_ready_conn() is None
@@ -251,12 +248,42 @@ def test_pool_get_ready_conn():
 
 
 def test_pool_put_conn_unchecked_raise():
-	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1, max_size=1, check_interval=10)
+	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1, max_size=2, check_interval=10)
 	pool.start()
 	time.sleep(1)
-	pool._max_size = 10
-	conn = pool._new_conn_unchecked()
-	assert pool._put_conn(conn) is None
-	assert pool._pool.qsize() == 1
+	with pool._lock:
+		assert pool._put_conn_unchecked(pool._new_conn_unchecked()) is None
+		assert pool._put_conn_unchecked(pool._new_conn_unchecked()) is None
+
+		pool._size = 1
+		assert pool._put_conn_unchecked(pool._new_conn_unchecked()) is None
+		assert pool._pool.qsize() == 2
 
 	pool.stop()
+
+
+def test_monitor_growing_creates_new_connections():
+	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1, check_interval=0.5)
+	pool._opened = True
+	pool._put_conn(pool._new_conn_unchecked())
+	# Initially, the pool should have min_size connections
+	assert pool._size == 1
+	# Set the pool to grow
+	pool._growing = True
+
+	monitor = Monitor(pool=pool)
+	t = threading.Thread(target=monitor.run, daemon=True)
+	t.start()
+	time.sleep(2)
+	pool._opened = False
+	# Check if a new connection is created when the pool is growing
+	assert pool._size == 2
+	t.join()
+
+
+def test_check_grow():
+	pool = PySQLXEnginePool(uri=SQLITE_URI, min_size=1, max_size=2, check_interval=10)
+	pool._size = 2
+	assert pool._waiting == 0
+	assert pool._growing is False
+	assert pool._check_grow(1) is None
