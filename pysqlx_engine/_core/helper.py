@@ -1,12 +1,12 @@
-from functools import lru_cache
 import json
-
-from .const import LOG_CONFIG
+from functools import lru_cache
 
 from pygments import highlight
 from pygments.formatters import TerminalFormatter
 from pygments.lexers import JsonLexer, PythonLexer
 from pygments.lexers.sql import SqlLexer
+
+from .const import LOG_CONFIG
 
 
 def _colorizer_json_message(dumps: str):
@@ -82,7 +82,7 @@ def not_connected_error_message():
 
 def model_parameter_error_message():
 	return f"""
-        model parameter must be a subclass of BaseRow
+        model parameter must be a subclass of BaseRow or Pydantic BaseModel.
 
         try importing the BaseRow class from the pysqlx_engine package.
 
