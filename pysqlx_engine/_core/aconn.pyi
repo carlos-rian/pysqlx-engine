@@ -35,40 +35,40 @@ class PySQLXEngine:
 
 
 	##### PostgreSQL
-	``python
+	```python
 	from pysqlx_engine import PySQLXEngine
 
 	uri = "postgresql://user:pass@host:port/db?schema=sample"
 	db = PySQLXEngine(uri=uri)
 	await db.connect()
-	``
+	```
 	---
 	##### MySQL
-	``python
+	```python
 	from pysqlx_engine import PySQLXEngine
 
 	uri = "mysql://user:pass@host:port/db?schema=sample"
 	db = PySQLXEngine(uri=uri)
 	await db.connect()
-	``
+	```
 	---
 	##### Microsoft SQL Server
-	``python
+	```python
 	from pysqlx_engine import PySQLXEngine
 
 	uri = "sqlserver://host:port;initial catalog=sample;user=sa;password=pass;"
 	db = PySQLXEngine(uri=uri)
 	await db.connect()
-	``
+	```
 	---
 	##### SQLite
-	``python
+	```python
 	from pysqlx_engine import PySQLXEngine
 
 	uri = "sqlite:./dev.db"
 	db = PySQLXEngine(uri=uri)
 	await db.connect()
-	``
+	```
 	"""
 
 	__slots__ = ["uri", "connected", "_conn", "_provider"]
@@ -166,13 +166,13 @@ class PySQLXEngine:
 		---
 
 		### Example
-		``python
+		```python
 		    from pysqlx_engine import PySQLXEngine
 
 		    uri = "postgresql://user:pass@host:port/db?schema=sample"
 		    db = PySQLXEngineSync(uri=uri)
 		    await db.connect()
-		``
+		```
 		"""
 		...
 	async def close(self) -> "None":
@@ -229,7 +229,7 @@ class PySQLXEngine:
 		---
 
 		### Example
-		``python
+		```python
 		    from pysqlx_engine import PySQLXEngine
 
 		    uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -238,7 +238,7 @@ class PySQLXEngine:
 
 		    await db.raw_cmd(sql="SET TRANSACTION ISOLATION LEVEL READ COMMITTED;")
 
-		``
+		```
 		"""
 		...
 	# all
@@ -329,7 +329,7 @@ class PySQLXEngine:
 		---
 
 		### Example
-		``python
+		```python
 		    from pysqlx_engine import PySQLXEngine
 
 		    uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -346,7 +346,7 @@ class PySQLXEngine:
 
 		    await db.close()
 
-		``
+		```
 		"""
 		...
 	# dict
@@ -433,7 +433,7 @@ class PySQLXEngine:
 		---
 
 		### Example
-		``python
+		```python
 		    from pysqlx_engine import PySQLXEngine
 
 		    uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -449,7 +449,7 @@ class PySQLXEngine:
 		    # output -> [{'id': 1, 'name': 'rian'}]
 
 		    await db.close()
-		``
+		```
 		"""
 		...
 	# fisrt
@@ -540,7 +540,7 @@ class PySQLXEngine:
 		---
 
 		### Example
-		``python
+		```python
 		    from pysqlx_engine import PySQLXEngine
 
 		    uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -557,7 +557,7 @@ class PySQLXEngine:
 
 		    await db.close()
 
-		``
+		```
 		"""
 		...
 	# dict
@@ -642,7 +642,7 @@ class PySQLXEngine:
 		---
 
 		### Example
-		``python
+		```python
 		    from pysqlx_engine import PySQLXEngine
 
 		    uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -658,7 +658,7 @@ class PySQLXEngine:
 		    # output -> {'id': 1, 'name': 'rian'}
 
 		    await db.close()
-		``
+		```
 		"""
 		...
 	# --
@@ -740,7 +740,7 @@ class PySQLXEngine:
 		---
 
 		### Example
-		``python
+		```python
 		    from pysqlx_engine import PySQLXEngine
 
 		    uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -750,7 +750,7 @@ class PySQLXEngine:
 		    result = await db.execute("INSERT INTO users (name) VALUES ('rian')")
 		    print(f"rows_affected = {result}")
 		    # output -> rows_affected = 1
-		``
+		```
 		"""
 		...
 	async def set_isolation_level(self, isolation_level: ISOLATION_LEVEL) -> "None":
@@ -785,14 +785,14 @@ class PySQLXEngine:
 		---
 
 		### Example
-		``python
+		```python
 		    from pysqlx_engine import PySQLXEngine
 
 		    uri = "postgresql://user:pass@host:port/db?schema=sample"
 		    db = PySQLXEngine(uri=uri)
 		    await db.connect()
 		    await db.set_isolation_level(isolation_level="ReadUncommitted")
-		``
+		```
 		---
 
 		### Isolation Level Help
@@ -823,14 +823,14 @@ class PySQLXEngine:
 		---
 
 		### Example
-		``python
+		```python
 		    from pysqlx_engine import PySQLXEngine
 
 		    uri = "postgresql://user:pass@host:port/db?schema=sample"
 		    db = PySQLXEngine(uri=uri)
 		    await db.connect()
 		    await db.begin()
-		``
+		```
 		"""
 		...
 	async def commit(self) -> "None":
@@ -858,7 +858,7 @@ class PySQLXEngine:
 		---
 
 		### Example
-		``python
+		```python
 		    from pysqlx_engine import PySQLXEngine
 
 		    uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -869,7 +869,7 @@ class PySQLXEngine:
 		    await db.execute("CREATE TABLE users (id serial PRIMARY KEY, name varchar(255))")
 		    await db.execute("INSERT INTO users (name) VALUES ('rian')")
 		    await db.commit()
-		``
+		```
 		"""
 		...
 	async def rollback(self) -> "None":
@@ -900,7 +900,7 @@ class PySQLXEngine:
 		---
 
 		### Example
-		``python
+		```python
 		    from pysqlx_engine import PySQLXEngine
 
 		    uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -911,7 +911,7 @@ class PySQLXEngine:
 		    await db.execute("CREATE TABLE users (id serial PRIMARY KEY, name varchar(255))")
 		    await db.execute("INSERT INTO users (name) VALUES ('rian')")
 		    await db.rollback()
-		``
+		```
 		"""
 		...
 	async def start_transaction(self, isolation_level: Union[ISOLATION_LEVEL, None] = None) -> "None":
@@ -943,7 +943,7 @@ class PySQLXEngine:
 		---
 
 		### Example
-		``python
+		```python
 		    from pysqlx_engine import PySQLXEngine
 
 		    uri = "postgresql://user:pass@host:port/db?schema=sample"
@@ -955,7 +955,7 @@ class PySQLXEngine:
 
 		    # without isolation level
 		    await db.start_transaction()
-		``
+		```
 
 		---
 

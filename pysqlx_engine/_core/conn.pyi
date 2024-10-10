@@ -92,11 +92,11 @@ class PySQLXEngineSync:
 
 		### Helper
 
-		    * Arguments: ``None``
+		    * Arguments: `None`
 
-		    * Returns: ``bool``
+		    * Returns: `bool`
 
-		    * Raises: ``None``
+		    * Raises: `None`
 
 		"""
 		...
@@ -116,11 +116,11 @@ class PySQLXEngineSync:
 
 		### Helper
 
-		    * Arguments: ``None``
+		    * Arguments: `None`
 
-		    * Returns: ``bool``
+		    * Returns: `bool`
 
-		    * Raises: ``None``
+		    * Raises: `None`
 
 		---
 
@@ -145,19 +145,19 @@ class PySQLXEngineSync:
 		"""
 		## Description
 
-		Each connection instance is lazy; only after ``.connect()`` is the database checked and the connection established.
+		Each connection instance is lazy; only after `.connect()` is the database checked and the connection established.
 
-		When you use ``async with`` the connection is automatically opened and closed.
+		When you use `async with` the connection is automatically opened and closed.
 
 		---
 
 		### Helper
 
-		    * Arguments: ``None``
+		    * Arguments: `None`
 
-		    * Returns: ``None``
+		    * Returns: `None`
 
-		    * Raises: ``ConnectError``
+		    * Raises: `ConnectError`
 
 		---
 
@@ -185,11 +185,11 @@ class PySQLXEngineSync:
 
 		### Helper
 
-		    * Arguments: ``None``
+		    * Arguments: `None`
 
-		    * Returns: ``None``
+		    * Returns: `None`
 
-		    * Raises: ``None``
+		    * Raises: `None`
 
 		---
 
@@ -214,12 +214,11 @@ class PySQLXEngineSync:
 		### Helper
 
 		    * Arguments:
+		        `sql(str)`: sql to be executed.
 
-		        ``sql(str)``: sql to be executed.
+		    * Returns: `None`
 
-		    * Returns: ``None``
-
-		    * Raises: ``RawCmdError``
+		    * Raises: `RawCmdError`
 
 		---
 
@@ -247,24 +246,24 @@ class PySQLXEngineSync:
 		"""
 		## Description
 
-		Returns all rows from query result as``BaseRow list``, ``MyModel list`` or ``empty list``.
+		Returns all rows from query result as`BaseRow list`, `MyModel list` or `empty list`.
 
 		---
 
 		### Helper
 		    * Arguments:
 
-		        ``sql(str)``: sql query to be executed.
+		        `sql(str)`: sql query to be executed.
 
-		        ``parameters(dict)``: (default is None) parameters must be a dictionary with the name of the parameter and the value.
+		        `parameters(dict)`: (default is None) parameters must be a dictionary with the name of the parameter and the value.
 
-		        ``model(BaseRow)``: (default is None) is your model that inherits from BaseRow.
+		        `model(BaseRow)`: (default is None) is your model that inherits from BaseRow.
 
 		    * Returns:
 
-		        ``List[BaseRow] | List[MyModel] | List``: BaseRow list, MyModel list or empty list.
+		        `List[BaseRow] | List[MyModel] | List`: BaseRow list, MyModel list or empty list.
 
-		    * Raises: ``QueryError``|``TypeError`` | ``ParameterInvalidProviderError``|``ParameterInvalidValueError``|``ParameterInvalidJsonValueError``
+		    * Raises: `QueryError`|`TypeError` | `ParameterInvalidProviderError`|`ParameterInvalidValueError`|`ParameterInvalidJsonValueError`
 
 		---
 
@@ -275,28 +274,28 @@ class PySQLXEngineSync:
 		This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
 
 		#### SQL with parameters syntax
-		    * SQL: ``SELECT * FROM table WHERE id = :id``
-		    * Parameters: ``{"id": 1}``
+		    * SQL: `SELECT * FROM table WHERE id = :id`
+		    * Parameters: `{"id": 1}`
 
 		#### Parameters(dict):
 
-		    * dict ``key`` must be a valid string.
-		    * dict ``value`` can be one of the types: (
-		        ``bool``,
-		        ``bytes``,
-		        ``date``,
-		        ``datetime``,
-		        ``Decimal``,
-		        ``dict``,
-		        ``Enum``, # Enum must be a subclass of enum.Enum
-		        ``float``,
-		        ``int``,
-		        ``list``,
-		        ``str``,
-		        ``time``,
-		        ``tuple``,
-		        ``UUID``,
-		        ``None``
+		    * dict `key` must be a valid string.
+		    * dict `value` can be one of the types: (
+		        `bool`,
+		        `bytes`,
+		        `date`,
+		        `datetime`,
+		        `Decimal`,
+		        `dict`,
+		        `Enum`, # Enum must be a subclass of enum.Enum
+		        `float`,
+		        `int`,
+		        `list`,
+		        `str`,
+		        `time`,
+		        `tuple`,
+		        `UUID`,
+		        `None`
 		    )
 
 		#### Python types vs SQL types:
@@ -351,22 +350,22 @@ class PySQLXEngineSync:
 		"""
 		## Description
 
-		Returns all rows from query result as ``dict list`` or ``empty list``.
+		Returns all rows from query result as `dict list` or `empty list`.
 
 		---
 
 		### Helper
 		    * Arguments:
 
-		        ``sql(str)``: sql query to be executed
+		        `sql(str)`: sql query to be executed
 
-		        ``parameters(dict)``: (default is None) parameters must be a dictionary with the name of the parameter and the value.
+		        `parameters(dict)`: (default is None) parameters must be a dictionary with the name of the parameter and the value.
 
 		    * Returns:
 
-		        ``List[Dict[str, Any]] | List``: dict list or empty list.
+		        `List[Dict[str, Any]] | List`: dict list or empty list.
 
-		    * Raises: ``QueryError``|``TypeError`` | ``ParameterInvalidProviderError``|``ParameterInvalidValueError``|``ParameterInvalidJsonValueError``
+		    * Raises: `QueryError`|`TypeError` | `ParameterInvalidProviderError`|`ParameterInvalidValueError`|`ParameterInvalidJsonValueError`
 
 		---
 
@@ -377,28 +376,28 @@ class PySQLXEngineSync:
 		This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
 
 		#### SQL with parameters syntax
-		    * SQL: ``SELECT * FROM table WHERE id = :id``
-		    * Parameters: ``{"id": 1}``
+		    * SQL: `SELECT * FROM table WHERE id = :id`
+		    * Parameters: `{"id": 1}`
 
 		#### Parameters(dict):
 
-		    * dict ``key`` must be a valid string.
-		    * dict ``value`` can be one of the types: (
-		        ``bool``,
-		        ``bytes``,
-		        ``date``,
-		        ``datetime``,
-		        ``Decimal``,
-		        ``dict``,
-		        ``Enum``, # Enum must be a subclass of enum.Enum
-		        ``float``,
-		        ``int``,
-		        ``list``,
-		        ``str``,
-		        ``time``,
-		        ``tuple``,
-		        ``UUID``,
-		        ``None``
+		    * dict `key` must be a valid string.
+		    * dict `value` can be one of the types: (
+		        `bool`,
+		        `bytes`,
+		        `date`,
+		        `datetime`,
+		        `Decimal`,
+		        `dict`,
+		        `Enum`, # Enum must be a subclass of enum.Enum
+		        `float`,
+		        `int`,
+		        `list`,
+		        `str`,
+		        `time`,
+		        `tuple`,
+		        `UUID`,
+		        `None`
 		    )
 
 		#### Python types vs SQL types:
@@ -460,22 +459,22 @@ class PySQLXEngineSync:
 		"""
 		## Description
 
-		Returns first row from query result as ``dict`` or ``None``.
+		Returns first row from query result as `dict` or `None`.
 
 		---
 
 		### Helper
 		    * Arguments:
 
-		        ``sql(str)``: sql query to be executed.
+		        `sql(str)`: sql query to be executed.
 
-		        ``parameters(dict)``: (default is None) parameters must be a dictionary with the name of the parameter and the value.
+		        `parameters(dict)`: (default is None) parameters must be a dictionary with the name of the parameter and the value.
 
 		    * Returns:
 
-		        ``Dict[str, Any] | None``: dict or None.
+		        `Dict[str, Any] | None`: dict or None.
 
-		    * Raises: ``QueryError``|``TypeError`` | ``ParameterInvalidProviderError``|``ParameterInvalidValueError``|``ParameterInvalidJsonValueError``
+		    * Raises: `QueryError`|`TypeError` | `ParameterInvalidProviderError`|`ParameterInvalidValueError`|`ParameterInvalidJsonValueError`
 
 		---
 
@@ -486,28 +485,28 @@ class PySQLXEngineSync:
 		This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
 
 		#### SQL with parameters syntax
-		    * SQL: ``SELECT * FROM table WHERE id = :id``
-		    * Parameters: ``{"id": 1}``
+		    * SQL: `SELECT * FROM table WHERE id = :id`
+		    * Parameters: `{"id": 1}`
 
 		#### Parameters(dict):
 
-		    * dict ``key`` must be a valid string.
-		    * dict ``value`` can be one of the types: (
-		        ``bool``,
-		        ``bytes``,
-		        ``date``,
-		        ``datetime``,
-		        ``Decimal``,
-		        ``dict``,
-		        ``Enum``, # Enum must be a subclass of enum.Enum
-		        ``float``,
-		        ``int``,
-		        ``list``,
-		        ``str``,
-		        ``time``,
-		        ``tuple``,
-		        ``UUID``,
-		        ``None``
+		    * dict `key` must be a valid string.
+		    * dict `value` can be one of the types: (
+		        `bool`,
+		        `bytes`,
+		        `date`,
+		        `datetime`,
+		        `Decimal`,
+		        `dict`,
+		        `Enum`, # Enum must be a subclass of enum.Enum
+		        `float`,
+		        `int`,
+		        `list`,
+		        `str`,
+		        `time`,
+		        `tuple`,
+		        `UUID`,
+		        `None`
 		    )
 
 		#### Python types vs SQL types:
@@ -567,13 +566,13 @@ class PySQLXEngineSync:
 
 		    * Arguments:
 
-		        ``sql(str)``:  sql to be executed.
+		        `sql(str)`:  sql to be executed.
 
-		        ``parameters(dict)``: (Default is None) parameters must be a dictionary with the name of the parameter and the value.
+		        `parameters(dict)`: (Default is None) parameters must be a dictionary with the name of the parameter and the value.
 
-		    * Returns: ``int``: number of rows affected.
+		    * Returns: `int`: number of rows affected.
 
-		    * Raises: ``ExecuteError``|``TypeError`` | ``ParameterInvalidProviderError``|``ParameterInvalidValueError``|``ParameterInvalidJsonValueError``
+		    * Raises: `ExecuteError`|`TypeError` | `ParameterInvalidProviderError`|`ParameterInvalidValueError`|`ParameterInvalidJsonValueError`
 
 		### Parameters Helper
 
@@ -582,28 +581,28 @@ class PySQLXEngineSync:
 		This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
 
 		#### SQL with parameters syntax
-		    * SQL: ``SELECT * FROM table WHERE id = :id``
-		    * Parameters: ``{"id": 1}``
+		    * SQL: `SELECT * FROM table WHERE id = :id`
+		    * Parameters: `{"id": 1}`
 
 		#### Parameters(dict):
 
-		    * dict ``key`` must be a valid string.
-		    * dict ``value`` can be one of the types: (
-		        ``bool``,
-		        ``bytes``,
-		        ``date``,
-		        ``datetime``,
-		        ``Decimal``,
-		        ``dict``,
-		        ``Enum``, # Enum must be a subclass of enum.Enum
-		        ``float``,
-		        ``int``,
-		        ``list``,
-		        ``str``,
-		        ``time``,
-		        ``tuple``,
-		        ``UUID``,
-		        ``None``
+		    * dict `key` must be a valid string.
+		    * dict `value` can be one of the types: (
+		        `bool`,
+		        `bytes`,
+		        `date`,
+		        `datetime`,
+		        `Decimal`,
+		        `dict`,
+		        `Enum`, # Enum must be a subclass of enum.Enum
+		        `float`,
+		        `int`,
+		        `list`,
+		        `str`,
+		        `time`,
+		        `tuple`,
+		        `UUID`,
+		        `None`
 		    )
 
 		#### Python types vs SQL types:
@@ -661,7 +660,7 @@ class PySQLXEngineSync:
 
 		### Helper
 
-		    * Arguments: ``isolation_level(str)``: isolation level to be set (
+		    * Arguments: `isolation_level(str)`: isolation level to be set (
 		        ReadUncommitted,
 		        ReadCommitted,
 		        RepeatableRead,
@@ -669,9 +668,9 @@ class PySQLXEngineSync:
 		        Serializable
 		    )
 
-		    * Returns: ``None``
+		    * Returns: `None`
 
-		    * Raises: ``IsolationLevelError``, ``ValueError``
+		    * Raises: `IsolationLevelError`, `ValueError`
 
 		---
 
@@ -697,19 +696,19 @@ class PySQLXEngineSync:
 		"""
 		## Description
 
-		Starts a transaction using ``BEGIN``.
+		Starts a transaction using `BEGIN`.
 
-		``begin()`` is equivalent to `start_transaction()` without setting the isolation level.
+		`begin()` is equivalent to `start_transaction()` without setting the isolation level.
 
 		---
 
 		### Helper
 
-		    * Arguments: ``None``
+		    * Arguments: `None`
 
-		    * Returns: ``None``
+		    * Returns: `None`
 
-		    * Raises: ``RawCmdError``
+		    * Raises: `RawCmdError`
 
 		---
 
@@ -740,11 +739,11 @@ class PySQLXEngineSync:
 
 		### Helper
 
-		    * Arguments: ``None`
+		    * Arguments: `None`
 
-		    * Returns: ``None``
+		    * Returns: `None`
 
-		    * Raises: ``RawCmdError``
+		    * Raises: `RawCmdError`
 
 		---
 
@@ -772,21 +771,21 @@ class PySQLXEngineSync:
 		Rollback is used to cancel the transaction, when you uses the rollback,
 		the transaction is canceled and the changes are not saved.
 
-		The ``begin()`` method must be called before calling ``rollback()``.
+		The `begin()` method must be called before calling `rollback()`.
 
-		If the database not need set the isolation level, maybe you can not use ``begin()`` and ``rollback()``.
+		If the database not need set the isolation level, maybe you can not use `begin()` and `rollback()`.
 
-		The PySQLXEngine by default try uses the ``begin()`` and ``commit()`` in all transactions.
+		The PySQLXEngine by default try uses the `begin()` and `commit()` in all transactions.
 
 		---
 
 		### Helper
 
-		    * Arguments: ``None``
+		    * Arguments: `None`
 
-		    * Returns: ``None``
+		    * Returns: `None`
 
-		    * Raises: ``RawCmdError``
+		    * Raises: `RawCmdError`
 
 		---
 
@@ -809,9 +808,9 @@ class PySQLXEngineSync:
 		"""
 		## Description
 
-		Starts a transaction with ``BEGIN/BEGIN TRANSACTION``. by default, does not set the isolation level.
+		Starts a transaction with `BEGIN/BEGIN TRANSACTION`. by default, does not set the isolation level.
 
-		The ``Snapshot`` isolation level is supported by MS SQL Server.
+		The `Snapshot` isolation level is supported by MS SQL Server.
 
 		The Sqlite does not support the isolation level.
 
@@ -819,7 +818,7 @@ class PySQLXEngineSync:
 
 		### Helper
 
-		    * Arguments: ``isolation_level(str)``: by default is None. Isolation level to be set (
+		    * Arguments: `isolation_level(str)`: by default is None. Isolation level to be set (
 		        ReadUncommitted,
 		        ReadCommitted,
 		        RepeatableRead,
