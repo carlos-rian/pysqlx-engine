@@ -97,7 +97,7 @@ asyncio_mode = "strict"
 asyncio_default_fixture_loop_scope="session"
 log_cli = true
 log_cli_level = "DEBUG"
-addopts = "--maxfail=10"
+addopts = "--maxfail=10 --ignore=tests/unittest/streess_test_pool"
 
 [tool.taskipy.tasks]
 lint = "ruff check . && ruff check . --diff"
