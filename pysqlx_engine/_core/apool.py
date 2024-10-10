@@ -9,6 +9,8 @@ from .abc.base_pool import BaseConnInfo, BaseMonitor, BasePool, Worker, logger
 from .errors import PoolAlreadyClosedError, PoolAlreadyStartedError, PoolTimeoutError
 from .util import agather, asleep, aspawn
 
+__all__ = ["PySQLXEnginePool"]
+
 
 class ConnInfo(BaseConnInfo):
 	conn: PySQLXEngine
