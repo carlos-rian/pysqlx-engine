@@ -125,11 +125,12 @@ class BasePool(ABC):
 	):
 		"""
 		:param uri: The connection URI.
-		:param min_size: The minimum connections in the pool.
-		:param max_size: The maximum connections in the pool.
-		:param conn_timeout: The timeout in seconds to wait for a connection must be returned by the pool.
-		:param max_lifetime: The maximum lifetime of a connection in seconds.
-		:param check_interval: The interval in seconds to check for idle connections to be closed, recycled or created.
+		:param min_size: The minimum number of connections to keep in the pool.
+		:param max_size: The maximum number of connections to keep in the pool.
+		:param conn_timeout: The maximum time in seconds to wait for a connection.
+		:param keep_alive: The maximum time in seconds to keep a connection alive.
+		:param check_interval: The interval in seconds to check the pool for expired connections.
+		:param monitor_batch_size: The number of connections to check per interval.
 		"""
 		# check if the uri is valid
 		validate_uri(uri)
