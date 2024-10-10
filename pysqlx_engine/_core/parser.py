@@ -6,7 +6,7 @@ from uuid import UUID
 from pydantic import BaseModel, create_model
 from pysqlx_core import PySQLxResponse
 
-from .const import PYDANTIC_IS_V1, TYPES_OUT
+from .const import TYPES_OUT
 from .util import build_sql, parse_obj_as
 
 MyModel = TypeVar("MyModel", bound="BaseRow")
@@ -31,19 +31,6 @@ class BaseRow(BaseModel):
 
 	BaseRow is a class created from `Pydantic`, then you have all the benefits of `Pydantic`.
 	"""
-
-	def get_columns(self) -> Dict[str, Any]:
-		"""
-		Return the columns of the row.
-
-		Returns:
-		    Dict[str, Any]: The columns of the row.
-		"""
-		values = self.dict() if PYDANTIC_IS_V1 else self.model_dump()
-		columns = {}
-		for key, value in values.items():
-			columns[key] = type(value)
-		return columns
 
 	def __str__(self) -> str:
 		return super().__repr__()
