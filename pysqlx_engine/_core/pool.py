@@ -79,6 +79,19 @@ class Monitor(BaseMonitor):
 
 
 class PySQLXEnginePoolSync(BasePool):
+	"""
+	A connection pool for PySQLXEngine connections.
+
+	:param uri: The connection URI.
+	:param min_size: The minimum number of connections to keep in the pool.
+	:param max_size: The maximum number of connections to keep in the pool.
+	:param conn_timeout: The maximum time in seconds to wait for a connection.
+	:param keep_alive: The maximum time in seconds to keep a connection alive.
+	:param check_interval: The interval in seconds to check the pool for expired connections.
+	:param monitor_batch_size: The number of connections to check per interval.
+
+	"""
+
 	def __init__(
 		self,
 		uri: str,
@@ -221,10 +234,17 @@ class PySQLXEnginePoolSync(BasePool):
 		logger.info("Pool: Workers started.")
 
 	def start(self) -> None:
+		"""Start the pool and create the initial connections."""
 		self._start_workers()
 
 	@contextmanager
 	def connection(self):
+		"""
+		A context manager that provides a connection from the pool.
+
+		Use this context manager to get a connection from the pool.
+
+		"""
 		conn = self._get_conn()
 		try:
 			yield conn.conn
@@ -257,5 +277,6 @@ class PySQLXEnginePoolSync(BasePool):
 		logger.info("Pool: All workers stopped and connections closed.")
 
 	def stop(self) -> None:
+		"""Stop the pool and close all connections."""
 		with self._lock:
 			self._stop()
