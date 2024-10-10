@@ -178,6 +178,9 @@ class BasePool(ABC):
 		if min_size <= 0:
 			raise ValueError("min_size must be greater than 0")
 
+		elif min_size == max_size:
+			raise ValueError("min_size must be less than max_size")
+
 		elif max_size < min_size:
 			raise ValueError("min_size must be less than max_size")
 
