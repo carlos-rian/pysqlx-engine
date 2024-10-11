@@ -89,6 +89,8 @@ async def test_reuse_connection(uri: str):
 	assert len(connections) >= 2, "Should use all min connections"
 	assert pool._size >= 2, "Should have 2 connections"
 	new_conn_ids = [id(conn) for conn in connections]
+	for context in contexts:
+		await context.__aexit__(None, None, None)
 
 	conn_ids.sort()
 	new_conn_ids.sort()
@@ -115,6 +117,8 @@ async def test_renew_connection(uri: str):
 	assert len(connections) >= 2, "Should use all min connections"
 	assert pool._size >= 2, "Should have 2 connections"
 	new_conn_ids = [id(conn) for conn in connections]
+	for context in contexts:
+		await context.__aexit__(None, None, None)
 
 	conn_ids.sort()
 	new_conn_ids.sort()

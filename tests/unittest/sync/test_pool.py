@@ -83,6 +83,8 @@ def test_reuse_connection(uri: str):
 	connections = [ctx.__enter__() for ctx in contexts]
 	assert len(connections) in (2, 3), "Should use all min connections"
 	assert pool._size in (2, 3), "Should have 2 connections"
+	for context in contexts:
+		context.__exit__(None, None, None)
 	pool.stop()
 
 
@@ -104,6 +106,8 @@ def test_renew_connection(uri: str):
 	assert len(connections) >= 2, "Should use all min connections"
 	assert pool._size >= 2, "Should have 2 connections"
 	new_conn_ids = [id(conn) for conn in connections]
+	for context in contexts:
+		context.__exit__(None, None, None)
 
 	conn_ids.sort()
 	new_conn_ids.sort()
