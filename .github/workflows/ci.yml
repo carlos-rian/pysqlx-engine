@@ -86,7 +86,7 @@ jobs:
         run: |
           pip install pydantic --upgrade
           pip freeze | grep pydantic
-          poetry run pytest --ignore=tests/benchmark --cov=pysqlx_engine --cov=tests --cov-report=term-missing:skip-covered --cov-report=xml tests ${@}
+          poetry run pytest --cov-report=xml tests ${@}
 
       - name: upload coverage v2
         uses: codecov/codecov-action@v3
