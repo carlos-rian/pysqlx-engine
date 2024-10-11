@@ -65,6 +65,20 @@ OS Support:
 ## Installation
 
 
+=== "UV"
+
+    <small>[**UV**](https://docs.astral.sh/uv/)</small>
+
+    <div class="termy">
+
+    ```console
+    $ uv add pysqlx-engine
+
+    ---> 100%
+    ```
+    
+    </div>
+
 === "PIP"
 
     <small>[**PIP**](https://pypi.org)</small>

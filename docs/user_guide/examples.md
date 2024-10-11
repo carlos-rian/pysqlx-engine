@@ -8,19 +8,17 @@ PySQLXEngine has some methods; among them, the ``query`` and ``execute`` methods
 
 The methods ``.query*`` is used to execute a query that returns data, and ``.execute`` is used to run a query that does not return data but only the number of rows affected.
 
-Both methods have the same parameters:
+Both methods have the two parameters:
 
 * ``sql``: The SQL query to be executed.
 * ``parameters``: The parameters to be passed to the query. This parameter is optional.
+
 !!! Note
-    **SQL** can be a str with or without named parameters. The PySQLXEngine builds the parameters into the SQL before sending it to the database.
-    This is possible only when the types are accepted by the PySQLXEngine. If the type is not accepted, the PySQLXEngine will raise an exception.
+    **SQL** must be a str with or without named parameters.
 
 
 !!! Note
-    **Parameters** are built into SQL at the application level; that is, *the SQL and separate parameters are not sent to the database*;
-    although most databases support this type of operation, the PySQLXEngine does it before calling the database to avoid possible incompatibilities.
-    This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
+    **Parameters** must be a dictionary with the named parameters and their values.
 
 ---
 
