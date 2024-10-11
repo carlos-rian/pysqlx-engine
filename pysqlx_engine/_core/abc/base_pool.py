@@ -1,19 +1,15 @@
 import asyncio
-import logging
 import threading
 from abc import ABC, abstractmethod
 from collections import deque as Deque
 from random import random
 from typing import List, Union
-from weakref import ReferenceType
 
 from ..errors import PoolClosedError
+from ..logger import logger
 from ..util import asleep, monotonic
 from .conn import TPySQLXEngineConn, validate_uri
 from .workers import PySQLXTask, PySQLXTaskSync
-
-logger = logging.getLogger("pysqlx_engine")
-TReferenceType = ReferenceType["BasePool"]
 
 
 def get_task_name(task: Union[PySQLXTask, PySQLXTaskSync]) -> str:
