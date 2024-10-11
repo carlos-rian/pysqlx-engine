@@ -4,7 +4,7 @@ import threading
 from abc import ABC, abstractmethod
 from collections import deque as Deque
 from random import random
-from typing import List, TypeAlias, Union
+from typing import List, Union
 from weakref import ReferenceType
 
 from ..errors import PoolClosedError
@@ -13,7 +13,7 @@ from .conn import TPySQLXEngineConn, validate_uri
 from .workers import PySQLXTask, PySQLXTaskSync
 
 logger = logging.getLogger("pysqlx_engine")
-TReferenceType: TypeAlias = ReferenceType["BasePool"]
+TReferenceType = ReferenceType["BasePool"]
 
 
 def get_task_name(task: Union[PySQLXTask, PySQLXTaskSync]) -> str:

@@ -1,4 +1,4 @@
-from typing import TypeAlias, Union
+from typing import Union
 
 from ..aconn import PySQLXEngine
 from ..conn import PySQLXEngineSync
@@ -10,4 +10,4 @@ def validate_uri(uri: str):
 		raise ValueError(f"invalid uri: {uri}, check the usage uri, accepted providers: {', '.join(_providers)}")
 
 
-TPySQLXEngineConn: TypeAlias = Union[PySQLXEngine, PySQLXEngineSync]
+TPySQLXEngineConn = Union[PySQLXEngine, PySQLXEngineSync]
