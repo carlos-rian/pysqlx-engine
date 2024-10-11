@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "pysqlx-engine"
 
-version = "0.2.25"
+version = "0.3.0"
 description = "Async and Sync SQL Engine for Python, with support for MySQL, PostgreSQL, SQLite and Microsoft SQL Server."
 authors = ["Carlos Rian <crian.rian@gmail.com>"]
 license = "MIT"
@@ -67,6 +67,7 @@ ruff = "^0.6.2"
 taskipy = "^1.13.0"
 trio = "^0.26.2"
 rich = "^13.8.0"
+httpx = "^0.27.2"
 
 [tool.ruff]
 line-length = 120
