@@ -29,13 +29,14 @@ The PySQLXEngine has more some methods to you can use the database more easily. 
 
 ---
 
-## **Parameters Helper**
+### **Parameters Helper**
 
 The PySQLXEngine has five methods that accept the parameters with sql.
 
-Parameters are built into SQL at the application level; that is, the SQL and separate parameters are not sent to the database;
-although most databases support this type of operation, the PySQLXEngine does it before calling the database to avoid possible incompatibilities.
-This allows you to show the precompiled queries and send only raw SQL while maintaining minimal consistency across types.
+Parameters are passed to the database with the SQL query.
+
+The parameters are used to avoid SQL injection and to make the code more secure.
+
 
 #### SQL with parameters syntax
 
@@ -321,7 +322,7 @@ Returns all rows from query result as ``BaseRow list``, ``MyModel list`` or ``em
 
     ``` py linenums="1"
     from pysqlx_engine import PySQLXEngine
-
+    
     uri = "postgresql://user:pass@host:port/db?schema=sample"
     db = PySQLXEngine(uri=uri)
     await db.connect()
