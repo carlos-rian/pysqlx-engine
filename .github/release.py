@@ -16,7 +16,7 @@ def get_version():
 	releases = json["releases"]
 	versions = sorted(releases.keys(), key=lambda x: int(x.replace(".", "").replace("b", "")), reverse=True)
 	versions = [v for v in versions if v.startswith("0.3.0") and "b" in v]
-	return versions.pop() if versions else "0.3.0b-1"
+	return versions[0] if versions else "0.3.0b-1"
 
 
 file_version = toml.loads(text)["tool"]["poetry"]["version"]
