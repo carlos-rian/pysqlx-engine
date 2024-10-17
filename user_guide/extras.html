@@ -1,0 +1,3818 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="PySQLXEngine a fast and minimalist SQL Engine">
+      
+      
+      
+        <link rel="canonical" href="https://github.com/carlos-rian/pysqlx-engine/user_guide/extras.html">
+      
+      
+        <link rel="prev" href="config.html">
+      
+      
+        <link rel="next" href="../advanced_guide/dml_with_return.html">
+      
+      
+      <link rel="icon" href="../img/favicon/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.41">
+    
+    
+      
+        <title>Documentation for Methods - PySQLXEngine</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.0253249f.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+        <script src="https://unpkg.com/iframe-worker/shim"></script>
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/termynal.css">
+    
+      <link rel="stylesheet" href="../css/custom.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+   <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#more-documentation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../index.html" title="PySQLXEngine" class="md-header__button md-logo" aria-label="PySQLXEngine" data-md-component="logo">
+      
+  <img src="../img/favicon/icon.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PySQLXEngine
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Documentation for Methods
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="orange"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="orange"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/carlos-rian/pysqlx-engine" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    carlos-rian/pysqlx-engine
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../index.html" class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="index.html" class="md-tabs__link">
+          
+  
+    
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../advanced_guide/dml_with_return.html" class="md-tabs__link">
+          
+  
+    
+  
+  Advanced Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../type_mappings.html" class="md-tabs__link">
+        
+  
+    
+  
+  Type Mappings
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../databases_and_versions.html" class="md-tabs__link">
+        
+  
+    
+  
+  Supported Databases
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../core_engine.html" class="md-tabs__link">
+        
+  
+    
+  
+  Core
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="PySQLXEngine" class="md-nav__button md-logo" aria-label="PySQLXEngine" data-md-component="logo">
+      
+  <img src="../img/favicon/icon.png" alt="logo">
+
+    </a>
+    PySQLXEngine
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/carlos-rian/pysqlx-engine" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    carlos-rian/pysqlx-engine
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="index.html" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    User Guide
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            User Guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Database Connectors
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Database Connectors
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="uri_postgresql.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PostgreSQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="uri_mysql.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MySQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="uri_sqlite.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SQLite
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_4" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="sqlserver/index.html" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Microsoft SQL Server
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2_4" id="__nav_2_2_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Microsoft SQL Server
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="sqlserver/uri_sqlserver_windows.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Microsoft SQL Server Windows (Local)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="sqlserver/uri_sqlserver_docker.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Microsoft SQL Server on Docker
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="examples.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Examples
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="queries.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Queries
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="parameters.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Parameters
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="config.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Documentation for Methods
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="extras.html" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Documentation for Methods
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#parameters-helper" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters Helper
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parameters Helper">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sql-with-parameters-syntax" class="md-nav__link">
+    <span class="md-ellipsis">
+      SQL with parameters syntax
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python-types-vs-sql-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      Python types vs SQL types
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connect" class="md-nav__link">
+    <span class="md-ellipsis">
+      connect
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="connect">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#close" class="md-nav__link">
+    <span class="md-ellipsis">
+      close
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="close">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#is_healthy" class="md-nav__link">
+    <span class="md-ellipsis">
+      is_healthy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="is_healthy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#requires_isolation_first" class="md-nav__link">
+    <span class="md-ellipsis">
+      requires_isolation_first
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="requires_isolation_first">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extra-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Extra documentation:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#raw_cmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      raw_cmd
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="raw_cmd">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query" class="md-nav__link">
+    <span class="md-ellipsis">
+      query
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="query">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query_first" class="md-nav__link">
+    <span class="md-ellipsis">
+      query_first
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="query_first">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query_as_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      query_as_dict
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="query_as_dict">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query_first_as_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      query_first_as_dict
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="query_first_as_dict">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#execute" class="md-nav__link">
+    <span class="md-ellipsis">
+      execute
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="execute">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#set_isolation_level" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_isolation_level
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="set_isolation_level">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isolation-level-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      Isolation Level Help
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#begin" class="md-nav__link">
+    <span class="md-ellipsis">
+      begin
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="begin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      commit
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="commit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rollback" class="md-nav__link">
+    <span class="md-ellipsis">
+      rollback
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="rollback">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#start_transaction" class="md-nav__link">
+    <span class="md-ellipsis">
+      start_transaction
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="start_transaction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isolation-level-help_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Isolation Level Help
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Advanced Guide
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Advanced Guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced_guide/dml_with_return.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DML With Return
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced_guide/pool.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Create a Pool with Concurrent Connections
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced_guide/json_support.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    JSON Support
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../type_mappings.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Type Mappings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../databases_and_versions.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Supported Databases
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../core_engine.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Core
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#parameters-helper" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters Helper
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parameters Helper">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sql-with-parameters-syntax" class="md-nav__link">
+    <span class="md-ellipsis">
+      SQL with parameters syntax
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python-types-vs-sql-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      Python types vs SQL types
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connect" class="md-nav__link">
+    <span class="md-ellipsis">
+      connect
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="connect">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#close" class="md-nav__link">
+    <span class="md-ellipsis">
+      close
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="close">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#is_healthy" class="md-nav__link">
+    <span class="md-ellipsis">
+      is_healthy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="is_healthy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#requires_isolation_first" class="md-nav__link">
+    <span class="md-ellipsis">
+      requires_isolation_first
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="requires_isolation_first">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extra-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Extra documentation:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#raw_cmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      raw_cmd
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="raw_cmd">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query" class="md-nav__link">
+    <span class="md-ellipsis">
+      query
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="query">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query_first" class="md-nav__link">
+    <span class="md-ellipsis">
+      query_first
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="query_first">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query_as_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      query_as_dict
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="query_as_dict">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query_first_as_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      query_first_as_dict
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="query_first_as_dict">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#execute" class="md-nav__link">
+    <span class="md-ellipsis">
+      execute
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="execute">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#set_isolation_level" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_isolation_level
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="set_isolation_level">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isolation-level-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      Isolation Level Help
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#begin" class="md-nav__link">
+    <span class="md-ellipsis">
+      begin
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="begin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      commit
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="commit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rollback" class="md-nav__link">
+    <span class="md-ellipsis">
+      rollback
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="rollback">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#start_transaction" class="md-nav__link">
+    <span class="md-ellipsis">
+      start_transaction
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="start_transaction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isolation-level-help_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Isolation Level Help
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<div><h1 id="more-documentation">More documentation<a class="headerlink" href="#more-documentation" title="Permanent link">¶</a></h1>
+<p>The PySQLXEngine has more some methods to you can use the database more easily. See the documentation below:</p>
+<ul>
+<li>
+<p><code>.connect()</code> create connection with db.</p>
+</li>
+<li>
+<p><code>.close()</code> disconnected from db.</p>
+</li>
+<li>
+<p><code>.is_healthy()</code> check if the connection is healthy.</p>
+</li>
+<li>
+<p><code>.requires_isolation_first()</code> this is used to determine if the connection should be isolated before executing a sql.</p>
+</li>
+<li>
+<p><code>.raw_cmd()</code> run a command in the database, for queries that can't be run using prepared statements.</p>
+</li>
+<li>
+<p><code>.query*()</code> to return actual records (for example, using SELECT).</p>
+</li>
+<li>
+<p><code>.execute()</code> to return a count of affected rows (for example, after an INSERT, UPDATE or DELETE).</p>
+</li>
+<li>
+<p><code>.set_isolation_level()</code> the isolation level is set before the transaction is started. Is used to separate the transaction per level.</p>
+</li>
+<li>
+<p><code>.begin()</code> starts a transaction.</p>
+</li>
+<li>
+<p><code>.commit()</code> commits a transaction.</p>
+</li>
+<li>
+<p><code>.rollback()</code> rollbacks a transaction.</p>
+</li>
+<li>
+<p><code>.start_transaction()</code> starts a transaction with BEGIN/BEGIN TRANSACTION. By default, does not set the isolation level. But is possible to set the isolation level using the parameter <code>isolation_level</code>.</p>
+</li>
+</ul>
+<hr>
+<h3 id="parameters-helper"><strong>Parameters Helper</strong><a class="headerlink" href="#parameters-helper" title="Permanent link">¶</a></h3>
+<p>The PySQLXEngine has five methods that accept the parameters with sql.</p>
+<p>Parameters are passed to the database with the SQL query.</p>
+<p>The parameters are used to avoid SQL injection and to make the code more secure.</p>
+<h4 id="sql-with-parameters-syntax">SQL with parameters syntax<a class="headerlink" href="#sql-with-parameters-syntax" title="Permanent link">¶</a></h4>
+<ul>
+<li>SQL</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">:</span><span class="n">id</span>
+</code></pre></div>
+<ul>
+<li>Parameters</li>
+</ul>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="p">{</span><span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">¶</a></h4>
+<ul>
+<li>dict <code>key</code> must be a valid string.</li>
+<li>dict <code>value</code> can be one of the types:<ul>
+<li><code>bool</code></li>
+<li><code>bytes</code></li>
+<li><code>date</code></li>
+<li><code>datetime</code></li>
+<li><code>Decimal</code></li>
+<li><code>dict</code></li>
+<li><code>float</code></li>
+<li><code>int</code></li>
+<li><code>list</code></li>
+<li><code>str</code></li>
+<li><code>time</code></li>
+<li><code>tuple</code></li>
+<li><code>UUID</code></li>
+<li><code>None</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="python-types-vs-sql-types">Python types vs SQL types<a class="headerlink" href="#python-types-vs-sql-types" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Python</th>
+<th>Databases</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bool</td>
+<td>bool/bit/boolean/tinyint/etc.</td>
+</tr>
+<tr>
+<td>bytes</td>
+<td>bytea/binary/varbinary/blob/etc.</td>
+</tr>
+<tr>
+<td>date</td>
+<td>date/nvarchar/varchar/string/etc.</td>
+</tr>
+<tr>
+<td>datetime</td>
+<td>timestamp/timestamptz/datetime/datetime2/nvarchar/varchar/string/etc.</td>
+</tr>
+<tr>
+<td>Decimal</td>
+<td>decimal/numeric/etc.</td>
+</tr>
+<tr>
+<td>dict</td>
+<td>json/jsonb/nvarchar/varchar/string/etc.</td>
+</tr>
+<tr>
+<td>float</td>
+<td>float/real/numeric/etc.</td>
+</tr>
+<tr>
+<td>int</td>
+<td>int/integer/smallint/bigint/tinyint/etc.</td>
+</tr>
+<tr>
+<td>list</td>
+<td>json/jsonb/nvarchar/varchar/string/etc.</td>
+</tr>
+<tr>
+<td>str</td>
+<td>varchar/text/nvarchar/char/etc.</td>
+</tr>
+<tr>
+<td>time</td>
+<td>time/nvarchar/varchar/string/etc.</td>
+</tr>
+<tr>
+<td>tuple</td>
+<td>array(Postgres Native), error for other databases.</td>
+</tr>
+<tr>
+<td>UUID</td>
+<td>uuid/varchar/text/nvarchar/etc.</td>
+</tr>
+<tr>
+<td>None</td>
+<td>null.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="methods"><strong>Methods</strong><a class="headerlink" href="#methods" title="Permanent link">¶</a></h2>
+<h2 id="connect"><em>connect</em><a class="headerlink" href="#connect" title="Permanent link">¶</a></h2>
+<h4 id="description">Description<a class="headerlink" href="#description" title="Permanent link">¶</a></h4>
+<p>Each connection instance is lazy; only after <code>.connect()</code> is the database checked and the connection established.</p>
+<p>When you use <code>with/async with</code>  the connection is automatically opened and closed.</p>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<p><a href="https://pypi.org/project/pysqlx-engine/"><code>PySQLXEngine</code></a> also supports <a href="https://docs.python.org/pt-br/3/whatsnew/3.5.html?highlight=async%20with#whatsnew-pep-492"><code>with/async with</code></a>, where the connection is automatically opened and closed.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked id="__tabbed_1_1" name="__tabbed_1" type="radio"><input id="__tabbed_1_2" name="__tabbed_1" type="radio"><div class="tabbed-labels"><label for="__tabbed_1_1"><strong>Async</strong></label><label for="__tabbed_1_2"><strong>Sync</strong></label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1">1</a></span>
+<span class="normal"><a href="#__codelineno-2-2">2</a></span>
+<span class="normal"><a href="#__codelineno-2-3">3</a></span>
+<span class="normal"><a href="#__codelineno-2-4">4</a></span>
+<span class="normal"><a href="#__codelineno-2-5">5</a></span>
+<span class="normal"><a href="#__codelineno-2-6">6</a></span>
+<span class="normal"><a href="#__codelineno-2-7">7</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="kn">from</span> <span class="nn">pysqlx_engine</span> <span class="kn">import</span> <span class="n">PySQLXEngine</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"sqlite:./db.db"</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="hll">    <span class="k">async</span> <span class="k">with</span> <span class="n">PySQLXEngine</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span> <span class="k">as</span> <span class="n">db</span><span class="p">:</span>
+</span><a id="__codelineno-2-7" name="__codelineno-2-7"></a>        <span class="o">...</span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1">1</a></span>
+<span class="normal"><a href="#__codelineno-3-2">2</a></span>
+<span class="normal"><a href="#__codelineno-3-3">3</a></span>
+<span class="normal"><a href="#__codelineno-3-4">4</a></span>
+<span class="normal"><a href="#__codelineno-3-5">5</a></span>
+<span class="normal"><a href="#__codelineno-3-6">6</a></span>
+<span class="normal"><a href="#__codelineno-3-7">7</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="kn">from</span> <span class="nn">pysqlx_engine</span> <span class="kn">import</span> <span class="n">PySQLXEngineSync</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"sqlite:./db.db"</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5"></a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6"></a><span class="hll">    <span class="k">with</span> <span class="n">PySQLXEngineSync</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span> <span class="k">as</span> <span class="n">db</span><span class="p">:</span>
+</span><a id="__codelineno-3-7" name="__codelineno-3-7"></a>        <span class="o">...</span>
+</code></pre></div></td></tr></table></div>
+</div>
+</div>
+</div>
+</div>
+<h4 id="helper">Helper<a class="headerlink" href="#helper" title="Permanent link">¶</a></h4>
+<ul>
+<li>
+<p>Arguments: <code>None</code></p>
+</li>
+<li>
+<p>Returns: <code>None</code></p>
+</li>
+<li>
+<p>Raises: <code>ConnectError</code></p>
+</li>
+</ul>
+<h4 id="example">Example<a class="headerlink" href="#example" title="Permanent link">¶</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked id="__tabbed_2_1" name="__tabbed_2" type="radio"><input id="__tabbed_2_2" name="__tabbed_2" type="radio"><div class="tabbed-labels"><label for="__tabbed_2_1"><strong>Async</strong></label><label for="__tabbed_2_2"><strong>Sync</strong></label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1">1</a></span>
+<span class="normal"><a href="#__codelineno-4-2">2</a></span>
+<span class="normal"><a href="#__codelineno-4-3">3</a></span>
+<span class="normal"><a href="#__codelineno-4-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="kn">from</span> <span class="nn">pysqlx_engine</span> <span class="kn">import</span> <span class="n">PySQLXEngine</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"sqlite:./db.db"</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="n">db</span> <span class="o">=</span> <span class="n">PySQLXEngine</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-5-1">1</a></span>
+<span class="normal"><a href="#__codelineno-5-2">2</a></span>
+<span class="normal"><a href="#__codelineno-5-3">3</a></span>
+<span class="normal"><a href="#__codelineno-5-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="kn">from</span> <span class="nn">pysqlx_engine</span> <span class="kn">import</span> <span class="n">PySQLXEngineSync</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"sqlite:./db.db"</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3"></a><span class="n">db</span> <span class="o">=</span> <span class="n">PySQLXEngineSync</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4"></a><span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+</div>
+</div>
+</div>
+<hr>
+<h2 id="close"><em>close</em><a class="headerlink" href="#close" title="Permanent link">¶</a></h2>
+<h4 id="description_1">Description<a class="headerlink" href="#description_1" title="Permanent link">¶</a></h4>
+<p>It's a good idea to close the connection, but PySQLXEngine has the core in Rust;
+closing is automatic when your code leaves the context.</p>
+<p>Even if you don't close the connection, don't worry; when the process ends automatically,
+the connections will be closed, so the database doesn't have an idle connection.</p>
+<h4 id="helper_1">Helper<a class="headerlink" href="#helper_1" title="Permanent link">¶</a></h4>
+<ul>
+<li>
+<p>Arguments: <code>None</code></p>
+</li>
+<li>
+<p>Returns: <code>None</code></p>
+</li>
+<li>
+<p>Raises: <code>None</code></p>
+</li>
+</ul>
+<h4 id="example_1">Example<a class="headerlink" href="#example_1" title="Permanent link">¶</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked id="__tabbed_3_1" name="__tabbed_3" type="radio"><input id="__tabbed_3_2" name="__tabbed_3" type="radio"><div class="tabbed-labels"><label for="__tabbed_3_1"><strong>Async</strong></label><label for="__tabbed_3_2"><strong>Sync</strong></label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-6-1">1</a></span>
+<span class="normal"><a href="#__codelineno-6-2">2</a></span>
+<span class="normal"><a href="#__codelineno-6-3">3</a></span>
+<span class="normal"><a href="#__codelineno-6-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"postgresql://user:pass@host:port/db?schema=sample"</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2"></a><span class="n">db</span> <span class="o">=</span> <span class="n">PySQLXEngine</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-7-1">1</a></span>
+<span class="normal"><a href="#__codelineno-7-2">2</a></span>
+<span class="normal"><a href="#__codelineno-7-3">3</a></span>
+<span class="normal"><a href="#__codelineno-7-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"postgresql://user:pass@host:port/db?schema=sample"</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2"></a><span class="n">db</span> <span class="o">=</span> <span class="n">PySQLXEngineSync</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3"></a><span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4"></a><span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+</div>
+</div>
+</div>
+<hr>
+<h2 id="is_healthy"><em>is_healthy</em><a class="headerlink" href="#is_healthy" title="Permanent link">¶</a></h2>
+<h4 id="description_2">Description<a class="headerlink" href="#description_2" title="Permanent link">¶</a></h4>
+<p>Check if the connection is healthy.</p>
+<p>Returns <code>false</code>, if connection is considered to not be in a working state.</p>
+<h4 id="helper_2">Helper<a class="headerlink" href="#helper_2" title="Permanent link">¶</a></h4>
+<ul>
+<li>
+<p>Arguments: <code>None</code></p>
+</li>
+<li>
+<p>Returns: <code>bool</code></p>
+</li>
+<li>
+<p>Raises: <code>None</code></p>
+</li>
+</ul>
+<hr>
+<h2 id="requires_isolation_first"><em>requires_isolation_first</em><a class="headerlink" href="#requires_isolation_first" title="Permanent link">¶</a></h2>
+<h4 id="description_3">Description<a class="headerlink" href="#description_3" title="Permanent link">¶</a></h4>
+<p>Returns <code>True</code> if the connection requires isolation first, <code>False</code> otherwise.</p>
+<p>This is used to determine if the connection should be isolated before executing a query.</p>
+<p>For example, SQL Server requires isolation before executing a statement using begin in some cases.</p>
+<p>Signals if the <code>isolation level</code> SET needs to happen before or after the <code>BEGIN</code>.</p>
+<h4 id="helper_3">Helper<a class="headerlink" href="#helper_3" title="Permanent link">¶</a></h4>
+<ul>
+<li>
+<p>Arguments: <code>None</code></p>
+</li>
+<li>
+<p>Returns: <code>bool</code></p>
+</li>
+<li>
+<p>Raises: <code>None</code></p>
+</li>
+</ul>
+<h4 id="extra-documentation">Extra documentation:<a class="headerlink" href="#extra-documentation" title="Permanent link">¶</a></h4>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/sql/t-sql/language-elements/transaction-isolation-levels">MSSQL</a></li>
+<li><a href="https://www.postgresql.org/docs/current/sql-set-transaction.html">Postgres</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html">MySQL</a></li>
+<li><a href="https://www.sqlite.org/isolation.html">SQLite</a></li>
+</ul>
+<hr>
+<h2 id="raw_cmd"><em>raw_cmd</em><a class="headerlink" href="#raw_cmd" title="Permanent link">¶</a></h2>
+<h4 id="description_4">Description<a class="headerlink" href="#description_4" title="Permanent link">¶</a></h4>
+<p>Run a command in the database, for queries that can't be run using prepared statements(queries/execute/etc).</p>
+<h4 id="helper_4">Helper<a class="headerlink" href="#helper_4" title="Permanent link">¶</a></h4>
+<ul>
+<li>
+<p>Arguments: </p>
+<ul>
+<li><code>sql(str)</code>: sql to be executed.</li>
+</ul>
+</li>
+<li>
+<p>Returns: <code>None</code></p>
+</li>
+<li>
+<p>Raises: <code>RawCmdError</code></p>
+</li>
+</ul>
+<h4 id="example_2">Example<a class="headerlink" href="#example_2" title="Permanent link">¶</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked id="__tabbed_4_1" name="__tabbed_4" type="radio"><input id="__tabbed_4_2" name="__tabbed_4" type="radio"><div class="tabbed-labels"><label for="__tabbed_4_1"><strong>Async</strong></label><label for="__tabbed_4_2"><strong>Sync</strong></label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-8-1">1</a></span>
+<span class="normal"><a href="#__codelineno-8-2">2</a></span>
+<span class="normal"><a href="#__codelineno-8-3">3</a></span>
+<span class="normal"><a href="#__codelineno-8-4">4</a></span>
+<span class="normal"><a href="#__codelineno-8-5">5</a></span>
+<span class="normal"><a href="#__codelineno-8-6">6</a></span>
+<span class="normal"><a href="#__codelineno-8-7">7</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="kn">from</span> <span class="nn">pysqlx_engine</span> <span class="kn">import</span> <span class="n">PySQLXEngine</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"postgresql://user:pass@host:port/db?schema=sample"</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4"></a><span class="n">db</span> <span class="o">=</span> <span class="n">PySQLXEngine</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">raw_cmd</span><span class="p">(</span><span class="n">sql</span><span class="o">=</span><span class="s2">"SET TRANSACTION ISOLATION LEVEL READ COMMITTED;"</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-9-1">1</a></span>
+<span class="normal"><a href="#__codelineno-9-2">2</a></span>
+<span class="normal"><a href="#__codelineno-9-3">3</a></span>
+<span class="normal"><a href="#__codelineno-9-4">4</a></span>
+<span class="normal"><a href="#__codelineno-9-5">5</a></span>
+<span class="normal"><a href="#__codelineno-9-6">6</a></span>
+<span class="normal"><a href="#__codelineno-9-7">7</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1"></a><span class="kn">from</span> <span class="nn">pysqlx_engine</span> <span class="kn">import</span> <span class="n">PySQLXEngineSync</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"postgresql://user:pass@host:port/db?schema=sample"</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4"></a><span class="n">db</span> <span class="o">=</span> <span class="n">PySQLXEngineSync</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5"></a><span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7"></a><span class="n">db</span><span class="o">.</span><span class="n">raw_cmd</span><span class="p">(</span><span class="n">sql</span><span class="o">=</span><span class="s2">"SET TRANSACTION ISOLATION LEVEL READ COMMITTED;"</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+</div>
+</div>
+</div>
+<hr>
+<h2 id="query"><em>query</em><a class="headerlink" href="#query" title="Permanent link">¶</a></h2>
+<h4 id="description_5">Description<a class="headerlink" href="#description_5" title="Permanent link">¶</a></h4>
+<p>Returns all rows from query result as <code>BaseRow list</code>, <code>MyModel list</code> or <code>empty list</code>.</p>
+<h4 id="helper_5">Helper<a class="headerlink" href="#helper_5" title="Permanent link">¶</a></h4>
+<ul>
+<li>
+<p>Arguments:</p>
+<ul>
+<li>
+<p><code>sql(str)</code>: sql query to be executed.</p>
+</li>
+<li>
+<p><code>parameters(dict)</code>: (default is None) dictionary with the name of the parameter and the value.</p>
+</li>
+<li>
+<p><code>model(BaseRow)</code>: (default is None) is your model that inherits from BaseRow.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Returns:</p>
+<ul>
+<li>
+<p><code>List[BaseRow]</code>: default if you don't pass a model.</p>
+</li>
+<li>
+<p><code>List[MyModel]</code>: If you pass a model.</p>
+</li>
+<li>
+<p><code>List</code>: If don't have rows.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Raises: </p>
+<ul>
+<li><code>QueryError</code></li>
+<li><code>TypeError</code> </li>
+<li><code>ParameterInvalidProviderError</code></li>
+<li><code>ParameterInvalidValueError</code></li>
+<li><code>ParameterInvalidJsonValueError</code></li>
+</ul>
+</li>
+</ul>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked id="__tabbed_5_1" name="__tabbed_5" type="radio"><input id="__tabbed_5_2" name="__tabbed_5" type="radio"><div class="tabbed-labels"><label for="__tabbed_5_1"><strong>Async</strong></label><label for="__tabbed_5_2"><strong>Sync</strong></label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-10-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-10-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-10-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-10-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-10-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-10-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-10-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-10-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-10-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-10-10">10</a></span>
+<span class="normal"><a href="#__codelineno-10-11">11</a></span>
+<span class="normal"><a href="#__codelineno-10-12">12</a></span>
+<span class="normal"><a href="#__codelineno-10-13">13</a></span>
+<span class="normal"><a href="#__codelineno-10-14">14</a></span>
+<span class="normal"><a href="#__codelineno-10-15">15</a></span>
+<span class="normal"><a href="#__codelineno-10-16">16</a></span>
+<span class="normal"><a href="#__codelineno-10-17">17</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="kn">from</span> <span class="nn">pysqlx_engine</span> <span class="kn">import</span> <span class="n">PySQLXEngine</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2"></a>
+<a id="__codelineno-10-3" name="__codelineno-10-3"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"postgresql://user:pass@host:port/db?schema=sample"</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4"></a><span class="n">db</span> <span class="o">=</span> <span class="n">PySQLXEngine</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7"></a><span class="n">result1</span> <span class="o">=</span> <span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="o">=</span><span class="s2">"SELECT 1 as id, 'rian' as name"</span><span class="p">)</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">result1</span><span class="p">)</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9"></a><span class="c1"># output: [BaseRow(id=1, name='rian')]</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11"></a><span class="n">sql</span> <span class="o">=</span> <span class="s2">"SELECT :id as id, :name as name"</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12"></a><span class="n">param</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"rian"</span><span class="p">}</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13"></a><span class="n">result2</span> <span class="o">=</span> <span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="o">=</span><span class="n">sql</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="n">param</span><span class="p">)</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14"></a><span class="nb">print</span><span class="p">(</span><span class="n">result2</span><span class="p">)</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15"></a><span class="c1"># output: [BaseRow(id=1, name='rian')]</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16"></a>
+<a id="__codelineno-10-17" name="__codelineno-10-17"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-11-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-11-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-11-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-11-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-11-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-11-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-11-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-11-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-11-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-11-10">10</a></span>
+<span class="normal"><a href="#__codelineno-11-11">11</a></span>
+<span class="normal"><a href="#__codelineno-11-12">12</a></span>
+<span class="normal"><a href="#__codelineno-11-13">13</a></span>
+<span class="normal"><a href="#__codelineno-11-14">14</a></span>
+<span class="normal"><a href="#__codelineno-11-15">15</a></span>
+<span class="normal"><a href="#__codelineno-11-16">16</a></span>
+<span class="normal"><a href="#__codelineno-11-17">17</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1"></a><span class="kn">from</span> <span class="nn">pysqlx_engine</span> <span class="kn">import</span> <span class="n">PySQLXEngineSync</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2"></a>
+<a id="__codelineno-11-3" name="__codelineno-11-3"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"postgresql://user:pass@host:port/db?schema=sample"</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4"></a><span class="n">db</span> <span class="o">=</span> <span class="n">PySQLXEngineSync</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5"></a><span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7"></a><span class="n">result1</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="o">=</span><span class="s2">"SELECT 1 as id, 'rian' as name"</span><span class="p">)</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">result1</span><span class="p">)</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9"></a><span class="c1"># output: [BaseRow(id=1, name='rian')]</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11"></a><span class="n">sql</span> <span class="o">=</span> <span class="s2">"SELECT :id as id, :name as name"</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12"></a><span class="n">param</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"rian"</span><span class="p">}</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13"></a><span class="n">result2</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="o">=</span><span class="n">sql</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="n">param</span><span class="p">)</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14"></a><span class="nb">print</span><span class="p">(</span><span class="n">result2</span><span class="p">)</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15"></a><span class="c1"># output: [BaseRow(id=1, name='rian')]</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16"></a>
+<a id="__codelineno-11-17" name="__codelineno-11-17"></a><span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+</div>
+</div>
+</div>
+<hr>
+<h2 id="query_first"><em>query_first</em><a class="headerlink" href="#query_first" title="Permanent link">¶</a></h2>
+<h4 id="description_6">Description<a class="headerlink" href="#description_6" title="Permanent link">¶</a></h4>
+<p>Returns first row from query result as <code>BaseRow</code>, <code>MyModel</code> or <code>None</code>.</p>
+<h4 id="helper_6">Helper<a class="headerlink" href="#helper_6" title="Permanent link">¶</a></h4>
+<ul>
+<li>
+<p>Arguments:</p>
+<ul>
+<li>
+<p><code>sql(str)</code>: sql query to be executed.</p>
+</li>
+<li>
+<p><code>parameters(dict)</code>: (default is None) parameters must be a dictionary with the name of the parameter and the value.</p>
+</li>
+<li>
+<p><code>model(BaseRow)</code>: (default is None) is your model that inherits from BaseRow.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Returns:</p>
+<ul>
+<li><code>BaseRow</code>: default if you don't pass a model.</li>
+<li><code>MyModel</code>: If you pass a model.</li>
+<li><code>None</code>: if no rows are found.</li>
+</ul>
+</li>
+<li>
+<p>Raises: </p>
+<ul>
+<li><code>QueryError</code></li>
+<li><code>TypeError</code></li>
+<li><code>ParameterInvalidProviderError</code></li>
+<li><code>ParameterInvalidValueError</code></li>
+<li><code>ParameterInvalidJsonValueError</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="example_3">Example<a class="headerlink" href="#example_3" title="Permanent link">¶</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:2"><input checked id="__tabbed_6_1" name="__tabbed_6" type="radio"><input id="__tabbed_6_2" name="__tabbed_6" type="radio"><div class="tabbed-labels"><label for="__tabbed_6_1"><strong>Async</strong></label><label for="__tabbed_6_2"><strong>Sync</strong></label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-12-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-12-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-12-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-12-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-12-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-12-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-12-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-12-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-12-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-12-10">10</a></span>
+<span class="normal"><a href="#__codelineno-12-11">11</a></span>
+<span class="normal"><a href="#__codelineno-12-12">12</a></span>
+<span class="normal"><a href="#__codelineno-12-13">13</a></span>
+<span class="normal"><a href="#__codelineno-12-14">14</a></span>
+<span class="normal"><a href="#__codelineno-12-15">15</a></span>
+<span class="normal"><a href="#__codelineno-12-16">16</a></span>
+<span class="normal"><a href="#__codelineno-12-17">17</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1"></a><span class="kn">from</span> <span class="nn">pysqlx_engine</span> <span class="kn">import</span> <span class="n">PySQLXEngine</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2"></a>
+<a id="__codelineno-12-3" name="__codelineno-12-3"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"postgresql://user:pass@host:port/db?schema=sample"</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4"></a><span class="n">db</span> <span class="o">=</span> <span class="n">PySQLXEngine</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7"></a><span class="n">result1</span> <span class="o">=</span> <span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">query_first</span><span class="p">(</span><span class="s2">"SELECT 1 as id, 'rian' as name"</span><span class="p">)</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">result1</span><span class="p">)</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9"></a><span class="c1"># output -&gt; BaseRow(id=1, name='rian')</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10"></a>
+<a id="__codelineno-12-11" name="__codelineno-12-11"></a><span class="n">sql</span> <span class="o">=</span> <span class="s2">"SELECT :id as id, :name as name"</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12"></a><span class="n">param</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"rian"</span><span class="p">}</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13"></a><span class="n">result2</span> <span class="o">=</span> <span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">query_first</span><span class="p">(</span><span class="n">sql</span><span class="o">=</span><span class="n">sql</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="n">param</span><span class="p">)</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14"></a><span class="nb">print</span><span class="p">(</span><span class="n">result2</span><span class="p">)</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15"></a><span class="c1"># output -&gt; BaseRow(id=1, name='rian')</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16"></a>
+<a id="__codelineno-12-17" name="__codelineno-12-17"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-13-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-13-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-13-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-13-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-13-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-13-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-13-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-13-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-13-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-13-10">10</a></span>
+<span class="normal"><a href="#__codelineno-13-11">11</a></span>
+<span class="normal"><a href="#__codelineno-13-12">12</a></span>
+<span class="normal"><a href="#__codelineno-13-13">13</a></span>
+<span class="normal"><a href="#__codelineno-13-14">14</a></span>
+<span class="normal"><a href="#__codelineno-13-15">15</a></span>
+<span class="normal"><a href="#__codelineno-13-16">16</a></span>
+<span class="normal"><a href="#__codelineno-13-17">17</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1"></a><span class="kn">from</span> <span class="nn">pysqlx_engine</span> <span class="kn">import</span> <span class="n">PySQLXEngineSync</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2"></a>
+<a id="__codelineno-13-3" name="__codelineno-13-3"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"postgresql://user:pass@host:port/db?schema=sample"</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4"></a><span class="n">db</span> <span class="o">=</span> <span class="n">PySQLXEngineSync</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5"></a><span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7"></a><span class="n">result1</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query_first</span><span class="p">(</span><span class="s2">"SELECT 1 as id, 'rian' as name"</span><span class="p">)</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">result1</span><span class="p">)</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9"></a><span class="c1"># output -&gt; BaseRow(id=1, name='rian')</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10"></a>
+<a id="__codelineno-13-11" name="__codelineno-13-11"></a><span class="n">sql</span> <span class="o">=</span> <span class="s2">"SELECT :id as id, :name as name"</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12"></a><span class="n">param</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"rian"</span><span class="p">}</span>
+<a id="__codelineno-13-13" name="__codelineno-13-13"></a><span class="n">result2</span> <span class="o">=</span> <span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">query_first</span><span class="p">(</span><span class="n">sql</span><span class="o">=</span><span class="n">sql</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="n">param</span><span class="p">)</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14"></a><span class="nb">print</span><span class="p">(</span><span class="n">result2</span><span class="p">)</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15"></a><span class="c1"># output -&gt; BaseRow(id=1, name='rian')</span>
+<a id="__codelineno-13-16" name="__codelineno-13-16"></a>
+<a id="__codelineno-13-17" name="__codelineno-13-17"></a><span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+</div>
+</div>
+</div>
+<hr>
+<h2 id="query_as_dict"><em>query_as_dict</em><a class="headerlink" href="#query_as_dict" title="Permanent link">¶</a></h2>
+<h4 id="description_7">Description<a class="headerlink" href="#description_7" title="Permanent link">¶</a></h4>
+<p>Returns all rows from query result as <code>dict list</code> or <code>empty list</code>.</p>
+<h4 id="helper_7">Helper<a class="headerlink" href="#helper_7" title="Permanent link">¶</a></h4>
+<ul>
+<li>
+<p>Arguments:</p>
+<ul>
+<li>
+<p><code>sql(str)</code>: sql query to be executed.</p>
+</li>
+<li>
+<p><code>parameters(dict)</code>: (default is None) dictionary with the name of the parameter and the value.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Returns:</p>
+<ul>
+<li>
+<p><code>List[Dict[str, Any]]</code>: dict list.</p>
+</li>
+<li>
+<p><code>List</code>: empty list.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Raises: </p>
+<ul>
+<li><code>QueryError</code></li>
+<li><code>TypeError</code></li>
+<li><code>ParameterInvalidProviderError</code></li>
+<li><code>ParameterInvalidValueError</code></li>
+<li><code>ParameterInvalidJsonValueError</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="example_4">Example<a class="headerlink" href="#example_4" title="Permanent link">¶</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="7:2"><input checked id="__tabbed_7_1" name="__tabbed_7" type="radio"><input id="__tabbed_7_2" name="__tabbed_7" type="radio"><div class="tabbed-labels"><label for="__tabbed_7_1"><strong>Async</strong></label><label for="__tabbed_7_2"><strong>Sync</strong></label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-14-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-14-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-14-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-14-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-14-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-14-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-14-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-14-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-14-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-14-10">10</a></span>
+<span class="normal"><a href="#__codelineno-14-11">11</a></span>
+<span class="normal"><a href="#__codelineno-14-12">12</a></span>
+<span class="normal"><a href="#__codelineno-14-13">13</a></span>
+<span class="normal"><a href="#__codelineno-14-14">14</a></span>
+<span class="normal"><a href="#__codelineno-14-15">15</a></span>
+<span class="normal"><a href="#__codelineno-14-16">16</a></span>
+<span class="normal"><a href="#__codelineno-14-17">17</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1"></a><span class="kn">from</span> <span class="nn">pysqlx_engine</span> <span class="kn">import</span> <span class="n">PySQLXEngine</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2"></a>
+<a id="__codelineno-14-3" name="__codelineno-14-3"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"postgresql://user:pass@host:port/db?schema=sample"</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4"></a><span class="n">db</span> <span class="o">=</span> <span class="n">PySQLXEngine</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7"></a><span class="n">result1</span> <span class="o">=</span> <span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">query_as_dict</span><span class="p">(</span><span class="n">sql</span><span class="o">=</span><span class="s2">"SELECT 1 as id, 'rian' as name"</span><span class="p">)</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">result1</span><span class="p">)</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9"></a><span class="c1"># output -&gt; [{'id': 1, 'name': 'rian'}]</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10"></a>
+<a id="__codelineno-14-11" name="__codelineno-14-11"></a><span class="n">sql</span> <span class="o">=</span> <span class="s2">"SELECT :id as id, :name as name"</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12"></a><span class="n">param</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"rian"</span><span class="p">}</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13"></a><span class="n">result2</span> <span class="o">=</span> <span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">query_as_dict</span><span class="p">(</span><span class="n">sql</span><span class="o">=</span><span class="n">sql</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="n">param</span><span class="p">)</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14"></a><span class="nb">print</span><span class="p">(</span><span class="n">result2</span><span class="p">)</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15"></a><span class="c1"># output -&gt; [{'id': 1, 'name': 'rian'}]</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16"></a>
+<a id="__codelineno-14-17" name="__codelineno-14-17"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-15-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-15-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-15-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-15-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-15-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-15-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-15-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-15-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-15-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-15-10">10</a></span>
+<span class="normal"><a href="#__codelineno-15-11">11</a></span>
+<span class="normal"><a href="#__codelineno-15-12">12</a></span>
+<span class="normal"><a href="#__codelineno-15-13">13</a></span>
+<span class="normal"><a href="#__codelineno-15-14">14</a></span>
+<span class="normal"><a href="#__codelineno-15-15">15</a></span>
+<span class="normal"><a href="#__codelineno-15-16">16</a></span>
+<span class="normal"><a href="#__codelineno-15-17">17</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1"></a><span class="kn">from</span> <span class="nn">pysqlx_engine</span> <span class="kn">import</span> <span class="n">PySQLXEngineSync</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2"></a>
+<a id="__codelineno-15-3" name="__codelineno-15-3"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"postgresql://user:pass@host:port/db?schema=sample"</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4"></a><span class="n">db</span> <span class="o">=</span> <span class="n">PySQLXEngineSync</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5"></a><span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7"></a><span class="n">result1</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query_as_dict</span><span class="p">(</span><span class="n">sql</span><span class="o">=</span><span class="s2">"SELECT 1 as id, 'rian' as name"</span><span class="p">)</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">result1</span><span class="p">)</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9"></a><span class="c1"># output -&gt; [{'id': 1, 'name': 'rian'}]</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10"></a>
+<a id="__codelineno-15-11" name="__codelineno-15-11"></a><span class="n">sql</span> <span class="o">=</span> <span class="s2">"SELECT :id as id, :name as name"</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12"></a><span class="n">param</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"rian"</span><span class="p">}</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13"></a><span class="n">result2</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query_as_dict</span><span class="p">(</span><span class="n">sql</span><span class="o">=</span><span class="n">sql</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="n">param</span><span class="p">)</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14"></a><span class="nb">print</span><span class="p">(</span><span class="n">result2</span><span class="p">)</span>
+<a id="__codelineno-15-15" name="__codelineno-15-15"></a><span class="c1"># output -&gt; [{'id': 1, 'name': 'rian'}]</span>
+<a id="__codelineno-15-16" name="__codelineno-15-16"></a>
+<a id="__codelineno-15-17" name="__codelineno-15-17"></a><span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+</div>
+</div>
+</div>
+<hr>
+<h2 id="query_first_as_dict"><em>query_first_as_dict</em><a class="headerlink" href="#query_first_as_dict" title="Permanent link">¶</a></h2>
+<h4 id="description_8">Description<a class="headerlink" href="#description_8" title="Permanent link">¶</a></h4>
+<p>Returns first row from query result as <code>dict</code> or <code>None</code>.</p>
+<h4 id="helper_8">Helper<a class="headerlink" href="#helper_8" title="Permanent link">¶</a></h4>
+<ul>
+<li>
+<p>Arguments:</p>
+<ul>
+<li>
+<p><code>sql(str)</code>: sql query to be executed.</p>
+</li>
+<li>
+<p><code>parameters(dict)</code>: (default is None) parameters must be a dictionary with the name of the parameter and the value.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Returns:</p>
+<ul>
+<li>
+<p><code>Dict[str, Any]</code>: row as dict.</p>
+</li>
+<li>
+<p><code>None</code>: if no rows are found.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Raises: </p>
+<ul>
+<li><code>QueryError</code></li>
+<li><code>TypeError</code> </li>
+<li><code>ParameterInvalidProviderError</code></li>
+<li><code>ParameterInvalidValueError</code></li>
+<li><code>ParameterInvalidJsonValueError</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="example_5">Example<a class="headerlink" href="#example_5" title="Permanent link">¶</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="8:2"><input checked id="__tabbed_8_1" name="__tabbed_8" type="radio"><input id="__tabbed_8_2" name="__tabbed_8" type="radio"><div class="tabbed-labels"><label for="__tabbed_8_1"><strong>Async</strong></label><label for="__tabbed_8_2"><strong>Sync</strong></label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-16-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-16-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-16-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-16-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-16-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-16-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-16-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-16-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-16-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-16-10">10</a></span>
+<span class="normal"><a href="#__codelineno-16-11">11</a></span>
+<span class="normal"><a href="#__codelineno-16-12">12</a></span>
+<span class="normal"><a href="#__codelineno-16-13">13</a></span>
+<span class="normal"><a href="#__codelineno-16-14">14</a></span>
+<span class="normal"><a href="#__codelineno-16-15">15</a></span>
+<span class="normal"><a href="#__codelineno-16-16">16</a></span>
+<span class="normal"><a href="#__codelineno-16-17">17</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1"></a><span class="kn">from</span> <span class="nn">pysqlx_engine</span> <span class="kn">import</span> <span class="n">PySQLXEngine</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2"></a>
+<a id="__codelineno-16-3" name="__codelineno-16-3"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"postgresql://user:pass@host:port/db?schema=sample"</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4"></a><span class="n">db</span> <span class="o">=</span> <span class="n">PySQLXEngine</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7"></a><span class="n">result1</span> <span class="o">=</span> <span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">query_first_as_dict</span><span class="p">(</span><span class="n">sql</span><span class="o">=</span><span class="s2">"SELECT 1 as id, 'rian' as name"</span><span class="p">)</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">result1</span><span class="p">)</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9"></a><span class="c1"># output -&gt; {'id': 1, 'name': 'rian'}</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10"></a>
+<a id="__codelineno-16-11" name="__codelineno-16-11"></a><span class="n">sql</span> <span class="o">=</span> <span class="s2">"SELECT :id as id, :name as name"</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12"></a><span class="n">param</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"rian"</span><span class="p">}</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13"></a><span class="n">result2</span> <span class="o">=</span> <span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">query_first_as_dict</span><span class="p">(</span><span class="n">sql</span><span class="o">=</span><span class="n">sql</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="n">param</span><span class="p">)</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14"></a><span class="nb">print</span><span class="p">(</span><span class="n">result2</span><span class="p">)</span>
+<a id="__codelineno-16-15" name="__codelineno-16-15"></a><span class="c1"># output -&gt; {'id': 1, 'name': 'rian'}</span>
+<a id="__codelineno-16-16" name="__codelineno-16-16"></a>
+<a id="__codelineno-16-17" name="__codelineno-16-17"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-17-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-17-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-17-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-17-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-17-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-17-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-17-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-17-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-17-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-17-10">10</a></span>
+<span class="normal"><a href="#__codelineno-17-11">11</a></span>
+<span class="normal"><a href="#__codelineno-17-12">12</a></span>
+<span class="normal"><a href="#__codelineno-17-13">13</a></span>
+<span class="normal"><a href="#__codelineno-17-14">14</a></span>
+<span class="normal"><a href="#__codelineno-17-15">15</a></span>
+<span class="normal"><a href="#__codelineno-17-16">16</a></span>
+<span class="normal"><a href="#__codelineno-17-17">17</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1"></a><span class="kn">from</span> <span class="nn">pysqlx_engine</span> <span class="kn">import</span> <span class="n">PySQLXEngineSync</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2"></a>
+<a id="__codelineno-17-3" name="__codelineno-17-3"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"postgresql://user:pass@host:port/db?schema=sample"</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4"></a><span class="n">db</span> <span class="o">=</span> <span class="n">PySQLXEngineSync</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5"></a><span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6"></a>
+<a id="__codelineno-17-7" name="__codelineno-17-7"></a><span class="n">result1</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query_first_as_dict</span><span class="p">(</span><span class="n">sql</span><span class="o">=</span><span class="s2">"SELECT 1 as id, 'rian' as name"</span><span class="p">)</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">result1</span><span class="p">)</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9"></a><span class="c1"># output -&gt; {'id': 1, 'name': 'rian'}</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10"></a>
+<a id="__codelineno-17-11" name="__codelineno-17-11"></a><span class="n">sql</span> <span class="o">=</span> <span class="s2">"SELECT :id as id, :name as name"</span>
+<a id="__codelineno-17-12" name="__codelineno-17-12"></a><span class="n">param</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"rian"</span><span class="p">}</span>
+<a id="__codelineno-17-13" name="__codelineno-17-13"></a><span class="n">result2</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query_first_as_dict</span><span class="p">(</span><span class="n">sql</span><span class="o">=</span><span class="n">sql</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="n">param</span><span class="p">)</span>
+<a id="__codelineno-17-14" name="__codelineno-17-14"></a><span class="nb">print</span><span class="p">(</span><span class="n">result2</span><span class="p">)</span>
+<a id="__codelineno-17-15" name="__codelineno-17-15"></a><span class="c1"># output -&gt; {'id': 1, 'name': 'rian'}</span>
+<a id="__codelineno-17-16" name="__codelineno-17-16"></a>
+<a id="__codelineno-17-17" name="__codelineno-17-17"></a><span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+</div>
+</div>
+</div>
+<hr>
+<h2 id="execute"><em>execute</em><a class="headerlink" href="#execute" title="Permanent link">¶</a></h2>
+<h4 id="description_9">Description<a class="headerlink" href="#description_9" title="Permanent link">¶</a></h4>
+<p>Executes a query/sql and returns the number of rows affected.</p>
+<h4 id="helper_9">Helper<a class="headerlink" href="#helper_9" title="Permanent link">¶</a></h4>
+<ul>
+<li>
+<p>Arguments:</p>
+<ul>
+<li>
+<p><code>sql(str)</code>:  sql to be executed.</p>
+</li>
+<li>
+<p><code>parameters(dict)</code>: (Default is None) dictionary with the name of the parameter and the value.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Returns: </p>
+<ul>
+<li><code>int</code>: number of rows affected.</li>
+</ul>
+</li>
+<li>
+<p>Raises: </p>
+<ul>
+<li><code>ExecuteError</code></li>
+<li><code>TypeError</code></li>
+<li><code>ParameterInvalidProviderError</code></li>
+<li><code>ParameterInvalidValueError</code></li>
+<li><code>ParameterInvalidJsonValueError</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="example_6">Example<a class="headerlink" href="#example_6" title="Permanent link">¶</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="9:2"><input checked id="__tabbed_9_1" name="__tabbed_9" type="radio"><input id="__tabbed_9_2" name="__tabbed_9" type="radio"><div class="tabbed-labels"><label for="__tabbed_9_1"><strong>Async</strong></label><label for="__tabbed_9_2"><strong>Sync</strong></label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-18-1">1</a></span>
+<span class="normal"><a href="#__codelineno-18-2">2</a></span>
+<span class="normal"><a href="#__codelineno-18-3">3</a></span>
+<span class="normal"><a href="#__codelineno-18-4">4</a></span>
+<span class="normal"><a href="#__codelineno-18-5">5</a></span>
+<span class="normal"><a href="#__codelineno-18-6">6</a></span>
+<span class="normal"><a href="#__codelineno-18-7">7</a></span>
+<span class="normal"><a href="#__codelineno-18-8">8</a></span>
+<span class="normal"><a href="#__codelineno-18-9">9</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1"></a><span class="kn">from</span> <span class="nn">pysqlx_engine</span> <span class="kn">import</span> <span class="n">PySQLXEngine</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2"></a>
+<a id="__codelineno-18-3" name="__codelineno-18-3"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"postgresql://user:pass@host:port/db?schema=sample"</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4"></a><span class="n">db</span> <span class="o">=</span> <span class="n">PySQLXEngine</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6"></a>
+<a id="__codelineno-18-7" name="__codelineno-18-7"></a><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"INSERT INTO users (name) VALUES ('rian')"</span><span class="p">)</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"rows_affected = </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9"></a><span class="c1"># output -&gt; rows_affected = 1</span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-19-1">1</a></span>
+<span class="normal"><a href="#__codelineno-19-2">2</a></span>
+<span class="normal"><a href="#__codelineno-19-3">3</a></span>
+<span class="normal"><a href="#__codelineno-19-4">4</a></span>
+<span class="normal"><a href="#__codelineno-19-5">5</a></span>
+<span class="normal"><a href="#__codelineno-19-6">6</a></span>
+<span class="normal"><a href="#__codelineno-19-7">7</a></span>
+<span class="normal"><a href="#__codelineno-19-8">8</a></span>
+<span class="normal"><a href="#__codelineno-19-9">9</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1"></a><span class="kn">from</span> <span class="nn">pysqlx_engine</span> <span class="kn">import</span> <span class="n">PySQLXEngineSync</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2"></a>
+<a id="__codelineno-19-3" name="__codelineno-19-3"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"postgresql://user:pass@host:port/db?schema=sample"</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4"></a><span class="n">db</span> <span class="o">=</span> <span class="n">PySQLXEngineSync</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5"></a><span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6"></a>
+<a id="__codelineno-19-7" name="__codelineno-19-7"></a><span class="n">result</span> <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"INSERT INTO users (name) VALUES ('rian')"</span><span class="p">)</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"rows_affected = </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-19-9" name="__codelineno-19-9"></a><span class="c1"># output -&gt; rows_affected = 1</span>
+</code></pre></div></td></tr></table></div>
+</div>
+</div>
+</div>
+<hr>
+<h2 id="set_isolation_level"><em>set_isolation_level</em><a class="headerlink" href="#set_isolation_level" title="Permanent link">¶</a></h2>
+<h4 id="description_10">Description<a class="headerlink" href="#description_10" title="Permanent link">¶</a></h4>
+<p>Sets the isolation level of the connection.</p>
+<p>The isolation level is set before the transaction is started.
+Is used to separate the transaction per level.</p>
+<p>The <code>Snapshot</code> isolation level is supported by MS SQL Server.</p>
+<p>The Sqlite does not support the isolation level.</p>
+<h4 id="helper_10">Helper<a class="headerlink" href="#helper_10" title="Permanent link">¶</a></h4>
+<ul>
+<li>
+<p>Arguments: </p>
+<ul>
+<li><code>isolation_level(str)</code>: isolation level to be set (
+    <code>ReadUncommitted</code>,
+    <code>ReadCommitted</code>,
+    <code>RepeatableRead</code>,
+    <code>Snapshot</code>,
+    <code>Serializable</code>
+    )</li>
+</ul>
+</li>
+<li>
+<p>Returns: <code>None</code></p>
+</li>
+<li>
+<p>Raises: </p>
+<ul>
+<li><code>IsolationLevelError</code></li>
+<li><code>ValueError</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="example_7">Example<a class="headerlink" href="#example_7" title="Permanent link">¶</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="10:2"><input checked id="__tabbed_10_1" name="__tabbed_10" type="radio"><input id="__tabbed_10_2" name="__tabbed_10" type="radio"><div class="tabbed-labels"><label for="__tabbed_10_1"><strong>Async</strong></label><label for="__tabbed_10_2"><strong>Sync</strong></label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-20-1">1</a></span>
+<span class="normal"><a href="#__codelineno-20-2">2</a></span>
+<span class="normal"><a href="#__codelineno-20-3">3</a></span>
+<span class="normal"><a href="#__codelineno-20-4">4</a></span>
+<span class="normal"><a href="#__codelineno-20-5">5</a></span>
+<span class="normal"><a href="#__codelineno-20-6">6</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1"></a><span class="kn">from</span> <span class="nn">pysqlx_engine</span> <span class="kn">import</span> <span class="n">PySQLXEngine</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2"></a>
+<a id="__codelineno-20-3" name="__codelineno-20-3"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"postgresql://user:pass@host:port/db?schema=sample"</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4"></a><span class="n">db</span> <span class="o">=</span> <span class="n">PySQLXEngine</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">set_isolation_level</span><span class="p">(</span><span class="n">isolation_level</span><span class="o">=</span><span class="s2">"ReadUncommitted"</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-21-1">1</a></span>
+<span class="normal"><a href="#__codelineno-21-2">2</a></span>
+<span class="normal"><a href="#__codelineno-21-3">3</a></span>
+<span class="normal"><a href="#__codelineno-21-4">4</a></span>
+<span class="normal"><a href="#__codelineno-21-5">5</a></span>
+<span class="normal"><a href="#__codelineno-21-6">6</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1"></a><span class="kn">from</span> <span class="nn">pysqlx_engine</span> <span class="kn">import</span> <span class="n">PySQLXEngineSync</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2"></a>
+<a id="__codelineno-21-3" name="__codelineno-21-3"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"postgresql://user:pass@host:port/db?schema=sample"</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4"></a><span class="n">db</span> <span class="o">=</span> <span class="n">PySQLXEngineSync</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5"></a><span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6"></a><span class="n">db</span><span class="o">.</span><span class="n">set_isolation_level</span><span class="p">(</span><span class="n">isolation_level</span><span class="o">=</span><span class="s2">"ReadUncommitted"</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+</div>
+</div>
+</div>
+<h4 id="isolation-level-help">Isolation Level Help<a class="headerlink" href="#isolation-level-help" title="Permanent link">¶</a></h4>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/sql/t-sql/language-elements/transaction-isolation-levels">MSSQL</a></li>
+<li><a href="https://www.postgresql.org/docs/current/sql-set-transaction.html">Postgres</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html">MySQL</a></li>
+<li><a href="https://www.sqlite.org/isolation.html">SQLite</a></li>
+</ul>
+<hr>
+<h2 id="begin"><em>begin</em><a class="headerlink" href="#begin" title="Permanent link">¶</a></h2>
+<h4 id="description_11">Description<a class="headerlink" href="#description_11" title="Permanent link">¶</a></h4>
+<p>Starts a transaction using <code>BEGIN</code>. <code>begin()</code> is equivalent to <code>start_transaction()</code> without setting the isolation level.</p>
+<h4 id="helper_11">Helper<a class="headerlink" href="#helper_11" title="Permanent link">¶</a></h4>
+<ul>
+<li>
+<p>Arguments: <code>None</code></p>
+</li>
+<li>
+<p>Returns: <code>None</code></p>
+</li>
+<li>
+<p>Raises: <code>RawCmdError</code></p>
+</li>
+</ul>
+<h4 id="example_8">Example<a class="headerlink" href="#example_8" title="Permanent link">¶</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="11:2"><input checked id="__tabbed_11_1" name="__tabbed_11" type="radio"><input id="__tabbed_11_2" name="__tabbed_11" type="radio"><div class="tabbed-labels"><label for="__tabbed_11_1"><strong>Async</strong></label><label for="__tabbed_11_2"><strong>Sync</strong></label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-22-1">1</a></span>
+<span class="normal"><a href="#__codelineno-22-2">2</a></span>
+<span class="normal"><a href="#__codelineno-22-3">3</a></span>
+<span class="normal"><a href="#__codelineno-22-4">4</a></span>
+<span class="normal"><a href="#__codelineno-22-5">5</a></span>
+<span class="normal"><a href="#__codelineno-22-6">6</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1"></a><span class="kn">from</span> <span class="nn">pysqlx_engine</span> <span class="kn">import</span> <span class="n">PySQLXEngine</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2"></a>
+<a id="__codelineno-22-3" name="__codelineno-22-3"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"postgresql://user:pass@host:port/db?schema=sample"</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4"></a><span class="n">db</span> <span class="o">=</span> <span class="n">PySQLXEngine</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">begin</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-23-1">1</a></span>
+<span class="normal"><a href="#__codelineno-23-2">2</a></span>
+<span class="normal"><a href="#__codelineno-23-3">3</a></span>
+<span class="normal"><a href="#__codelineno-23-4">4</a></span>
+<span class="normal"><a href="#__codelineno-23-5">5</a></span>
+<span class="normal"><a href="#__codelineno-23-6">6</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1"></a><span class="kn">from</span> <span class="nn">pysqlx_engine</span> <span class="kn">import</span> <span class="n">PySQLXEngineSync</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2"></a>
+<a id="__codelineno-23-3" name="__codelineno-23-3"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"postgresql://user:pass@host:port/db?schema=sample"</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4"></a><span class="n">db</span> <span class="o">=</span> <span class="n">PySQLXEngineSync</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5"></a><span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6"></a><span class="n">db</span><span class="o">.</span><span class="n">begin</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+</div>
+</div>
+</div>
+<hr>
+<h2 id="commit"><em>commit</em><a class="headerlink" href="#commit" title="Permanent link">¶</a></h2>
+<h4 id="description_12">Description<a class="headerlink" href="#description_12" title="Permanent link">¶</a></h4>
+<p>Commits the current transaction.</p>
+<p>The <code>begin()</code> method must be called before calling <code>commit()</code>.</p>
+<p>If the database not need set the isolation level, maybe you can not use <code>begin()</code> and <code>commit()</code>.</p>
+<p>The PySQLXEngine by default uses the <code>begin()</code> and <code>commit()</code> in all transactions.</p>
+<h4 id="helper_12">Helper<a class="headerlink" href="#helper_12" title="Permanent link">¶</a></h4>
+<div class="codehilite"><pre><span></span><code>* Arguments: ``None`
+
+* Returns: ``None``
+
+* Raises: ``RawCmdError``
+</code></pre></div>
+
+<h4 id="example_9">Example<a class="headerlink" href="#example_9" title="Permanent link">¶</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="12:2"><input checked id="__tabbed_12_1" name="__tabbed_12" type="radio"><input id="__tabbed_12_2" name="__tabbed_12" type="radio"><div class="tabbed-labels"><label for="__tabbed_12_1"><strong>Async</strong></label><label for="__tabbed_12_2"><strong>Sync</strong></label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-24-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-24-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-24-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-24-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-24-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-24-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-24-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-24-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-24-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-24-10">10</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1"></a><span class="kn">from</span> <span class="nn">pysqlx_engine</span> <span class="kn">import</span> <span class="n">PySQLXEngine</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2"></a>
+<a id="__codelineno-24-3" name="__codelineno-24-3"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"postgresql://user:pass@host:port/db?schema=sample"</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4"></a><span class="n">db</span> <span class="o">=</span> <span class="n">PySQLXEngine</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<a id="__codelineno-24-6" name="__codelineno-24-6"></a>
+<a id="__codelineno-24-7" name="__codelineno-24-7"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">begin</span><span class="p">()</span>
+<a id="__codelineno-24-8" name="__codelineno-24-8"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"CREATE TABLE users (id serial PRIMARY KEY, name varchar(255))"</span><span class="p">)</span>
+<a id="__codelineno-24-9" name="__codelineno-24-9"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"INSERT INTO users (name) VALUES ('rian')"</span><span class="p">)</span>
+<a id="__codelineno-24-10" name="__codelineno-24-10"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-25-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-25-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-25-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-25-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-25-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-25-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-25-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-25-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-25-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-25-10">10</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1"></a><span class="kn">from</span> <span class="nn">pysqlx_engine</span> <span class="kn">import</span> <span class="n">PySQLXEngineSync</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2"></a>
+<a id="__codelineno-25-3" name="__codelineno-25-3"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"postgresql://user:pass@host:port/db?schema=sample"</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4"></a><span class="n">db</span> <span class="o">=</span> <span class="n">PySQLXEngineSync</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5"></a><span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<a id="__codelineno-25-6" name="__codelineno-25-6"></a>
+<a id="__codelineno-25-7" name="__codelineno-25-7"></a><span class="n">db</span><span class="o">.</span><span class="n">begin</span><span class="p">()</span>
+<a id="__codelineno-25-8" name="__codelineno-25-8"></a><span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"CREATE TABLE users (id serial PRIMARY KEY, name varchar(255))"</span><span class="p">)</span>
+<a id="__codelineno-25-9" name="__codelineno-25-9"></a><span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"INSERT INTO users (name) VALUES ('rian')"</span><span class="p">)</span>
+<a id="__codelineno-25-10" name="__codelineno-25-10"></a><span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+</div>
+</div>
+</div>
+<hr>
+<h2 id="rollback"><em>rollback</em><a class="headerlink" href="#rollback" title="Permanent link">¶</a></h2>
+<h4 id="description_13">Description<a class="headerlink" href="#description_13" title="Permanent link">¶</a></h4>
+<p>Rollbacks the current transaction.</p>
+<p>Rollback is used to cancel the transaction, when you uses the rollback,
+the transaction is canceled and the changes are not saved.</p>
+<p>The <code>begin()</code> method must be called before calling <code>rollback()</code>.</p>
+<p>If the database not need set the isolation level, maybe you can not use <code>begin()</code> and <code>rollback()</code>.</p>
+<p>The PySQLXEngine by default try uses the <code>begin()</code> and <code>commit()</code> in all transactions.</p>
+<h4 id="helper_13">Helper<a class="headerlink" href="#helper_13" title="Permanent link">¶</a></h4>
+<ul>
+<li>
+<p>Arguments: <code>None</code></p>
+</li>
+<li>
+<p>Returns: <code>None</code></p>
+</li>
+<li>
+<p>Raises: <code>RawCmdError</code></p>
+</li>
+</ul>
+<h4 id="example_10">Example<a class="headerlink" href="#example_10" title="Permanent link">¶</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="13:2"><input checked id="__tabbed_13_1" name="__tabbed_13" type="radio"><input id="__tabbed_13_2" name="__tabbed_13" type="radio"><div class="tabbed-labels"><label for="__tabbed_13_1"><strong>Async</strong></label><label for="__tabbed_13_2"><strong>Sync</strong></label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-26-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-26-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-26-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-26-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-26-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-26-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-26-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-26-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-26-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-26-10">10</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1"></a><span class="kn">from</span> <span class="nn">pysqlx_engine</span> <span class="kn">import</span> <span class="n">PySQLXEngine</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2"></a>
+<a id="__codelineno-26-3" name="__codelineno-26-3"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"postgresql://user:pass@host:port/db?schema=sample"</span>
+<a id="__codelineno-26-4" name="__codelineno-26-4"></a><span class="n">db</span> <span class="o">=</span> <span class="n">PySQLXEngine</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<a id="__codelineno-26-6" name="__codelineno-26-6"></a>
+<a id="__codelineno-26-7" name="__codelineno-26-7"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">begin</span><span class="p">()</span>
+<a id="__codelineno-26-8" name="__codelineno-26-8"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"CREATE TABLE users (id serial PRIMARY KEY, name varchar(255))"</span><span class="p">)</span>
+<a id="__codelineno-26-9" name="__codelineno-26-9"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"INSERT INTO users (name) VALUES ('rian')"</span><span class="p">)</span>
+<a id="__codelineno-26-10" name="__codelineno-26-10"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-27-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-27-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-27-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-27-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-27-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-27-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-27-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-27-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-27-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-27-10">10</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1"></a><span class="kn">from</span> <span class="nn">pysqlx_engine</span> <span class="kn">import</span> <span class="n">PySQLXEngineSync</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2"></a>
+<a id="__codelineno-27-3" name="__codelineno-27-3"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"postgresql://user:pass@host:port/db?schema=sample"</span>
+<a id="__codelineno-27-4" name="__codelineno-27-4"></a><span class="n">db</span> <span class="o">=</span> <span class="n">PySQLXEngineSync</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<a id="__codelineno-27-5" name="__codelineno-27-5"></a><span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<a id="__codelineno-27-6" name="__codelineno-27-6"></a>
+<a id="__codelineno-27-7" name="__codelineno-27-7"></a><span class="n">db</span><span class="o">.</span><span class="n">begin</span><span class="p">()</span>
+<a id="__codelineno-27-8" name="__codelineno-27-8"></a><span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"CREATE TABLE users (id serial PRIMARY KEY, name varchar(255))"</span><span class="p">)</span>
+<a id="__codelineno-27-9" name="__codelineno-27-9"></a><span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"INSERT INTO users (name) VALUES ('rian')"</span><span class="p">)</span>
+<a id="__codelineno-27-10" name="__codelineno-27-10"></a><span class="n">db</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+</div>
+</div>
+</div>
+<hr>
+<h2 id="start_transaction"><em>start_transaction</em><a class="headerlink" href="#start_transaction" title="Permanent link">¶</a></h2>
+<h4 id="description_14">Description<a class="headerlink" href="#description_14" title="Permanent link">¶</a></h4>
+<p>Starts a transaction with <code>BEGIN/BEGIN TRANSACTION</code>. by default, does not set the isolation level.</p>
+<p>The <code>Snapshot</code> isolation level is supported by MS SQL Server.</p>
+<p>The Sqlite does not support the isolation level.</p>
+<hr>
+<h4 id="helper_14">Helper<a class="headerlink" href="#helper_14" title="Permanent link">¶</a></h4>
+<ul>
+<li>
+<p>Arguments: </p>
+<ul>
+<li><code>isolation_level(str)</code>: by default is None. Isolation level to be set (
+<code>ReadUncommitted</code>,
+<code>ReadCommitted</code>,
+<code>RepeatableRead</code>,
+<code>Snapshot</code>,
+<code>Serializable</code>
+)</li>
+</ul>
+</li>
+<li>
+<p>Returns: <code>None</code></p>
+</li>
+<li>
+<p>Raises: </p>
+<ul>
+<li><code>IsolationLevelError</code></li>
+<li><code>StartTransactionError</code></li>
+<li><code>ValueError</code></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="example_11">Example<a class="headerlink" href="#example_11" title="Permanent link">¶</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="14:2"><input checked id="__tabbed_14_1" name="__tabbed_14" type="radio"><input id="__tabbed_14_2" name="__tabbed_14" type="radio"><div class="tabbed-labels"><label for="__tabbed_14_1"><strong>Async</strong></label><label for="__tabbed_14_2"><strong>Sync</strong></label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-28-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-28-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-28-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-28-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-28-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-28-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-28-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-28-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-28-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-28-10">10</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1"></a><span class="kn">from</span> <span class="nn">pysqlx_engine</span> <span class="kn">import</span> <span class="n">PySQLXEngine</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"postgresql://user:pass@host:port/db?schema=sample"</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3"></a><span class="n">db</span> <span class="o">=</span> <span class="n">PySQLXEngine</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<a id="__codelineno-28-4" name="__codelineno-28-4"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<a id="__codelineno-28-5" name="__codelineno-28-5"></a>
+<a id="__codelineno-28-6" name="__codelineno-28-6"></a><span class="c1"># with isolation level</span>
+<a id="__codelineno-28-7" name="__codelineno-28-7"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">start_transaction</span><span class="p">(</span><span class="n">isolation_level</span><span class="o">=</span><span class="s2">"ReadCommitted"</span><span class="p">)</span>
+<a id="__codelineno-28-8" name="__codelineno-28-8"></a>
+<a id="__codelineno-28-9" name="__codelineno-28-9"></a><span class="c1"># without isolation level</span>
+<a id="__codelineno-28-10" name="__codelineno-28-10"></a><span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">start_transaction</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-29-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-29-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-29-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-29-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-29-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-29-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-29-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-29-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-29-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-29-10">10</a></span>
+<span class="normal"><a href="#__codelineno-29-11">11</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1"></a><span class="kn">from</span> <span class="nn">pysqlx_engine</span> <span class="kn">import</span> <span class="n">PySQLXEngineSync</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2"></a>
+<a id="__codelineno-29-3" name="__codelineno-29-3"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"postgresql://user:pass@host:port/db?schema=sample"</span>
+<a id="__codelineno-29-4" name="__codelineno-29-4"></a><span class="n">db</span> <span class="o">=</span> <span class="n">PySQLXEngineSync</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<a id="__codelineno-29-5" name="__codelineno-29-5"></a><span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<a id="__codelineno-29-6" name="__codelineno-29-6"></a>
+<a id="__codelineno-29-7" name="__codelineno-29-7"></a><span class="c1"># with isolation level</span>
+<a id="__codelineno-29-8" name="__codelineno-29-8"></a><span class="n">db</span><span class="o">.</span><span class="n">start_transaction</span><span class="p">(</span><span class="n">isolation_level</span><span class="o">=</span><span class="s2">"ReadCommitted"</span><span class="p">)</span>
+<a id="__codelineno-29-9" name="__codelineno-29-9"></a>
+<a id="__codelineno-29-10" name="__codelineno-29-10"></a><span class="c1"># without isolation level</span>
+<a id="__codelineno-29-11" name="__codelineno-29-11"></a><span class="n">db</span><span class="o">.</span><span class="n">start_transaction</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+</div>
+</div>
+</div>
+<hr>
+<h4 id="isolation-level-help_1">Isolation Level Help<a class="headerlink" href="#isolation-level-help_1" title="Permanent link">¶</a></h4>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/sql/t-sql/language-elements/transaction-isolation-levels">MSSQL</a></li>
+<li><a href="https://www.postgresql.org/docs/current/sql-set-transaction.html">Postgres</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html">MySQL</a></li>
+<li><a href="https://www.sqlite.org/isolation.html">SQLite</a></li>
+</ul></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="config.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Configs">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Configs
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../advanced_guide/dml_with_return.html" class="md-footer__link md-footer__link--next" aria-label="Next: DML With Return">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                DML With Return
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2022 - 2023 Carlos Rian
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["search.suggest", "search.highlight", "search.share", "search.suggest", "navigation.indexes", "navigation.top", "navigation.tabs", "navigation.footer", "header.autohide", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+        <script src="../js/termynal.js"></script>
+      
+        <script src="../js/custom.js"></script>
+      
+    
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
+</html>
