@@ -4,6 +4,17 @@
     "files.watcherExclude": {
         "**/__pycache__/**": true,
     },
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/__pycache__/**": true,
+        "**/.pytest_cache/**": true,
+        "**.coverage": true,
+    },
     "[python]": {
         "editor.rulers": [
             120
@@ -12,7 +23,7 @@
         "editor.codeActionsOnSave": {
             "source.organizeImports": "explicit"
         },
-        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.defaultFormatter": "charliermarsh.ruff",
         "editor.bracketPairColorization.enabled": true
     },
 }

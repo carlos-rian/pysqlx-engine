@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "pysqlx-engine"
 
-version = "0.2.25"
-description = "Async and Sync SQL Engine for Python, with support for MySQL, PostgreSQL, SQLite and Microsoft SQL Server."
+version = "0.3.0"
+description = "Async and Sync SQL Engine for Python, with support for PostgreSQL, MySQL, SQLite and Microsoft SQL Server."
 authors = ["Carlos Rian <crian.rian@gmail.com>"]
 license = "MIT"
 readme = "readme.md"
@@ -46,26 +46,27 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.7"
-pydantic = [{ version = ">=1 <3", python = ">=3.7" }]
-pysqlx-core = "^0.1"
-typing-extensions = ">=4.5,<5"
+python = "^3.8"
+pydantic = [{ version = ">=1 <3", python = ">=3.8" }]
 Pygments = "^2.15.1"
+pysqlx-core = "^0.2.3"
 
-[tool.poetry.dev-dependencies]
-black = "^23"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=8.3.3"
+pytest-asyncio = ">=0.24.0"
+pytest-cov = ">=5.0.0"
+pytest-dotenv = "^0"
+pytest-xdist = "^3.6.1"
+toml = "^0.10.2"
+ruff = "^0.6.9"
+taskipy = "^1.13.0"
+rich = "^13.8.0"
+
 isort = [
     { version = "^5.11", python = "<3.8" },
     { version = "^5.12", python = ">=3.8" },
 ]
-pytest = ">=7.*"
-pytest-asyncio = ">=0.*"
-pytest-cov = ">=4.*"
-pytest-dotenv = "^0"
-pytest-xdist = "^3"
-toml = "^0.10.2"
-httpx = "^0.24"
-ruff = "^0.3.4"
 
 [tool.ruff]
 line-length = 120
@@ -82,25 +83,31 @@ ignore = ["E402", "F403", "F405"]
 [tool.ruff.lint.isort]
 case-sensitive = true
 
-
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
-
 
 [tool.pytest.ini_options]
 testpaths = 'tests'
 log_format = '%(name)s %(levelname)s: %(message)s'
 filterwarnings = 'error'
-timeout = 30
 xfail_strict = true
-# min, max, mean, stddev, median, iqr, outliers, ops, rounds, iterations
-#addopts = [
-#    '--benchmark-columns',
-#    'min,mean,stddev,outliers,rounds,iterations',
-#    '--benchmark-group-by',
-#    'group',
-#    '--benchmark-warmup',
-#    'on',
-#    '--benchmark-disable',                        # this is enable by `make benchmark` when you actually want to run benchmarks
-#]
+env_files = "tests/.env.test"
+asyncio_mode = "strict"
+asyncio_default_fixture_loop_scope="session"
+log_cli = true
+log_cli_level = "DEBUG"
+addopts = "--maxfail=10 --ignore=tests/unittest/streess_test_pool"
+
+[tool.taskipy.tasks]
+lint = "ruff check . && ruff check . --diff"
+format = "ruff check . --fix && ruff format ."
+stop_db = "rm -rf dev.db & docker-compose --file tests/docker/docker-compose.yml down"
+start_db = "docker-compose --file tests/docker/docker-compose.yml up --build --detach"
+clear_db = "task stop_db && task start_db"
+test = "pytest tests -vv -x -s --cov=."
+test_with_cache = "pytest tests -vv -x -s --cov=. --cache-clear"
+test_clean = "task clear_db && sleep 10 && task test"
+cov = "coverage html"
+
+local_core = "poetry remove pysqlx-core && poetry add $w/Documents/repo/my-repos/pysqlx-core/target/wheels/pysqlx_core-0.1.49-cp38-cp38-manylinux_2_34_x86_64.whl"
