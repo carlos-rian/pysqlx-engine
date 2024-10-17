@@ -55,7 +55,7 @@ Easily create a pool of connections and start reusing them in your application.
 **Taking a connection from the pool**
 
 === "**Async**"
-    ```py linenums="1" hl_lines="8-11"
+    ```py linenums="1" hl_lines="8-11" title="main.py"
     import asyncio
     from pysqlx_engine import PySQLXEnginePool
 
@@ -71,7 +71,7 @@ Easily create a pool of connections and start reusing them in your application.
     asyncio.run(main())
     ```
 === "**Sync**"
-    ```py linenums="1" hl_lines="8-11"
+    ```py linenums="1" hl_lines="8-11" title="main.py"
     # import
     from pysqlx_engine import PySQLXEnginePoolSync
 
@@ -90,7 +90,7 @@ Easily create a pool of connections and start reusing them in your application.
 **Stopping the pool**
 
 === "**Async**"
-    ```py linenums="1" hl_lines="10"
+    ```py linenums="1" hl_lines="10" title="main.py"
     import asyncio
     from pysqlx_engine import PySQLXEnginePool
 
@@ -106,7 +106,7 @@ Easily create a pool of connections and start reusing them in your application.
     ```
 
 === "**Sync**"
-    ```py linenums="1" hl_lines="10"
+    ```py linenums="1" hl_lines="10" title="main.py"
     # import
     from pysqlx_engine import PySQLXEnginePoolSync
 
@@ -124,7 +124,7 @@ Easily create a pool of connections and start reusing them in your application.
 **Complete example**
 
 === "**Async**"
-    ```py
+    ```py title="main.py"
     import asyncio
     from pysqlx_engine import PySQLXEnginePool
 
@@ -143,7 +143,7 @@ Easily create a pool of connections and start reusing them in your application.
     ```
 
 === "**Sync**"
-    ```py
+    ```py title="main.py"
     # import
     from pysqlx_engine import PySQLXEnginePoolSync
 
@@ -168,7 +168,7 @@ Create a `main.py` file and add the code examples below.
 
 
 === "**Async**"
-    ``` py
+    ```py title="main.py"
     import asyncio
     import logging
     import random
@@ -223,7 +223,7 @@ Create a `main.py` file and add the code examples below.
 
 === "**Sync**"
 
-    ``` py
+    ```py title="main.py"
     import concurrent.futures
     import logging
     import random
@@ -281,6 +281,32 @@ Running the code using the terminal
 
 $ python3 main.py
 ...
-```
 
+INFO:pysqlx_engine:Pool: Starting the connection pool.
+DEBUG:pysqlx_engine:Pool: New connection created: <pysqlx_engine._core.apool.ConnInfo 'conn-1' at 0x7f24301e78c0> PoolSize: 1
+...
+INFO:pysqlx_engine:Pool: Initialized with 5 connections.
+DEBUG:pysqlx_engine:Worker: Worker-1-ConnectionMonitor starting.
+INFO:pysqlx_engine:Pool: Workers started.
+DEBUG:pysqlx_engine:Async -> Starting task: ConnectionMonitor
+DEBUG:pysqlx_engine:Async -> Running task: ConnectionMonitor
+INFO:pysqlx_engine:Monitor: Started monitoring the pool.
+...
+DEBUG:pysqlx_engine:Getting a ready connection.
+DEBUG:pysqlx_engine:Acquired semaphore in 0.00001 seconds
+DEBUG:pysqlx_engine:Pool: Growing: False Waiting: 1
+DEBUG:pysqlx_engine:Pool: Connection: <pysqlx_engine._core.apool.ConnInfo 'conn-1' at 0x7f24301e78c0> retrieved in 0.00018 seconds.
+DEBUG:pysqlx_engine:Pool: Growing: False Waiting: 0
+DEBUG:pysqlx_engine:Pool: Connection returned to pool: <pysqlx_engine._core.apool.ConnInfo 'conn-1' at 0x7f24301e78c0>
+...
+DEBUG:pysqlx_engine:Pool: Connection returned to pool: <pysqlx_engine._core.apool.ConnInfo 'conn-1' at 0x7f24301e78c0>
+...
+INFO:pysqlx_engine:Pool: Stopping the connection pool.
+INFO:pysqlx_engine:Removed: <pysqlx_engine._core.apool.ConnInfo 'conn-1' at 0x7f24301e78c0> from pool, the conn was open for 5.36555 secs
+...
+DEBUG:pysqlx_engine:Worker: Worker-1-ConnectionMonitor finishing.
+INFO:pysqlx_engine:Monitor: Stopped monitoring the pool.
+DEBUG:pysqlx_engine:Async -> Stopping task: ConnectionMonitor
+INFO:pysqlx_engine:Pool: All workers stopped and connections closed.
+```
 </div>

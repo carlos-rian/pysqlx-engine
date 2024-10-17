@@ -63,6 +63,7 @@ plugins:
 
   - glightbox
   - offline
+  
 
 nav:
   - Home: index.md
@@ -86,7 +87,7 @@ nav:
 
   - Advanced Guide:
       - DML With Return: advanced_guide/dml_with_return.md
-      - Create a Pool with Concurrent Connections: advanced_guide/simple_pool_conn.md
+      - Create a Pool with Concurrent Connections: advanced_guide/pool.md
       - JSON Support: advanced_guide/json_support.md
 
   - Type Mappings: type_mappings.md
