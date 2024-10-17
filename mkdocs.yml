@@ -85,8 +85,8 @@ nav:
       - Documentation for Methods: user_guide/extras.md
 
   - Advanced Guide:
-      - DML with return: advanced_guide/dml_with_return.md
-      - Simple Pool With Concurrent Connections: advanced_guide/simple_pool_conn.md
+      - DML With Return: advanced_guide/dml_with_return.md
+      - Create a Pool with Concurrent Connections: advanced_guide/simple_pool_conn.md
       - JSON Support: advanced_guide/json_support.md
 
   - Type Mappings: type_mappings.md

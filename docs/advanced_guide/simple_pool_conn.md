@@ -1,9 +1,168 @@
-# **Simple pool with concurrent connections**
+# **Create a pool with concurrent connections**
 
 The PySQLXEngine allows you to create a pool of connections to the database. 
 You can reuse and recycle connections to the database, which can improve the performance of your application.
 
 This example will use the `SQLite` database.
+
+## Introduction
+
+The PySQLXEngine provides two types of pools: `PySQLXEnginePool` for asynchronous connections and `PySQLXEnginePoolSync` for synchronous connections.
+
+Both work similarly, but the asynchronous pool is designed to work with `asyncio` and the synchronous pool with threads.
+
+**Parameters**
+
+- `uri: str`: Database URI, e.g. `sqlite:./dev.db`
+- `min_size: int`: Minimum number of connections in the pool, you can start the pool with the minimum number of connections
+- `max_size: int`: (default: 10): Maximum number of connections in the pool
+- `conn_timeout: float`: (default: 30.0) Connection timeout in seconds, waiting for a connection to be available, case the timeout is reached, a `PoolTimeoutError` is raised
+- `keep_alive: float`: (default: 60 * 15) Time to keep the connection alive in the pool
+- `check_interval: float`: (default: 5.0) Interval to check the connections in the pool
+- `monitor_batch_size: int`: (default: 10)  Number of connections to check per interval
+
+Easily create a pool of connections and start reusing them in your application.
+
+
+### Simple example
+
+**Creating and starting the pool**
+
+=== "**Async**"
+    ```py linenums="1" hl_lines="6" title="main.py"
+    import asyncio
+    from pysqlx_engine import PySQLXEnginePool
+
+    async def main():
+        pool = PySQLXEnginePool(uri="sqlite:./dev.db", min_size=5)
+        await pool.start() # Start the pool
+
+    asyncio.run(main())
+    ```
+=== "**Sync**"
+    ```py linenums="1" hl_lines="6" title="main.py"
+    # import
+    from pysqlx_engine import PySQLXEnginePoolSync
+
+    def main():
+        pool = PySQLXEnginePoolSync(uri="sqlite:./dev.db", min_size=5)
+        pool.start() # Start the pool
+    
+    main()
+    ```
+
+
+**Taking a connection from the pool**
+
+=== "**Async**"
+    ```py linenums="1" hl_lines="8-11"
+    import asyncio
+    from pysqlx_engine import PySQLXEnginePool
+
+    async def main():
+        pool = PySQLXEnginePool(uri="sqlite:./dev.db", min_size=5)
+        await pool.start() # Start the pool
+
+        async with pool.connection() as conn:
+            # Use the connection
+            resp = await conn.query_first("SELECT 1 as a")
+            print(resp) # Output: BaseRow(a=1)
+
+    asyncio.run(main())
+    ```
+=== "**Sync**"
+    ```py linenums="1" hl_lines="8-11"
+    # import
+    from pysqlx_engine import PySQLXEnginePoolSync
+
+    def main():
+        pool = PySQLXEnginePoolSync(uri="sqlite:./dev.db", min_size=5)
+        pool.start() # Start the pool
+
+        with pool.connection() as conn:
+            # Use the connection
+            resp = conn.query_first("SELECT 1 as a")
+            print(resp) # Output: BaseRow(a=1)
+    
+    main()
+    ```
+
+**Stopping the pool**
+
+=== "**Async**"
+    ```py linenums="1" hl_lines="10"
+    import asyncio
+    from pysqlx_engine import PySQLXEnginePool
+
+    async def main():
+        pool = PySQLXEnginePool(uri="sqlite:./dev.db", min_size=5)
+        await pool.start() # Start the pool
+
+        # Use the pool
+
+        await pool.stop() # Stop the pool
+
+    asyncio.run(main())
+    ```
+
+=== "**Sync**"
+    ```py linenums="1" hl_lines="10"
+    # import
+    from pysqlx_engine import PySQLXEnginePoolSync
+
+    def main():
+        pool = PySQLXEnginePoolSync(uri="sqlite:./dev.db", min_size=5)
+        pool.start() # Start the pool
+
+        # Use the pool
+
+        pool.stop() # Stop the pool
+    
+    main()
+    ```
+
+**Complete example**
+
+=== "**Async**"
+    ```py
+    import asyncio
+    from pysqlx_engine import PySQLXEnginePool
+
+    async def main():
+        pool = PySQLXEnginePool(uri="sqlite:./dev.db", min_size=5)
+        await pool.start() # Start the pool
+
+        async with pool.connection() as conn:
+            # Use the connection
+            resp = await conn.query_first("SELECT 1 as a")
+            print(resp) # Output: BaseRow(a=1)
+
+        await pool.stop() # Stop the pool
+
+    asyncio.run(main())
+    ```
+
+=== "**Sync**"
+    ```py
+    # import
+    from pysqlx_engine import PySQLXEnginePoolSync
+
+    def main():
+        pool = PySQLXEnginePoolSync(uri="sqlite:./dev.db", min_size=5)
+        pool.start() # Start the pool
+
+        with pool.connection() as conn:
+            # Use the connection
+            resp = conn.query_first("SELECT 1 as a")
+            print(resp) # Output: BaseRow(a=1)
+
+        pool.stop() # Stop the pool
+
+    main()
+    ```
+
+
+## Concurrent connections example
 
 Create a `main.py` file and add the code examples below.
 
