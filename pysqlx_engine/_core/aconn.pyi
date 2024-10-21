@@ -246,6 +246,7 @@ class PySQLXEngine:
 	async def query(self, sql: str) -> Union[List[BaseRow], List]: ...
 	@overload
 	async def query(self, sql: str, parameters: Optional[DictParam] = None) -> Union[List[BaseRow], List]: ...
+	@overload
 	async def query(
 		self, sql: str, parameters: Optional[DictParam] = None, model: Optional[Type["MyModel"]] = None
 	) -> Union[List[Type["MyModel"]], List]:
@@ -287,21 +288,21 @@ class PySQLXEngine:
 
 		    * dict `key` must be a valid string.
 		    * dict `value` can be one of the types: (
-		        `bool`,
-		        `bytes`,
-		        `date`,
-		        `datetime`,
-		        `Decimal`,
-		        `dict`,
-		        `Enum`, # Enum must be a subclass of enum.Enum
-		        `float`,
-		        `int`,
-		        `list`,
-		        `str`,
-		        `time`,
-		        `tuple`,
-		        `UUID`,
-		        `None`
+		        - bool,
+		        - bytes,
+		        - date,
+		        - datetime,
+		        - Decimal,
+		        - dict,
+		        - Enum, # Enum must be a subclass of enum.Enum
+		        - float,
+		        - int,
+		        - list,
+		        - str,
+		        - time,
+		        - tuple,
+		        - UUID,
+		        - None
 		    )
 
 		#### Python types vs SQL types:
@@ -391,21 +392,21 @@ class PySQLXEngine:
 
 		    * dict `key` must be a valid string.
 		    * dict `value` can be one of the types: (
-		        `bool`,
-		        `bytes`,
-		        `date`,
-		        `datetime`,
-		        `Decimal`,
-		        `dict`,
-		        `Enum`, # Enum must be a subclass of enum.Enum
-		        `float`,
-		        `int`,
-		        `list`,
-		        `str`,
-		        `time`,
-		        `tuple`,
-		        `UUID`,
-		        `None`
+		        - bool,
+		        - bytes,
+		        - date,
+		        - datetime,
+		        - Decimal,
+		        - dict,
+		        - Enum, # Enum must be a subclass of enum.Enum
+		        - float,
+		        - int,
+		        - list,
+		        - str,
+		        - time,
+		        - tuple,
+		        - UUID,
+		        - None
 		    )
 
 		#### Python types vs SQL types:
@@ -457,6 +458,7 @@ class PySQLXEngine:
 	async def query_first(self, sql: str) -> Union[BaseRow, None]: ...
 	@overload
 	async def query_first(self, sql: str, parameters: DictParam = None) -> Union[BaseRow, None]: ...
+	@overload
 	async def query_first(
 		self, sql: str, parameters: DictParam = None, model: Type["MyModel"] = None
 	) -> Union[Type["MyModel"], None]:
@@ -498,21 +500,21 @@ class PySQLXEngine:
 
 		    * dict `key` must be a valid string.
 		    * dict `value` can be one of the types: (
-		        `bool`,
-		        `bytes`,
-		        `date`,
-		        `datetime`,
-		        `Decimal`,
-		        `dict`,
-		        `Enum`, # Enum must be a subclass of enum.Enum
-		        `float`,
-		        `int`,
-		        `list`,
-		        `str`,
-		        `time`,
-		        `tuple`,
-		        `UUID`,
-		        `None`
+		        - bool,
+		        - bytes,
+		        - date,
+		        - datetime,
+		        - Decimal,
+		        - dict,
+		        - Enum, # Enum must be a subclass of enum.Enum
+		        - float,
+		        - int,
+		        - list,
+		        - str,
+		        - time,
+		        - tuple,
+		        - UUID,
+		        - None
 		    )
 
 		#### Python types vs SQL types:
@@ -563,6 +565,7 @@ class PySQLXEngine:
 	# dict
 	@overload
 	async def query_first_as_dict(self, sql: str) -> Optional[Dict[str, Any]]: ...
+	@overload
 	async def query_first_as_dict(self, sql: str, parameters: Optional[DictParam] = None) -> Optional[Dict[str, Any]]:
 		"""
 		## Description
@@ -600,21 +603,21 @@ class PySQLXEngine:
 
 		    * dict `key` must be a valid string.
 		    * dict `value` can be one of the types: (
-		        `bool`,
-		        `bytes`,
-		        `date`,
-		        `datetime`,
-		        `Decimal`,
-		        `dict`,
-		        `Enum`, # Enum must be a subclass of enum.Enum
-		        `float`,
-		        `int`,
-		        `list`,
-		        `str`,
-		        `time`,
-		        `tuple`,
-		        `UUID`,
-		        `None`
+		        - bool,
+		        - bytes,
+		        - date,
+		        - datetime,
+		        - Decimal,
+		        - dict,
+		        - Enum, # Enum must be a subclass of enum.Enum
+		        - float,
+		        - int,
+		        - list,
+		        - str,
+		        - time,
+		        - tuple,
+		        - UUID,
+		        - None
 		    )
 
 		#### Python types vs SQL types:
@@ -664,6 +667,7 @@ class PySQLXEngine:
 	# --
 	@overload
 	async def execute(self, sql: str) -> "int": ...
+	@overload
 	async def execute(self, sql: str, parameters: Optional[DictParam] = None) -> "int":
 		"""
 		## Description
@@ -698,21 +702,21 @@ class PySQLXEngine:
 
 		    * dict `key` must be a valid string.
 		    * dict `value` can be one of the types: (
-		        `bool`,
-		        `bytes`,
-		        `date`,
-		        `datetime`,
-		        `Decimal`,
-		        `dict`,
-		        `Enum`, # Enum must be a subclass of enum.Enum
-		        `float`,
-		        `int`,
-		        `list`,
-		        `str`,
-		        `time`,
-		        `tuple`,
-		        `UUID`,
-		        `None`
+		        - bool,
+		        - bytes,
+		        - date,
+		        - datetime,
+		        - Decimal,
+		        - dict,
+		        - Enum, # Enum must be a subclass of enum.Enum
+		        - float,
+		        - int,
+		        - list,
+		        - str,
+		        - time,
+		        - tuple,
+		        - UUID,
+		        - None
 		    )
 
 		#### Python types vs SQL types:
