@@ -9,18 +9,10 @@ from pysqlx_core import PySQLxResponse
 from .const import TYPES_OUT
 from .util import build_sql, parse_obj_as
 
-MyModel = TypeVar("MyModel", bound="BaseRow")
-
-JsonParam = Union[
-	Dict[str, Union[bool, str, int, UUID, time, date, datetime, float, bytes, Decimal, None]],
-	List[Dict[str, Union[bool, str, int, UUID, time, date, datetime, float, bytes, Decimal, None]]],
-	Dict,
-	List,
-]
-DictParam = Dict[
-	str,
-	Union[bool, str, int, JsonParam, UUID, time, date, datetime, float, bytes, Decimal, None],
-]
+MyModel = TypeVar("MyModel", bound=BaseModel)
+SupportedTypes = Union[bool, str, int, UUID, time, date, datetime, float, bytes, Decimal, None]
+JsonParam = Union[Dict[str, SupportedTypes], List[Dict[str, SupportedTypes]]]
+DictParam = Dict[str, SupportedTypes]
 
 
 class BaseRow(BaseModel):

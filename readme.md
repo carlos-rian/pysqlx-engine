@@ -25,6 +25,7 @@
 </a>
 </p>
 
+
 ---
 
 **Documentation**: <a href="https://carlos-rian.github.io/pysqlx-engine/" target="_blank">https://carlos-rian.github.io/pysqlx-engine/</a>
@@ -33,35 +34,33 @@
 
 ---
 
-PySQLXEngine supports the option of sending **Raw SQL** to your database.
+PySQLXEngine supports the option of sending **raw sql** to your database.
 
-The PySQLXEngine is a minimalist [SQL Engine](https://github.com/carlos-rian/pysqlx-engine).
+The PySQLXEngine is a minimalist **Async and Sync** SQL engine. Currently this lib have supports *async and sync programming*.
 
-The PySQLXEngine was created and thought to be minimalistic, but very efficient. The core is write in [**Rust**](https://www.rust-lang.org), making communication between Databases and [**Python**](https://python-poetry.org) more efficient.
+The PySQLXEngine was created and thought to be minimalistic, but very efficient. The core is write in Rust, making communication between database and Python more efficient.
 
-All SQL executed using PySQLXEngine is atomic; only one instruction is executed at a time. Only the first one will be completed if you send an Insert and a select. This is one of the ways to handle SQL ingestion. As of version **0.2.0**, PySQLXEngine supports transactions, where you can control [`BEGIN`](https://learn.microsoft.com/en-us/sql/t-sql/language-elements/begin-end-transact-sql?view=sql-server-ver16), [`COMMIT`](https://www.geeksforgeeks.org/difference-between-commit-and-rollback-in-sql), [ `ROLLBACK` ](https://www.geeksforgeeks.org/difference-between-commit-and-rollback-in-sql), [`ISOLATION LEVEL`](https://levelup.gitconnected.com/understanding-isolation-levels-in-a-database-transaction-af78aea3f44), etc. as you wish.
-
-
-> **NOTE**:
-    Minimalism is not the lack of something, but having exactly what you need.
-    PySQLXEngine aims to expose an easy interface for you to communicate with the database in a simple, intuitive way and with good help through documentation, autocompletion, typing, and good practices.
----
 
 Database Support:
 
-* [`SQLite`](https://www.sqlite.org/index.html)
-* [`PostgreSQL`](https://www.postgresql.org/)
-* [`MySQL`](https://www.mysql.com/)
-* [`Microsoft SQL Server`](https://www.microsoft.com/sql-server)
+* `SQLite`
+* `PostgreSQL`
+* `MySQL`
+* `Microsoft SQL Server`
 
 OS Support:
 
-* [`Linux`](https://pt.wikipedia.org/wiki/Linux)
-* [`MacOS`](https://pt.wikipedia.org/wiki/Macos)
-* [`Windows`](https://pt.wikipedia.org/wiki/Microsoft_Windows)
-
+* `Linux`
+* `MacOS`
+* `Windows`
 
 ## Installation
+
+UV
+    
+```console
+$ uv add pysqlx-engine
+```
 
 
 PIP
@@ -75,6 +74,7 @@ Poetry
 ```console
 $ poetry add pysqlx-engine
 ```
+
 
 ## Async Example
 
