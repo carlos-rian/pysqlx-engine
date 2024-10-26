@@ -214,6 +214,8 @@ class PySQLXEngineSync:
 
 		You can use `:parameter_pattern` in the sql query to use parameters.
 
+		You can use `:parameter_pattern` in the sql query to use parameters.
+
 		---
 
 		Args:
@@ -264,6 +266,8 @@ class PySQLXEngineSync:
 	def query_as_dict(self, sql: str, parameters: DictParam) -> Union[List[Dict[str, SupportedTypes]], List]:
 		"""
 		Returns all rows from query result as `dict list` or `empty list`.
+
+		You can use `:parameter_pattern` in the sql query to use parameters.
 
 		You can use `:parameter_pattern` in the sql query to use parameters.
 
